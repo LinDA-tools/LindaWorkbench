@@ -1,0 +1,38 @@
+{% extends "messages/base.html" %} 
+{% block title %}New Message{% endblock %}
+{% load i18n %}
+
+{% block content %} 
+
+<div class="main">
+	<h1 class="page-title centered">{% trans "New Message" %}</h1>
+		
+	<div class="compose-mail">
+		<form class="form" action="/messages/compose/" method="post">
+			{% csrf_token %}
+			<div class="table">
+				<div class="row">
+					<span class="cell">{% trans "To:" %}</span>
+					<span class="cell"div>{{ form.recipient }}</span>
+					<span class="error">{{ form.recipient.errors }}</span>
+				</div>
+				<div class="row">
+					<span class="cell">{% trans "Subject:" %}</span>
+					<span class="cell"div>{{ form.subject }}</span>
+					<span class="error">{{ form.subject.errors }}</span>
+				</div>
+				<div class="row">
+					<span class="cell"></span>
+					<span class="cell">{{ form.body }}</span>
+				</div>
+
+				<div class="row">
+					<a href='/messages/inbox' class="cell button orange centered">{% trans "Back to inbox" %}</a>
+					<input id="msgsend" class="cell button button-big blue" type="submit" value='{% trans "Send" %} &raquo;'/>
+				</div>
+			</div>
+		</form>
+	</div>
+</div><!-- END of wrapper-content -->
+
+{% endblock %}

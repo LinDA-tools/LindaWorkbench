@@ -1,0 +1,23 @@
+{% load i18n %}{% blocktrans with message.recipient.username as recipient and message.sender.username as sender%}Hello {{ recipient }},
+
+you received a private message on the ENGAGE platform from user {{ sender }} with
+the following contents:{% endblocktrans %}
+
+{{ message.body|safe }}
+
+--
+{% blocktrans %}Sent from {{ site_url }}{% endblocktrans %}
+{% trans "Inbox" %}: {{ site_url }}{% url messages_inbox %}
+{% trans "Reply" %}: {{ site_url }}{% url messages_reply message.pk %}
+
+
+The ENGAGE team
+http://www.engagedata.eu
+
+
+About ENGAGE
+---------------------
+The main goal of the ENGAGE project is the development and use of a data infrastructure, incorporating distributed and diverse public sector information (PSI) resources, capable of supporting scientific collaboration and research, particularly for the Social Science and Humanities (SSH) scientific communities, while also empowering the deployment of open governmental data towards citizens.
+The ENGAGE e-infrastructure is envisaged to promote a highly synergetic approach to governance research, by providing the ground for experimentation to actors from both ICT and non-ICT related disciplines and scientific communities, as well as by ensuring that the scientific outcomes are made accessible to the citizens, so that they can monitor public service delivery and influence the decision making process.
+
+ENGAGE is a combination of CP & CSA project funded under the European Commission FP7 Programme. To find out more about the project, visit http://www.engage-project.eu
