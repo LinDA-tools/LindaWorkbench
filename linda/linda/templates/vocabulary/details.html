@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+{% load url from future %}
+{% load i18n thumbnail2 %}
+{% load app_filters %}
+{% block title %}{{vocabulary.title}} | LinDa{% endblock %}
+{% block bodyclass %}vocabulary{% endblock %}
+
+{% block content %}
+	<div class="main content-sidebar">
+		<article class="vocabulary">
+			<h1 class="page-title inline">{{vocabulary.title}}</h1>
+			<p class="upload-info">{% trans "Uploaded by" %} <a href="/profile/{{vocabulary.uploader.id}}">{{vocabulary.uploader|nice_name}}</a> {% trans "on" %} {{vocabulary.dateCreated}}.</p>
+			<p class="description">{{vocabulary.description}}</p>
+		
+		</article>
+		<aside>
+			<div class="sidebar-block">
+				<h3 class="sidebar-title">{% trans "Rate" %}</h3>
+				<p>
+					{% if vocabulary.votes == 0 %}
+						{% trans "No ratings yet" %}
+					{% else %}
+						{{vocabulary.get_score|floatformat:"1"}} {% trans "out of" %} 5, {{vocabulary.votes}} {% trans "votes" %}
+					{% endif %}
+				</p>
+				{% if user.is_authenticated %}
+					{% if hasVoted %}
+						<span>{% trans "You have rated this dataset with" %}</span>
+						<div class="stars">
+							<input type="radio" name="rating" class="star" value="1" {% if voteSubmitted == 1 %}checked="checked" {% else %} disabled="disabled"{% endif %}/>
+							<input type="radio" name="rating" class="star" value="2" {% if voteSubmitted == 2 %}checked="checked" {% else %} disabled="disabled"{% endif %}/>
+							<input type="radio" name="rating" class="star" value="3" {% if voteSubmitted == 3 %}checked="checked" {% else %} disabled="disabled"{% endif %}/>
+							<input type="radio" name="rating" class="star" value="4" {% if voteSubmitted == 4 %}checked="checked" {% else %} disabled="disabled"{% endif %}/>
+							<input type="radio" name="rating" class="star" value="5" {% if voteSubmitted == 5 %}checked="checked" {% else %} disabled="disabled"{% endif %}/>
+						</div>
+					{% else %}
+						<span>{% trans "Rate this dataset" %}:</span>
+						<div class="stars">
+							<input type="radio" name="rating" class="star" value="1"/>
+							<input type="radio" name="rating" class="star" value="2"/>
+							<input type="radio" name="rating" class="star" value="3"/>
+							<input type="radio" name="rating" class="star" value="4"/>
+							<input type="radio" name="rating" class="star" value="5"/>
+						</div>
+					{% endif %}
+				{% else %}
+					<p>{% trans "In order to rate this dataset, you have to" %} <a href="/accounts/login/?next=/vocabulary/{{vocabulary.id}}">{% trans "log in" %}</a></p>
+				{% endif %}
+				
+			</div>
+			
+			<div class="sidebar-block">
+				<h3 class="sidebar-title">{% trans "Download" %}</h3>
+				<select class="download-select">
+					<option value="--" disabled="disabled" selected="selected">Choose download format</option>
+					<option value="xml">As a standard rdf/xml file</option>
+					<option value="n3">As a n3 file</option>
+					<option value="turtles">As NTriples</option>
+				</select>
+			</div>
+			
+			<a href="/vocabulary/{{vocabulary.id}}/visualize" class="button green">{% trans "Visualize" %}</a>
+			
+			<div class="sidebar-block">
+				<h3 class="sidebar-title">{% trans "Actions" %}</h3>
+			</div>
+			
+		</aside>
+	</div>
+{% endblock %}
+
+{% block scripts %}
+	{% if not hasVoted %}
+		<script>
+			$(".stars input[type='radio']").click(function(){
+				$.ajax({
+					url: "/vocabulary/{{vocabulary.id}}/rate/" + $(".stars input[type='radio']:checked").val() + "/",
+					dataType: 'json',
+					
+					success: function(result){
+						window.location.reload();
+					},
+					error: function(result){
+						console.log(JSON.stringify(result));
+					},
+				});
+			});
+		</script>
+	{% endif %}
+{% endblock %}

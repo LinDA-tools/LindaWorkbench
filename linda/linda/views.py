@@ -1,12 +1,12 @@
-from django.shortcuts import render
 from django.http import HttpResponse
-from django.contrib.auth.models import User
 from django.contrib.auth.views import login
-from django.shortcuts import redirect
-from django.views.generic import ListView, UpdateView
-from itertools import chain
+from django.contrib.auth.models import User
+from django.shortcuts import redirect, render
+from django.views.generic import ListView, UpdateView, DetailView
+
 import json
 from forms import *
+from itertools import chain
 
 class UserListView(ListView):
     model = User
@@ -116,3 +116,66 @@ def users(request):
 		data = 'fail'
 	mimetype = 'application/json'
 	return HttpResponse(data, mimetype)
+	
+class VocabularyDetailsView(DetailView):
+	model = Vocabulary
+	template_name = 'vocabulary/details.html'
+	context_object_name = 'vocabulary'
+	
+	def get(self, *args, **kwargs):
+		vocabulary = Vocabulary.objects.get(pk=kwargs.get('pk'))
+		if not vocabulary.title_slug() == kwargs.get('slug'):
+			return redirect(vocabulary.get_absolute_url())
+
+		return super(VocabularyDetailsView, self).get(self, *args, **kwargs)
+		
+	def get_context_data(self, **kwargs):
+		context = super(VocabularyDetailsView, self).get_context_data(**kwargs)
+		
+		if (VocabularyRanking.objects.filter(vocabularyRanked=context['vocabulary'], voter=self.request.user).exists()):
+			context['hasVoted'] = True
+			context['voteSubmitted'] = VocabularyRanking.objects.filter(vocabularyRanked=context['vocabulary'], voter=self.request.user)[0].vote
+		else:
+			context['hasVoted'] = False
+			
+		return context
+		
+def rateDataset(request, pk, vt):
+	vocid = int(pk)
+	voteSubmitted = int(vt)
+	
+	if request.is_ajax():
+		dataJson = []
+		res = {}
+		if ((voteSubmitted<1) or (voteSubmitted>5)):
+			res['result'] = "Invalid vote " + voteSubmitted + ", votes must be between 1 and 5."
+			code = 401
+		else:
+			if (not Vocabulary.objects.get(id=vocid)):
+				res['result'] = "Vocabulary does not exist."
+				code = 404
+			else:
+				if (VocabularyRanking.objects.filter(vocabularyRanked=Vocabulary.objects.get(id=vocid), voter=request.user).exists()):
+					res['result'] = "You have already ranked this vocabulary."
+					code = 403
+				else:
+					vocabulary = Vocabulary.objects.get(id=vocid)
+					ranking = VocabularyRanking.objects.create(voter=request.user, vocabularyRanked=vocabulary, vote=voteSubmitted)
+					ranking.save()
+					vocabulary.votes = vocabulary.votes + 1
+					vocabulary.score = vocabulary.score + 1
+					vocabulary.save()
+					res['result'] = "Your vote was submitted."
+					code = 200
+					
+		dataJson.append(res)
+		data = json.dumps(dataJson)
+	else:
+		data = 'fail'
+		code = 401
+	
+	#Create the response
+	mimetype = 'application/json'
+	response = HttpResponse(data, mimetype)
+	response.status_code = code
+	return response

@@ -81,7 +81,7 @@
 			{% if userModel.id == user.id %}
 				<a class="button red" href="edit">{% trans "Edit profile" %}</a>
 			{% else %}
-				<a class="button green" href="/messages/compose/{{user.username}}/">{% trans "Send message" %}</a>
+				<a class="button green" href="/messages/compose/{{userModel.username}}/">{% trans "Send message" %}</a>
 			{% endif %}
 		</div>
 	</div>

@@ -1,4 +1,5 @@
 {% load i18n inbox %}
+{% load app_filters %}
 {% inbox_count as inbox_count %}
 
 <header id="header">
@@ -11,13 +12,12 @@
 		
 		<div class="username right">
 		{% if user.is_authenticated %}
-			{% trans "Welcome back" %}, {{user.username}}.
-			{% if inbox_count %}
-					<a href="/messages/inbox" class="unread-counter">
-						{% inbox_count %}<img src="/static/images/mail.png" class="inbox-mail-icon"/>
-					</a> 
-            {% endif %}
-			<a href="/accounts/logout">{% trans "Sign Out" %}</a>
+			{% trans "Welcome back" %}, {{user|nice_name}}.
+			<a href="/messages/inbox" class="unread-counter">
+				{% if inbox_count %} {% inbox_count %} {% endif %}<img src="/static/images/mail.png" class="admin-icon"/>
+			</a> 
+            
+			<a href="/accounts/logout"><img src="/static/images/logout.png" class="admin-icon"/></a>
 		{% else %}
 			<a href="/accounts/login">{% trans "Sign in" %}</a>
 		{% endif %}

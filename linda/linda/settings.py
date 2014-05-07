@@ -112,6 +112,7 @@ TEMPLATE_DIRS = (
 
 INSTALLED_APPS = (
 	'linda',
+	'linda.models',
 	'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

@@ -18,6 +18,7 @@ html {
 
 p {
 	font-weight: 400;
+	margin-bottom: 10px;
 }
 
 article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section {
@@ -102,7 +103,7 @@ body h1, h2 {
 
 /* Header */
 header {
-	background: #DADFE1;
+	background: #ECF0F1;
 }
 
 header a {
@@ -389,14 +390,14 @@ footer a {
 
 /* Messages */
 
-.inbox-mail-icon {
+.admin-icon {
 	width: 15px;
 	height: auto;
 	vertical-align: top;
 	padding-top: 7px;
 }
 
-.unread-counter:hover .inbox-mail-icon {
+.unread-counter:hover .admin-icon, .admin-icon:hover {
 	opacity: 0.5;
 }
 
@@ -467,6 +468,71 @@ footer a {
 	text-align: justify;
 }
 
+/* Sidebar */
+.content-sidebar {
+	padding: 0;
+}
+
+.main aside {
+	background: #DADFE1;
+	color: #E87E04;
+}
+
+.main aside h3 {
+	font-size: 150%;
+	margin: 10px 0 10px 0;
+	padding: 5px 0 5px 0;
+	border-bottom: 1px solid #ABB7B7
+}
+
+.main aside p {
+	font-weight: 300;
+}
+
+@media only screen and (min-width: 760px) {
+	.main article, .main aside {
+		display: inline-block;
+	}
+	
+	.main article {
+		width: 65%;
+		padding: 10px;
+		display: table-cell
+	}
+	
+	.main aside {
+		width: 25%;
+		padding: 10px;
+		border-left: 1px solid #ABB7B7;
+		min-height: 400px;
+		display: table-cell;
+	}
+
+}
+
+@media only screen and (max-width: 759px) {
+	.main article, .main aside {
+		display: block;
+		margin-left: 20px;
+		margin-right: 20px;
+	}
+
+	.main article {
+		width: 100%;
+	}
+	
+	.main aside {
+		border-top: 1px solid #ABB7B7;
+		width: 80%;
+		padding: 10px;
+		margin-bottom: 20px;
+	}
+}
+
+.sidebar-block {
+	margin-bottom: 20px;
+}
+
 /* Colors */
 .green {
 	background-color: #00B16A;
@@ -520,6 +586,10 @@ footer a {
 	clear: both;
 }
 
+.main:after {
+	clear: both;
+}
+
 .centered {
 	margin: 0 auto;
 	text-align: center !important;
@@ -560,7 +630,7 @@ footer a {
 	padding: 10px 20px;
 }
 
-.container, .table {
+.content-sidebar, .container, .table {
   display: table;
 }
 .container div, .row {
@@ -572,6 +642,56 @@ footer a {
 
 .cell {
 	text-align: left;
+}
+
+/* Vocabulary details */
+
+.vocabulary .upload-info {
+	font-weight: 300;
+}
+
+.vocabulary .description {
+	width: 70%;
+	text-align: justify;
+	left: 40px;
+	position: relative;
+	padding: 15px;
+	margin: 1em 0 3em;
+	border: 2px solid #dce0e1;
+	border-radius: 5px;
+}
+
+.vocabulary .description:before {
+	top: 10px;
+	bottom: auto;
+	left: -30px;
+	border-width: 15px 30px 15px 0;
+	content: "";
+	position: absolute;
+	border-style: solid;
+	border-color: transparent #dce0e1;
+	display: block;
+	width: 0;
+}
+
+@media only screen and (max-width: 759px) {
+	.vocabulary .description {
+		left: 10px;
+	}
+}
+
+.download-select {
+	padding: 10px;
+	background: #26C281;
+	color: #fff;
+	border: 1px solid #20B775;
+	border-radius: 5px;
+	outline: none;
+}
+
+.download-select option {
+	padding: 10px;
+	color: #fff;
 }
 
 /* Styles for jquery ui elements */
