@@ -150,28 +150,30 @@ def rateDataset(request, pk, vt):
 	voteSubmitted = int(vt)
 	
 	if request.is_ajax():
-		dataJson = []
-		res = {}
-		if ((voteSubmitted<1) or (voteSubmitted>5)):
-			res['result'] = "Invalid vote " + voteSubmitted + ", votes must be between 1 and 5."
-			code = 401
+		if (not request.user.is_authenticated()):
+			res['result'] = "You must be logged in to rate."
+			code = 403
 		else:
-			if (not Vocabulary.objects.get(id=vocid)):
-				res['result'] = "Vocabulary does not exist."
-				code = 404
+			if ((voteSubmitted<1) or (voteSubmitted>5)):
+				res['result'] = "Invalid vote " + voteSubmitted + ", votes must be between 1 and 5."
+				code = 401
 			else:
-				if (VocabularyRanking.objects.filter(vocabularyRanked=Vocabulary.objects.get(id=vocid), voter=request.user).exists()):
-					res['result'] = "You have already ranked this vocabulary."
-					code = 403
+				if (not Vocabulary.objects.get(id=vocid)):
+					res['result'] = "Vocabulary does not exist."
+					code = 404
 				else:
-					vocabulary = Vocabulary.objects.get(id=vocid)
-					ranking = VocabularyRanking.objects.create(voter=request.user, vocabularyRanked=vocabulary, vote=voteSubmitted)
-					ranking.save()
-					vocabulary.votes = vocabulary.votes + 1
-					vocabulary.score = vocabulary.score + voteSubmitted
-					vocabulary.save()
-					res['result'] = "Your vote was submitted."
-					code = 200
+					if (VocabularyRanking.objects.filter(vocabularyRanked=Vocabulary.objects.get(id=vocid), voter=request.user).exists()):
+						res['result'] = "You have already ranked this vocabulary."
+						code = 403
+					else:
+						vocabulary = Vocabulary.objects.get(id=vocid)
+						ranking = VocabularyRanking.objects.create(voter=request.user, vocabularyRanked=vocabulary, vote=voteSubmitted)
+						ranking.save()
+						vocabulary.votes = vocabulary.votes + 1
+						vocabulary.score = vocabulary.score + voteSubmitted
+						vocabulary.save()
+						res['result'] = "Your vote was submitted."
+						code = 200
 					
 		dataJson.append(res)
 		data = json.dumps(dataJson)
@@ -179,6 +181,39 @@ def rateDataset(request, pk, vt):
 		data = 'fail'
 		code = 401
 	
+	#Create the response
+	mimetype = 'application/json'
+	response = HttpResponse(data, mimetype)
+	response.status_code = code
+	return response
+	
+def postComment(request, pk):
+	vocid = int(pk)
+	commentTxt = request.POST['comment']
+	
+	if request.is_ajax():
+		dataJson = []
+		res = {}
+		
+		if (not Vocabulary.objects.get(id=vocid)):
+			res['result'] = "Vocabulary does not exist."
+			code = 404
+		else:
+			if (not request.user.is_authenticated()):
+				res['result'] = "You must be logged in to comment."
+				code = 403
+			else:
+				comment = VocabularyComments.objects.create(commentText = commentTxt, vocabularyCommented = Vocabulary.objects.get(id=vocid), user = request.user)
+				comment.save()
+				res['result'] = "Your comment was submitted."
+				code = 200
+	
+		dataJson.append(res)
+		data = json.dumps(dataJson)
+	else:
+		data = 'fail'
+		code = 401
+		
 	#Create the response
 	mimetype = 'application/json'
 	response = HttpResponse(data, mimetype)

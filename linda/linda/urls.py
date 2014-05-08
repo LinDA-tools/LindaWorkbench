@@ -26,6 +26,7 @@ urlpatterns = patterns('',
 	url(r'^vocabulary/(?P<pk>\d+)/$', views.VocabularyDetailsView.as_view(), name='vocabulary-detail'),
 	url(r'^vocabulary/(?P<pk>\d+)/(?P<slug>[\w-]+)$', views.VocabularyDetailsView.as_view(), name='vocabulary-detail'),
 	url(r'^vocabulary/(?P<pk>\d+)/rate/(?P<vt>\d+)', views.rateDataset, name='vocabulary-rate'),
+	url(r'^vocabulary/(?P<pk>\d+)/comment/', views.postComment, name='vocabulary-comment'),
 	
 	#API calls
 	url(r'^api/users/', login_required(views.users), name='users'),

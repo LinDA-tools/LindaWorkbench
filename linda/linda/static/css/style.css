@@ -496,8 +496,14 @@ footer a {
 	
 }
 
+@media only screen and (max-width: 479px) {
+	.comment-content {
+		width: 180px;
+	}
+}
+
 .comment {
-	padding: 10px;
+	margin: 10px;
 }
 
 .comment-content {
@@ -507,6 +513,7 @@ footer a {
 	vertical-align: top;
 	margin-left: 30px;
 	position: relative;
+	width: 60%;
 }
 
 .comment-author {
@@ -529,6 +536,23 @@ footer a {
 
 .comment-text {
 	padding: 5px;
+}
+
+.comment-text-new-comment {
+	padding: 0;
+}
+
+.comment-text-new-comment .button {
+	border-radius: 0;
+	width: calc(100% - 20px);
+}
+
+#comment-text-input {
+	width: calc(97% - 5px);
+	padding: 5px;
+	border: none;
+	outline: none;
+	max-width: calc(97% - 5px);
 }
 
 /* Sidebar */
