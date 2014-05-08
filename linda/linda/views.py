@@ -132,11 +132,16 @@ class VocabularyDetailsView(DetailView):
 	def get_context_data(self, **kwargs):
 		context = super(VocabularyDetailsView, self).get_context_data(**kwargs)
 		
-		if (VocabularyRanking.objects.filter(vocabularyRanked=context['vocabulary'], voter=self.request.user).exists()):
-			context['hasVoted'] = True
-			context['voteSubmitted'] = VocabularyRanking.objects.filter(vocabularyRanked=context['vocabulary'], voter=self.request.user)[0].vote
-		else:
-			context['hasVoted'] = False
+		#Load comments
+		context['comments'] = VocabularyComments.objects.filter(vocabularyCommented=context['vocabulary'])
+		
+		#Check if user has voted for this vocabulary
+		if self.request.user.is_authenticated():
+			if (VocabularyRanking.objects.filter(vocabularyRanked=context['vocabulary'], voter=self.request.user).exists()):
+				context['hasVoted'] = True
+				context['voteSubmitted'] = VocabularyRanking.objects.filter(vocabularyRanked=context['vocabulary'], voter=self.request.user)[0].vote
+			else:
+				context['hasVoted'] = False
 			
 		return context
 		
@@ -163,7 +168,7 @@ def rateDataset(request, pk, vt):
 					ranking = VocabularyRanking.objects.create(voter=request.user, vocabularyRanked=vocabulary, vote=voteSubmitted)
 					ranking.save()
 					vocabulary.votes = vocabulary.votes + 1
-					vocabulary.score = vocabulary.score + 1
+					vocabulary.score = vocabulary.score + voteSubmitted
 					vocabulary.save()
 					res['result'] = "Your vote was submitted."
 					code = 200

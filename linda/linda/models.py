@@ -52,6 +52,7 @@ class Vocabulary(models.Model):
 	category = models.CharField(max_length=256, blank=True, choices=CATEGORIES)  #checkbox-list, PREDEFINED LIST - LIST "CATEGORIES"
 	uploader = models.ForeignKey(User)
 	originalUrl = models.URLField(max_length=256, blank=True, null=True) #Location of the original vocabulary (for instance, in the publisher's website)
+	downloadUrl = models.URLField(max_length=256, blank=True, null=True) #Location of the original vocabulary (for instance, in the publisher's website)
 	datePublished = models.DateField(blank=True, null=True) #Original vocabulary publish date
 	dateCreated = models.DateField(blank=True, null=True) #Vocabulary creation inside LinDa
 	dateModified = models.DateField(blank=True, null=True) #Last vocabulary modification
@@ -80,3 +81,8 @@ class VocabularyRanking(models.Model):
 	voter = models.ForeignKey(User)
 	vocabularyRanked = models.ForeignKey(Vocabulary)
 	vote = models.IntegerField()
+	
+class VocabularyComments(models.Model):
+	commentText = models.CharField(max_length=512, blank=False, null=False)
+	vocabularyCommented = models.ForeignKey(Vocabulary)
+	user = models.ForeignKey(User)

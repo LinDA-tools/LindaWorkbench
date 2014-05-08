@@ -42,6 +42,18 @@ table {
   border-spacing: 0;
 }
 
+h1 {
+	font-size: 32px;
+}
+
+h2 {
+	font-size: 26px;
+}
+
+h3 {
+	font-size: 22px;
+}
+
 /*set max img width*/
 img {
   max-width: 100%;
@@ -291,9 +303,12 @@ footer a {
 	height: auto;
 }
 
+.profile-image-small {
+	border-radius: 10px;
+}
+
 @media only screen and (min-width: 760px) {
 	.community-user .profile-image-small {
-		border-radius: 10px;
 		width: 30%;
 		max-width: 100px;
 	}
@@ -468,6 +483,54 @@ footer a {
 	text-align: justify;
 }
 
+/* Comments */
+
+@media only screen and (min-width: 759px) {
+	.comments {
+		margin: 20px 40px;
+	}
+	
+	.comment-content {
+		width: 280px;
+	}
+	
+}
+
+.comment {
+	padding: 10px;
+}
+
+.comment-content {
+	border: 1px solid #1E8BC3;
+	border-radius: 5px;
+	display: inline-block;
+	vertical-align: top;
+	margin-left: 30px;
+	position: relative;
+}
+
+.comment-author {
+	border-bottom: 1px solid #1E8BC3;
+	background: #1E8BC3;
+	padding: 0 5px;
+}
+
+.comment-author > a {
+	color: #fff;
+}
+
+.comment-author > a:hover {
+	color: #eee;
+}
+
+.comment:last-of-type {
+	border-bottom: none;
+}
+
+.comment-text {
+	padding: 5px;
+}
+
 /* Sidebar */
 .content-sidebar {
 	padding: 0;
@@ -475,14 +538,15 @@ footer a {
 
 .main aside {
 	background: #DADFE1;
-	color: #E87E04;
+	color: #859596;
 }
 
 .main aside h3 {
 	font-size: 150%;
 	margin: 10px 0 10px 0;
 	padding: 5px 0 5px 0;
-	border-bottom: 1px solid #ABB7B7
+	border-bottom: 1px solid #ABB7B7;
+	width: 200px;
 }
 
 .main aside p {
@@ -490,11 +554,11 @@ footer a {
 }
 
 @media only screen and (min-width: 760px) {
-	.main article, .main aside {
+	.main content, .main aside {
 		display: inline-block;
 	}
 	
-	.main article {
+	.main content {
 		width: 65%;
 		padding: 10px;
 		display: table-cell
@@ -502,7 +566,7 @@ footer a {
 	
 	.main aside {
 		width: 25%;
-		padding: 10px;
+		padding: 10px 30px 10px 50px;
 		border-left: 1px solid #ABB7B7;
 		min-height: 400px;
 		display: table-cell;
@@ -511,20 +575,20 @@ footer a {
 }
 
 @media only screen and (max-width: 759px) {
-	.main article, .main aside {
+	.main content, .main aside {
 		display: block;
 		margin-left: 20px;
 		margin-right: 20px;
 	}
-
-	.main article {
+	
+	.main content {
 		width: 100%;
 	}
 	
 	.main aside {
 		border-top: 1px solid #ABB7B7;
 		width: 80%;
-		padding: 10px;
+		padding: 10px 0 10px 20px;
 		margin-bottom: 20px;
 	}
 }
@@ -533,6 +597,31 @@ footer a {
 	margin-bottom: 20px;
 }
 
+/* Stars */
+.rating {
+	overflow: hidden;
+	display: inline-block;
+}
+
+.rating-input {
+	position: absolute;
+	left: 0;
+	top: -50px;
+}
+      
+.rating-star {        
+	display: block;
+	float: right;        
+	width: 16px;
+	height: 16px;
+	background: url('/static/images/star.png') 0 -16px;
+}
+
+.rating-star:hover, .rating-star:hover ~ .rating-star, .rating-input:checked ~ .rating-star {
+	background-position: 0 0;
+}
+
+	  
 /* Colors */
 .green {
 	background-color: #00B16A;
@@ -630,7 +719,7 @@ footer a {
 	padding: 10px 20px;
 }
 
-.content-sidebar, .container, .table {
+.container, .table {
   display: table;
 }
 .container div, .row {
@@ -657,15 +746,15 @@ footer a {
 	position: relative;
 	padding: 15px;
 	margin: 1em 0 3em;
-	border: 2px solid #dce0e1;
+	border: 2px solid #DADFE1;
 	border-radius: 5px;
 }
 
-.vocabulary .description:before {
+.comment-content:before, .vocabulary .description:before {
 	top: 10px;
 	bottom: auto;
 	left: -30px;
-	border-width: 15px 30px 15px 0;
+	border-width: 10px 20px 10px 0;
 	content: "";
 	position: absolute;
 	border-style: solid;
@@ -674,24 +763,99 @@ footer a {
 	width: 0;
 }
 
+.vocabulary .description:hover:before {
+	border-color: transparent #F4B350;
+}
+
 @media only screen and (max-width: 759px) {
 	.vocabulary .description {
 		left: 10px;
 	}
 }
 
-.download-select {
-	padding: 10px;
-	background: #26C281;
-	color: #fff;
-	border: 1px solid #20B775;
-	border-radius: 5px;
-	outline: none;
+.select-button {
+	position: relative;
+	display: inline-block;
+	vertical-align: middle;
+	width: 180px;
 }
 
-.download-select option {
-	padding: 10px;
-	color: #fff;
+.select-button .filter-option {
+	height: 26px;
+	left: 13px;
+	overflow: hidden;
+	position: absolute;
+	right: 33px;
+	text-align: left;
+	float: left !important;
+}
+
+.select-button .caret {
+	position: absolute;
+	width: 0; 
+	height: 0;
+	left: 85%;
+	top: 15px;
+	border-left: 4px solid transparent;
+	border-right: 4px solid transparent;
+	border-top: 7px solid #fff;
+}
+
+.dropdown-menu {
+	max-height: 470px;
+	min-height: 70px;
+	margin-top: 18px !important;
+	background-color: #34495e;
+	color: #cccccc;
+	padding: 4px 0 6px;
+	width: 200px;
+	z-index: 1000;
+	display: none;
+	float: left;
+	min-width: 160px;
+	padding: 5px 0;
+	margin: 2px 0 10px 0;
+	font-size: 14px;
+	list-style: none;
+	background-clip: padding-box;
+	border: 1px solid #ccc;
+	border: 1px solid rgba(0, 0, 0, .15);
+	border-radius: 4px;
+	position: absolute;
+}
+
+.dropdown-menu .arrow-up {
+	position: absolute;
+	top: -10px;
+	left: 165px;
+	width: 0; 
+	height: 0; 
+	border-left: 10px solid transparent;
+	border-right: 10px solid transparent;
+	border-bottom: 15px solid #34495e;
+}
+
+.dropdown-menu > li {
+	margin: 0 4px -2px;
+	padding: 5px;
+	border-radius: 4px;
+}
+
+.dropdown-menu > li > div {
+	outline: none;
+	border-radius: 2px;
+	padding-bottom: 7px;
+	padding-top: 5px;
+}
+
+.dropdown-menu > li:hover {
+	background-color: #428bca;
+	cursor: pointer;
+}
+
+.sidebar-button {
+	margin-top: 10px;
+	width: 180px;
 }
 
 /* Styles for jquery ui elements */

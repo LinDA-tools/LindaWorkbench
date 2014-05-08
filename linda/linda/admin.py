@@ -10,3 +10,8 @@ class VocabularyRankingAdmin(admin.ModelAdmin):
 	pass
 	
 admin.site.register(VocabularyRanking, VocabularyRankingAdmin)
+
+class VocabularyCommentsAdmin(admin.ModelAdmin):
+	pass
+	
+admin.site.register(VocabularyComments, VocabularyCommentsAdmin)
