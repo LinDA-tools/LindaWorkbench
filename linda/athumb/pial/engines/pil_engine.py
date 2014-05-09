@@ -6,10 +6,12 @@ try:
 except ImportError:
     import Image, ImageFile, ImageDraw
 
+
 class PILEngine(EngineBase):
     """
     Python Imaging Library Engine. This implements members of EngineBase.
     """
+
     def get_image(self, source):
         """
         Given a file-like object, loads it up into a PIL.Image object

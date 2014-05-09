@@ -2,6 +2,7 @@
 from athumb.pial.helpers import toint
 from athumb.pial.parsers import parse_crop
 
+
 class EngineBase(object):
     """
     A base class whose public methods define the public-facing API for all
@@ -14,6 +15,7 @@ class EngineBase(object):
     .. note:: Do not instantiate and use this class directly, use one of the
         sub-classes.
     """
+
     def create_thumbnail(self, image, geometry,
                          upscale=True, crop=None, colorspace='RGB'):
         """

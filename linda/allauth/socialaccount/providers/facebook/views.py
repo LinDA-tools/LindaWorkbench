@@ -15,9 +15,10 @@ from allauth.socialaccount.providers.oauth2.views import (OAuth2Adapter,
 from forms import FacebookConnectForm
 from provider import FacebookProvider
 
+
 def fb_complete_login(app, token):
     resp = requests.get('https://graph.facebook.com/me',
-                        params={ 'access_token': token.token })
+                        params={'access_token': token.token})
     extra_data = resp.json()
     uid = extra_data['id']
     user = get_adapter() \

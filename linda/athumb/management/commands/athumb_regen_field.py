@@ -3,6 +3,7 @@ from django.core.files.base import ContentFile
 from django.core.management.base import BaseCommand, CommandError
 from django.contrib.contenttypes.models import ContentType
 
+
 class Command(BaseCommand):
     args = '<app.model> <field>'
     help = 'Re-generates thumbnails for all instances of the given model, for the given field.'
@@ -70,10 +71,10 @@ class Command(BaseCommand):
 
             if regen_tracker.has_key(file_name):
                 print "(%d/%d) ID: %d -- Skipped -- Already re-genned %s" % (
-                                                    counter,
-                                                    num_instances,
-                                                    instance.id,
-                                                    file_name)
+                    counter,
+                    num_instances,
+                    instance.id,
+                    file_name)
                 counter += 1
                 continue
 
@@ -88,9 +89,9 @@ class Command(BaseCommand):
             except IOError:
                 # Key didn't exist.
                 print "(%d/%d) ID %d -- Error -- File missing on S3" % (
-                                                              counter,
-                                                              num_instances,
-                                                              instance.id)
+                    counter,
+                    num_instances,
+                    instance.id)
                 counter += 1
                 continue
 
@@ -100,9 +101,9 @@ class Command(BaseCommand):
             except ValueError:
                 # This field has no file associated with it, skip it.
                 print "(%d/%d) ID %d --  Skipped -- No file on field)" % (
-                                                              counter,
-                                                              num_instances,
-                                                              instance.id)
+                    counter,
+                    num_instances,
+                    instance.id)
                 counter += 1
                 continue
 

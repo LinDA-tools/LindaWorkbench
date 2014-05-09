@@ -4,6 +4,7 @@ from allauth.socialaccount.providers import registry
 
 from provider import FacebookProvider
 
+
 class FacebookTests(create_oauth2_tests(registry.by_id(FacebookProvider.id))):
     def get_mocked_response(self):
         return MockedResponse(200, """
