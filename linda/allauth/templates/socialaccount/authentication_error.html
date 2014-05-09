@@ -4,19 +4,19 @@
 
 {% block head_title %}{% trans "Social Network Login Failure" %}{% endblock %}
 {% block css %}
-<link rel="stylesheet" href="/s/django_file_upload/css/bootstrap.min.css">
-<link rel="stylesheet" href="/s/django_file_upload/css/bootstrap-responsive.min.css">
+    <link rel="stylesheet" href="/s/django_file_upload/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/s/django_file_upload/css/bootstrap-responsive.min.css">
 {% endblock %}
 {% block content %}
 <div id="login_page" class="wrapper-content">
-    <div class="auth-form">
-        <div class="auth-form-header">
-            {% trans "Social Network Login Failure" %}
-        </div>
-        <div class="auth-form-body">
+	<div class="auth-form">
+		<div class="auth-form-header">
+{% trans "Social Network Login Failure" %}
+		 </div>
+		 <div class="auth-form-body">
 
-            <p>{% trans "An error occurred while attempting to login via your social network account." %}</p>
-        </div>
-    </div>
+<p>{% trans "An error occurred while attempting to login via your social network account." %}</p>
+</div>
+</div>
 </div>
 {% endblock %}

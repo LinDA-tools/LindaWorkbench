@@ -1,3 +1,4 @@
+
 class ThumbnailError(Exception):
     pass
 

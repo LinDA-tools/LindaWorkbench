@@ -1,75 +1,58 @@
-{% extends "messages/base.html" %}
-{% load i18n thumbnail2 humanize%}
+{% extends "messages/base.html" %} 
+{% load i18n thumbnail2 humanize%} 
 {% block title %}Outbox{% endblock %}
 {% block content %}
 
 <div id="view_inbox" class="wrapper-content">
-    <div class="inbox-form">
-        <div class="inbox-form-header">
-            {% trans "Sent Messages" %}
+	<div class="inbox-form" >
+		<div class="inbox-form-header">
+		{% trans "Sent Messages" %}
+		 </div>
+		 <div class="inbox-form-body">
+	    <div><a href='/messages/inbox'><div class='button' style="color:#DF4E15">Return to inbox</div></a>
+    <div id='show-hide'>
+ {% if message_list %}
+       {% for message in message_list %}
+	<div class="inbox_view msglist">
+		{% if message.reciever.profile.avatar.photo_original %}
+			{% thumbnail message.reciever.profile.avatar.photo_original "48x48" as avatar %}
+		<div style="float:left"><a href="/profile/{{message.reciever.profile.id}}"><img src="{{avatar}}" width="48" height="48" class="roundedphoto"/></a></div>
+
+		{% else %}
+		<div style="float:left"><a href="/profile/{{message.reciever.profile.id}}"><img src="/s/imgs/defaultavatar.jpg" width="48" height="48" class="roundedphoto"/></a></div>
+		{% endif %}
+		<div style="float:left" ><a class="sendername" href="/profile/{{message.sender.profile.id}}"> {{ message.sender }} {% if  message.sender.last_name or userModel.first_name %} ({{message.sender.last_name}} {{message.sender.last_name}}) {% endif %}</a></div>
+		<div style="float:left" class="msgdate" >{{ message.sent_at|naturaltime}}</div><a style="float:right;padding-left:30px;margin-top:3px" href="{% url messages_delete message.id %}?next={% url messages_outbox %}"><img src="/s/imgs/delete_msg.png"/></a></br>
+		<div style="float:left" class="subject" >{% if message.new %}<strong>{% endif %}<a href="{{message.get_absolute_url }}">{{ message.subject|truncatechars:100}}</a>{% if message.new %}</strong>{% endif %}
+		
+		</div>
+	</div>
+	</a>
+	<div style="clear:both"></div>
+	<div class="msgseparator"></div>
+  {% endfor %}
+{% else %}
+        <p style="margin-top:10px">{% trans "No messages." %}</p>
+{% endif %} 
+    </div>
+    <div class="pagination">
+        <div class="green">
+            {%if page_obj.has_previous %}
+                <a class="next" href="{%url 'messages_outbox'%}?page={{page_obj.number|add:"-1"}}"> « Previous</a>
+            {%endif%}
+            {% for curpage in page_obj.paginator.page_range %}
+                {% if page_obj.number != curpage %}
+                    <a href="{%url 'messages_outbox'%}?page={{curpage}}">{{curpage}}</a>
+                {%else%}
+                    <span class="current">{{curpage}}</span>
+                {%endif%}
+            {%endfor%}
+            {%if page_obj.has_next %}
+                <a class="next" href="{%url 'messages_outbox'%}?page={{page_obj.number|add:"1"}}">Next »</a>
+            {%endif%}
         </div>
-        <div class="inbox-form-body">
-            <div><a href='/messages/inbox'>
-                <div class='button' style="color:#DF4E15">Return to inbox</div>
-            </a>
+    </div>
+</div>
+</div><!-- END of wrapper-content -->
 
-                <div id='show-hide'>
-                    {% if message_list %}
-                    {% for message in message_list %}
-                    <div class="inbox_view msglist">
-                        {% if message.reciever.profile.avatar.photo_original %}
-                        {% thumbnail message.reciever.profile.avatar.photo_original "48x48" as avatar %}
-                        <div style="float:left"><a href="/profile/{{message.reciever.profile.id}}"><img src="{{avatar}}"
-                                                                                                        width="48"
-                                                                                                        height="48"
-                                                                                                        class="roundedphoto"/></a>
-                        </div>
-
-                        {% else %}
-                        <div style="float:left"><a href="/profile/{{message.reciever.profile.id}}"><img
-                                src="/s/imgs/defaultavatar.jpg" width="48" height="48" class="roundedphoto"/></a></div>
-                        {% endif %}
-                        <div style="float:left"><a class="sendername" href="/profile/{{message.sender.profile.id}}"> {{
-                            message.sender }} {% if message.sender.last_name or userModel.first_name %}
-                            ({{message.sender.last_name}} {{message.sender.last_name}}) {% endif %}</a></div>
-                        <div style="float:left" class="msgdate">{{ message.sent_at|naturaltime}}</div>
-                        <a style="float:right;padding-left:30px;margin-top:3px"
-                           href="{% url messages_delete message.id %}?next={% url messages_outbox %}"><img
-                                src="/s/imgs/delete_msg.png"/></a></br>
-                        <div style="float:left" class="subject">{% if message.new %}<strong>{% endif %}<a
-                                href="{{message.get_absolute_url }}">{{ message.subject|truncatechars:100}}</a>{% if
-                            message.new %}</strong>{% endif %}
-
-                        </div>
-                    </div>
-                    </a>
-                    <div style="clear:both"></div>
-                    <div class="msgseparator"></div>
-                    {% endfor %}
-                    {% else %}
-                    <p style="margin-top:10px">{% trans "No messages." %}</p>
-                    {% endif %}
-                </div>
-                <div class="pagination">
-                    <div class="green">
-                        {%if page_obj.has_previous %}
-                        <a class="next" href="{%url 'messages_outbox'%}?page={{page_obj.number|add:"-1"}}"> «
-                        Previous</a>
-                        {%endif%}
-                        {% for curpage in page_obj.paginator.page_range %}
-                        {% if page_obj.number != curpage %}
-                        <a href="{%url 'messages_outbox'%}?page={{curpage}}">{{curpage}}</a>
-                        {%else%}
-                        <span class="current">{{curpage}}</span>
-                        {%endif%}
-                        {%endfor%}
-                        {%if page_obj.has_next %}
-                        <a class="next" href="{%url 'messages_outbox'%}?page={{page_obj.number|add:"1"}}">Next »</a>
-                        {%endif%}
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- END of wrapper-content -->
-
-        {% endblock %}
+{% endblock %}

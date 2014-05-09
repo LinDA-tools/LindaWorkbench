@@ -5,66 +5,62 @@
 {% block bodyclass %}community{% endblock %}
 
 {% block content %}
-<div class="main">
-    <h1 class="page-title">{% trans "Community" %}</h1>
+	<div class="main">
+		<h1 class="page-title">{% trans "Community" %}</h1>
+		
+		<div class="home-search centered">
+			<form method="post" action="/community" class="form">
+				{% csrf_token %}
+				
+				<input id="username-search" name="name" type="text" placeholder="Search LinDa users"/>
+				<input type="submit" name="submit" value=""/>
+			</form>
+		</div>
+		
+		<div class="divider"></div>
 
-    <div class="home-search centered">
-        <form method="post" action="/community" class="form">
-            {% csrf_token %}
+		{% for user in users %}	
+			<div class="community-user centered">
+				{% if user.profile.avatar.photo_original %}
+					{% thumbnail user.profile.avatar.photo_original "100x100" as avatar %}
+					<img src="{{avatar}}" width=100 height=100 class="profile-image-small" />
+				{% else %}
+					<img src="/static/images/avatar.jpg" width=100 height=100 class="profile-image-small" />
+				{% endif %}
 
-            <input id="username-search" name="name" type="text" placeholder="Search LinDa users"/>
-            <input type="submit" name="submit" value=""/>
-        </form>
-    </div>
+				<div class="community-user-info inline">
+					<p class="user-fullname"><a href="/profile/{{user.id}}">{{user|nice_name}}</a></p>
+					<p class="user-info">{% if user.profile.scientific_background != '--' %} {{user.profile.get_scientific_background_display}} {% endif %}</p>
+				</div><!-- .community-user-info .align-left -->
 
-    <div class="divider"></div>
-
-    {% for user in users %}
-    <div class="community-user centered">
-        {% if user.profile.avatar.photo_original %}
-        {% thumbnail user.profile.avatar.photo_original "100x100" as avatar %}
-        <img src="{{avatar}}" width=100 height=100 class="profile-image-small"/>
-        {% else %}
-        <img src="/static/images/avatar.jpg" width=100 height=100 class="profile-image-small"/>
-        {% endif %}
-
-        <div class="community-user-info inline">
-            <p class="user-fullname"><a href="/profile/{{user.id}}">{{user|nice_name}}</a></p>
-
-            <p class="user-info">{% if user.profile.scientific_background != '--' %}
-                {{user.profile.get_scientific_background_display}} {% endif %}</p>
-        </div>
-        <!-- .community-user-info .align-left -->
-
-        <a href="/profile/{{user.id}}" class="profile-link inline">view profile</a>
-    </div>
-    <!-- .community-user .clearfix -->
-    {% endfor %}
-
-    {% with current_url="/community" %}
-    {% include 'util/paginator.html' %}
-    {% endwith %}
-</div>
+				<a href="/profile/{{user.id}}" class="profile-link inline">view profile</a>
+			</div><!-- .community-user .clearfix -->
+		{% endfor %}
+				
+		{% with current_url="/community" %}
+			{% include 'util/paginator.html' %}
+		{% endwith %}
+	</div>
 {% endblock %}
 
 {% block scripts %}
-<script src="/static/js/jquery-ui.min.js"></script>
-<script>
-    $(function () {
-
-        $("#username-search").autocomplete({
-            source: "/api/users/",
-            minLength: 2,
-            select: function (event, ui) {
-                window.location.href = '/profile/' + ui.item.id;
-            }
-        });
-
-
-        $(window).resize(function () {
-            $(".ui-autocomplete").css("left", $("#username-search").offset().left + "px");
-        });
-        $("#username-search").val("");
-    });
-</script>
+	<script src="/static/js/jquery-ui.min.js"></script>
+	<script>
+		$(function() {
+			
+			$("#username-search").autocomplete({
+				source: "/api/users/",
+				minLength: 2,
+				select: function(event, ui) {
+					window.location.href = '/profile/' + ui.item.id;
+				}
+			});
+			
+			
+			$( window ).resize(function() {
+				$(".ui-autocomplete").css( "left", $("#username-search").offset().left + "px");
+			});
+			$("#username-search").val("");
+		});
+	</script>
 {% endblock %}

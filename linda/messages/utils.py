@@ -1,6 +1,7 @@
 from django.utils.text import wrap
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.sites.models import Site
+from django.template import Context, loader
 from django.template.loader import render_to_string
 from django.conf import settings
 
@@ -10,7 +11,6 @@ if "mailer" in settings.INSTALLED_APPS:
     from mailer import send_mail
 else:
     from django.core.mail import send_mail
-
 
 def format_quote(text):
     """
@@ -22,13 +22,12 @@ def format_quote(text):
     for i, line in enumerate(lines):
         lines[i] = "> %s" % line
     return '\n'.join(lines)
-
-
-def new_message_email(sender, instance, signal,
-                      subject_prefix=_(u'New Message: %(subject)s'),
-                      template_name="messages/new_message.html",
-                      default_protocol=None,
-                      *args, **kwargs):
+    
+def new_message_email(sender, instance, signal, 
+        subject_prefix=_(u'New Message: %(subject)s'),
+        template_name="messages/new_message.html",
+        default_protocol=None,
+        *args, **kwargs):
     """
     This function sends an email and is called via Django's signal framework.
     Optional arguments:
@@ -49,7 +48,7 @@ def new_message_email(sender, instance, signal,
             })
             if instance.recipient.email != "":
                 send_mail(subject, message, settings.DEFAULT_FROM_EMAIL,
-                          [instance.recipient.email, ])
+                    [instance.recipient.email,])
         except Exception, e:
             #print e
             pass #fail silently

@@ -6,10 +6,8 @@ a cropping a string value of '50% 50%' into cropping offsets.
 import re
 from athumb.pial.helpers import ThumbnailError
 
-
 class ThumbnailParseError(ThumbnailError):
     pass
-
 
 _CROP_PERCENT_PATTERN = re.compile(r'^(?P<value>\d+)(?P<unit>%|px)$')
 
@@ -25,7 +23,6 @@ _Y_ALIAS_PERCENT = {
     'center': '50%',
     'bottom': '100%',
 }
-
 
 def get_cropping_offset(crop, epsilon):
     """
@@ -49,7 +46,6 @@ def get_cropping_offset(crop, epsilon):
         value = epsilon * value / 100.0
         # return ∈ [0, epsilon]
     return int(max(0, min(value, epsilon)))
-
 
 def parse_crop(crop, xy_image, xy_window):
     """

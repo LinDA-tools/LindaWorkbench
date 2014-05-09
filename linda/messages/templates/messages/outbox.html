@@ -1,5 +1,5 @@
-{% extends "messages/base.html" %}
-{% load i18n humanize app_filters%}
+{% extends "messages/base.html" %} 
+{% load i18n humanize app_filters%} 
 {% load url from future %}
 {% block title %}{% trans "Outbox" %}{% endblock %}
 {% block bodyclass %}mailbox{% endblock %}
@@ -7,42 +7,40 @@
 {% block content %}
 
 <div class="main centered">
-    <h1 class="page-title inline">{% trans "Sent Messages" %}</h1>
+	<h1 class="page-title inline">{% trans "Sent Messages" %}</h1>
 
-    <div class="message-actions">
-        <a href='/messages/compose' class="button blue">{% trans "New message" %}</a>
-        <a href='/messages/inbox' class="button green">{% trans "Inbox" %}</a>
-        <a href='/profile/{{request.user.id}}' class="button orange">{% trans "Return to profile" %}</a>
-    </div>
+	<div class="message-actions">
+		<a href='/messages/compose' class="button blue">{% trans "New message" %}</a>
+		<a href='/messages/inbox'  class="button green">{% trans "Inbox" %}</a>
+		<a href='/profile/{{request.user.id}}' class="button orange">{% trans "Return to profile" %}</a>
+	</div>
 
-    {% if message_list %}
-    <div class="table centered inbox-table">
-        <div class="message-titles row">
-            <span class="cell">{% trans "To:" %}</span>
-            <span class="cell">{% trans "Sent" %}</span>
-            <span class="cell">{% trans "Subject" %}</span>
-            <span class="cell">{% trans "Actions" %}</span>
-        </div>
-        {% for message in message_list %}
-        <div class="message row outbox">
-            <a class="cell sendername" href="/profile/{{message.recipient.profile.id}}"> {{ message.recipient|nice_name
-                }}</a>
-            <span class="cell text-blue">{{ message.sent_at|naturaltime}}</span>
-					<span class="cell subject">
-						{% if message.new %}<strong>{% endif %}<a href="{{message.get_absolute_url }}">{{
-                        message.subject|truncatechars:100}}</a>{% if message.new %}</strong>{% endif %}
+	{% if message_list %}
+		<div class="table centered inbox-table">
+			<div class="message-titles row">
+				<span class="cell">{% trans "To:" %}</span>
+				<span class="cell">{% trans "Sent" %}</span>
+				<span class="cell">{% trans "Subject" %}</span>
+				<span class="cell">{% trans "Actions" %}</span>
+			</div>
+			{% for message in message_list %}
+				<div class="message row outbox">
+					<a class="cell sendername" href="/profile/{{message.recipient.profile.id}}"> {{ message.recipient|nice_name }}</a>
+					<span class="cell text-blue" >{{ message.sent_at|naturaltime}}</span>
+					<span class="cell subject" >
+						{% if message.new %}<strong>{% endif %}<a href="{{message.get_absolute_url }}">{{ message.subject|truncatechars:100}}</a>{% if message.new %}</strong>{% endif %}
 					</span>
-            <a class="cell" href="{% url 'messages_delete' message.id %}"><img src="/static/images/remove.png"/></a>
-        </div>
-        {% endfor %}
-    </div>
-    {% else %}
-    <p>{% trans "No messages." %}</p>
-    {% endif %}
-
-    {% with current_url="/messages/outbox" %}
-    {% include 'util/paginator.html' %}
-    {% endwith %}
+					<a class="cell" href="{% url 'messages_delete' message.id %}"><img src="/static/images/remove.png" /></a>
+				</div>
+			{% endfor %}
+		</div>
+	{% else %}
+		<p>{% trans "No messages." %}</p>
+	{% endif %}     
+	
+	{% with current_url="/messages/outbox" %}
+		{% include 'util/paginator.html' %}
+	{% endwith %}
 </div>
 
 {% endblock %}

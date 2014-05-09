@@ -63,13 +63,13 @@ class S3BotoStorage(Storage):
     """Amazon Simple Storage Service using Boto"""
 
     def __init__(self, bucket=STORAGE_BUCKET_NAME,
-                 bucket_cname=STORAGE_BUCKET_CNAME,
-                 region=AWS_REGION, access_key=None,
-                 secret_key=None, acl=DEFAULT_ACL,
-                 headers=HEADERS, gzip=IS_GZIPPED,
-                 gzip_content_types=GZIP_CONTENT_TYPES,
-                 querystring_auth=QUERYSTRING_AUTH,
-                 force_no_ssl=False):
+                       bucket_cname=STORAGE_BUCKET_CNAME,
+                       region=AWS_REGION, access_key=None,
+                       secret_key=None, acl=DEFAULT_ACL,
+                       headers=HEADERS, gzip=IS_GZIPPED,
+                       gzip_content_types=GZIP_CONTENT_TYPES,
+                       querystring_auth=QUERYSTRING_AUTH,
+                       force_no_ssl=False):
         self.bucket_name = bucket
         self.bucket_cname = bucket_cname
         self.host = self._get_host(region)
@@ -122,8 +122,8 @@ class S3BotoStorage(Storage):
             return 's3-%s.amazonaws.com' % region
         elif region and not REGION_RE.findall(region):
             raise ImproperlyConfigured('AWS_REGION improperly configured!')
-            # can be full host or empty string, default region
-        return region
+        # can be full host or empty string, default region
+        return  region
 
     def _get_or_create_bucket(self, name):
         """Retrieves a bucket if it exists, otherwise creates it."""
@@ -133,8 +133,8 @@ class S3BotoStorage(Storage):
             if AUTO_CREATE_BUCKET:
                 return self.connection.create_bucket(name)
             raise ImproperlyConfigured, ("Bucket specified by "
-                                         "AWS_STORAGE_BUCKET_NAME does not exist. Buckets can be "
-                                         "automatically created by setting AWS_AUTO_CREATE_BUCKET=True")
+            "AWS_STORAGE_BUCKET_NAME does not exist. Buckets can be "
+            "automatically created by setting AWS_AUTO_CREATE_BUCKET=True")
 
     def _clean_name(self, name):
         # Useful for windows' paths
@@ -172,14 +172,14 @@ class S3BotoStorage(Storage):
 
         headers.update({
             'Content-Type': content_type,
-            'Content-Length': len(content),
+            'Content-Length' : len(content),
         })
 
         content.name = name
         k = self.bucket.get_key(name)
         if not k:
             k = self.bucket.new_key(name)
-            # The callback seen here is particularly important for async WSGI
+        # The callback seen here is particularly important for async WSGI
         # servers. This allows us to call back to eventlet or whatever
         # async support library we're using periodically to prevent timeouts.
         k.set_contents_from_file(content, headers=headers, policy=self.acl,
@@ -251,7 +251,6 @@ class S3BotoStorage_AllPublic(S3BotoStorage):
     WARNING: This backend makes absolutely no attempt to verify whether the
     given key exists on self.url(). This is much faster, but be aware.
     """
-
     def __init__(self, *args, **kwargs):
         super(S3BotoStorage_AllPublic, self).__init__(acl='public-read',
                                                       querystring_auth=False,
@@ -269,7 +268,7 @@ class S3BotoStorage_AllPublic(S3BotoStorage):
             return "http://%s/%s" % (self.bucket_cname, name)
         elif self.host:
             return "http://%s/%s/%s" % (self.host, self.bucket_name, name)
-            # No host ? Then it's the default region
+        # No host ? Then it's the default region
         return "http://s3.amazonaws.com/%s/%s" % (self.bucket_name, name)
 
 
@@ -306,6 +305,5 @@ class S3BotoStorageFile(File):
         if self._is_dirty:
             if not self.key:
                 self.key = self._storage.bucket.new_key(key_name=self.name)
-            self.key.set_contents_from_string(self.file.getvalue(), headers=self._storage.headers,
-                                              policy=self.storage.acl)
+            self.key.set_contents_from_string(self.file.getvalue(), headers=self._storage.headers, policy=self.storage.acl)
         self.key.close()

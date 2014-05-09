@@ -1,10 +1,9 @@
 from django.template import Library, Node, TemplateSyntaxError
 
-
 class InboxOutput(Node):
     def __init__(self, varname=None):
         self.varname = varname
-
+        
     def render(self, context):
         try:
             user = context['user']
@@ -15,9 +14,8 @@ class InboxOutput(Node):
             context[self.varname] = count
             return ""
         else:
-            return "%s" % (count)
-
-
+            return "%s" % (count)        
+        
 def do_print_inbox_count(parser, token):
     """
     A templatetag to show the unread-count for a logged in user.
@@ -43,6 +41,5 @@ def do_print_inbox_count(parser, token):
     else:
         return InboxOutput()
 
-
-register = Library()
+register = Library()     
 register.tag('inbox_count', do_print_inbox_count)

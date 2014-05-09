@@ -1,8 +1,6 @@
 """
 Some top-level exceptions that are generally useful.
 """
-
-
 class UploadedImageIsUnreadableError(Exception):
     """
     Raise this when the image generation backend can't read the image being

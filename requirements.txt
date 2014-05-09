@@ -1,4 +1,0 @@
-django
-django-allauth
-PIL
-Image

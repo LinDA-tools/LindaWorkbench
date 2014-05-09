@@ -4,20 +4,20 @@
 
 {% block head_title %}{% trans "Account Inactive" %}{% endblock %}
 {% block css %}
-<link rel="stylesheet" href="/s/django_file_upload/css/bootstrap.min.css">
-<link rel="stylesheet" href="/s/django_file_upload/css/bootstrap-responsive.min.css">
+    <link rel="stylesheet" href="/s/django_file_upload/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/s/django_file_upload/css/bootstrap-responsive.min.css">
 {% endblock %}
 {% block content %}
 <div id="login_page" class="wrapper-content">
-    <div class="auth-form">
-        <div class="auth-form-header">
-            {% trans "Inactive account" %}
-        </div>
-        <div class="auth-form-body">
+	<div class="auth-form">
+		<div class="auth-form-header">
+		{% trans "Inactive account" %}
+		 </div>
+		 <div class="auth-form-body">
 
-            <p>{% trans "This account is inactive." %}</p>
+<p>{% trans "This account is inactive." %}</p>
 
-        </div>
-    </div>
+</div>
+</div>
 </div>
 {% endblock %}

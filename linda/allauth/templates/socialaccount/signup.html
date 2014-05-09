@@ -4,32 +4,31 @@
 
 {% block head_title %}{% trans "Signup" %}{% endblock %}
 {% block css %}
-<link rel="stylesheet" href="/s/django_file_upload/css/bootstrap.min.css">
-<link rel="stylesheet" href="/s/django_file_upload/css/bootstrap-responsive.min.css">
+    <link rel="stylesheet" href="/s/django_file_upload/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/s/django_file_upload/css/bootstrap-responsive.min.css">
 {% endblock %}
 {% block content %}
-<div id="login_page" class="wrapper-content">
-    <div class="auth-form">
-        <div class="auth-form-header">
-            {% trans "Sign Up" %}
-        </div>
-        <div class="auth-form-body">
+ <div id="login_page" class="wrapper-content">
+	<div class="auth-form">
+		<div class="auth-form-header">
+{% trans "Sign Up" %}
+		 </div>
+		 <div class="auth-form-body">
 
-            <p>{% blocktrans with provider_name=account.get_provider.name site_name=site.name %}You are about to use
-                your {{provider_name}} account to login to
-                {{site_name}}. As a final step, please complete the following form:{% endblocktrans %}</p>
-
-            <form class="signup" id="signup_form" method="post" action="">
-                {% csrf_token %}
-                {{ form.as_p }}
-                {% if redirect_field_value %}
-                <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}"/>
-                {% endif %}
-                <button type="submit">{% trans "Sign Up" %} &raquo;</button>
-            </form>
-
-        </div>
-    </div>
+<p>{% blocktrans with provider_name=account.get_provider.name site_name=site.name %}You are about to use your {{provider_name}} account to login to 
+{{site_name}}. As a final step, please complete the following form:{% endblocktrans %}</p>
+    
+<form class="signup" id="signup_form" method="post" action="">
+  {% csrf_token %}
+  {{ form.as_p }}
+  {% if redirect_field_value %}
+  <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+  {% endif %}
+  <button type="submit">{% trans "Sign Up" %} &raquo;</button>
+</form>
+        
+</div>
+</div>
 </div>
 {% endblock %}
 

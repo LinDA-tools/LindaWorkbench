@@ -1,26 +1,23 @@
 import datetime
-
 from django.http import Http404, HttpResponseRedirect
 from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.utils.translation import ugettext as _
+from django.utils.translation import ugettext_noop
 from django.core.urlresolvers import reverse
 from django.conf import settings
 from django.contrib import messages
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-
 from messages.models import Message
 from messages.forms import ComposeForm
 from messages.utils import format_quote
-
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 if "notification" in settings.INSTALLED_APPS:
     from notification import models as notification
 else:
     notification = None
-
 
 def inbox(request, template_name='messages/inbox.html'):
     """
@@ -43,10 +40,7 @@ def inbox(request, template_name='messages/inbox.html'):
         'message_list': message_list,
         'page_obj': message_list
     }, context_instance=RequestContext(request))
-
-
 inbox = login_required(inbox)
-
 
 def outbox(request, template_name='messages/outbox.html'):
     """
@@ -69,10 +63,7 @@ def outbox(request, template_name='messages/outbox.html'):
         'message_list': message_list,
         'page_obj': message_list
     }, context_instance=RequestContext(request))
-
-
 outbox = login_required(outbox)
-
 
 def trash(request, template_name='messages/trash.html'):
     """
@@ -97,13 +88,10 @@ def trash(request, template_name='messages/trash.html'):
         'message_list': message_list,
         'page_obj': message_list
     }, context_instance=RequestContext(request))
-
-
 trash = login_required(trash)
 
-
 def compose(request, recipient=None, form_class=ComposeForm,
-            success_url=None, recipient_filter=None):
+        success_url=None, recipient_filter=None):
     """
     Displays and handles the ``form_class`` form to compose new messages.
     Required Arguments: None
@@ -116,7 +104,7 @@ def compose(request, recipient=None, form_class=ComposeForm,
         ``success_url``: where to redirect after successfull submission
     """
     if request.method == "POST":
-        template_name = 'messages/compose.html'
+        template_name='messages/compose.html'
         sender = request.user
         form = form_class(request.POST, recipient_filter=recipient_filter)
         if form.is_valid():
@@ -133,31 +121,28 @@ def compose(request, recipient=None, form_class=ComposeForm,
             return HttpResponseRedirect(success_url)
     else:
         form = form_class()
-        template_name = 'messages/compose.html'
+        template_name='messages/compose.html'
         if recipient is not None:
-            template_name = 'messages/compose_to.html'
+            template_name='messages/compose_to.html'
             recipients = [u for u in User.objects.filter(username__in=[r.strip() for r in recipient.split('+')])]
             form.fields['recipient'].initial = recipients
     return render_to_response(template_name, {
         'form': form,
     }, context_instance=RequestContext(request))
-
-
 compose = login_required(compose)
 
-
 def reply(request, message_id, form_class=ComposeForm,
-          template_name='messages/compose.html', success_url=None, recipient_filter=None):
+        template_name='messages/compose.html', success_url=None, recipient_filter=None):
     """
     Prepares the ``form_class`` form for writing a reply to a given message
     (specified via ``message_id``). Uses the ``format_quote`` helper from
     ``messages.utils`` to pre-format the quote.
     """
     parent = get_object_or_404(Message, id=message_id)
-
+    
     if parent.sender != request.user and parent.recipient != request.user:
         raise Http404
-
+    
     if request.method == "POST":
         sender = request.user
         form = form_class(request.POST, recipient_filter=recipient_filter)
@@ -170,19 +155,16 @@ def reply(request, message_id, form_class=ComposeForm,
     else:
         form = form_class({
             'body': _(u"%(sender)s wrote:\n%(body)s") % {
-                'sender': parent.sender,
+                'sender': parent.sender, 
                 'body': format_quote(parent.body)
-            },
+                }, 
             'subject': _(u"Re: %(subject)s") % {'subject': parent.subject},
-            'recipient': [parent.sender, ]
-        })
+            'recipient': [parent.sender,]
+            })
     return render_to_response(template_name, {
         'form': form,
     }, context_instance=RequestContext(request))
-
-
 reply = login_required(reply)
-
 
 def delete(request, message_id, success_url=None):
     """
@@ -214,13 +196,10 @@ def delete(request, message_id, success_url=None):
         message.save()
         messages.success(request, _(u"Message successfully deleted."))
         if notification:
-            notification.send([user], "messages_deleted", {'message': message, })
+            notification.send([user], "messages_deleted", {'message': message,})
         return HttpResponseRedirect(success_url)
     raise Http404
-
-
 delete = login_required(delete)
-
 
 def undelete(request, message_id, success_url=None):
     """
@@ -244,13 +223,10 @@ def undelete(request, message_id, success_url=None):
         message.save()
         messages.success(request, _(u"Message successfully recovered."))
         if notification:
-            notification.send([user], "messages_recovered", {'message': message, })
+            notification.send([user], "messages_recovered", {'message': message,})
         return HttpResponseRedirect(success_url)
     raise Http404
-
-
 undelete = login_required(undelete)
-
 
 def view(request, message_id, template_name='messages/view.html'):
     """
@@ -272,6 +248,4 @@ def view(request, message_id, template_name='messages/view.html'):
     return render_to_response(template_name, {
         'message': message,
     }, context_instance=RequestContext(request))
-
-
 view = login_required(view)
