@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% load url from future %}
+{% load i18n thumbnail2 %}
+{% load app_filters %}
+{% block title %}{{vocabulary.title}} | LinDa{% endblock %}
+{% block bodyclass %}vocabulary{% endblock %}
+
+{% block content %}
+	<div class="main">
+		<h1 class="page-title inline">{{vocabulary.title}}</h1>
+		<div>
+			<a href="/vocabulary/{{vocabulary.id}}" class="button green">{% trans "Back to info" %}</a>
+		</div>
+		<p class="error">Visualization under construction</p>
+	</div>
+{% endblock %}

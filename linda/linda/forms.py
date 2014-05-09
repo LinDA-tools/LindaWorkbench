@@ -16,3 +16,8 @@ class UserProfileForm(forms.ModelForm):
 class UserForm(forms.ModelForm):
     class Meta:
         model = User
+		
+class VocabularyUpdateForm(forms.ModelForm):
+    class Meta:
+        model = Vocabulary
+        exclude = ('uploader', 'datePublished', 'dateCreated', 'score', 'votes', 'downloads')

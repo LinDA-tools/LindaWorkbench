@@ -2,11 +2,12 @@ from django.http import HttpResponse
 from django.contrib.auth.views import login
 from django.contrib.auth.models import User
 from django.shortcuts import redirect, render
-from django.views.generic import ListView, UpdateView, DetailView
+from django.views.generic import ListView, UpdateView, DetailView, DeleteView
 
 import json
 from forms import *
 from itertools import chain
+from datetime import datetime
 
 class UserListView(ListView):
     model = User
@@ -144,12 +145,74 @@ class VocabularyDetailsView(DetailView):
 				context['hasVoted'] = False
 			
 		return context
+
+class VocabularyUpdateView(UpdateView):
+	form_class = VocabularyUpdateForm
+	model = Vocabulary
+	template_name = 'vocabulary/edit.html'
+	context_object_name = 'vocabulary'
+	
+	def get_object(self):
+		object = super(VocabularyUpdateView, self).get_object()
+		if (object.uploader.id != self.request.user.id):
+			res = HttpResponse("Unauthorized")
+			res.status_code = 401
+			return res
+		return object
 		
+	def get_context_data(self, **kwargs):
+		context = super(VocabularyUpdateView, self).get_context_data(**kwargs)
+		
+		#Load categories
+		context['categories'] = CATEGORIES
+		
+		return context
+		
+	def post(self, *args, **kwargs):
+		oldVocabulary = Vocabulary.objects.get(pk=kwargs.get('pk'))
+
+		data = self.request.POST
+		data['dateModified'] = datetime.now()
+		
+		vocabularyForm = VocabularyUpdateForm(data, instance=oldVocabulary)
+		
+		#Validate form
+		if vocabularyForm.is_valid():
+			vocabularyForm.save()
+			return redirect("/vocabulary/" + kwargs.get('pk'))
+		else:
+			return render(self.request, 'vocabulary/edit.html', {
+				'current': 'vocabulary',
+				'form': vocabularyForm,
+			})
+	
+class VocabularyDeleteView(DeleteView):
+	model = Vocabulary
+	template_name = 'vocabulary/delete.html'
+	context_object_name = 'vocabulary'
+	success_url = '/vocabularies/'
+	
+	def get_object(self):
+		object = super(VocabularyDeleteView, self).get_object()
+		if (object.uploader.id != self.request.user.id):
+			res = HttpResponse("Unauthorized")
+			res.status_code = 401
+			return res
+		return object
+		
+class VocabularyVisualize(DetailView):
+	model = Vocabulary
+	template_name = 'vocabulary/visualize.html'
+	context_object_name = 'vocabulary'
+	
 def rateDataset(request, pk, vt):
 	vocid = int(pk)
 	voteSubmitted = int(vt)
-	
+		
 	if request.is_ajax():
+		dataJson = []
+		res = {}
+		
 		if (not request.user.is_authenticated()):
 			res['result'] = "You must be logged in to rate."
 			code = 403
@@ -166,9 +229,11 @@ def rateDataset(request, pk, vt):
 						res['result'] = "You have already ranked this vocabulary."
 						code = 403
 					else:
+						#Create ranking object
 						vocabulary = Vocabulary.objects.get(id=vocid)
 						ranking = VocabularyRanking.objects.create(voter=request.user, vocabularyRanked=vocabulary, vote=voteSubmitted)
 						ranking.save()
+						#Edit vocabulary ranking
 						vocabulary.votes = vocabulary.votes + 1
 						vocabulary.score = vocabulary.score + voteSubmitted
 						vocabulary.save()
@@ -203,7 +268,8 @@ def postComment(request, pk):
 				res['result'] = "You must be logged in to comment."
 				code = 403
 			else:
-				comment = VocabularyComments.objects.create(commentText = commentTxt, vocabularyCommented = Vocabulary.objects.get(id=vocid), user = request.user)
+				#Create and store the comment
+				comment = VocabularyComments.objects.create(commentText = commentTxt, vocabularyCommented = Vocabulary.objects.get(id=vocid), user = request.user, timePosted = datetime.now())
 				comment.save()
 				res['result'] = "Your comment was submitted."
 				code = 200

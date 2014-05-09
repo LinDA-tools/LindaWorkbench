@@ -12,7 +12,7 @@
 		
 		<div class="username right">
 		{% if user.is_authenticated %}
-			{% trans "Welcome back" %}, {{user|nice_name}}.
+			{% trans "Welcome back" %}, <a href="/profile/{{user.id}}">{{user|nice_name}}</a>.
 			<a href="/messages/inbox" class="unread-counter">
 				{% if inbox_count %} {% inbox_count %} {% endif %}<img src="/static/images/mail.png" class="admin-icon"/>
 			</a> 

@@ -11,12 +11,15 @@
 			<h1 class="page-title inline">{{vocabulary.title}}</h1>
 			<p class="upload-info">{% trans "Uploaded by" %} <a href="/profile/{{vocabulary.uploader.id}}">{{vocabulary.uploader|nice_name}}</a> {% trans "on" %} {{vocabulary.dateCreated}}.</p>
 			<p><a href="{{vocabulary.originalUrl}}" target="_blank">{% trans "Visit original page" %}</a></p>
+			{% if vocabulary.category %}
+				<p class="upload-info">{% trans "Category" %}: {{vocabulary.get_category_display}}</p>
+			{% endif %}
 			<p class="description">{{vocabulary.description}}</p>
 			
 			
 			<div class="comments">
+				<h2>{% trans "Discussion" %}</h2>
 				{% if comments %}
-					<h2>{% trans "Discussion" %}</h2>
 					{% for comment in comments %}
 						<div class="comment">
 							{% if comment.user.profile.avatar.photo_original %}
@@ -26,7 +29,7 @@
 								<img src="/static/images/avatar.jpg" width=50 height=50 class="profile-image-small" />
 							{% endif %}
 							<div class="comment-content">
-								<div class="comment-author"><a href="/profile/{{comment.user.id}}/">{{comment.user|nice_name}}</a></div>
+								<div class="comment-author"><a href="/profile/{{comment.user.id}}/">{{comment.user|nice_name}}</a><span class="commentTime">, {{comment.timePosted|timesince}} {% trans "ago" %}.</span></div>
 								<div class="comment-text">
 									{{comment.commentText}}
 								</div>
@@ -106,37 +109,38 @@
 			<div class="sidebar-block">
 				<h3 class="sidebar-title">{% trans "Download" %}</h3>
 				
-				<a href="{{vocabulary.downloadUrl}}" class="button green sidebar-button">
+				<a href="{{vocabulary.downloadUrl}}" target="_blank" class="button green sidebar-button">
 					{% trans "Get Source" %}
 				</a>
 				
-				<div class="button green clearfix select-button sidebar-button" onclick="$('.dropdown-menu').toggle();">
+				<div id="download-dropdown-button" class="button green clearfix select-button sidebar-button">
 					<span class="filter-option">{% trans "Download as" %}</span>&nbsp;<span class="caret"></span>
 				</div>
 				
 				<ul id="download-drop-down" class="dropdown-menu" role="menu">
 					<span class="arrow-up"></span>
-					<li rel="1" class=""><div tabindex="-1" onclick="$('.dropdown-menu').toggle();">
+					<li rel="1" class=""><div tabindex="-1" >
 						<span class="pull-left">{% trans "A standard rdf/xml file" %}</span>
 					</div></li>
-					<li rel="2"><div tabindex="-1" onclick="$('.dropdown-menu').toggle();">
+					<li rel="2"><div tabindex="-1" >
 						<span class="pull-left">{% trans "A n3 file" %}</span>
 					</div></li>
-					<li rel="3" class="selected"><div tabindex="-1" onclick="$('.dropdown-menu').toggle();">
+					<li rel="3"><div tabindex="-1" >
 						<span class="pull-left">{% trans "NTriples" %}</span>
 					</div></li>
 				</ul>
 				
 			</div>
 			
-			<a href="/vocabulary/{{vocabulary.id}}/visualize" class="button sidebar-button green">{% trans "Visualize" %}</a>
+			<a href="/vocabulary/{{vocabulary.id}}/{{vocabulary.title_slug}}/visualize/" class="button sidebar-button green">{% trans "Visualize" %}</a>
 			
-			<div class="sidebar-block">
-				<h3 class="sidebar-title">{% trans "Actions" %}</h3>
-				<a href="/vocabulary/{{vocabulary.id}}/edit" class="button sidebar-button blue">{% trans "Edit" %}</a>
-				<a href="/vocabulary/{{vocabulary.id}}/delete" class="button sidebar-button red">{% trans "Delete" %}</a>
-			</div>
-			
+			{% if user.id == vocabulary.uploader.id %}
+				<div class="sidebar-block">
+					<h3 class="sidebar-title">{% trans "Actions" %}</h3>
+					<a href="/vocabulary/{{vocabulary.id}}/{{vocabulary.title_slug}}/edit"   class="button sidebar-button blue">{% trans "Edit" %}</a>
+					<a href="/vocabulary/{{vocabulary.id}}/{{vocabulary.title_slug}}/delete" class="button sidebar-button red">{% trans "Delete" %}</a>
+				</div>
+			{% endif %}
 		</aside>
 	</div>
 {% endblock %}
@@ -156,29 +160,36 @@
 						console.log(JSON.stringify(result));
 					},
 				});
-			});
-			
-			$(".dropdown-menu > li > a").click(function() {
-				$('.dropdown-menu').toggle();
-			});
-			
-			$("#comment-post-button").click(function() {
-				$.ajax({
-					url: "/vocabulary/{{vocabulary.id}}/comment/",
-					type: 'POST',
-					data: 	{"comment": $("#comment-text-input").val(),
-							"csrfmiddlewaretoken": '{{ csrf_token }}'
-							},
-					
-					success: function(result){
-						$("#comment-text-input").val('');
-						window.location.reload();
-					},
-					error: function(result){
-						console.log(JSON.stringify(result));
-					},
-				});
-			});
+			});			
 		</script>
 	{% endif %}
+	
+	<script>
+	
+		$("#download-dropdown-button").click(function() {
+			$('.dropdown-menu').toggle();
+		});
+			
+		$("#download-drop-down > li > div").click(function() {
+			$('.dropdown-menu').toggle();
+		});
+
+		$("#comment-post-button").click(function() {
+			$.ajax({
+				url: "/vocabulary/{{vocabulary.id}}/comment/",
+				type: 'POST',
+				data: 	{"comment": $("#comment-text-input").val(),
+						"csrfmiddlewaretoken": '{{ csrf_token }}'
+						},
+				
+				success: function(result){
+					$("#comment-text-input").val('');
+					window.location.reload();
+				},
+				error: function(result){
+					console.log(JSON.stringify(result));
+				},
+			});
+		});
+	</script>
 {% endblock %}

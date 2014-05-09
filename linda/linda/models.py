@@ -8,6 +8,8 @@ from PIL import Image
 from imagekit.models import ImageSpecField
 from athumb.fields import ImageWithThumbsField
 
+import datetime
+
 User.profile = property(lambda u: UserProfile.objects.get_or_create(user=u)[0])
 
 photo_upload_path = 'static/images/photos/'
@@ -83,6 +85,8 @@ class VocabularyRanking(models.Model):
 	vote = models.IntegerField()
 	
 class VocabularyComments(models.Model):
-	commentText = models.CharField(max_length=512, blank=False, null=False)
-	vocabularyCommented = models.ForeignKey(Vocabulary)
-	user = models.ForeignKey(User)
+	commentText = models.CharField(max_length=512, blank=False, null=False) #Comment content
+	vocabularyCommented = models.ForeignKey(Vocabulary) #Vocabulary-discussion
+	user = models.ForeignKey(User) #Comment author
+	timePosted = models.DateTimeField(blank=True, null=True) #Comment timestamp
+
