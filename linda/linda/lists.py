@@ -347,10 +347,10 @@ EXTENSION = (
 )
 
 DATASET_STATE = (
-        ('AA', _('Awaiting Approval')),
-        ('AP', _('Approved')),
-        ('RE', _('Rejected')),
-    )
+    ('AA', _('Awaiting Approval')),
+    ('AP', _('Approved')),
+    ('RE', _('Rejected')),
+)
 
 CATEGORIES = (
     ('AG', _('Agriculture')),
@@ -430,7 +430,7 @@ LICENSES = (
 
 EXTENSION_DESCRIPTION = {
     'CF': '<img width="68px" height="68px" src="/s/imgs/r_CF.png"/><div><b>Conversion to other format</b></div><div>Convert the original dataset to another format (e.g. from .pdf to excel)</div><div style="margin-top:15px">You can read more about this <a style="color:#DE4F15" href="/wiki/data_curation" >here</a></div>',
-    'DC' : ' <img width="68px" height="68px" src="/s/imgs/r_DC.png"/><div><b>Data Cleansing</b></div><div>Data cleansing, data cleaning or data scrubbing is the process of detecting and correcting (or removing) corrupt or inaccurate records from a record set, table, or database. Used mainly in databases, the term refers to identifying incomplete, incorrect, inaccurate, irrelevant, etc. parts of the data and then replacing, modifying, or deleting this dirty data</div><div style="margin-top:15px">You can read more about this <a style="color:#DE4F15" href="/wiki/data_curation" >here</a></div>',
+    'DC': ' <img width="68px" height="68px" src="/s/imgs/r_DC.png"/><div><b>Data Cleansing</b></div><div>Data cleansing, data cleaning or data scrubbing is the process of detecting and correcting (or removing) corrupt or inaccurate records from a record set, table, or database. Used mainly in databases, the term refers to identifying incomplete, incorrect, inaccurate, irrelevant, etc. parts of the data and then replacing, modifying, or deleting this dirty data</div><div style="margin-top:15px">You can read more about this <a style="color:#DE4F15" href="/wiki/data_curation" >here</a></div>',
     'ME': ' <img width="68px" height="68px" src="/s/imgs/r_ME.png"/><div><b>Metadata Enrichment</b></div><div>Metadata Enrichment is the process of adding more information to the metadata describing the dataset</div><div style="margin-top:15px">You can read more about this <a style="color:#DE4F15" href="/wiki/data_curation" >here</a></div>',
     'DE': '<img width="68px" height="68px" src="/s/imgs/r_DE.png"/><div><b>Data Enrichment</b></div><div>Data Enrichment is a value adding process, where external data from multiple sources is added to the existing dataset to enhance the quality and richness of the data.This process provides more information of the dataset to the users</div><div style="margin-top:15px">You can read more about the recommended Data Enrichment procedures <a style="color:#DE4F15" href="/wiki/data_curation" >here</a></div>',
     'SR': '<img width="68px" height="68px" src="/s/imgs/r_SR.png"/><div><b>Snapshots of real-time data</b></div><div>Snapshots of real-time data is the process of capturing a snapshot of dynamic, real-time data. The snapshots indicate the captured time period of the datasets </div><div style="margin-top:15px">You can read more about this <a style="color:#DE4F15" href="/wiki/data_curation" >here</a></div>',
@@ -617,7 +617,7 @@ PUBLICATION_TYPES = (
 
 DATASET_REQUESTS_TYPES = (
     ('', _('Please choose a request type..')),
-    ('SD',_('Looking for a dataset')),
+    ('SD', _('Looking for a dataset')),
     ('CF', _('Conversion to other format')),
     ('DC', _('Data Cleansing')),
     ('ME', _('Metadata Enrichment')),

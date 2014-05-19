@@ -4,7 +4,7 @@
 {% block bodyclass %}profile{% endblock %}
 
 {% block scripts %}
-	<script>
+<script>
 	function validateForm(){
 			x = $("#id_scientific_background_chzn span").html();
 			y = $("#id_rpg_class_chzn span").html();
@@ -40,8 +40,9 @@
 			  return false;
 			  }
 			}
-	</script>
-    <script>
+
+</script>
+<script>
     $(function() {
 		//$('.chzn-select').chosen();
         $('#avatar-change').on('click', function() {
@@ -53,111 +54,118 @@
             $('#avatar-change').click();
 		});
     });
-    </script>
+
+</script>
 {% endblock %}
 
 {% block content %}
 
 
-<div class="main" >
-	<h1 class="page-title">{% trans "User profile" %}</h1>
-			
-		<form id="account-settings-edit-form" class="form profile-edit-form" method="post" onsubmit="return validateForm()" action="/profile/{{ user.id }}/edit" enctype="multipart/form-data">{% csrf_token %}
-			<div class="profile-edit-column">
-				<div class="error">{{ form.errors }}</div>
-				<div class="error">{{ form.non_field_errors.as_text }}</div>
-				
-				<h2 class="info">{% trans "Basic information" %}</h2>
-					
-				<div class="avatar-photo-container">
-					<div class="avatar-photo">
-						{% if userModel.profile.avatar.photo_original %}
-							{% thumbnail userModel.profile.avatar.photo_original "150x150" as avatar %}
-							<img width=150 height=150 src="{{ avatar }}" class="user-avatar image-rounded"/>
-						{% else %}
-							<img width=150 height=150 src="/static/images/avatar.jpg" class="user-avatar image-rounded"/>
-						{% endif %}
-					</div>
-					<div id="avatar-change" class="button blue photo-change-button">{% trans "change photo" %}</div>
-				</div>	
-				
-				<div id="avatar-change-input"></div>
+<div class="main">
+    <h1 class="page-title">{% trans "User profile" %}</h1>
 
-				<div id="errorlabel" ></div>
+    <form id="account-settings-edit-form" class="form profile-edit-form" method="post" onsubmit="return validateForm()"
+          action="/profile/{{ user.id }}/edit" enctype="multipart/form-data">{% csrf_token %}
+        <div class="profile-edit-column">
+            <div class="error">{{ form.errors }}</div>
+            <div class="error">{{ form.non_field_errors.as_text }}</div>
 
-				{{ form.first_name.label_tag }}
-				{{ form.first_name }}
-				{{ form.first_name.errors.as_text }}<br />
-				{{ form.last_name.label_tag }}
-				{{ form.last_name }}
-				{{ form.last_name.errors.as_text }}<br />
-				{{ form.username.label_tag }}
-				{{ form.username }}
-				{{ form.username.errors.as_text }}
-				
-				<h2 class="info">{% trans "About you..." %}</h2>
-				
-				<label>{% trans "Background" %}</label><br />
-				{{ userProfileForm.scientific_background }}
-				{{ userProfileForm.scientific_background.errors.as_text }}
-				
-				{{ userProfileForm.errors }}
-				<div class="error">{{ userProfileForm.non_field_errors.as_text }}</div>
-				<div class="hidden">
-					{{ userProfileForm.nameAppearance.label_tag }}
-					{{ userProfileForm.nameAppearance }}
-					{{ userProfileForm.nameAppearance.errors.as_text }}
-				</div>
-				<div class="hidden">
-					{{ userProfileForm.city.label_tag }}
-					{{ userProfileForm.city }}
-					{{ userProfileForm.city.errors.as_text }}
-				</div>
-				{{ userProfileForm.country.label_tag }} <br />
-				{{ userProfileForm.country }}<br />
-				<div id="errorlabel2"></div>
-				{{ userProfileForm.country.errors.as_text }}
-			</div>
-			<div class="profile-edit-column">
-					<div id="social_contact">
-					<h2 class="info">{% trans "Contact" %}</h2>
-						{{ form.email.errors.as_text }}
-						<div class="social user-email">
-							<label class="social">{% trans "Email Address" %}</label>{{ form.email }}
-						</div>
-						<div class="social user-facebook">
-							<label class="social">Facebook URL</label>{{ userProfileForm.facebookUrl }}
-						</div>
-						<span class="error">{{ userProfileForm.facebookUrl.errors.as_text }}</span>
-					    <div class="social user-twitter">
-							<label class="social">Twitter URL</label>{{ userProfileForm.twitterUrl }}
-						</div>
-						<span class="error">{{ userProfileForm.twitterUrl.errors.as_text }}</span>
-						<div class="social user-google">
-							<label class="social">Google+ URL</label>{{ userProfileForm.googleUrl }}
-						</div>
-						
-						<span class="error">{{ userProfileForm.googleUrl.errors.as_text }}</span>
-						<div class="social user-linkedin">
-							<label class="social">LinkedIn URL</label>{{ userProfileForm.linkedInUrl }}
-						</div>
-						
-						<span class="error">{{ userProfileForm.linkedInUrl.errors.as_text }}</span>
-						<div class="social user-personalweb">
-							<label class="social">{% trans "Personal Website" %} URL</label>{{ userProfileForm.websiteUrl }}
-						</div>
-						
-						<span class="error">{{ userProfileForm.websiteUrl.errors.as_text }}</span>
-					</div>
-			</div>
+            <h2 class="info">{% trans "Basic information" %}</h2>
 
-					<div class="form-actions">
-						<input type="submit" class='form-submit button blue' value='{% trans "Save Profile" %}'/>
-						<a href="/profile/{{ user.id }}" class='button button-red-rounded'>{% trans "Cancel" %}</a>
-					</div>
-				</form>
-			</div>
-		</div>
-	</div>
+            <div class="avatar-photo-container">
+                <div class="avatar-photo">
+                    {% if userModel.profile.avatar.photo_original %}
+                    {% thumbnail userModel.profile.avatar.photo_original "150x150" as avatar %}
+                    <img width=150 height=150 src="{{ avatar }}" class="user-avatar image-rounded"/>
+                    {% else %}
+                    <img width=150 height=150 src="/static/images/avatar.jpg" class="user-avatar image-rounded"/>
+                    {% endif %}
+                </div>
+                <div id="avatar-change" class="button blue photo-change-button">{% trans "change photo" %}</div>
+            </div>
+
+            <div id="avatar-change-input"></div>
+
+            <div id="errorlabel"></div>
+
+            {{ form.first_name.label_tag }}
+            {{ form.first_name }}
+            {{ form.first_name.errors.as_text }}<br/>
+            {{ form.last_name.label_tag }}
+            {{ form.last_name }}
+            {{ form.last_name.errors.as_text }}<br/>
+            {{ form.username.label_tag }}
+            {{ form.username }}
+            {{ form.username.errors.as_text }}
+
+            <h2 class="info">{% trans "About you..." %}</h2>
+
+            <label>{% trans "Background" %}</label><br/>
+            {{ userProfileForm.scientific_background }}
+            {{ userProfileForm.scientific_background.errors.as_text }}
+
+            {{ userProfileForm.errors }}
+            <div class="error">{{ userProfileForm.non_field_errors.as_text }}</div>
+            <div class="hidden">
+                {{ userProfileForm.nameAppearance.label_tag }}
+                {{ userProfileForm.nameAppearance }}
+                {{ userProfileForm.nameAppearance.errors.as_text }}
+            </div>
+            <div class="hidden">
+                {{ userProfileForm.city.label_tag }}
+                {{ userProfileForm.city }}
+                {{ userProfileForm.city.errors.as_text }}
+            </div>
+            {{ userProfileForm.country.label_tag }} <br/>
+            {{ userProfileForm.country }}<br/>
+
+            <div id="errorlabel2"></div>
+            {{ userProfileForm.country.errors.as_text }}
+        </div>
+        <div class="profile-edit-column">
+            <div id="social_contact">
+                <h2 class="info">{% trans "Contact" %}</h2>
+                {{ form.email.errors.as_text }}
+                <div class="social user-email">
+                    <label class="social">{% trans "Email Address" %}</label>{{ form.email }}
+                </div>
+                <div class="social user-facebook">
+                    <label class="social">Facebook URL</label>{{ userProfileForm.facebookUrl }}
+                </div>
+                <span class="error">{{ userProfileForm.facebookUrl.errors.as_text }}</span>
+
+                <div class="social user-twitter">
+                    <label class="social">Twitter URL</label>{{ userProfileForm.twitterUrl }}
+                </div>
+                <span class="error">{{ userProfileForm.twitterUrl.errors.as_text }}</span>
+
+                <div class="social user-google">
+                    <label class="social">Google+ URL</label>{{ userProfileForm.googleUrl }}
+                </div>
+
+                <span class="error">{{ userProfileForm.googleUrl.errors.as_text }}</span>
+
+                <div class="social user-linkedin">
+                    <label class="social">LinkedIn URL</label>{{ userProfileForm.linkedInUrl }}
+                </div>
+
+                <span class="error">{{ userProfileForm.linkedInUrl.errors.as_text }}</span>
+
+                <div class="social user-personalweb">
+                    <label class="social">{% trans "Personal Website" %} URL</label>{{ userProfileForm.websiteUrl }}
+                </div>
+
+                <span class="error">{{ userProfileForm.websiteUrl.errors.as_text }}</span>
+            </div>
+        </div>
+
+        <div class="form-actions">
+            <input type="submit" class='form-submit button blue' value='{% trans "Save Profile" %}'/>
+            <a href="/profile/{{ user.id }}" class='button button-red-rounded'>{% trans "Cancel" %}</a>
+        </div>
+    </form>
+</div>
+</div>
+</div>
 </div>
 {% endblock %}
