@@ -9,34 +9,28 @@ from forms import *
 from itertools import chain
 from datetime import datetime
 
-
 class UserListView(ListView):
     model = User
     template_name = 'users/community.html'
     context_object_name = 'users'
     paginate_by = 20
-
-
+	
 def index(request):
-    params = {}
-    return render(request, 'index.html', params)
-
-
+	params = {}
+	return render(request, 'index.html', params)
+	
 def terms(request):
-    params = {}
-    return render(request, 'terms.html', params)
-
-
+	params = {}
+	return render(request, 'terms.html', params)
+	
 def sparql(request):
-    params = {}
-    return render(request, 'sparql.html', params)
-
-
+	params = {}
+	return render(request, 'sparql.html', params)
+	
 def profile(request, pk):
-    user = User.objects.get(pk=pk)
-    params = {'userModel': user}
-    return render(request, 'users/profile.html', params)
-
+	user = User.objects.get(pk=pk)
+	params = {'userModel': user}
+	return render(request, 'users/profile.html', params)
 
 class UserUpdateView(UpdateView):
     form_class = UserForm
@@ -61,7 +55,7 @@ class UserUpdateView(UpdateView):
             return super(UserUpdateView, self).get(self, *args, **kwargs)
 
     def get_success_url(self, **kwargs):
-
+        
         return "/profile/" + kwargs.get('pk')
 
     def post(self, *args, **kwargs):
@@ -70,7 +64,7 @@ class UserUpdateView(UpdateView):
             res.status_code = 401
             return res
         else:
-            data = self.request.POST
+            data=self.request.POST
             user = self.request.user
             data['password'] = user.password
             data['date_joined'] = user.date_joined
@@ -99,209 +93,195 @@ class UserUpdateView(UpdateView):
                 'userProfileForm': userProfileForm,
                 'userModel': user
             })
-
-
+	
 def users(request):
-    if request.is_ajax():
-        q = request.GET.get('term', '')
-        usernameList = User.objects.filter(username__icontains=q)
-        last_nameList = User.objects.filter(first_name__icontains=q)
-        first_nameList = User.objects.filter(first_name__icontains=q)
-        userList = usernameList | first_nameList | last_nameList
-        results = []
-        for user in userList[:20]:
-            user_json = {}
-            user_json['id'] = user.id
-            if user.get_full_name():
-                user_json['label'] = user.get_full_name() + ' (' + user.username + ')'
-            else:
-                user_json['label'] = user.username
-            user_json['value'] = user.username
-            results.append(user_json)
-
-        data = json.dumps(results)
-    else:
-        data = 'fail'
-    mimetype = 'application/json'
-    return HttpResponse(data, mimetype)
-
-
+	if request.is_ajax():
+		q = request.GET.get('term', '')
+		usernameList = User.objects.filter(username__icontains = q )
+		last_nameList = User.objects.filter(first_name__icontains = q )
+		first_nameList = User.objects.filter(first_name__icontains = q )
+		userList = usernameList | first_nameList | last_nameList
+		results = []
+		for user in userList[:20]:
+			user_json = {}
+			user_json['id'] = user.id
+			if user.get_full_name():
+				user_json['label'] = user.get_full_name() + ' (' + user.username + ')'
+			else:
+				user_json['label'] = user.username
+			user_json['value'] = user.username
+			results.append(user_json)
+	
+		data = json.dumps(results)
+	else:
+		data = 'fail'
+	mimetype = 'application/json'
+	return HttpResponse(data, mimetype)
+	
 class VocabularyDetailsView(DetailView):
-    model = Vocabulary
-    template_name = 'vocabulary/details.html'
-    context_object_name = 'vocabulary'
+	model = Vocabulary
+	template_name = 'vocabulary/details.html'
+	context_object_name = 'vocabulary'
+	
+	def get(self, *args, **kwargs):
+		vocabulary = Vocabulary.objects.get(pk=kwargs.get('pk'))
+		if not vocabulary.title_slug() == kwargs.get('slug'):
+			return redirect(vocabulary.get_absolute_url())
 
-    def get(self, *args, **kwargs):
-        vocabulary = Vocabulary.objects.get(pk=kwargs.get('pk'))
-        if not vocabulary.title_slug() == kwargs.get('slug'):
-            return redirect(vocabulary.get_absolute_url())
-
-        return super(VocabularyDetailsView, self).get(self, *args, **kwargs)
-
-    def get_context_data(self, **kwargs):
-        context = super(VocabularyDetailsView, self).get_context_data(**kwargs)
-
-        #Load comments
-        context['comments'] = VocabularyComments.objects.filter(vocabularyCommented=context['vocabulary'])
-
-        #Check if user has voted for this vocabulary
-        if self.request.user.is_authenticated():
-            if (
-            VocabularyRanking.objects.filter(vocabularyRanked=context['vocabulary'], voter=self.request.user).exists()):
-                context['hasVoted'] = True
-                context['voteSubmitted'] = \
-                VocabularyRanking.objects.filter(vocabularyRanked=context['vocabulary'], voter=self.request.user)[
-                    0].vote
-            else:
-                context['hasVoted'] = False
-
-        return context
-
+		return super(VocabularyDetailsView, self).get(self, *args, **kwargs)
+		
+	def get_context_data(self, **kwargs):
+		context = super(VocabularyDetailsView, self).get_context_data(**kwargs)
+		
+		#Load comments
+		context['comments'] = VocabularyComments.objects.filter(vocabularyCommented=context['vocabulary'])
+		
+		#Check if user has voted for this vocabulary
+		if self.request.user.is_authenticated():
+			if (VocabularyRanking.objects.filter(vocabularyRanked=context['vocabulary'], voter=self.request.user).exists()):
+				context['hasVoted'] = True
+				context['voteSubmitted'] = VocabularyRanking.objects.filter(vocabularyRanked=context['vocabulary'], voter=self.request.user)[0].vote
+			else:
+				context['hasVoted'] = False
+			
+		return context
 
 class VocabularyUpdateView(UpdateView):
-    form_class = VocabularyUpdateForm
-    model = Vocabulary
-    template_name = 'vocabulary/edit.html'
-    context_object_name = 'vocabulary'
+	form_class = VocabularyUpdateForm
+	model = Vocabulary
+	template_name = 'vocabulary/edit.html'
+	context_object_name = 'vocabulary'
+	
+	def get_object(self):
+		object = super(VocabularyUpdateView, self).get_object()
+		if (object.uploader.id != self.request.user.id):
+			res = HttpResponse("Unauthorized")
+			res.status_code = 401
+			return res
+		return object
+		
+	def get_context_data(self, **kwargs):
+		context = super(VocabularyUpdateView, self).get_context_data(**kwargs)
+		
+		#Load categories
+		context['categories'] = CATEGORIES
+		
+		return context
+		
+	def post(self, *args, **kwargs):
+		oldVocabulary = Vocabulary.objects.get(pk=kwargs.get('pk'))
 
-    def get_object(self):
-        object = super(VocabularyUpdateView, self).get_object()
-        if (object.uploader.id != self.request.user.id):
-            res = HttpResponse("Unauthorized")
-            res.status_code = 401
-            return res
-        return object
-
-    def get_context_data(self, **kwargs):
-        context = super(VocabularyUpdateView, self).get_context_data(**kwargs)
-
-        #Load categories
-        context['categories'] = CATEGORIES
-
-        return context
-
-    def post(self, *args, **kwargs):
-        oldVocabulary = Vocabulary.objects.get(pk=kwargs.get('pk'))
-
-        data = self.request.POST
-        data['dateModified'] = datetime.now()
-
-        vocabularyForm = VocabularyUpdateForm(data, instance=oldVocabulary)
-
-        #Validate form
-        if vocabularyForm.is_valid():
-            vocabularyForm.save()
-            return redirect("/vocabulary/" + kwargs.get('pk'))
-        else:
-            return render(self.request, 'vocabulary/edit.html', {
-            'current': 'vocabulary',
-            'form': vocabularyForm,
-            })
-
-
+		data = self.request.POST
+		data['dateModified'] = datetime.now()
+		
+		vocabularyForm = VocabularyUpdateForm(data, instance=oldVocabulary)
+		
+		#Validate form
+		if vocabularyForm.is_valid():
+			vocabularyForm.save()
+			return redirect("/vocabulary/" + kwargs.get('pk'))
+		else:
+			return render(self.request, 'vocabulary/edit.html', {
+				'current': 'vocabulary',
+				'form': vocabularyForm,
+			})
+	
 class VocabularyDeleteView(DeleteView):
-    model = Vocabulary
-    template_name = 'vocabulary/delete.html'
-    context_object_name = 'vocabulary'
-    success_url = '/vocabularies/'
-
-    def get_object(self):
-        object = super(VocabularyDeleteView, self).get_object()
-        if (object.uploader.id != self.request.user.id):
-            res = HttpResponse("Unauthorized")
-            res.status_code = 401
-            return res
-        return object
-
-
+	model = Vocabulary
+	template_name = 'vocabulary/delete.html'
+	context_object_name = 'vocabulary'
+	success_url = '/vocabularies/'
+	
+	def get_object(self):
+		object = super(VocabularyDeleteView, self).get_object()
+		if (object.uploader.id != self.request.user.id):
+			res = HttpResponse("Unauthorized")
+			res.status_code = 401
+			return res
+		return object
+		
 class VocabularyVisualize(DetailView):
-    model = Vocabulary
-    template_name = 'vocabulary/visualize.html'
-    context_object_name = 'vocabulary'
-
-
+	model = Vocabulary
+	template_name = 'vocabulary/visualize.html'
+	context_object_name = 'vocabulary'
+	
 def rateDataset(request, pk, vt):
-    vocid = int(pk)
-    voteSubmitted = int(vt)
-
-    if request.is_ajax():
-        dataJson = []
-        res = {}
-
-        if (not request.user.is_authenticated()):
-            res['result'] = "You must be logged in to rate."
-            code = 403
-        else:
-            if ((voteSubmitted < 1) or (voteSubmitted > 5)):
-                res['result'] = "Invalid vote " + voteSubmitted + ", votes must be between 1 and 5."
-                code = 401
-            else:
-                if (not Vocabulary.objects.get(id=vocid)):
-                    res['result'] = "Vocabulary does not exist."
-                    code = 404
-                else:
-                    if (VocabularyRanking.objects.filter(vocabularyRanked=Vocabulary.objects.get(id=vocid),
-                                                         voter=request.user).exists()):
-                        res['result'] = "You have already ranked this vocabulary."
-                        code = 403
-                    else:
-                        #Create ranking object
-                        vocabulary = Vocabulary.objects.get(id=vocid)
-                        ranking = VocabularyRanking.objects.create(voter=request.user, vocabularyRanked=vocabulary,
-                                                                   vote=voteSubmitted)
-                        ranking.save()
-                        #Edit vocabulary ranking
-                        vocabulary.votes = vocabulary.votes + 1
-                        vocabulary.score = vocabulary.score + voteSubmitted
-                        vocabulary.save()
-                        res['result'] = "Your vote was submitted."
-                        code = 200
-
-        dataJson.append(res)
-        data = json.dumps(dataJson)
-    else:
-        data = 'fail'
-        code = 401
-
-    #Create the response
-    mimetype = 'application/json'
-    response = HttpResponse(data, mimetype)
-    response.status_code = code
-    return response
-
-
+	vocid = int(pk)
+	voteSubmitted = int(vt)
+		
+	if request.is_ajax():
+		dataJson = []
+		res = {}
+		
+		if (not request.user.is_authenticated()):
+			res['result'] = "You must be logged in to rate."
+			code = 403
+		else:
+			if ((voteSubmitted<1) or (voteSubmitted>5)):
+				res['result'] = "Invalid vote " + voteSubmitted + ", votes must be between 1 and 5."
+				code = 401
+			else:
+				if (not Vocabulary.objects.get(id=vocid)):
+					res['result'] = "Vocabulary does not exist."
+					code = 404
+				else:
+					if (VocabularyRanking.objects.filter(vocabularyRanked=Vocabulary.objects.get(id=vocid), voter=request.user).exists()):
+						res['result'] = "You have already ranked this vocabulary."
+						code = 403
+					else:
+						#Create ranking object
+						vocabulary = Vocabulary.objects.get(id=vocid)
+						ranking = VocabularyRanking.objects.create(voter=request.user, vocabularyRanked=vocabulary, vote=voteSubmitted)
+						ranking.save()
+						#Edit vocabulary ranking
+						vocabulary.votes = vocabulary.votes + 1
+						vocabulary.score = vocabulary.score + voteSubmitted
+						vocabulary.save()
+						res['result'] = "Your vote was submitted."
+						code = 200
+					
+		dataJson.append(res)
+		data = json.dumps(dataJson)
+	else:
+		data = 'fail'
+		code = 401
+	
+	#Create the response
+	mimetype = 'application/json'
+	response = HttpResponse(data, mimetype)
+	response.status_code = code
+	return response
+	
 def postComment(request, pk):
-    vocid = int(pk)
-    commentTxt = request.POST['comment']
-
-    if request.is_ajax():
-        dataJson = []
-        res = {}
-
-        if (not Vocabulary.objects.get(id=vocid)):
-            res['result'] = "Vocabulary does not exist."
-            code = 404
-        else:
-            if (not request.user.is_authenticated()):
-                res['result'] = "You must be logged in to comment."
-                code = 403
-            else:
-                #Create and store the comment
-                comment = VocabularyComments.objects.create(commentText=commentTxt,
-                                                            vocabularyCommented=Vocabulary.objects.get(id=vocid),
-                                                            user=request.user, timePosted=datetime.now())
-                comment.save()
-                res['result'] = "Your comment was submitted."
-                code = 200
-
-        dataJson.append(res)
-        data = json.dumps(dataJson)
-    else:
-        data = 'fail'
-        code = 401
-
-    #Create the response
-    mimetype = 'application/json'
-    response = HttpResponse(data, mimetype)
-    response.status_code = code
-    return response
+	vocid = int(pk)
+	commentTxt = request.POST['comment']
+	
+	if request.is_ajax():
+		dataJson = []
+		res = {}
+		
+		if (not Vocabulary.objects.get(id=vocid)):
+			res['result'] = "Vocabulary does not exist."
+			code = 404
+		else:
+			if (not request.user.is_authenticated()):
+				res['result'] = "You must be logged in to comment."
+				code = 403
+			else:
+				#Create and store the comment
+				comment = VocabularyComments.objects.create(commentText = commentTxt, vocabularyCommented = Vocabulary.objects.get(id=vocid), user = request.user, timePosted = datetime.now())
+				comment.save()
+				res['result'] = "Your comment was submitted."
+				code = 200
+	
+		dataJson.append(res)
+		data = json.dumps(dataJson)
+	else:
+		data = 'fail'
+		code = 401
+		
+	#Create the response
+	mimetype = 'application/json'
+	response = HttpResponse(data, mimetype)
+	response.status_code = code
+	return response

@@ -1,35 +1,33 @@
 {% load i18n %}
 
 <div class="pagination centered">
-    {%if page_obj.has_previous %}
-    <span class="prev align-left"><a href="{{current_url}}?page={{page_obj.number|add:'-1'}}"
-                                     title="{% trans 'previous' %}">&lsaquo;</a></span>
-    {% endif %}
-    <ul class="inline">
-        {% for curpage in page_obj.paginator.page_range %}
-
-
-        {% if page_obj.number == curpage %}
-        <li><span class="current">{{curpage}}</span></li>
-        {% elif forloop.first %}
-        <li><a href="{{current_url}}?page={{curpage}}">{{curpage}}</a></li>
-        {% if page_obj.number|add:"-4" > 1 and forloop.first %}
-        <li>...</li>
-        {% endif %}
-        {% elif forloop.last %}
-        {% if page_obj.number|add:"4" < curpage %}
-        <li>...</li>
-        {% endif %}
-        <li><a href="{{current_url}}?page={{curpage}}">{{curpage}}</a></li>
-        {% elif page_obj.number|add:"3" < curpage or page_obj.number|add:"-3" > curpage %}
-        {% else %}
-        <li><a href="{{current_url}}?page={{curpage}}">{{curpage}}</a></li>
-        {% endif %}
-
-        {% endfor %}
-    </ul>
-    {%if page_obj.has_next %}
-    <span class="next align-right"><a href="{{current_url}}?page={{page_obj.number|add:'1'}}"
-                                      title="{% trans 'next' %}">&rsaquo;</a></span>
-    {% endif %}
+	{%if page_obj.has_previous %}
+		<span class="prev align-left"><a href="{{current_url}}?page={{page_obj.number|add:'-1'}}" title="{% trans 'previous' %}">&lsaquo;</a></span>
+	{% endif %}
+	<ul class="inline">
+		{% for curpage in page_obj.paginator.page_range %}
+			
+				
+			{% if page_obj.number == curpage %}
+				<li><span class="current">{{curpage}}</span></li>
+			{% elif forloop.first %}
+				<li><a href="{{current_url}}?page={{curpage}}">{{curpage}}</a></li>	
+				{% if page_obj.number|add:"-4" > 1 and forloop.first %}
+					<li>...</li>
+				{% endif %}
+			{% elif forloop.last %}
+				{% if page_obj.number|add:"4" < curpage %}
+					<li>...</li>
+				{% endif %}
+				<li><a href="{{current_url}}?page={{curpage}}">{{curpage}}</a></li>
+			{% elif page_obj.number|add:"3" < curpage or page_obj.number|add:"-3" > curpage %}
+			{% else %}
+				<li><a href="{{current_url}}?page={{curpage}}">{{curpage}}</a></li>
+			{% endif %}
+			
+		{% endfor %}
+	</ul>
+	{%if page_obj.has_next %}
+		<span class="next align-right"><a href="{{current_url}}?page={{page_obj.number|add:'1'}}" title="{% trans 'next' %}">&rsaquo;</a></span>
+	{% endif %}
 </div><!-- pagination -->

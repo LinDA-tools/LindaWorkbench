@@ -7,63 +7,57 @@
 
 {% block content %}
 
-{% if user.is_authenticated %}
-{% include "account/snippets/already_logged_in.html" %}
-{% else %}
+	{% if user.is_authenticated %}
+		{% include "account/snippets/already_logged_in.html" %}
+	{% else %}
 
-<div class="main">
-    <div id="content" class="site-content centered" role="main">
-        <h1 class="page-title">{% trans "Register" %}</h1>
-
-        <div class="auth-form-body">
-
-            <div id="emailaccount">
-                <p>{% blocktrans %}Already have an account? Then please <a href="{{ login_url }}">sign in</a>.{%
-                    endblocktrans %}</p>
-
-                <form class="form" id="form-login" method="post" action="{% url 'account_signup' %}">
-                    {% csrf_token %}
-                    {{ form.non_field_errors }}
-
-                    <div class="table centered">
-                        <div class="row">
-                            <span class="cell">{%trans "Username" %}:<span
-                                    class="error">{{ form.username.errors }}</span></span>
-                            <input id="user_username" class="input-text cell" type="text" name="username"
-                                   required="required"/>
-                        </div>
-
-                        <div class="row">
-                            <span class="cell">{%trans "Password" %}:<span
-                                    class="error">{{ form.password1.errors }}</span></span>
-                            <input id="user_password" class="input-text cell" type="password" name="password1"
-                                   required="required"/>
-                        </div>
-
-                        <div class="row">
-                            <span class="cell">{%trans "Password (again)" %}:<span class="error">{{ form.password2.errors }}</span></span>
-                            <input id="user_password" class="input-text cell" type="password" name="password2"
-                                   required="required">
-                        </div>
-
-                        <div class="row">
-
-                            <span class="cell">{%trans "E-mail: (optional)" %}:<span class="error">{{ form.email.errors }}</span></span>
-                            <input id="user_email" class="input-email cell" type="email" name="email">
-                        </div>
-                    </div>
-
-                    {% if redirect_field_value %}
-                    <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}"/>
-                    {% endif %}
-
-                    <button class="button button-login blue" type="submit">{% trans "Sign Up" %} &raquo;</button>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-{% endif %}
+		<div class="main">
+			<div id="content" class="site-content centered" role="main">
+				<h1 class="page-title">{% trans "Register" %}</h1>
+				
+				<div class="auth-form-body">
+			
+					<div id="emailaccount">
+						<p>{% blocktrans %}Already have an account? Then please <a href="{{ login_url }}">sign in</a>.{% endblocktrans %}</p>
+			
+						<form class="form" id="form-login" method="post" action="{% url 'account_signup' %}">
+							{% csrf_token %}
+							{{ form.non_field_errors }}
+							
+							<div class="table centered">
+								<div class="row">
+									<span class="cell">{%trans "Username" %}:<span class="error">{{ form.username.errors }}</span></span>
+									<input id="user_username" class="input-text cell" type="text" name="username" required="required" />
+								</div>
+								
+								<div class="row">				
+									<span class="cell">{%trans "Password" %}:<span class="error">{{ form.password1.errors }}</span></span>
+									<input id="user_password" class="input-text cell" type="password" name="password1" required="required" />
+								</div>
+								
+								<div class="row">			
+									<span class="cell">{%trans "Password (again)" %}:<span class="error">{{ form.password2.errors }}</span></span>
+									<input id="user_password" class="input-text cell" type="password" name="password2" required="required">
+								</div>
+								
+								<div class="row">
+									
+									<span class="cell">{%trans "E-mail: (optional)" %}:<span class="error">{{ form.email.errors }}</span></span>
+									<input id="user_email" class="input-email cell" type="email" name="email" >
+								</div>
+							</div>
+							
+							{% if redirect_field_value %}
+								<input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+							{% endif %}
+  
+							<button class="button button-login blue" type="submit">{% trans "Sign Up" %} &raquo;</button>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	{% endif %}
 
 {% endblock %}
 
