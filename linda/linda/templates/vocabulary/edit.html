@@ -8,11 +8,18 @@
 {% block content %}
 	<div class="main">
 		<h1 class="page-title inline">{% trans "Edit vocabulary"%}</h1>
-		<form class="vocabulary-edit-form" method="post" action="{{vocabulary.get_absolute_url}}/edit/" class="vocabulary-edit-form" enctype="multipart/form-data">{% csrf_token %}
+		<form class="vocabulary-edit-form" method="post" action="/vocabulary/{{vocabulary.id}}/edit/" class="vocabulary-edit-form" enctype="multipart/form-data">{% csrf_token %}
 		
+			{% if form.non_field_errors %}
+				<p class="error">{{ form.non_field_errors }}</p>
+			{% endif %}
+			
 			<div>
 				<label for="title">{% trans "Title"%}:</label>
-				<input type="text" name="title" id="id_title" class="page-title" value="{{vocabulary.title}}" />
+				{{form.title}}
+				{% if form.title.errors %}
+					<span class="error">{{ form.title.errors.as_text }}</span>
+				{% endif %}
 			</div>
 			
 			<div>
@@ -40,20 +47,29 @@
 				
 			<label for="description">{% trans "Vocabulary description"%}:</label>
 			<p class="description">
-				<textarea name="description" id="id_description" maxlength="2048">{{vocabulary.description}}</textarea>
+				{{form.description}}
+				{% if form.description.errors %}
+					<span class="error">{{ form.description.errors.as_text }}</span>
+				{% endif %}
 			</p>
 			
 			<div>
 				<label for="originalUrl">{% trans "Reference page"%}:</label>
-				<input type="text" name="originalUrl" id="id_originalUrl" value="{{vocabulary.originalUrl}}" />
+				{{form.originalUrl}}
+				{% if form.originalUrl.errors %}
+					<span class="error">{{ form.originalUrl.errors.as_text }}</span>
+				{% endif %}
 			</div>
 			<div>
 				<label for="downloadUrl">{% trans "Download link"%}:</label>
-				<input type="text" name="downloadUrl" id="id_originalUrl" value="{{vocabulary.downloadUrl}}" />
+				{{form.downloadUrl}}
+				{% if form.downloadUrl.errors %}
+					<span class="error">{{ form.downloadUrl.errors.as_text }}</span>
+				{% endif %}
 			</div>
 			
 			<div class="action-buttons">
-				<a href="{{vocabulary.get_absolute_url}}" class="button blue right">{% trans "Cancel" %}</a>
+				<a href="/vocabulary/{{vocabulary.id}}" class="button blue right">{% trans "Cancel" %}</a>
 				<input type="submit" value='{% trans "Update vocabulary" %}' class="button red left" />
 			</div>
 

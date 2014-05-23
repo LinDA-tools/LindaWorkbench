@@ -19,5 +19,8 @@ class UserForm(forms.ModelForm):
 		
 class VocabularyUpdateForm(forms.ModelForm):
     class Meta:
-        model = Vocabulary
-        exclude = ('uploader', 'datePublished', 'dateCreated', 'score', 'votes', 'downloads')
+		model = Vocabulary
+		exclude = ('uploader', 'datePublished', 'dateCreated', 'score', 'votes', 'downloads')
+		widgets = {
+			'description': forms.Textarea,
+		}

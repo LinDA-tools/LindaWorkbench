@@ -574,12 +574,12 @@ form input[type="submit"] {
 	border-radius: 5px;
 }
 
-.vocabulary-edit-form .page-title {
+.vocabulary-edit-form #id_title{
 	color: #F4B350;
-	border: none !important;
 	outline: none;
 	padding: 5px;
-	width: calc(100% - 210px);
+	width: 250px;
+	font-size: 22px;
 }
 
 .vocabulary-edit-form  label {

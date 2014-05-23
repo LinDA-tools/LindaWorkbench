@@ -184,7 +184,7 @@ class VocabularyUpdateView(UpdateView):
 			return redirect("/vocabulary/" + kwargs.get('pk'))
 		else:
 			return render(self.request, 'vocabulary/edit.html', {
-				'current': 'vocabulary',
+				'vocabulary': oldVocabulary,
 				'form': vocabularyForm,
 			})
 	

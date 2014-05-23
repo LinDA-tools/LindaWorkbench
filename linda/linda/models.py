@@ -53,8 +53,8 @@ class Vocabulary(models.Model):
 	description = models.CharField(max_length=2048, blank=False, null=False)
 	category = models.CharField(max_length=256, blank=True, choices=CATEGORIES)  #checkbox-list, PREDEFINED LIST - LIST "CATEGORIES"
 	uploader = models.ForeignKey(User)
-	originalUrl = models.URLField(max_length=256, blank=True, null=True) #Location of the original vocabulary (for instance, in the publisher's website)
-	downloadUrl = models.URLField(max_length=256, blank=True, null=True) #Location of the original vocabulary (for instance, in the publisher's website)
+	originalUrl = models.URLField(max_length=256, blank=False, null=True) #Location of the original vocabulary (for instance, in the publisher's website)
+	downloadUrl = models.URLField(max_length=256, blank=False, null=True) #Location of the original vocabulary (for instance, in the publisher's website)
 	datePublished = models.DateField(blank=True, null=True) #Original vocabulary publish date
 	dateCreated = models.DateField(blank=True, null=True) #Vocabulary creation inside LinDa
 	dateModified = models.DateField(blank=True, null=True) #Last vocabulary modification

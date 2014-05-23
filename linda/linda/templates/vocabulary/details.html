@@ -75,9 +75,9 @@
 				</p>
 				{% if user.is_authenticated %}
 					{% if hasVoted %}
-						<span>{% trans "You have rated this dataset with" %}</span>
+						<span>{% trans "You have rated this vocabulary with" %}</span>
 					{% else %}
-						<span>{% trans "Rate this dataset" %}:</span>
+						<span>{% trans "Rate this vocabulary" %}:</span>
 					{% endif %}
 					
 					<span class="rating">
@@ -137,8 +137,8 @@
 			{% if user.id == vocabulary.uploader.id %}
 				<div class="sidebar-block">
 					<h3 class="sidebar-title">{% trans "Actions" %}</h3>
-					<a href="/vocabulary/{{vocabulary.id}}/{{vocabulary.title_slug}}/edit"   class="button sidebar-button blue">{% trans "Edit" %}</a>
-					<a href="/vocabulary/{{vocabulary.id}}/{{vocabulary.title_slug}}/delete" class="button sidebar-button red">{% trans "Delete" %}</a>
+					<a href="/vocabulary/{{vocabulary.id}}/edit"   class="button sidebar-button blue">{% trans "Edit" %}</a>
+					<a href="/vocabulary/{{vocabulary.id}}/delete" class="button sidebar-button red">{% trans "Delete" %}</a>
 				</div>
 			{% endif %}
 		</aside>
