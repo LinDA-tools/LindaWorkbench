@@ -11,6 +11,31 @@
 		<div>
 			<a href="/vocabulary/{{vocabulary.id}}" class="button green">{% trans "Back to info" %}</a>
 		</div>
-		<p class="error">Visualization under construction</p>
+		
+		<canvas id="viewport" width="800" height="600"></canvas>
 	</div>
+{% endblock %}
+
+{% block scripts %}
+	<script src="/static/js/arbor/arbor.js"></script>
+	<script src="/static/js/arbor/graphics.js"></script>
+	<script src="/static/js/arbor/renderer.js"></script>
+	<script>
+		var sys = arbor.ParticleSystem(3000, 400,0.5);
+		sys.parameters({gravity:true});
+		sys.renderer = Renderer("#viewport") ;
+		
+		{% for key, value in objects.items %}
+			sys.addNode("{{key}}", {'color':'#d2d7d5','shape':'circle','label':"{{value}}"});
+		{% endfor %}
+		
+		{% for key, value in subjects.items %}
+			sys.addNode("{{key}}", {'color':'#00B16A','shape':'square','label':"{{value}}"});
+		{% endfor %}
+		
+		{% for predicate in predicates %}
+			sys.addEdge("{{predicate.0}}", "{{predicate.2}}");
+		{% endfor %}
+		
+	</script>
 {% endblock %}

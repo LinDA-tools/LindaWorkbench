@@ -207,6 +207,56 @@ class VocabularyVisualize(DetailView):
 	template_name = 'vocabulary/visualize.html'
 	context_object_name = 'vocabulary'
 	
+	def get_context_data(self, **kwargs):
+		context = super(VocabularyVisualize, self).get_context_data(**kwargs)
+		
+		#Parse rdf
+		g = Graph()
+		g.parse(context['vocabulary'].downloadUrl)
+		
+		#Load subjects
+		subjects = {}
+		objects = {}
+		predicates = []
+		
+		for (subject, predicate, object) in g:
+			subjectName = subject.split("/")[-1]
+			predicateName = predicate.split("#")[-1]
+			objectName = object.split("/")[-1].split("#")[-1]
+				
+			if (predicateName == "type") and (objectName == "Class"):
+				subjects[subject] = subjectName
+				
+			if predicateName == "domain": #property
+				objects[subject] = subjectName
+				subjects[object] = objectName
+				predicates.append( (subject, predicate, object) )
+				
+			if predicateName == "subClassOf": #Attribute type
+				subjects[subject] = subjectName
+				subjects[object] = objectName
+				predicates.append( (subject, predicate, object) )
+				
+			if predicateName == "range": #Attribute type
+				objects[subject] = subject.split("/")[-1] + ": " + object.split("/")[-1].split("#")[-1]
+
+		context['subjects'] = subjects
+		context['objects'] = objects
+		context['predicates'] = predicates
+		"""
+		#Load objects
+		context['objects'] = {}
+		for object in g.objects():
+			context['objects'][object] = object.split("/")[-1]
+			
+		#Load predicates
+		context['predicates'] = []
+		for subj, pred, obj in g:
+			context['predicates'].append( (subj, pred, obj) )
+		"""
+		
+		return context
+		
 def rateDataset(request, pk, vt):
 	vocid = int(pk)
 	voteSubmitted = int(vt)

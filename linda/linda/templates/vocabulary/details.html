@@ -170,7 +170,8 @@
 			$('.dropdown-menu').toggle();
 		});
 			
-		$("#download-drop-down > li > div").click(function() {
+		$("#download-drop-down > li").click(function() {
+			window.location = $(this).find("a:first").attr("href"); //download the rdf
 			$('.dropdown-menu').toggle();
 		});
 
