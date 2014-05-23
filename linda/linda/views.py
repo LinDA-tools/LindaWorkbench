@@ -1,13 +1,15 @@
-from django.http import HttpResponse
 from django.contrib.auth.views import login
 from django.contrib.auth.models import User
-from django.shortcuts import redirect, render
+from django.http import HttpResponse, HttpResponseNotFound
+from django.shortcuts import redirect, render, get_object_or_404
 from django.views.generic import ListView, UpdateView, DetailView, DeleteView
 
 import json
 from forms import *
 from itertools import chain
 from datetime import datetime
+
+from rdflib import Graph
 
 class UserListView(ListView):
     model = User
@@ -285,3 +287,22 @@ def postComment(request, pk):
 	response = HttpResponse(data, mimetype)
 	response.status_code = code
 	return response
+	
+def downloadRDF(request, pk, type):
+	vocid = int(pk)
+	
+	voc = get_object_or_404(Vocabulary, pk=vocid)
+
+	if not type in ("xml", "n3", "nt"):
+		return HttpResponseNotFound("Invalid type.")
+		
+	#Convert rdf to the appropriate type
+	g = Graph()
+	g.parse(voc.downloadUrl)
+	
+	#Return response
+	mimetype = "application/octet-stream"
+	response = HttpResponse( g.serialize(format=type), mimetype=mimetype )
+	response["Content-Disposition"]= "attachment; filename=%s.%s" % (voc.title_slug(), type)
+	return response 
+	
