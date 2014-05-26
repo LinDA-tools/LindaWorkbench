@@ -9,7 +9,7 @@ from rdflib import Graph
 from datetime import datetime
 
 
-#import queries
+from graphdb import views as query_views
 
 class UserListView(ListView):
     model = User
@@ -224,6 +224,10 @@ class VocabularySearchView(ListView):
         #TODO get search results
 
         results = []
+
+        # TODO fix the response to actual results and search
+        # actual_results = query_views.query()
+
 
         for i in range(1,1000):
             item = {}
