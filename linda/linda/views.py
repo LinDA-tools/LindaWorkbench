@@ -9,7 +9,7 @@ from rdflib import Graph
 from datetime import datetime
 
 
-from graphdb import views as query_views
+# from graphdb import views as query_views
 
 class UserListView(ListView):
     model = User
