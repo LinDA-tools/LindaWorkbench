@@ -59,7 +59,7 @@ class Vocabulary(models.Model):
 	originalUrl = models.URLField(max_length=256, blank=False, null=True) #Location of the original vocabulary (for instance, in the publisher's website)
 	downloadUrl = models.URLField(max_length=256, blank=False, null=True) #Location of the original vocabulary (for instance, in the publisher's website)
 	preferredNamespaceUri = models.URLField(max_length=1024, blank=False, null=True) #Preferred namespace uri
-	preferredNamespacePrefix = models.URLField(max_length=256, blank=False, null=True) #Preffered namespace prefix
+	preferredNamespacePrefix = models.CharField(max_length=256, blank=False, null=True) #Preffered namespace prefix
 	
 	#Logging
 	uploader = models.ForeignKey(User)

@@ -13,7 +13,7 @@
 		{% if vocabulary.category %}
 			<p class="upload-info">{% trans "Category" %}: {{vocabulary.get_category_display}}</p>
         {% endif %}
-		<p class="upload-info">{% trans "Namespace URI" %}: {{vocabulary.preferredNamespaceUri}}</p>
+		<p class="upload-info">{% trans "Namespace URI" %}: <a href="#">{{vocabulary.preferredNamespaceUri}}</a></p>
 		<p class="upload-info">{% trans "Namespace prefix" %}: <strong>{{vocabulary.preferredNamespacePrefix}}</strong></p>
         <p><a href="{{vocabulary.originalUrl}}" target="_blank">{% trans "Visit original page" %}</a></p>
         
