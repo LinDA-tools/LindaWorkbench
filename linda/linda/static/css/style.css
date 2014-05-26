@@ -559,15 +559,15 @@ form input[type="submit"] {
 
 .comment-text-new-comment .button {
     border-radius: 0;
-    width: calc(100% -20px);
+    width: calc(100% - 20px);
 }
 
 #comment-text-input {
-    width: calc(97% -5px);
+    width: calc(97% - 5px);
     padding: 5px;
     border: none;
     outline: none;
-    max-width: calc(97% -5px);
+    max-width: calc(97% - 5px);
 }
 
 .commentTime {
@@ -577,18 +577,11 @@ form input[type="submit"] {
 /* Edit vocabulary */
 
 .vocabulary-edit-form input[type="text"] {
-<<<<<<< HEAD
 	border: 2px solid #DADFE1;
 	padding: 5px;
 	outline: none;
 	border-radius: 5px;
 	width: 250px;
-=======
-    border: 2px solid #DADFE1;
-    padding: 5px;
-    outline: none;
-    border-radius: 5px;
->>>>>>> 69f47ece1979e36995bd210a41065672663a3bca
 }
 
 .vocabulary-edit-form #id_title {
@@ -635,7 +628,7 @@ form input[type="submit"] {
 @media only screen and (max-width: 479px) {
     .vocabulary-edit-form .page-title {
         display: block;
-        width: calc(100% -10px);
+        width: calc(100% - 10px);
     }
 
     .vocabulary-edit-form  label {

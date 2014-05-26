@@ -78,17 +78,16 @@
 
             <p>
                 {% if vocabulary.votes == 0 %}
-                {% trans "No ratings yet" %}
+					{% trans "No ratings yet" %}
                 {% else %}
-                {{vocabulary.get_score|floatformat:"1"}} {% trans "out of" %} 5, {{vocabulary.votes}} {% trans "votes"
-                %}
+					{{vocabulary.get_score|floatformat:"1"}} {% trans "out of" %} 5, {{vocabulary.votes}} {% trans "votes" %}
                 {% endif %}
             </p>
             {% if user.is_authenticated %}
-            {% if hasVoted %}
-            <span>{% trans "You have rated this vocabulary with" %}</span>
-            {% else %}
-            <span>{% trans "Rate this vocabulary" %}:</span>
+				{% if hasVoted %}
+				<span>{% trans "You have rated this vocabulary with" %}</span>
+				{% else %}
+				<span>{% trans "Rate this vocabulary" %}:</span>
             {% endif %}
 					
 					<span class="rating">

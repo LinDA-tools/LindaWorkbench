@@ -212,70 +212,13 @@ class VocabularyDeleteView(DeleteView):
             return res
         return object
 
-
-class VocabularyVisualize(DetailView):
-<<<<<<< HEAD
-	model = Vocabulary
-	template_name = 'vocabulary/visualize.html'
-	context_object_name = 'vocabulary'
-	
-	def get_context_data(self, **kwargs):
-		context = super(VocabularyVisualize, self).get_context_data(**kwargs)
-		
-		#Parse rdf
-		g = Graph()
-		g.parse(context['vocabulary'].downloadUrl)
-		
-		#Load subjects
-		subjects = {}
-		objects = {}
-		predicates = []
-		
-		for (subject, predicate, object) in g:
-			subjectName = subject.split("/")[-1]
-			predicateName = predicate.split("#")[-1]
-			objectName = object.split("/")[-1].split("#")[-1]
-				
-			if (predicateName == "type") and (objectName == "Class"):
-				subjects[subject] = subjectName
-				
-			if predicateName == "domain": #property
-				objects[subject] = subjectName
-				subjects[object] = objectName
-				predicates.append( (subject, predicate, object) )
-				
-			if predicateName == "subClassOf": #Attribute type
-				subjects[subject] = subjectName
-				subjects[object] = objectName
-				predicates.append( (subject, predicate, object) )
-				
-			if predicateName == "range": #Attribute type
-				objects[subject] = subject.split("/")[-1] + ": " + object.split("/")[-1].split("#")[-1]
-
-		context['subjects'] = subjects
-		context['objects'] = objects
-		context['predicates'] = predicates
-		"""
-		#Load objects
-		context['objects'] = {}
-		for object in g.objects():
-			context['objects'][object] = object.split("/")[-1]
-			
-		#Load predicates
-		context['predicates'] = []
-		for subj, pred, obj in g:
-			context['predicates'].append( (subj, pred, obj) )
-		"""
-		
-		return context
-		
 class VocabularySearchView(ListView):
-	model = Vocabulary
-	template_name = 'vocabulary-search/index.html'
-	context_object_name = 'vocabularylist'
-	paginate_by = 20
+    model = Vocabulary
+    template_name = 'vocabulary-search/index.html'
+    context_object_name = 'vocabularylist'
+    paginate_by = 20
 	
-=======
+class VocabularyVisualize(DetailView):
     model = Vocabulary
     template_name = 'vocabulary/visualize.html'
     context_object_name = 'vocabulary'
@@ -331,7 +274,6 @@ class VocabularySearchView(ListView):
         return context
 
 
->>>>>>> 69f47ece1979e36995bd210a41065672663a3bca
 def rateDataset(request, pk, vt):
     vocid = int(pk)
     voteSubmitted = int(vt)

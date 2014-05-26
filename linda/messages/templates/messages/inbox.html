@@ -28,8 +28,7 @@
             <a class="cell sendername" href="/profile/{{message.sender.profile.id}}"> {{ message.sender|nice_name }}</a>
             <span class="cell text-blue">{{ message.sent_at|naturaltime}}</span>
 					<span class="cell subject">
-						{% if message.new %}<strong>{% endif %}<a href="{{message.get_absolute_url }}">{{
-                        message.subject|truncatechars:100}}</a>{% if message.new %}</strong>{% endif %}
+						{% if message.new %}<strong>{% endif %}<a href="{{message.get_absolute_url }}">{{message.subject|truncatechars:100}}</a>{% if message.new %}</strong>{% endif %}
 					</span>
             <a class="cell" href="{% url 'messages_delete' message.id %}"><img src="/static/images/remove.png"/></a>
         </div>
