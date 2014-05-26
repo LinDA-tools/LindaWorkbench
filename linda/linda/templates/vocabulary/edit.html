@@ -59,6 +59,21 @@
             {% endif %}
         </p>
 
+		<div>
+            <label for="originalUrl">{% trans "Preferred namespace URI"%}:</label>
+            {{form.preferredNamespaceUri}}
+            {% if form.preferredNamespaceUri.errors %}
+            <span class="error">{{ form.preferredNamespaceUri.errors.as_text }}</span>
+            {% endif %}
+        </div>
+        <div>
+            <label for="downloadUrl">{% trans "Preferred namespace prefix"%}:</label>
+            {{form.preferredNamespacePrefix}}
+            {% if form.preferredNamespacePrefix.errors %}
+            <span class="error">{{ form.preferredNamespacePrefix.errors.as_text }}</span>
+            {% endif %}
+        </div>
+		
         <div>
             <label for="originalUrl">{% trans "Reference page"%}:</label>
             {{form.originalUrl}}

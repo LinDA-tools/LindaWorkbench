@@ -10,13 +10,13 @@
     <content class="vocabulary">
         <h1 class="page-title inline">{{vocabulary.title}}</h1>
 
-        <p class="upload-info">{% trans "Uploaded by" %} <a href="/profile/{{vocabulary.uploader.id}}">{{vocabulary.uploader|nice_name}}</a>
-            {% trans "on" %} {{vocabulary.dateCreated}}.</p>
-
-        <p><a href="{{vocabulary.originalUrl}}" target="_blank">{% trans "Visit original page" %}</a></p>
-        {% if vocabulary.category %}
-        <p class="upload-info">{% trans "Category" %}: {{vocabulary.get_category_display}}</p>
+		{% if vocabulary.category %}
+			<p class="upload-info">{% trans "Category" %}: {{vocabulary.get_category_display}}</p>
         {% endif %}
+		<p class="upload-info">{% trans "Namespace URI" %}: {{vocabulary.preferredNamespaceUri}}</p>
+		<p class="upload-info">{% trans "Namespace prefix" %}: <strong>{{vocabulary.preferredNamespacePrefix}}</strong></p>
+        <p><a href="{{vocabulary.originalUrl}}" target="_blank">{% trans "Visit original page" %}</a></p>
+        
         <p class="description">{{vocabulary.description}}</p>
 
 
@@ -73,6 +73,9 @@
 
     </content>
     <aside>
+		<p class="upload-info">{% trans "Uploaded by" %} <a href="/profile/{{vocabulary.uploader.id}}">{{vocabulary.uploader|nice_name}}</a>
+            {% trans "on" %} {{vocabulary.dateCreated}}.</p>
+			
         <div class="sidebar-block">
             <h3 class="sidebar-title">{% trans "Rate" %}</h3>
 
@@ -118,6 +121,7 @@
         </div>
 
         <div class="sidebar-block">
+			
             <h3 class="sidebar-title">{% trans "Download" %}</h3>
 
             <a href="{{vocabulary.downloadUrl}}" target="_blank" class="button green sidebar-button">
