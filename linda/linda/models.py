@@ -49,12 +49,19 @@ class Photo(models.Model):
 		return "%d" % self.id
 	
 class Vocabulary(models.Model):
+	#General information
 	title = models.CharField(max_length=128, blank=False, null=False)
 	description = models.CharField(max_length=2048, blank=False, null=False)
 	category = models.CharField(max_length=256, blank=True, choices=CATEGORIES)  #checkbox-list, PREDEFINED LIST - LIST "CATEGORIES"
-	uploader = models.ForeignKey(User)
+	
+	#RDF schema properties
 	originalUrl = models.URLField(max_length=256, blank=False, null=True) #Location of the original vocabulary (for instance, in the publisher's website)
 	downloadUrl = models.URLField(max_length=256, blank=False, null=True) #Location of the original vocabulary (for instance, in the publisher's website)
+	preferredNamespaceUri = models.URLField(max_length=1024, blank=False, null=True) #Preferred namespace uri
+	preferredNamespacePrefix = models.URLField(max_length=256, blank=False, null=True) #Preffered namespace prefix
+	
+	#Logging
+	uploader = models.ForeignKey(User)
 	datePublished = models.DateField(blank=True, null=True) #Original vocabulary publish date
 	dateCreated = models.DateField(blank=True, null=True) #Vocabulary creation inside LinDa
 	dateModified = models.DateField(blank=True, null=True) #Last vocabulary modification

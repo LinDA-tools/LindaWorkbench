@@ -1,11 +1,11 @@
 {% extends "base.html" %}
 
 {% load i18n %}
-{% block title %}LinDA{% endblock %}
-	
+{% block title %}{% trans "Vocabulary search" %} | LinDA{% endblock %}
+		
 {% block content %}
 	<div class="main">
-		<h1 class="page-title">{% trans "Welcome to LinDA" %}</h1>
+		<h1 class="page-title">LinDA - {% trans "Vocabulary search" %}</h1>
 		
 		<div class="home-search centered">
 			<form method="get" action="/vocabulary-search" class="form">
@@ -14,6 +14,14 @@
 				<input type="submit" value=""/>
 				
 			</form>
+			
+			<!--
+			{% for vocabulary in vocabularylist %}
+				<h3>{{vocabulary.title}}</h3>
+			{% empty %}
+				<p>{% trans "No vocabularies."</p>
+			{% endfor %}
+			-->
 		</div>
 	</div>
 {% endblock %}

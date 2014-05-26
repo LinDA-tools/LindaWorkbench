@@ -257,6 +257,12 @@ class VocabularyVisualize(DetailView):
 		
 		return context
 		
+class VocabularySearchView(ListView):
+	model = Vocabulary
+	template_name = 'vocabulary-search/index.html'
+	context_object_name = 'vocabularylist'
+	paginate_by = 20
+	
 def rateDataset(request, pk, vt):
 	vocid = int(pk)
 	voteSubmitted = int(vt)

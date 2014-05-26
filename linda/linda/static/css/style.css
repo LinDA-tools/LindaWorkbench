@@ -572,6 +572,7 @@ form input[type="submit"] {
 	padding: 5px;
 	outline: none;
 	border-radius: 5px;
+	width: 250px;
 }
 
 .vocabulary-edit-form #id_title{

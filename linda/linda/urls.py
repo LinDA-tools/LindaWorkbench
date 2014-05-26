@@ -34,6 +34,9 @@ urlpatterns = patterns('',
 	url(r'^vocabulary/(?P<pk>\d+)/(?P<slug>[\w-]+)/$', views.VocabularyDetailsView.as_view(), name='vocabulary-detail'),
 	url(r'^vocabulary/(?P<pk>\d+)/(?P<slug>[\w-]+)/visualize/', views.VocabularyVisualize.as_view(), name='vocabulary-visualize'),
 	
+	#Vocabulary search
+	url(r'^vocabulary-search/$', views.VocabularySearchView.as_view(), name='vocabulary-search'),
+	
 	#API calls
 	url(r'^api/users/', login_required(views.users), name='users'),
 )
