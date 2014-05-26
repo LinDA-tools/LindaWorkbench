@@ -1054,3 +1054,15 @@ input, textarea {
     margin: 0 auto;
     border-radius: 5px 5px 0 0;
 }
+
+.vocabulary-teaser {
+    position: relative;
+}
+
+.vocabulary-teaser .read-more {
+    width: 50px;
+    font-size: 70%;
+    position: relative;
+    left: 80%;
+    display: block;
+}

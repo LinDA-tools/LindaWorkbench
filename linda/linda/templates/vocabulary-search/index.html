@@ -27,6 +27,7 @@
                     <h3><a href="/vocabulary/{{vocabulary.id}}">{{vocabulary.title}}</a></h3>
                     <a href="{{vocabulary.preferredNamespacePrefix}}"></a>
                     <span>{{vocabulary.description|slice:"150"}}...</span>
+                    <a href="/vocabulary/{{vocabulary.id}}" class="read-more button gray">{% trans "Read more" %}</a>
                 </div>
 
                 {% empty %}
