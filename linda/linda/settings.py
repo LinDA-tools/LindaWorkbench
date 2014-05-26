@@ -127,6 +127,7 @@ INSTALLED_APPS = (
 # 'allauth.socialaccount.providers.facebook',
 'messages',
 'athumb',
+'graphdb',
 
 # Uncomment the next line to enable the admin:
 # 'django.contrib.admin',

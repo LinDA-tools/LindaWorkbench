@@ -224,17 +224,21 @@ class VocabularySearchView(ListView):
         #Get search results
         #TODO get search results
 
-        item = {}
-        item['id'] = "1"
-        item['shortTitle'] = "foaf"
-        item['title'] = "Friend of a Friend vocabulary"
-        item['preferredNamespacePrefix'] = "foaf"
-        item['preferredNamespaceUri'] = "http://xmlns.com/foaf/0.1/"
-        item['description'] = "FOAF is a project devoted to linking people and information using the Web. Regardless of whether information is in people's heads, in physical or digital documents, or in the form of factual data, it can be linked."
-        item['creator'] = "http://google.com/DanBrickley"
-        item['modified'] = "2014-01-14"
+        results = []
 
-        context['vocabularylist'] = [item]
+        for i in range(1,20):
+            item = {}
+            item['id'] = "%s"%str(i)
+            item['shortTitle'] = "foaf"
+            item['title'] = "Friend of a Friend vocabulary"
+            item['preferredNamespacePrefix'] = "foaf"
+            item['preferredNamespaceUri'] = "http://xmlns.com/foaf/0.1/"
+            item['description'] = "FOAF is a project devoted to linking people and information using the Web. Regardless of whether information is in people's heads, in physical or digital documents, or in the form of factual data, it can be linked."
+            item['creator'] = "http://google.com/DanBrickley"
+            item['modified'] = "2014-01-14"
+            results.append(item)
+
+        context['vocabularylist'] = results
 
         return context
 	
