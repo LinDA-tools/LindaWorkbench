@@ -14,14 +14,29 @@
 				<input type="submit" value=""/>
 				
 			</form>
-			
-			<!--
-			{% for vocabulary in vocabularylist %}
-				<h3>{{vocabulary.title}}</h3>
-			{% empty %}
-				<p>{% trans "No vocabularies."</p>
-			{% endfor %}
-			-->
+
+            <div class="search-filters">
+                <a href="#" class="button white active">Vocabularies</a>
+                <a href="#" class="button white">Classes</a>
+                <a href="#" class="button white">Properties</a>
+            </div>
+
+            <div class="search-results">
+                {% for vocabulary in vocabularylist %}
+                <div class="vocabulary-teaser">
+                    <h3><a href="/vocabulary/{{vocabulary.id}}">{{vocabulary.title}}</a></h3>
+                    <a href="{{vocabulary.preferredNamespacePrefix}}"></a>
+                    <span>{{vocabulary.description|slice:"60"}}...</span>
+                </div>
+
+                {% empty %}
+                    <p>{% trans "No vocabularies match this query."</p>
+                {% endfor %}
+
+            </div>
+
+
+
 		</div>
 	</div>
 {% endblock %}

@@ -742,6 +742,15 @@ form input[type="submit"] {
 }
 
 /* Colors */
+.white {
+    background-color: #fff;
+    color: #727272 !important;
+}
+
+.white.active, .white:hover {
+    background-color: #eee;
+}
+
 .green {
     background-color: #00B16A;
 }
@@ -1023,3 +1032,25 @@ input, textarea {
     font-weight: 300;
 }
 
+/*Search results*/
+.search-results {
+    margin-top: 20px;
+    padding-top: 10px;
+    text-align: left;
+    width: 500px;
+    max-width: 100%;
+}
+
+.search-filters {
+    margin-top: 20px;
+    padding-top: 10px;
+    text-align: left;
+    width: 100%;
+    border-bottom: 1px solid #eee;
+}
+
+.search-filters .button {
+    width: 100px;
+    margin: 0 auto;
+    border-radius: 5px 5px 0 0;
+}
