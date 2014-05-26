@@ -2,10 +2,9 @@
 from south.db import db
 from south.v2 import SchemaMigration
 
-class Migration(SchemaMigration):
 
+class Migration(SchemaMigration):
     def forwards(self, orm):
-        
         # Removing unique constraint on 'FacebookAccessToken', fields ['app', 'account']
         db.delete_unique('facebook_facebookaccesstoken', ['app_id', 'account_id'])
 
@@ -20,7 +19,6 @@ class Migration(SchemaMigration):
 
 
     def backwards(self, orm):
-        
         # Adding model 'FacebookApp'
         db.create_table('facebook_facebookapp', (
             ('application_id', self.gf('django.db.models.fields.CharField')(max_length=80)),
@@ -46,7 +44,9 @@ class Migration(SchemaMigration):
 
         # Adding model 'FacebookAccount'
         db.create_table('facebook_facebookaccount', (
-            ('socialaccount_ptr', self.gf('django.db.models.fields.related.OneToOneField')(to=orm['socialaccount.SocialAccount'], unique=True, primary_key=True)),
+            ('socialaccount_ptr',
+             self.gf('django.db.models.fields.related.OneToOneField')(to=orm['socialaccount.SocialAccount'],
+                                                                      unique=True, primary_key=True)),
             ('social_id', self.gf('django.db.models.fields.CharField')(max_length=255, unique=True)),
             ('link', self.gf('django.db.models.fields.URLField')(max_length=200)),
             ('name', self.gf('django.db.models.fields.CharField')(max_length=255)),
@@ -55,7 +55,7 @@ class Migration(SchemaMigration):
 
 
     models = {
-        
+
     }
 
     complete_apps = ['facebook']

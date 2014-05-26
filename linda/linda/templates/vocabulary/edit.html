@@ -6,91 +6,97 @@
 {% block bodyclass %}vocabulary{% endblock %}
 
 {% block content %}
-	<div class="main">
-		<h1 class="page-title inline">{% trans "Edit vocabulary"%}</h1>
-		<form class="vocabulary-edit-form" method="post" action="/vocabulary/{{vocabulary.id}}/edit/" class="vocabulary-edit-form" enctype="multipart/form-data">{% csrf_token %}
-		
-			{% if form.non_field_errors %}
-				<p class="error">{{ form.non_field_errors }}</p>
-			{% endif %}
-			
-			<div>
-				<label for="title">{% trans "Title"%}:</label>
-				{{form.title}}
-				{% if form.title.errors %}
-					<span class="error">{{ form.title.errors.as_text }}</span>
-				{% endif %}
-			</div>
-			
-			<div>
-				<label for="category">{% trans "Category"%}:</label>
-				<div class="hidden">
-					{{form.category}}
-				</div>
-				
-				<div class="inline">
-					<div id="category-dropdown-button" class="button green clearfix select-button sidebar-button" >
-						<span class="filter-option">{{vocabulary.category}}</span>&nbsp;<span class="caret"></span>
-					</div>
-						
-					<ul id="category-dropdown" class="dropdown-menu" role="menu">
-						<span class="arrow-up"></span>
-						{% for category in categories %}
-							<li><div>
-								<span class="pull-left" data-option="{{category.0}}">{{category.1}}</span>
-							</div></li>
-						{% endfor %}
-					</ul>
+<div class="main">
+    <h1 class="page-title inline">{% trans "Edit vocabulary"%}</h1>
 
-				</div>
-			</div>
-				
-			<label for="description">{% trans "Vocabulary description"%}:</label>
-			<p class="description">
-				{{form.description}}
-				{% if form.description.errors %}
-					<span class="error">{{ form.description.errors.as_text }}</span>
-				{% endif %}
-			</p>
-			
-			<div>
-				<label for="originalUrl">{% trans "Reference page"%}:</label>
-				{{form.originalUrl}}
-				{% if form.originalUrl.errors %}
-					<span class="error">{{ form.originalUrl.errors.as_text }}</span>
-				{% endif %}
-			</div>
-			<div>
-				<label for="downloadUrl">{% trans "Download link"%}:</label>
-				{{form.downloadUrl}}
-				{% if form.downloadUrl.errors %}
-					<span class="error">{{ form.downloadUrl.errors.as_text }}</span>
-				{% endif %}
-			</div>
-			
-			<div class="action-buttons">
-				<a href="/vocabulary/{{vocabulary.id}}" class="button blue right">{% trans "Cancel" %}</a>
-				<input type="submit" value='{% trans "Update vocabulary" %}' class="button red left" />
-			</div>
+    <form class="vocabulary-edit-form" method="post" action="/vocabulary/{{vocabulary.id}}/edit/"
+          class="vocabulary-edit-form" enctype="multipart/form-data">{% csrf_token %}
 
-		</form>
-	</div>
+        {% if form.non_field_errors %}
+        <p class="error">{{ form.non_field_errors }}</p>
+        {% endif %}
+
+        <div>
+            <label for="title">{% trans "Title"%}:</label>
+            {{form.title}}
+            {% if form.title.errors %}
+            <span class="error">{{ form.title.errors.as_text }}</span>
+            {% endif %}
+        </div>
+
+        <div>
+            <label for="category">{% trans "Category"%}:</label>
+
+            <div class="hidden">
+                {{form.category}}
+            </div>
+
+            <div class="inline">
+                <div id="category-dropdown-button" class="button green clearfix select-button sidebar-button">
+                    <span class="filter-option">{{vocabulary.category}}</span>&nbsp;<span class="caret"></span>
+                </div>
+
+                <ul id="category-dropdown" class="dropdown-menu" role="menu">
+                    <span class="arrow-up"></span>
+                    {% for category in categories %}
+                    <li>
+                        <div>
+                            <span class="pull-left" data-option="{{category.0}}">{{category.1}}</span>
+                        </div>
+                    </li>
+                    {% endfor %}
+                </ul>
+
+            </div>
+        </div>
+
+        <label for="description">{% trans "Vocabulary description"%}:</label>
+
+        <p class="description">
+            {{form.description}}
+            {% if form.description.errors %}
+            <span class="error">{{ form.description.errors.as_text }}</span>
+            {% endif %}
+        </p>
+
+        <div>
+            <label for="originalUrl">{% trans "Reference page"%}:</label>
+            {{form.originalUrl}}
+            {% if form.originalUrl.errors %}
+            <span class="error">{{ form.originalUrl.errors.as_text }}</span>
+            {% endif %}
+        </div>
+        <div>
+            <label for="downloadUrl">{% trans "Download link"%}:</label>
+            {{form.downloadUrl}}
+            {% if form.downloadUrl.errors %}
+            <span class="error">{{ form.downloadUrl.errors.as_text }}</span>
+            {% endif %}
+        </div>
+
+        <div class="action-buttons">
+            <a href="/vocabulary/{{vocabulary.id}}" class="button blue right">{% trans "Cancel" %}</a>
+            <input type="submit" value='{% trans "Update vocabulary" %}' class="button red left"/>
+        </div>
+
+    </form>
+</div>
 {% endblock %}
 
 {% block scripts %}
-	<script>
-		$(function() {
-			$("#category-dropdown-button > .filter-option").html( $("#id_category option:selected").text() );
-		});
-		
-		$("#category-dropdown-button").click(function() {
-			$('#category-dropdown').toggle();
-		});
-			
-		$("#category-dropdown > li > div").click(function() {
-			$('#category-dropdown').toggle();
-			$('#category-dropdown-button > .filter-option').html( $(this).children('span').text() );
-			$('#id_category').val( $(this).children('span').attr("data-option") );
-		});
-	</script>
+<script>
+    $(function () {
+        $("#category-dropdown-button > .filter-option").html($("#id_category option:selected").text());
+    });
+
+    $("#category-dropdown-button").click(function () {
+        $('#category-dropdown').toggle();
+    });
+
+    $("#category-dropdown > li > div").click(function () {
+        $('#category-dropdown').toggle();
+        $('#category-dropdown-button > .filter-option').html($(this).children('span').text());
+        $('#id_category').val($(this).children('span').attr("data-option"));
+    });
+</script>
 {% endblock %}

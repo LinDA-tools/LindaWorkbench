@@ -6,8 +6,7 @@ import os
 import cStringIO
 
 # from PIL import Image
-import Image
-import exceptions
+from PIL import Image
 from django.db.models import ImageField
 from django.db.models.fields.files import ImageFieldFile
 from django.conf import settings
@@ -21,6 +20,7 @@ from validators import ImageUploadExtensionValidator
 try:
     #noinspection PyUnresolvedReferences
     from south.modelsinspector import add_introspection_rules
+
     add_introspection_rules([], ["^athumb\.fields\.ImageWithThumbsField"])
 except ImportError:
     # Not using South, no big deal.
@@ -38,10 +38,12 @@ MEDIA_CACHE_BUSTER = getattr(settings, 'MEDIA_CACHE_BUSTER', '')
 # Models want this instantiated ahead of time.
 IMAGE_EXTENSION_VALIDATOR = ImageUploadExtensionValidator()
 
+
 class ImageWithThumbsFieldFile(ImageFieldFile):
     """
     Serves as the file-level storage object for thumbnails.
     """
+
     def generate_url(self, thumb_name, ssl_mode=False, check_cache=True, cache_bust=True):
         # This is tacked on to the end of the cache key to make sure SSL
         # URLs are stored separate from plain http.
@@ -54,8 +56,8 @@ class ImageWithThumbsFieldFile(ImageFieldFile):
 
         if check_cache:
             cache_key = "Thumbcache_%s_%s%s" % (self.url,
-                                                   thumb_name,
-                                                   ssl_postfix)
+                                                thumb_name,
+                                                ssl_postfix)
             cache_key = cache_key.strip()
 
             cached_val = cache.get(cache_key)
@@ -76,7 +78,7 @@ class ImageWithThumbsFieldFile(ImageFieldFile):
         # Slap the new thumbnail filename on the end of the old URL, in place
         # of the orignal image's filename.
         new_url = "%s/%s" % (url_minus_filename,
-                                      os.path.basename(new_filename))
+                             os.path.basename(new_filename))
 
         # Cache busters are a cheezy way to force some browsers to retrieve
         # an updated image, circumventing any long-term or infinite caching
@@ -117,7 +119,7 @@ class ImageWithThumbsFieldFile(ImageFieldFile):
             self.generate_thumbs(name, content)
         except IOError, exc:
             if 'cannot identify' in exc.message or \
-               'bad EPS header' in exc.message:
+                            'bad EPS header' in exc.message:
                 raise UploadedImageIsUnreadableError(
                     "We were unable to read the uploaded image. "
                     "Please make sure you are uploading a valid image file."
@@ -212,6 +214,7 @@ class ImageWithThumbsFieldFile(ImageFieldFile):
             self.storage.delete(thumb_filename)
 
         super(ImageWithThumbsFieldFile, self).delete(save)
+
 
 class ImageWithThumbsField(ImageField):
     """
