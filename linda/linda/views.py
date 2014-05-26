@@ -1,14 +1,13 @@
-import json
-from datetime import datetime
-
-from django.contrib.auth.models import User
-
 from django.http import HttpResponse, HttpResponseNotFound
 from django.shortcuts import redirect, render, get_object_or_404
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.views.generic import ListView, UpdateView, DetailView, DeleteView
-from rdflib import Graph
 
+import json
 from forms import *
+from rdflib import Graph
+from datetime import datetime
+
 
 #import queries
 
@@ -226,7 +225,7 @@ class VocabularySearchView(ListView):
 
         results = []
 
-        for i in range(1,20):
+        for i in range(1,1000):
             item = {}
             item['id'] = "%s"%str(i)
             item['shortTitle'] = "foaf"
@@ -238,7 +237,22 @@ class VocabularySearchView(ListView):
             item['modified'] = "2014-01-14"
             results.append(item)
 
-        context['vocabularylist'] = results
+        #paginate results
+        paginator = Paginator(results, self.paginate_by)
+
+        page = self.request.GET.get('page')
+
+        try:
+            page_vocabularies = paginator.page(page)
+        except PageNotAnInteger:
+            # If page is not an integer, deliver first page.
+            page_vocabularies = paginator.page(1)
+        except EmptyPage:
+            # If page is out of range (e.g. 9999), deliver last page of results.
+            page_vocabularies = paginator.page(paginator.num_pages)
+
+        context['vocabularylist'] = page_vocabularies
+        context['page_obj'] = page_vocabularies
 
         return context
 	

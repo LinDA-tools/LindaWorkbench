@@ -810,6 +810,7 @@ form input[type="submit"] {
 
 .centered {
     margin: 0 auto;
+    margin-top: 10px;
     text-align: center !important;
 }
 
