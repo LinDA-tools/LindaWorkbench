@@ -150,9 +150,7 @@ class VocabularyDetailsView(DetailView):
             if (
             VocabularyRanking.objects.filter(vocabularyRanked=context['vocabulary'], voter=self.request.user).exists()):
                 context['hasVoted'] = True
-                context['voteSubmitted'] =
-                VocabularyRanking.objects.filter(vocabularyRanked=context['vocabulary'], voter=self.request.user)[
-                    0].vote
+                context['voteSubmitted'] = VocabularyRanking.objects.filter(vocabularyRanked=context['vocabulary'], voter=self.request.user)[0].vote
             else:
                 context['hasVoted'] = False
 
