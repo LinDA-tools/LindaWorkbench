@@ -26,7 +26,7 @@ urlpatterns = patterns('',
 					   #Vocabulary search
                        url(r'^vocabulary-search/$', views.VocabularySearchView.as_view(),
                            name='vocabulary-search'),
-						   
+
                        #Vocabularies
                        url(r'^vocabulary/(?P<pk>\d+)/$', views.VocabularyDetailsView.as_view(),
                            name='vocabulary-detail'),
