@@ -6,7 +6,7 @@ import os
 import cStringIO
 
 # from PIL import Image
-import Image
+from PIL import Image
 import exceptions
 from django.db.models import ImageField
 from django.db.models.fields.files import ImageFieldFile

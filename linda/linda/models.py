@@ -4,8 +4,6 @@ from django.contrib.auth.models import User
 from django.template.defaultfilters import slugify
 
 from lists import *
-from PIL import Image
-from imagekit.models import ImageSpecField
 from athumb.fields import ImageWithThumbsField
 
 import datetime

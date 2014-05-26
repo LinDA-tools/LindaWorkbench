@@ -1,0 +1,7 @@
+rdflib
+rdflib-sqlite
+#pyparsing<=1.5.7
+django==1.4.3
+Pillow
+django-allauth
+django-imagekit
