@@ -26,26 +26,18 @@
     sys.parameters({gravity: true});
     sys.renderer = Renderer("#viewport");
 
-    {%
-        for key, value in objects.items %}
-        sys.addNode("{{key}}", {'color': '#d2d7d5', 'shape': 'circle', 'label': "{{value}}"});
-        {%
-            endfor %
-        }
+        {% for key, value in objects.items %}
+            sys.addNode("{{key}}", {'color': '#d2d7d5', 'shape': 'circle', 'label': "{{value}}"});
+        {% endfor %}
 
-        {%
-            for key, value in subjects.items %}
+        {% for key, value in subjects.items %}
             sys.addNode("{{key}}", {'color': '#00B16A', 'shape': 'square', 'label': "{{value}}"});
-            {%
-                endfor %
-            }
+        {% endfor %}
 
-            {%
-                for predicate in predicates %}
-                sys.addEdge("{{predicate.0}}", "{{predicate.2}}");
-                {%
-                    endfor %
-                }
+            
+        {% for predicate in predicates %}
+            sys.addEdge("{{predicate.0}}", "{{predicate.2}}");
+        {% endfor %}
 
 </script>
 {% endblock %}
