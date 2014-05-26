@@ -59,9 +59,10 @@ WHERE{
 
 """
 
+import json
 
 import dgraphdbstore
-import json
+
 
 graphdb = dgraphdbstore.DeepGraphStore()
 graphdb.open('deepGraphFile_321763af3ed32e1bb47233944ef6bc74_140512_191741')

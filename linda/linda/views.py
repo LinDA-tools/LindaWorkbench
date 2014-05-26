@@ -1,15 +1,14 @@
-from django.contrib.auth.views import login
+import json
+from datetime import datetime
+
 from django.contrib.auth.models import User
 from django.http import HttpResponse, HttpResponseNotFound
 from django.shortcuts import redirect, render, get_object_or_404
 from django.views.generic import ListView, UpdateView, DetailView, DeleteView
-
-import json
-from forms import *
-from itertools import chain
-from datetime import datetime
-
 from rdflib import Graph
+
+from forms import *
+
 
 class UserListView(ListView):
     model = User

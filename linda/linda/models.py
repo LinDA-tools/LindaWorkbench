@@ -1,12 +1,9 @@
 from django.db import models
-from django.db.models import ImageField
 from django.contrib.auth.models import User
 from django.template.defaultfilters import slugify
 
 from lists import *
 from athumb.fields import ImageWithThumbsField
-
-import datetime
 
 User.profile = property(lambda u: UserProfile.objects.get_or_create(user=u)[0])
 

@@ -10,10 +10,8 @@ Mikko Hellsing, Chris Beaven.
 Modifications and new ideas, Copyright (c) 2010, DUO Interactive, LLC.
 """
 import re
-import math
 from django.template import Library, Node, Variable, VariableDoesNotExist, TemplateSyntaxError
 from django.conf import settings
-from django.utils.encoding import force_unicode
 
 register = Library()
 

@@ -1,8 +1,8 @@
-import views
-
 from django.contrib import admin
 from django.conf.urls import patterns, include, url
 from django.contrib.auth.decorators import login_required
+
+import views
 
 admin.autodiscover()
 
