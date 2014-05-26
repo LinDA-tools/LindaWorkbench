@@ -1,18 +1,18 @@
 {% extends "base.html" %}
 
 {% load i18n %}
-		
+
 {% block content %}
-	<div class="main">
-		<h1 class="page-title">Welcome to LinDa</h1>
-		
-		<div class="home-search centered">
-			<form method="post" action="/search" class="form">
-				{% csrf_token %}
-				
-				<input type="text" placeholder="Search LinDa"/>
-				<input type="submit" name="submit" value=""/>
-			</form>
-		</div>
-	</div>
+<div class="main">
+    <h1 class="page-title">Welcome to LinDa</h1>
+
+    <div class="home-search centered">
+        <form method="post" action="/search" class="form">
+            {% csrf_token %}
+
+            <input type="text" placeholder="Search LinDa"/>
+            <input type="submit" name="submit" value=""/>
+        </form>
+    </div>
+</div>
 {% endblock %}

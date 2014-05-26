@@ -18,6 +18,7 @@ class EventletFileSystemStorage(FileSystemStorage):
     Modified standard FileSystemStorage class to play nicely with large file
     uploads and eventlet gunicorn workers.
     """
+
     def _save(self, name, content):
         full_path = self.path(name)
 

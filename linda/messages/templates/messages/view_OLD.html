@@ -1,43 +1,56 @@
-{% extends "messages/base.html" %} 
+{% extends "messages/base.html" %}
 {% load thumbnail2 i18n humanize list_tags%}
 
 {% block content %}
 
 <div id="view_inbox" class="wrapper-content">
-	<div class="inbox-form" >
-		<div class="inbox-form-header">
-		Message - {{ message.subject|truncatechars:131 }}
-		 </div>
-		 <div class="inbox-form-body">
-    <div id='show-hide'>
+    <div class="inbox-form">
+        <div class="inbox-form-header">
+            Message - {{ message.subject|truncatechars:131 }}
+        </div>
+        <div class="inbox-form-body">
+            <div id='show-hide'>
 
 
-	<div class="inbox_view">
-		{% if message.sender.profile.avatar.photo_original %}
-			{% thumbnail message.sender.profile.avatar.photo_original "48x48" as avatar %}
-		<div style="float:left"><a href="/profile/{{message.sender.profile.id}}"><img src="{{avatar}}" width="48" height="48" class="roundedphoto"/></a></div>
+                <div class="inbox_view">
+                    {% if message.sender.profile.avatar.photo_original %}
+                    {% thumbnail message.sender.profile.avatar.photo_original "48x48" as avatar %}
+                    <div style="float:left"><a href="/profile/{{message.sender.profile.id}}"><img src="{{avatar}}"
+                                                                                                  width="48" height="48"
+                                                                                                  class="roundedphoto"/></a>
+                    </div>
 
-		{% else %}
-		<div style="float:left"><a href="/profile/{{message.sender.profile.id}}"><img src="/s/imgs/defaultavatar.jpg" width="48" height="48" class="roundedphoto"/></a></div>
-		{% endif %}
-		<div style="float:left" ><a class="sendername" href="/profile/{{message.sender.profile.id}}"> {{ message.sender }} {% if  message.sender.last_name or userModel.first_name %} ({{message.sender.last_name}} {{message.sender.last_name}}) {% endif %}</a></div>
-		<div style="float:left" class="msgdate" >{{ message.sent_at|naturaltime}}</div></br>
-		<div style="float:left" class="subject" >{{ message.subject|truncatechars:100}}</div>
-	</div>
+                    {% else %}
+                    <div style="float:left"><a href="/profile/{{message.sender.profile.id}}"><img
+                            src="/s/imgs/defaultavatar.jpg" width="48" height="48" class="roundedphoto"/></a></div>
+                    {% endif %}
+                    <div style="float:left"><a class="sendername" href="/profile/{{message.sender.profile.id}}"> {{
+                        message.sender }} {% if message.sender.last_name or userModel.first_name %}
+                        ({{message.sender.last_name}} {{message.sender.last_name}}) {% endif %}</a></div>
+                    <div style="float:left" class="msgdate">{{ message.sent_at|naturaltime}}</div>
+                    </br>
+                    <div style="float:left" class="subject">{{ message.subject|truncatechars:100}}</div>
+                </div>
 
-	<div style="clear:both"></div>
-	<div class="msgbody">
-	{{ message.body|linebreaksbr|urlize|url_target_blank }}
-	</div>
+                <div style="clear:both"></div>
+                <div class="msgbody">
+                    {{ message.body|linebreaksbr|urlize|url_target_blank }}
+                </div>
 
 
-	{% ifequal message.recipient.pk user.pk %}
-	<a href="{% url messages_reply message.id %}"><div class='button bigrounded orangish'>{% trans "Reply" %}</div></a>
-	{% endifequal %}
-	<a href="{% url messages_delete message.id %}"><div class='button bigrounded' style="color:#DF4E15">{% trans "Delete" %}</div></a>
-	<a href='/messages/inbox'><div class='button bigrounded' style="color:#DF4E15">Back</div></a>
-	</div>
-	</div>
-	</div>
+                {% ifequal message.recipient.pk user.pk %}
+                <a href="{% url messages_reply message.id %}">
+                    <div class='button bigrounded orangish'>{% trans "Reply" %}</div>
+                </a>
+                {% endifequal %}
+                <a href="{% url messages_delete message.id %}">
+                    <div class='button bigrounded' style="color:#DF4E15">{% trans "Delete" %}</div>
+                </a>
+                <a href='/messages/inbox'>
+                    <div class='button bigrounded' style="color:#DF4E15">Back</div>
+                </a>
+            </div>
+        </div>
+    </div>
 </div>
 {% endblock %}

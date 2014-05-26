@@ -23,6 +23,7 @@ REGEXP_ARGS = re.compile('(?<!quality)=')
 # List of valid keys for key=value tag arguments.
 TAG_SETTINGS = ['force_ssl']
 
+
 def split_args(args):
     """
     Split a list of argument strings into a dictionary where each key is an
@@ -46,11 +47,13 @@ def split_args(args):
 
     return args_dict
 
+
 class ThumbnailNode(Node):
     """
     Handles the rendering of a thumbnail URL, based on the input gathered
     from the thumbnail() tag function.
     """
+
     def __init__(self, source_var, thumb_name_var, opts=None,
                  context_name=None, **kwargs):
         # Name of the object/attribute pair, ie: some_obj.image
@@ -72,7 +75,7 @@ class ThumbnailNode(Node):
         except VariableDoesNotExist:
             if settings.TEMPLATE_DEBUG:
                 raise VariableDoesNotExist("Variable '%s' does not exist." %
-                        self.source_var)
+                                           self.source_var)
             else:
                 relative_source = None
 
@@ -106,7 +109,7 @@ class ThumbnailNode(Node):
                 except:
                     #import traceback
                     #traceback.print_stack()
-                    print "ERROR: Using {% thumbnail %} tag with "\
+                    print "ERROR: Using {% thumbnail %} tag with " \
                           "a regular ImageField instead of ImageWithThumbsField:", self.source_var
                     return ''
             except ValueError:
@@ -166,9 +169,9 @@ def thumbnail(parser, token):
 
     if len(args) < 3:
         raise TemplateSyntaxError("Invalid syntax. Expected "
-            "'{%% %s source size [option1 option2 ...] %%}' or "
-            "'{%% %s source size [option1 option2 ...] as variable %%}'" %
-            (tag, tag))
+                                  "'{%% %s source size [option1 option2 ...] %%}' or "
+                                  "'{%% %s source size [option1 option2 ...] as variable %%}'" %
+                                  (tag, tag))
 
     # Get the source image path and requested size.
 
@@ -197,5 +200,6 @@ def thumbnail(parser, token):
                                       "'%s'" % (tag, arg))
     return ThumbnailNode(source_var, size_var, opts=opts,
                          context_name=context_name, **kwargs)
+
 
 register.tag(thumbnail)

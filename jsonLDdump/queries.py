@@ -1,6 +1,5 @@
 __author__ = 'mpetyx'
 
-
 SPECIFIC_VOCABULARY = """
 PREFIX rdf:<http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX xsd:<http://www.w3.org/2001/XMLSchema#>
@@ -25,7 +24,6 @@ WHERE{
 }
 ORDER BY ?vocabPrefix
 """
-
 
 DETAILS_ABOUT_VOCABULARY = """
 

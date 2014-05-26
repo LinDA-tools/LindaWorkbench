@@ -11,6 +11,7 @@ if "mailer" in settings.INSTALLED_APPS:
 else:
     from django.core.mail import send_mail
 
+
 def format_quote(text):
     """
     Wraps text at 55 chars and prepends each
@@ -21,12 +22,13 @@ def format_quote(text):
     for i, line in enumerate(lines):
         lines[i] = "> %s" % line
     return '\n'.join(lines)
-    
-def new_message_email(sender, instance, signal, 
-        subject_prefix=_(u'New Message: %(subject)s'),
-        template_name="messages/new_message.html",
-        default_protocol=None,
-        *args, **kwargs):
+
+
+def new_message_email(sender, instance, signal,
+                      subject_prefix=_(u'New Message: %(subject)s'),
+                      template_name="messages/new_message.html",
+                      default_protocol=None,
+                      *args, **kwargs):
     """
     This function sends an email and is called via Django's signal framework.
     Optional arguments:
@@ -47,7 +49,7 @@ def new_message_email(sender, instance, signal,
             })
             if instance.recipient.email != "":
                 send_mail(subject, message, settings.DEFAULT_FROM_EMAIL,
-                    [instance.recipient.email,])
+                          [instance.recipient.email, ])
         except Exception, e:
             #print e
             pass #fail silently

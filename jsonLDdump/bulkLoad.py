@@ -77,8 +77,8 @@ new_graph.close()
 # for fail in failure:
 #     print fail
 
-thefile = open("failures.txt","w")
+thefile = open("failures.txt", "w")
 for item in failure:
-  thefile.write("%s\n" % item)
+    thefile.write("%s\n" % item)
 
 thefile.close()

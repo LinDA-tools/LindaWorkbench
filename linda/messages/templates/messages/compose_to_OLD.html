@@ -1,45 +1,47 @@
-{% load i18n %} 
+{% load i18n %}
 {% block css %}
-    <link rel="stylesheet" href="/s/django_file_upload/css/bootstrap.min.css">
-	    <link rel="stylesheet" href="/s/django_file_upload/css/bootstrap-responsive.min.css">
-    <link rel="stylesheet" href="/s/django_file_upload/css/bootstrap-image-gallery.min.css">
+<link rel="stylesheet" href="/s/django_file_upload/css/bootstrap.min.css">
+<link rel="stylesheet" href="/s/django_file_upload/css/bootstrap-responsive.min.css">
+<link rel="stylesheet" href="/s/django_file_upload/css/bootstrap-image-gallery.min.css">
 {% endblock %}
-{% block content %} 
+{% block content %}
 <div id="view_inbox" style="min-height:150px;" class="wrapper-content">
-<div id="newmsg_dialog">
-	<div class="inbox-form" style="width:500px;margin:0;box-shadow:none;border:0" >
-		<div class="inbox-form-header">
-		{% trans "New Message" %}
-		 </div>
-		 <div class="inbox-form-body" style="border:0">
-<form action="/messages/compose/" method="post">{% csrf_token %}
-<div>To: (username)</div>
-<div>{{ form.recipient }}</div>
-	{{ form.recipient.errors }}
-<div>Subject</div>
-<div>{{ form.subject }}</div>
-<div>{{ form.body }}</div>
-	<input id="msgsend" class="button orangish" type="submit" value="{% trans "Send" %} &raquo;"/>
-	</form>
-    <a href='/messages/inbox'><div class='button' style="color:#DF4E15" >Back to inbox</div></a>
-</div>
-</div>
-</div>
-<script>
-jQuery.ajax({
-		type: "GET",
-		url: '/api/engage/users/',
-		dataType: 'json',
+    <div id="newmsg_dialog">
+        <div class="inbox-form" style="width:500px;margin:0;box-shadow:none;border:0">
+            <div class="inbox-form-header">
+                {% trans "New Message" %}
+            </div>
+            <div class="inbox-form-body" style="border:0">
+                <form action="/messages/compose/" method="post">{% csrf_token %}
+                    <div>To: (username)</div>
+                    <div>{{ form.recipient }}</div>
+                    {{ form.recipient.errors }}
+                    <div>Subject</div>
+                    <div>{{ form.subject }}</div>
+                    <div>{{ form.body }}</div>
+                    <input id="msgsend" class="button orangish" type="submit" value="{% trans " Send" %} &raquo;"/>
+                </form>
+                <a href='/messages/inbox'>
+                    <div class='button' style="color:#DF4E15">Back to inbox</div>
+                </a>
+            </div>
+        </div>
+    </div>
+    <script>
+        jQuery.ajax({
+            type: "GET",
+            url: '/api/engage/users/',
+            dataType: 'json',
 
-		success: function(json) {
-			users = [];
-			for (index in json.objects) {
-				users.push(json.objects[index].username);
-			}
-			jQuery( "#id_recipient" ).autocomplete({
-				source: users
-			});
-		}
-	});
-</script>
-{% endblock %}
+            success: function (json) {
+                users = [];
+                for (index in json.objects) {
+                    users.push(json.objects[index].username);
+                }
+                jQuery("#id_recipient").autocomplete({
+                    source: users
+                });
+            }
+        });
+    </script>
+    {% endblock %}

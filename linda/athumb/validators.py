@@ -5,18 +5,19 @@ from django.core.validators import ValidationError
 ALLOWABLE_THUMBNAIL_EXTENSIONS = getattr(
     settings, 'ALLOWABLE_THUMBNAIL_EXTENSIONS', ['png', 'jpg', 'jpeg', 'gif'])
 
+
 class ImageUploadExtensionValidator(object):
     """
     Perform some basic image uploading extension validation.
     """
     compare = lambda self, a, b: a is not b
-    clean   = lambda self, x: x
+    clean = lambda self, x: x
 
     def __call__(self, value):
         filename = value.name
         filename_split = filename.split('.')
         extension = filename_split[-1]
-        
+
         # Decided to require file extensions.
         if len(filename_split) < 2:
             raise ValidationError(
