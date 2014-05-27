@@ -18,8 +18,8 @@
         <div class="auth-form-body">
 
             <div id="emailaccount">
-                <p>{% blocktrans %}Already have an account? Then please <a href="{{ login_url }}">sign in</a>.{%
-                    endblocktrans %}</p>
+                <p>Already have an account? Then please <a href="{{ login_url }}">sign in</a>.
+                    </p>
 
                 <form class="form" id="form-login" method="post" action="{% url 'account_signup' %}">
                     {% csrf_token %}
