@@ -28,3 +28,19 @@ class VocabularyUpdateForm(forms.ModelForm):
         widgets = {
         'description': forms.Textarea,
         }
+
+from haystack.forms import ModelSearchForm
+
+class AutocompleteModelSearchForm(ModelSearchForm):
+
+    def search(self):
+        if not self.is_valid():
+            return self.no_query_found()
+        if not self.cleaned_data.get('q'):
+            return self.no_query_found()
+        sqs = self.searchqueryset.filter(title_auto=self.cleaned_data['q'])
+
+        if self.load_all:
+            sqs = sqs.load_all()
+
+        return sqs

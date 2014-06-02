@@ -79,13 +79,13 @@ class Vocabulary(models.Model):
 		return u'/vocabulary/%d/%s' % (self.id, self.title_slug())
 		
 	def has_been_voted(self):
-		return score > 0
+		return self.score > 0
 		
 	def get_score(self):
 		return float(self.score) / self.votes
 
 	def hasVoted(self, user):
-		return false
+		return False
 		
 
 class VocabularyRanking(models.Model):

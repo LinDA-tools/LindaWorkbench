@@ -2,6 +2,9 @@ from django.contrib import admin
 from django.conf.urls import patterns, include, url
 from django.contrib.auth.decorators import login_required
 
+from forms import AutocompleteModelSearchForm
+from haystack.views import SearchView, search_view_factory
+
 import views
 
 admin.autodiscover()
@@ -47,5 +50,14 @@ urlpatterns = patterns('',
 
                        #API calls
                        url(r'^api/users/', login_required(views.users), name='users'),
+
+                       (r'^search/', include('haystack.urls')),
+                       url(r'^autocomplete/', views.autocomplete),
+                       url(r'^search/vocabulary/', search_view_factory(
+                            view_class=SearchView,
+                            template='search/autocomplete.html',
+                            form_class=AutocompleteModelSearchForm
+                         ), name='haystack_search'),
+
 
 )
