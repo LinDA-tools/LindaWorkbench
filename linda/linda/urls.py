@@ -48,10 +48,12 @@ urlpatterns = patterns('',
                        url(r'^vocabulary/(?P<pk>\d+)/(?P<slug>[\w-]+)/visualize/', views.VocabularyVisualize.as_view(),
                            name='vocabulary-visualize'),
 
+                       #Tools
+                       url(r'^rdb2rdf/', views.rdb2rdf, name='rdb2rdf'),
+
                        #API calls
                        url(r'^api/users/', login_required(views.users), name='users'),
-
-                       (r'^search/', include('haystack.urls')),
+                            (r'^search/', include('haystack.urls')),
                        url(r'^autocomplete/', views.autocomplete),
                        url(r'^search/vocabulary/', search_view_factory(
                             view_class=SearchView,

@@ -1,4 +1,5 @@
 @import url(http://fonts.googleapis.com/css?family=Open+Sans:400italic,600italic,700italic,400,300,600,700);
+@import url(http://fonts.googleapis.com/css?family=Inconsolata);
 
 /* Reset
 ================================================== */
@@ -52,6 +53,10 @@ h2 {
 
 h3 {
     font-size: 22px;
+}
+
+h4 {
+    font-size: 20px;
 }
 
 /*set max img width*/
@@ -273,26 +278,53 @@ form input[type="submit"] {
     display: inline-block;
     min-width: 100px;
     text-align: right;
+    color: #333;
 }
 
 .form input {
     outline: none;
 }
 
-.form input[type="text"], .form input[type="password"], .form select, .form input[type="select"], .form input[type="email"], .form textarea {
+.form input[type="text"], input[type="url"], .form input[type="password"], .form select, .form input[type="select"], .form input[type="email"], .form textarea {
     padding: 5px;
-    border: 1px solid #F4B350;
+    border: 1px solid #ccc;
     color: #727272;
     border-radius: 3px;
     outline: none !important;
 }
 
-.form input[type="text"]:focus, .form input[type="password"]:focus, .form select:focus, .form input[type="select"]:focus, .form input[type="email"]:focus, .form textarea:focus {
+.form input[type="text"]:focus, input[type="url"]:focus, .form input[type="password"]:focus, .form select:focus, .form input[type="select"]:focus, .form input[type="email"]:focus, .form textarea:focus {
     border: 1px solid #E87E04;
 }
 
 .form .form-actions {
     margin-top: 10px;
+}
+
+.border-top {
+    border-top: 1px solid #ccc;
+    padding-top: 10px;
+    margin-top: 10px;
+}
+
+.seperated {
+    padding-top: 10px;
+    margin-top: 10px;
+}
+
+.custom-select {
+   width: 200px;
+   -moz-appearance: none;
+   -webkit-appearance: none;
+   text-indent: 0.01px;
+   text-overflow: '';
+   appearance: none;
+   margin: 2px;
+   border-radius: 0 !important;
+   background-image: url('/static/images/dropdown.png');
+   background-position: 180px 10px;
+   background-size: 10px 10px;
+   background-repeat: no-repeat;
 }
 
 /* Community */
@@ -834,7 +866,7 @@ form input[type="submit"] {
 
 .button {
     display: inline-block;
-    padding: 5px 10px;
+    padding: 3px 10px;
     border-radius: 4px;
     text-shadow: none;
     text-align: center;
@@ -1068,4 +1100,25 @@ input, textarea {
     position: relative;
     left: 80%;
     display: block;
+}
+
+/*RDB to RDF*/
+
+.rdb2rdf .form input[type="text"], .rdb2rdf .form input[type="url"], .rdb2rdf .form input[type="select"] {
+    min-width: 250px;
+}
+
+.rdb2rdf .rdfview, .rdb2rdf .dbview {
+    margin-top: 30px;
+}
+
+.rdb2rdf .rdfview h4, .rdb2rdf .dbview h4 {
+    color: #E87E04;
+}
+
+.rdb2rdf .dbview #dbquery {
+    min-width: 400px;
+    min-height: 150px;
+    vertical-align: top;
+    font-family:Consolas, monospace !important;
 }

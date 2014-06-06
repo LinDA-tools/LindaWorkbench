@@ -433,3 +433,7 @@ def autocomplete(request):
         'results': suggestions
     })
     return HttpResponse(the_data, content_type='application/json')
+
+def rdb2rdf(request):
+    params = {}
+    return render(request, 'rdb2rdf/rdb2rdf.html', params)
