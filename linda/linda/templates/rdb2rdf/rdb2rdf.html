@@ -9,7 +9,7 @@
 <div class="main">
     <h1 class="page-title inline">{% trans "R2R Mapping Designer"%}</h1>
 
-    <form action="." method="post" enctype="multipart/form-data" class="form">{% csrf_token %}
+    <form action="/" method="post" enctype="multipart/form-data" class="form">{% csrf_token %}
         {% if form.non_field_errors %}
         <p class="error">{{ form.non_field_errors }}</p>
         {% endif %}

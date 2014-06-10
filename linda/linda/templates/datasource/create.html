@@ -9,11 +9,11 @@
 <div class="main">
     <h1 class="page-title inline">{% trans "Create datasource"%}</h1>
 
-    <form class="form datasource-create-form" method="post" action="/datasource/create/" enctype="multipart/form-data">{% csrf_token %}
+    <form class="form datasource-create-form" method="post" action="/rdb2rdf/" enctype="multipart/form-data">{% csrf_token %}
 
         <div>
             <label for="name">{% trans "Name"%}:</label>
-            <input type="text" name="name" id="id_name" placeholder="name to recognise datasource" />
+            <input type="text" name="name" id="id_name" placeholder="name to recognise datasource" required="required"/>
         </div>
 
         <div>
@@ -36,7 +36,7 @@
 
         <div class="submit-box">
             <label for="datatype"></label>
-            <a class="button blue create-datasource-submit" href="/rdb2rdf">{% trans "Create and continue"%}</a>
+            <input type="submit" class="button blue create-datasource-submit" value='{% trans "Create and continue"%}'/>
         </div>
     </form>
 </div>
