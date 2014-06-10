@@ -1180,6 +1180,6 @@ input, textarea {
     width: 190px;
 }
 
-.datasource-create-form input[type="submit"] {
-    width: 200px;
+.datasource-create-form input[type="submit"], .datasource-create-form .create-datasource-submit {
+    width: 180px;
 }

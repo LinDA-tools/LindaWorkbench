@@ -7,16 +7,15 @@
         }
     });
 
-
     $( window ).resize(function() {
         $("#{{id}}-dropdown").css('left', $("#{{id}}-dropdown-button").offset().left);
     });
 
-    $("#{{id}}-dropdown-button").click(function () {
+    $("#{{id}}-dropdown-button").click(function(){
         $('#{{id}}-dropdown').toggle();
     });
 
-    $("#{{id}}-dropdown > li > div").click(function () {
+    $("#{{id}}-dropdown > li > div").click( function() {
         $('#{{id}}-dropdown').toggle();
         $('#{{id}}-dropdown-button > .filter-option').html($(this).children('span').text());
         $('#{{field.id}}').val($(this).children('span').attr("data-option"));
