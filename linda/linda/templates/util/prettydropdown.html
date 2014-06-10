@@ -1,0 +1,21 @@
+<div class="hidden">
+    {{field}}
+</div>
+
+<div class="inline">
+    <div id="{{id}}-dropdown-button" class="button green clearfix select-button sidebar-button">
+        <span class="filter-option">{% if default %}{{default}}{% endif %}</span>&nbsp;<span class="caret"></span>
+    </div>
+
+    <ul id="{{id}}-dropdown" class="dropdown-menu" role="menu">
+        <span class="arrow-up"></span>
+        {% for option in options %}
+            <li>
+                <div><span class="pull-left" data-option="{{option.0}}">{{option.1}}</span></div>
+            </li>
+        {% empty %}
+           {% if on_empty %}<div class="empty-options">{{on_empty}}</div>{% endif %}
+        {% endfor %}
+    </ul>
+</div>
+
