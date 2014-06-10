@@ -20,6 +20,11 @@ class UserListView(ListView):
 
 def index(request):
     params = {}
+    params['datasources'] = {(1, 'Customers data', 'Data about our company''s customers and contact information', 'private'),
+                             (2, 'Sales data', 'Sales for our company in the last 5 years', 'private'),
+                             (3, 'Eurostat', 'Eurostat data', 'public'),
+    }
+
     return render(request, 'index.html', params)
 
 
@@ -148,9 +153,12 @@ class VocabularyDetailsView(DetailView):
         #Check if user has voted for this vocabulary
         if self.request.user.is_authenticated():
             if (
-            VocabularyRanking.objects.filter(vocabularyRanked=context['vocabulary'], voter=self.request.user).exists()):
+                    VocabularyRanking.objects.filter(vocabularyRanked=context['vocabulary'],
+                                                     voter=self.request.user).exists()):
                 context['hasVoted'] = True
-                context['voteSubmitted'] = VocabularyRanking.objects.filter(vocabularyRanked=context['vocabulary'], voter=self.request.user)[0].vote
+                context['voteSubmitted'] = \
+                    VocabularyRanking.objects.filter(vocabularyRanked=context['vocabulary'], voter=self.request.user)[
+                        0].vote
             else:
                 context['hasVoted'] = False
 
@@ -193,8 +201,8 @@ class VocabularyUpdateView(UpdateView):
             return redirect("/vocabulary/" + kwargs.get('pk'))
         else:
             return render(self.request, 'vocabulary/edit.html', {
-            'vocabulary': oldVocabulary,
-            'form': vocabularyForm,
+                'vocabulary': oldVocabulary,
+                'form': vocabularyForm,
             })
 
 
@@ -211,6 +219,7 @@ class VocabularyDeleteView(DeleteView):
             res.status_code = 401
             return res
         return object
+
 
 class VocabularySearchView(ListView):
     model = Vocabulary
@@ -229,14 +238,15 @@ class VocabularySearchView(ListView):
         # actual_results = query_views.query()
 
 
-        for i in range(1,1000):
+        for i in range(1, 1000):
             item = {}
-            item['id'] = "%s"%str(i)
+            item['id'] = "%s" % str(i)
             item['shortTitle'] = "foaf"
             item['title'] = "Friend of a Friend vocabulary"
             item['preferredNamespacePrefix'] = "foaf"
             item['preferredNamespaceUri'] = "http://xmlns.com/foaf/0.1/"
-            item['description'] = "FOAF is a project devoted to linking people and information using the Web. Regardless of whether information is in people's heads, in physical or digital documents, or in the form of factual data, it can be linked."
+            item[
+                'description'] = "FOAF is a project devoted to linking people and information using the Web. Regardless of whether information is in people's heads, in physical or digital documents, or in the form of factual data, it can be linked."
             item['creator'] = "http://google.com/DanBrickley"
             item['modified'] = "2014-01-14"
             results.append(item)
@@ -259,7 +269,8 @@ class VocabularySearchView(ListView):
         context['page_obj'] = page_vocabularies
 
         return context
-	
+
+
 class VocabularyVisualize(DetailView):
     model = Vocabulary
     template_name = 'vocabulary/visualize.html'
@@ -285,17 +296,17 @@ class VocabularyVisualize(DetailView):
             if (predicateName == "type") and (objectName == "Class"):
                 subjects[subject] = subjectName
 
-            if predicateName == "domain": #property
+            if predicateName == "domain":  #property
                 objects[subject] = subjectName
                 subjects[object] = objectName
                 predicates.append((subject, predicate, object))
 
-            if predicateName == "subClassOf": #Attribute type
+            if predicateName == "subClassOf":  #Attribute type
                 subjects[subject] = subjectName
                 subjects[object] = objectName
                 predicates.append((subject, predicate, object))
 
-            if predicateName == "range": #Attribute type
+            if predicateName == "range":  #Attribute type
                 objects[subject] = subject.split("/")[-1] + ": " + object.split("/")[-1].split("#")[-1]
 
         context['subjects'] = subjects
@@ -421,6 +432,7 @@ def downloadRDF(request, pk, type):
     response["Content-Disposition"] = "attachment; filename=%s.%s" % (voc.title_slug(), type)
     return response
 
+
 from haystack.query import SearchQuerySet
 
 
@@ -434,6 +446,15 @@ def autocomplete(request):
     })
     return HttpResponse(the_data, content_type='application/json')
 
+#Datasource
+def datasourceCreate(request):
+    params = {}
+    params['types'] = {('public', 'Public'), ('private', 'Private')}
+    params['datatypes'] = {('csv', 'CSV file'), ('db', 'Database (relational)'), ('xls', 'Excel file'), ('rdf', 'RDF file')}
+
+    return render(request, 'datasource/create.html', params)
+
+#Tools
 def rdb2rdf(request):
     params = {}
     params['datasources'] = {}

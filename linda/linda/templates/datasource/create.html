@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% load url from future %}
+{% load i18n thumbnail2 %}
+{% load app_filters %}
+{% block title %}{% trans "Create datasource"%} | LinDA{% endblock %}
+{% block bodyclass %}datasource-create{% endblock %}
+
+{% block content %}
+<div class="main">
+    <h1 class="page-title inline">{% trans "Create datasource"%}</h1>
+
+    <form class="form datasource-create-form" method="post" action="/datasource/create/" enctype="multipart/form-data">{% csrf_token %}
+
+        <div>
+            <label for="name">{% trans "Name"%}:</label>
+            <input type="text" name="name" id="id_name" placeholder="name to recognise datasource" />
+        </div>
+
+        <div>
+            <label for="type">{% trans "Type"%}:</label>
+
+            {% with field="TODO connect field" id="type" options=types default="Private"%}
+                {% include 'util/prettydropdown.html' %}
+            {% endwith %}
+
+        </div>
+
+        <div>
+            <label for="datatype">{% trans "Data type"%}:</label>
+
+            {% with field="TODO connect field" id="datatype" options=datatypes default="Select the data type"%}
+                {% include 'util/prettydropdown.html' %}
+            {% endwith %}
+
+        </div>
+
+        <div class="submit-box">
+            <label for="datatype"></label>
+            <input type="submit" class="button blue" value='{% trans "Create and continue"%}'/>
+        </div>
+    </form>
+</div>
+{% endblock %}
+
+{% block scripts %}
+    {% with field="TODO connect field" id="type" %}
+        {% include 'util/prettydropdown_js.html' %}
+    {% endwith %}
+
+    {% with field="TODO connect field" id="datatype" %}
+        {% include 'util/prettydropdown_js.html' %}
+    {% endwith %}
+{% endblock %}

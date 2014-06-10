@@ -48,6 +48,10 @@ urlpatterns = patterns('',
                        url(r'^vocabulary/(?P<pk>\d+)/(?P<slug>[\w-]+)/visualize/', views.VocabularyVisualize.as_view(),
                            name='vocabulary-visualize'),
 
+                       #Datasources
+                       url(r'^datasource/create/', views.datasourceCreate,
+                           name='datasource-create'),
+
                        #Tools
                        url(r'^rdb2rdf/', views.rdb2rdf, name='rdb2rdf'),
 

@@ -301,6 +301,10 @@ form input[type="submit"] {
     margin-top: 10px;
 }
 
+.form .submit-box {
+    margin-top: 30px;
+}
+
 .border-top {
     border-top: 1px solid #ccc;
     padding-top: 10px;
@@ -885,6 +889,62 @@ form input[type="submit"] {
     text-align: left;
 }
 
+.edit-button {
+    background-image: url('/static/images/edit.png');
+    background-repeat: no-repeat;
+    padding: 5px 30px;
+    border-radius: 3px;
+    background-position: 5px 5px;
+    background-size: 20px 20px;
+}
+
+/* Home page */
+.homepage .main {
+    padding-left: 0;
+    padding-right: 0;
+}
+
+.homepage .page-title {
+    margin-left: 10px;
+}
+.create-new-datasource {
+    background: #F2F1EF;
+    color: #727272;
+    padding: 10px 0;
+    border-top: 2px solid #ABB7B7;
+    border-bottom: 2px solid #ABB7B7;
+}
+.create-new-datasource > p {
+    width: 70%;
+    margin: 0 auto;
+}
+
+.homepage .add-datasource-button {
+    margin: 20px;
+}
+
+.homepage .datasources-list {
+    width: 70%;
+    margin: 0 auto;
+}
+
+.homepage .datasources-list li > .datasource-title {
+    font-size: 130%;
+}
+
+.homepage .datasources-list li > span {
+    color: #a3a3a3;
+}
+
+.homepage .datasources-list li .edit-button {
+    display: none;
+    margin-left: 10px;
+}
+
+.homepage .datasources-list li:hover .edit-button {
+    display: inline;
+}
+
 /* Vocabulary details */
 
 .vocabulary .upload-info {
@@ -962,7 +1022,7 @@ form input[type="submit"] {
 .dropdown-menu {
     max-height: 470px;
     min-height: 70px;
-    margin-top: 18px !important;
+    margin-top: 10px !important;
     background-color: #34495e;
     color: #cccccc;
     padding: 4px 0 6px;
@@ -1113,4 +1173,13 @@ input, textarea {
     min-height: 150px;
     vertical-align: top;
     font-family:Consolas, monospace !important;
+}
+
+/* Create datasource */
+.datasource-create-form input[type="text"]{
+    width: 190px;
+}
+
+.datasource-create-form input[type="submit"] {
+    width: 200px;
 }

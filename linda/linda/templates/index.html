@@ -1,9 +1,9 @@
 {% extends "base.html" %}
 
 {% load i18n %}
-
 {% block title %}LinDA{% endblock %}
-	
+{% block bodyclass %}homepage{% endblock %}
+
 {% block content %}
 	<div class="main">
 		<h1 class="page-title">{% trans "Welcome to LinDA" %}</h1>
@@ -16,6 +16,45 @@
 				
 			</form>
 		</div>
+
+        <div class="create-new-datasource clearfix">
+            <p>{% trans "Connecting all your data with each other and with public data sources is easier than ever. Start with creating a new data source!" %}
+            <a href="/datasource/create/" class="button blue add-datasource-button">+ {% trans "Create a new datasource" %}</a>
+            </p>
+
+        </div>
+
+        <div class="datasources-list">
+            <h2>{% trans "Private Datasources" %}</h2>
+            <p>{% trans "In private datasources, you can view protected data that belongs to your business, benefiting from Linked Data technologies."%}</p>
+            <ul class="datasources-private">
+                {% for datasource in datasources %}
+                    {% if datasource.3 == "private" %}
+                    <li>
+                        <a class="datasource-title" href="/datasource/{{datasource.0}}/visualize/">{{datasource.1}}</a>
+                        <a class="button edit-button" title='{% trans "Edit datasource" %}' href="/datasource/{{datasource.0}}/edit/"></a><br />
+                        <span>{{datasource.2}}</span>
+                    </li>
+                    {% endif %}
+                {% endfor %}
+            </ul>
+
+            <br />
+
+            <h2>{% trans "Public Datasources" %}</h2>
+            <p>{% trans "With public datasources, you access knowledge from any open, linked data repository, enriching your own data with additional information."%}</p>
+            <ul class="datasources-public">
+                {% for datasource in datasources %}
+                    {% if datasource.3 == "public" %}
+                    <li>
+                        <a class="datasource-title" href="/datasource/{{datasource.0}}/visualize/">{{datasource.1}}</a>
+                        <a class="button edit-button" title='{% trans "Edit datasource" %}' href="/datasource/{{datasource.0}}/edit/"></a><br />
+                        <span>{{datasource.2}}</span>
+                    </li>
+                    {% endif %}
+                {% endfor %}
+            </ul>
+        </div>
 	</div>
 
 {% endblock %}
