@@ -13,7 +13,7 @@
           class="vocabulary-edit-form" enctype="multipart/form-data">{% csrf_token %}
 
         {% if form.non_field_errors %}
-        <p class="error">{{ form.non_field_errors }}</p>
+            <p class="error">{{ form.non_field_errors }}</p>
         {% endif %}
 
         <div>
@@ -27,27 +27,10 @@
         <div>
             <label for="category">{% trans "Category"%}:</label>
 
-            <div class="hidden">
-                {{form.category}}
-            </div>
+            {% with field=form.category id="category" options=categories %}
+                {% include 'util/prettydropdown.html' %}
+            {% endwith %}
 
-            <div class="inline">
-                <div id="category-dropdown-button" class="button green clearfix select-button sidebar-button">
-                    <span class="filter-option">{{vocabulary.category}}</span>&nbsp;<span class="caret"></span>
-                </div>
-
-                <ul id="category-dropdown" class="dropdown-menu" role="menu">
-                    <span class="arrow-up"></span>
-                    {% for category in categories %}
-                    <li>
-                        <div>
-                            <span class="pull-left" data-option="{{category.0}}">{{category.1}}</span>
-                        </div>
-                    </li>
-                    {% endfor %}
-                </ul>
-
-            </div>
         </div>
 
         <label for="description">{% trans "Vocabulary description"%}:</label>
@@ -99,19 +82,7 @@
 {% endblock %}
 
 {% block scripts %}
-<script>
-    $(function () {
-        $("#category-dropdown-button > .filter-option").html($("#id_category option:selected").text());
-    });
-
-    $("#category-dropdown-button").click(function () {
-        $('#category-dropdown').toggle();
-    });
-
-    $("#category-dropdown > li > div").click(function () {
-        $('#category-dropdown').toggle();
-        $('#category-dropdown-button > .filter-option').html($(this).children('span').text());
-        $('#id_category').val($(this).children('span').attr("data-option"));
-    });
-</script>
+    {% with field=form.category id="category" %}
+        {% include 'util/prettydropdown_js.html' %}
+    {% endwith %}
 {% endblock %}

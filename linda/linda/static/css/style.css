@@ -312,21 +312,6 @@ form input[type="submit"] {
     margin-top: 10px;
 }
 
-.custom-select {
-   width: 200px;
-   -moz-appearance: none;
-   -webkit-appearance: none;
-   text-indent: 0.01px;
-   text-overflow: '';
-   appearance: none;
-   margin: 2px;
-   border-radius: 0 !important;
-   background-image: url('/static/images/dropdown.png');
-   background-position: 180px 10px;
-   background-size: 10px 10px;
-   background-repeat: no-repeat;
-}
-
 /* Community */
 
 .divider {
@@ -866,6 +851,7 @@ form input[type="submit"] {
 
 .button {
     display: inline-block;
+    vertical-align: top;
     padding: 3px 10px;
     border-radius: 4px;
     text-shadow: none;
@@ -944,6 +930,8 @@ form input[type="submit"] {
     display: inline-block;
     vertical-align: middle;
     width: 180px;
+    margin-left: 2px;
+    margin-bottom: 5px;
 }
 
 .vocabulary-edit-form .select-button {
@@ -1032,6 +1020,10 @@ form input[type="submit"] {
 .dropdown-menu > li:hover {
     background-color: #428bca;
     cursor: pointer;
+}
+
+.dropdown-menu > .empty-options {
+    padding: 5px;
 }
 
 .sidebar-button {

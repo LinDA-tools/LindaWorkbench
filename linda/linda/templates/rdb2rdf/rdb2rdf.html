@@ -17,10 +17,11 @@
         <div class="generics">
             <div>
                 <label for="datasource">{% trans "Data Source"%}:</label>
-                <select name="datasource" class="custom-select">
-                    <option value="" disabled selected>{% trans "Select a data source" %}</option>
-                </select>
-                <a class="button blue" href="#">+</a>
+                {% with field="TODO connect field" id="datasource" options=datasources default="Select a data source" on_empty="No datasources found" %}
+                    {% include 'util/prettydropdown.html' %}
+                {% endwith %}
+
+                <a class="button blue" style="margin-top: 10px;" href="#">+</a>
             </div>
 
             <div>
@@ -39,35 +40,36 @@
 
             <div>
                 <label for="dbtable">{% trans "Database table"%}:</label>
-                <select id="dbtable" name="dbtable" class="custom-select">
-                    <option value="" disabled selected>{% trans "Select a table" %}</option>
-                    <option value="product">Product</option>>
-                    <option value="_write_custom_query">{% trans "Write a custom query"%}</option>>
-                </select>
+                {% with field="TODO connect field" id="dbtable" options=dbtables default="Select a table" %}
+                    {% include 'util/prettydropdown.html' %}
+                {% endwith %}
+
                 <textarea id="dbquery" name="dbquery" style="display: none;"></textarea>
             </div>
         </div>
 
-        <div class="rdfview">
-            <h4>{% trans "RDF view" %}</h4>
+            <div class="rdfview">
+                <h4>{% trans "RDF view" %}</h4>
 
-            <div>
-                <label for="subjtemplate">{% trans "Subject <br />template"%}:</label>
-                <input type="text" name="subjtemplate" placeholder="product/{productName}/{productId}"/>
-            </div>
+                <div>
+                    <label for="subjtemplate">{% trans "Subject <br />template"%}:</label>
+                    <input type="text" name="subjtemplate" placeholder="product/{productName}/{productId}"/>
+                </div>
 
-            <div>
-                <label for="rdftype">{% trans "Type"%}:</label>
-                <input type="text" name="rdftype" value="{suggested value}" /><!--Add autocomplete type here-->
-            </div>
+                <div>
+                    <label for="rdftype">{% trans "Type"%}:</label>
+                    <input type="text" name="rdftype" value="{suggested value}" /><!--Add autocomplete type here-->
+                </div>
 
-            <div>
-                <label for="dbcolumn">{% trans "Map from"%}:</label>
-                <select id="dbcolumn" name="dbcolumn" class="custom-select">
-                    <option value="" disabled selected>{% trans "Column..." %}</option>
-                    <option value="ID">ID</option>
-                </select>
-            </div>
+
+                <div>
+                    <label for="dbcolumn">{% trans "Map from"%}:</label>
+
+                    {% with field="TODO connect field" id="dbcolumn" options=dbcolumns default="Column..."%}
+                        {% include 'util/prettydropdown.html' %}
+                    {% endwith %}
+
+                </div>
 
             <div>
                 <label for="rdfproperty">{% trans "to"%}:</label>
@@ -84,14 +86,38 @@
 {% endblock %}
 
 {% block scripts %}
-<script>
-    $( "#dbtable" ).change(function() {
-        if ($(this).val() === "_write_custom_query") {
-            $("#dbquery").show();
-        }
-        else {
-             $("#dbquery").hide();
-        }
-    })
-</script>
+    <script>
+        $( "#dbtable" ).change(function() {
+            if ($(this).val() === "_write_custom_query") {
+                $("#dbquery").show();
+            }
+            else {
+                 $("#dbquery").hide();
+            }
+        });
+    </script>
+
+    {% with field="TODO connect field" id="datasource" %}
+        {% include 'util/prettydropdown_js.html' %}
+    {% endwith %}
+
+    {% with field="TODO connect field" id="dbtable" %}
+        {% include 'util/prettydropdown_js.html' %}
+    {% endwith %}
+
+    {% with field="TODO connect field" id="dbcolumn" %}
+        {% include 'util/prettydropdown_js.html' %}
+    {% endwith %}
+
+    <script>
+        //show custom query box on the according selection
+        $("#dbtable-dropdown > li").click(function () {
+            if ($(this).find("div > span").attr("data-option") === "_write_custom_query") {
+                $("#dbquery").show();
+            }
+            else {
+                $("#dbquery").hide();
+            }
+        });
+    </script>
 {% endblock %}

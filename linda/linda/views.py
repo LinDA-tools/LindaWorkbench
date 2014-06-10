@@ -436,4 +436,8 @@ def autocomplete(request):
 
 def rdb2rdf(request):
     params = {}
+    params['datasources'] = {}
+    params['dbcolumns'] = {('name', 'Name'), ('id', 'ID')}
+    params['dbtables'] = {('_write_custom_query', 'Write a custom query'), ('product', 'Product')}
+
     return render(request, 'rdb2rdf/rdb2rdf.html', params)
