@@ -52,6 +52,10 @@ urlpatterns = patterns('',
                        url(r'^datasource/create/', views.datasourceCreate,
                            name='datasource-create'),
 
+                       #Query Builder
+                       url(r'^query-builder/', views.queryBuilder,
+                           name='query-builder'),
+
                        #Tools
                        url(r'^rdb2rdf/', views.rdb2rdf, name='rdb2rdf'),
 

@@ -454,6 +454,12 @@ def datasourceCreate(request):
 
     return render(request, 'datasource/create.html', params)
 
+#Query builder
+def queryBuilder(request):
+    params = {}
+
+    return render(request, 'query-builder/index.html', params)
+
 #Tools
 def rdb2rdf(request):
     params = {}
