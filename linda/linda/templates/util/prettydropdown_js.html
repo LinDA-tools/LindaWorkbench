@@ -1,6 +1,6 @@
 <script>
     $(function () {
-        $("#{{id}}-dropdown").css('left', $("#{{id}}-dropdown-button").offset().left);
+        //$("#{{id}}-dropdown").css('left', $("#{{id}}-dropdown-button").offset().left);
         var text = $("#{{field.auto_id}} option:selected").text();
         if (text !== "") {
             $("#{{id}}-dropdown-button > .filter-option").html(text);

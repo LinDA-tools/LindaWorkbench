@@ -7,7 +7,137 @@
 
 {% block content %}
 <div class="main">
-    <h1 class="page-title">{% trans "Query Builder"%}</h1>
+    <h1 class="page-title">{% trans "Run a query"%}</h1>
 
+    <form class="form" method="post" action="." >{% csrf_token %}
+        <a id="query-builder-button" href="#" class="button tab orange">{% trans "Query builder tool" %}</a>
+        <a id="sparql-builder-button" href="#" class="button tab blue">{% trans "SPARQL Query" %}</a>
+
+        <div class="query-builder">
+            <h3>{% trans "Follow the steps below to build the query:" %}</h3>
+            <p>{% trans "[Tip]: Press ctrl and then click item to choose multiple items at the same time." %}</p>
+
+            <div id="select-datasources" class="column-4">
+                <label for="datasources">{% trans "Choose datasources"%}</label><br />
+                <select name="datasources" multiple="multiple">
+                    <option value="sales">Sales data</option>
+                    <option value="customers">Customers data</option>
+                    <option value="eurostat">Eurostat</option>
+                </select>
+
+                <a id="datasources-next" class="button blue "href="#">{% trans "next"%} ›</a>
+            </div>
+
+            <div id="select-classes" class="column-4 hidden">
+                <label for="classes">{% trans "Choose classes"%}</label><br />
+                <select name="classes" multiple="multiple">
+                    <option value="person">Person</option>
+                    <option value="price">Price</option>
+                    <option value="city">City</option>
+                    <option value="country">Country</option>
+                </select>
+
+                <a id="classes-next" class="button blue "href="#">{% trans "next"%} ›</a>
+                <input type="submit" class="button blue" value='{% trans "Visualize"%} »' />
+            </div>
+
+            <div id="select-properties" class="column-4 hidden">
+                <label for="properties">{% trans "Choose properties"%}</label><br />
+                <select name="properties" multiple="multiple">
+                    <option value="buyer">Buyer</option>
+                    <option value="product_price">Product price</option>
+                </select>
+
+                <a id="properties-next" class="button blue "href="#">{% trans "next"%} ›</a>
+                <input type="submit" class="button blue" value='{% trans "Visualize"%} »' />
+            </div>
+
+            <div id="define-limitations" class="column-4 hidden">
+                <p id="limitation-list">{% trans "Limitations:" %}</p>
+
+                {% with field="TODO connect field" id="limitation-property" options=example_properties default="Choose a property" %}
+                    {% include 'util/prettydropdown.html' %}
+                {% endwith %}
+
+                {% with field="TODO connect field" id="limitation-relation" options=limitation_relations default="=" %}
+                    {% include 'util/prettydropdown.html' %}
+                {% endwith %}
+
+                <input id="id_limitation-value" name="limitation-value" type="text" placeholder='{% trans "value" %}'/>
+
+                <a id="limitation-add" class="button blue "href="#">+{% trans "Add limitation"%}</a><br />
+                <input type="submit" class="button blue" value='{% trans "Visualize"%} »' />
+            </div>
+        </div>
+
+        <div class="sparql-query">
+            <h3>{% trans "Write your SPARQL query:" %}</h3>
+            <textarea id="id_query-text" name="query-text" placeholder='{% trans "Insert your SPARQL query here"%}'></textarea><br />
+
+            <input type="submit" class="button blue" value='{% trans "Visualize" %}'/>
+        </div>
+
+    </form>
 </div>
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        $("div.sparql-query").hide();
+
+        $("#query-builder-button").click(function() {
+            $(this).removeClass("blue");
+            $(this).addClass("orange");
+            $("#sparql-builder-button").removeClass("orange");
+            $("#sparql-builder-button").addClass("blue");
+
+            $("div.sparql-query").hide();
+            $("div.query-builder").show();
+        });
+
+        $("#sparql-builder-button").click(function() {
+            $(this).removeClass("blue");
+            $(this).addClass("orange");
+            $("#query-builder-button").removeClass("orange");
+            $("#query-builder-button").addClass("blue");
+
+            $("div.query-builder").hide();
+            $("div.sparql-query").show();
+        });
+
+        $("#datasources-next").click(function () {
+            $("#select-datasources > label").addClass("done");
+            $("#select-classes").removeClass("hidden");
+        });
+
+        $("#classes-next").click(function () {
+            $('#select-classes > input[type="submit"]').hide();
+            $("#select-classes > label").addClass("done");
+            $("#select-properties").removeClass("hidden");
+        });
+
+        $("#properties-next").click(function () {
+            $('#select-properties > input[type="submit"]').hide();
+            $("#select-properties > label").addClass("done");
+            $("#define-limitations").removeClass("hidden");
+        });
+
+        $("#limitation-add").click(function () {
+            $("#limitation-list").html( $("#limitation-list").html() + '<br />'
+                                            + $("#limitation-property-dropdown-button > .filter-option").html()
+                                            + $("#limitation-relation-dropdown-button > .filter-option").html()
+                                            + $("#id_limitation-value").val());
+
+            $("#id_limitation-value").val('');
+        });
+    </script>
+
+    {% with field="TODO connect field" id="limitation-property" %}
+        {% include 'util/prettydropdown_js.html' %}
+    {% endwith %}
+
+    {% with field="TODO connect field" id="limitation-relation" %}
+        {% include 'util/prettydropdown_js.html' %}
+    {% endwith %}
+
 {% endblock %}

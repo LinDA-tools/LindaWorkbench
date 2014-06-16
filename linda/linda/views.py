@@ -457,7 +457,8 @@ def datasourceCreate(request):
 #Query builder
 def queryBuilder(request):
     params = {}
-
+    params['example_properties'] = {('buyers', 'Buyers'), ('product_price', 'Product price')}
+    params['limitation_relations'] = {('EQ','='), ('NEQ','!='), ('EQ','<'), ('EQ','<='), ('EQ','>'), ('EQ','>=')}
     return render(request, 'query-builder/index.html', params)
 
 #Tools
