@@ -536,27 +536,25 @@ def api_datasource_create(request):
 @csrf_exempt
 def api_datasource_get(request, dtname):
     results = {}
-    if request.POST: #request must be POST
-        #check if datasource exists
-        if DatasourceDescription.objects.filter(name=dtname).exists():
-            #get rdf type
-            if request.POST.get("format"):
-                rdf_format = request.POST.get("format")
-            else:
-                rdf_format = 'application/rdf+xml' #rdf+xml by default
 
-            #make REST api call to update graph
-            headers = {'accept': rdf_format, 'content-type': 'application/rdf+xml'}
-            callReplace = requests.get(SESAME_LINDA_URL + 'rdf-graphs/' + dtname, headers=headers)
-
-            results['status'] = '200'
-            results['content'] = callReplace.text
+    #check if datasource exists
+    if DatasourceDescription.objects.filter(name=dtname).exists():
+        #get rdf type
+        if request.POST.get("format"):
+            rdf_format = request.GET.get("format")
         else:
-            results['status'] = '403'
-            results['message'] = "Datasource does not exist."
+            rdf_format = 'application/rdf+xml' #rdf+xml by default
+
+        #make REST api call to update graph
+        headers = {'accept': rdf_format, 'content-type': 'application/rdf+xml'}
+        callReplace = requests.get(SESAME_LINDA_URL + 'rdf-graphs/' + dtname, headers=headers)
+
+        results['status'] = '200'
+        results['message'] = "Datasource retrieved successfully"
+        results['content'] = callReplace.text
     else:
         results['status'] = '403'
-        results['message'] = 'POST method must be called to get a datasource contents.'
+        results['message'] = "Datasource does not exist."
 
     data = json.dumps(results)
     mimetype = 'application/json'
