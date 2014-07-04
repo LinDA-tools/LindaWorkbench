@@ -540,7 +540,7 @@ def api_datasource_get(request, dtname):
     #check if datasource exists
     if DatasourceDescription.objects.filter(name=dtname).exists():
         #get rdf type
-        if request.POST.get("format"):
+        if request.GET.get("format"):
             rdf_format = request.GET.get("format")
         else:
             rdf_format = 'application/rdf+xml' #rdf+xml by default
@@ -609,8 +609,12 @@ def api_datasource_delete(request, dtname):
             #make REST api call to delete graph
             callDelete = requests.delete(SESAME_LINDA_URL + 'rdf-graphs/' + dtname)
 
-            results['status'] = '200'
-            results['message'] = 'Datasource deleted succesfully.'
+            if callDelete.text == "":
+                results['status'] = '200'
+                results['message'] = 'Datasource deleted succesfully.'
+            else:
+                results['status'] = '500'
+                results['message'] = 'Error deleting datasource: ' + callDelete.text
         else:
             results['status'] = '403'
             results['message'] = "Datasource does not exist."
