@@ -29,6 +29,14 @@ urlpatterns = patterns('',
 					   #Vocabulary search
                        url(r'^vocabulary-search/$', views.VocabularySearchView.as_view(),
                            name='vocabulary-search'),
+                       url(r'^search/', include('haystack.urls')),
+                       url(r'^autocomplete/', views.autocomplete),
+                       url(r'^search/vocabulary/', search_view_factory(
+
+                            view_class=SearchView,
+                            template='search/autocomplete.html',
+                            form_class=AutocompleteModelSearchForm
+                         ), name='haystack_search'),
 
                        #Vocabularies
                        url(r'^vocabulary/(?P<pk>\d+)/$', views.VocabularyDetailsView.as_view(),
@@ -60,14 +68,12 @@ urlpatterns = patterns('',
                        url(r'^rdb2rdf/', views.rdb2rdf, name='rdb2rdf'),
 
                        #API calls
-                       url(r'^api/users/', login_required(views.users), name='users'),
-                            (r'^search/', include('haystack.urls')),
-                       url(r'^autocomplete/', views.autocomplete),
-                       url(r'^search/vocabulary/', search_view_factory(
-                            view_class=SearchView,
-                            template='search/autocomplete.html',
-                            form_class=AutocompleteModelSearchForm
-                         ), name='haystack_search'),
+                       url(r'^api/users/', login_required(views.api_users), name='users'),
 
+                       url(r'^api/datasources/', views.api_datasources_list, name='datasources-list'),
+                       url(r'^api/datasource/create/', views.api_datasource_create, name='datasource-create'),
+                       url(r'^api/datasource/(?P<dtname>[\w-]+)/replace/', views.api_datasource_replace, name='datasource-replace'),
+                       url(r'^api/datasource/(?P<dtname>[\w-]+)/delete/', views.api_datasource_delete, name='datasource-delete'),
+                       url(r'^api/datasource/(?P<dtname>[\w-]+)/', views.api_datasource_get, name='datasource-get'),
 
 )

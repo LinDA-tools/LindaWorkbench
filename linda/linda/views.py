@@ -1,21 +1,18 @@
 from django.http import HttpResponse, HttpResponseNotFound
 from django.shortcuts import redirect, render, get_object_or_404
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import ListView, UpdateView, DetailView, DeleteView
 
 import json
+import requests
 from forms import *
 from rdflib import Graph
 from datetime import datetime
 
 
 # from graphdb import views as query_views
-
-class UserListView(ListView):
-    model = User
-    template_name = 'users/community.html'
-    context_object_name = 'users'
-    paginate_by = 20
+from linda.settings import SESAME_LINDA_URL
 
 
 def index(request):
@@ -43,6 +40,11 @@ def profile(request, pk):
     params = {'userModel': user}
     return render(request, 'users/profile.html', params)
 
+class UserListView(ListView):
+    model = User
+    template_name = 'users/community.html'
+    context_object_name = 'users'
+    paginate_by = 20
 
 class UserUpdateView(UpdateView):
     form_class = UserForm
@@ -59,7 +61,7 @@ class UserUpdateView(UpdateView):
         return context
 
     def get(self, *args, **kwargs):
-        if (str(self.request.user.id) != str(kwargs.get('pk'))):
+        if str(self.request.user.id) != str(kwargs.get('pk')):
             res = HttpResponse("Unauthorized")
             res.status_code = 401
             return res
@@ -71,7 +73,7 @@ class UserUpdateView(UpdateView):
         return "/profile/" + kwargs.get('pk')
 
     def post(self, *args, **kwargs):
-        if (str(self.request.user.id) != str(kwargs.get('pk'))  ):
+        if str(self.request.user.id) != str(kwargs.get('pk')):
             res = HttpResponse("Unauthorized")
             res.status_code = 401
             return res
@@ -105,32 +107,6 @@ class UserUpdateView(UpdateView):
                 'userProfileForm': userProfileForm,
                 'userModel': user
             })
-
-
-def users(request):
-    if request.is_ajax():
-        q = request.GET.get('term', '')
-        usernameList = User.objects.filter(username__icontains=q)
-        last_nameList = User.objects.filter(first_name__icontains=q)
-        first_nameList = User.objects.filter(first_name__icontains=q)
-        userList = usernameList | first_nameList | last_nameList
-        results = []
-        for user in userList[:20]:
-            user_json = {}
-            user_json['id'] = user.id
-            if user.get_full_name():
-                user_json['label'] = user.get_full_name() + ' (' + user.username + ')'
-            else:
-                user_json['label'] = user.username
-            user_json['value'] = user.username
-            results.append(user_json)
-
-        data = json.dumps(results)
-    else:
-        data = 'fail'
-    mimetype = 'application/json'
-    return HttpResponse(data, mimetype)
-
 
 class VocabularyDetailsView(DetailView):
     model = Vocabulary
@@ -335,20 +311,20 @@ def rateDataset(request, pk, vt):
         dataJson = []
         res = {}
 
-        if (not request.user.is_authenticated()):
+        if not request.user.is_authenticated():
             res['result'] = "You must be logged in to rate."
             code = 403
         else:
-            if ((voteSubmitted < 1) or (voteSubmitted > 5)):
+            if (voteSubmitted < 1) or (voteSubmitted > 5):
                 res['result'] = "Invalid vote " + voteSubmitted + ", votes must be between 1 and 5."
                 code = 401
             else:
-                if (not Vocabulary.objects.get(id=vocid)):
+                if not Vocabulary.objects.get(id=vocid):
                     res['result'] = "Vocabulary does not exist."
                     code = 404
                 else:
-                    if (VocabularyRanking.objects.filter(vocabularyRanked=Vocabulary.objects.get(id=vocid),
-                                                         voter=request.user).exists()):
+                    if VocabularyRanking.objects.filter(vocabularyRanked=Vocabulary.objects.get(id=vocid),
+                                                         voter=request.user).exists():
                         res['result'] = "You have already ranked this vocabulary."
                         code = 403
                     else:
@@ -457,7 +433,7 @@ def datasourceCreate(request):
 #Query builder
 def queryBuilder(request):
     params = {}
-    params['example_properties'] = {('buyers', 'Buyers'), ('product_price', 'Product price')}
+    params['example_properties'] = {('buyer', 'Buyer'), ('product_price', 'Product price')}
     params['limitation_relations'] = {('EQ','='), ('NEQ','!='), ('EQ','<'), ('EQ','<='), ('EQ','>'), ('EQ','>=')}
     return render(request, 'query-builder/index.html', params)
 
@@ -469,3 +445,181 @@ def rdb2rdf(request):
     params['dbtables'] = {('_write_custom_query', 'Write a custom query'), ('product', 'Product')}
 
     return render(request, 'rdb2rdf/rdb2rdf.html', params)
+
+#Api view
+
+#Get a list with all users - used in autocomplete
+def api_users(request):
+    if request.is_ajax():
+        q = request.GET.get('term', '')
+        usernameList = User.objects.filter(username__icontains=q)
+        last_nameList = User.objects.filter(first_name__icontains=q)
+        first_nameList = User.objects.filter(first_name__icontains=q)
+        userList = usernameList | first_nameList | last_nameList
+        results = []
+        for user in userList[:20]:
+            user_json = {}
+            user_json['id'] = user.id
+            if user.get_full_name():
+                user_json['label'] = user.get_full_name() + ' (' + user.username + ')'
+            else:
+                user_json['label'] = user.username
+            user_json['value'] = user.username
+            results.append(user_json)
+
+        data = json.dumps(results)
+    else:
+        data = 'fail'
+    mimetype = 'application/json'
+    return HttpResponse(data, mimetype)
+
+#Return a list with all created datasources
+@csrf_exempt
+def api_datasources_list(request):
+    results = []
+    for source in DatasourceDescription.objects.all():
+        source_info = {}
+        source_info['name'] = source.name
+        source_info['uri'] = source.uri
+        source_info['title'] = source.title
+        results.append(source_info)
+
+    data = json.dumps(results)
+    mimetype = 'application/json'
+    return HttpResponse(data, mimetype)
+
+#Create a new datasource with some rdf data
+@csrf_exempt
+def api_datasource_create(request):
+    results = {}
+    if request.POST: #request must be POST
+        #check if datasource already exists
+        if DatasourceDescription.objects.filter(title=request.POST.get("title")).exists():
+            results['status'] = '403'
+            results['message'] = "Datasource already exists."
+        else:
+            #create datasource description
+            sname = slugify(request.POST.get("title"))
+            source = DatasourceDescription.objects.create(title=request.POST.get("title"),
+                                                          name=sname,
+                                                          uri="<" + SESAME_LINDA_URL + "rdf-graphs/" + sname)
+
+            #get rdf type
+            if request.POST.get("format"):
+                rdf_format = request.POST.get("format")
+            else:
+                rdf_format = 'application/rdf+xml' #rdf+xml by default
+
+            #make REST api call to add rdf data
+            headers = {'accept': 'application/rdf+xml', 'content-type': rdf_format}
+            callAdd = requests.post(SESAME_LINDA_URL + 'rdf-graphs/' + source.name, headers=headers, data=request.POST.get("content"))
+
+            if callAdd.text == "":
+                results['status'] = '200'
+                results['message'] = 'Datasource created succesfully.'
+                results['name'] = source.name
+                results['uri'] = source.uri
+            else:
+                #remove datasource from database
+                source.delete()
+                results['status'] = '500'
+                results['message'] = 'Error storing rdf data: ' + callAdd.text
+    else:
+        results['status'] = '403'
+        results['message'] = 'POST method must be used to create a datasource.'
+
+    data = json.dumps(results)
+    mimetype = 'application/json'
+    return HttpResponse(data, mimetype)
+
+#Retrieve all data from datasource in specified format
+@csrf_exempt
+def api_datasource_get(request, dtname):
+    results = {}
+    if request.POST: #request must be POST
+        #check if datasource exists
+        if DatasourceDescription.objects.filter(name=dtname).exists():
+            #get rdf type
+            if request.POST.get("format"):
+                rdf_format = request.POST.get("format")
+            else:
+                rdf_format = 'application/rdf+xml' #rdf+xml by default
+
+            #make REST api call to update graph
+            headers = {'accept': rdf_format, 'content-type': 'application/rdf+xml'}
+            callReplace = requests.get(SESAME_LINDA_URL + 'rdf-graphs/' + dtname, headers=headers)
+
+            results['status'] = '200'
+            results['content'] = callReplace.text
+        else:
+            results['status'] = '403'
+            results['message'] = "Datasource does not exist."
+    else:
+        results['status'] = '403'
+        results['message'] = 'POST method must be called to get a datasource contents.'
+
+    data = json.dumps(results)
+    mimetype = 'application/json'
+    return HttpResponse(data, mimetype)
+
+#Replace all data from datasource with new rdf data
+@csrf_exempt
+def api_datasource_replace(request, dtname):
+    results = {}
+    if request.POST: #request must be POST
+        #check if datasource exists
+        if DatasourceDescription.objects.filter(name=dtname).exists():
+            #get rdf type
+            if request.POST.get("format"):
+                rdf_format = request.POST.get("format")
+            else:
+                rdf_format = 'application/rdf+xml' #rdf+xml by default
+
+            #make REST api call to update graph
+            headers = {'accept': 'application/rdf+xml', 'content-type': rdf_format}
+            callReplace = requests.put(SESAME_LINDA_URL + 'rdf-graphs/' + dtname, headers=headers, data=request.POST.get("content"))
+
+            if callReplace.text == "":
+                results['status'] = '200'
+                results['message'] = 'Datasource updated succesfully.' + callReplace.text
+            else:
+                results['status'] = '500'
+                results['message'] = 'Error replacing rdf data: ' + callReplace.text
+
+        else:
+            results['status'] = '403'
+            results['message'] = "Datasource does not exist."
+    else:
+        results['status'] = '403'
+        results['message'] = 'POST method must be used to update a datasource.'
+
+    data = json.dumps(results)
+    mimetype = 'application/json'
+    return HttpResponse(data, mimetype)
+
+#Replace all data from datasource with new rdf data
+@csrf_exempt
+def api_datasource_delete(request, dtname):
+    results = {}
+    if request.POST: #request must be POST
+        #check if datasource exists
+        if DatasourceDescription.objects.filter(name=dtname).exists():
+            #delete object from database
+            source = DatasourceDescription.objects.filter(name=dtname)[:1].get()
+            source.delete()
+
+            #make REST api call to delete graph
+            callDelete = requests.delete(SESAME_LINDA_URL + 'rdf-graphs/' + dtname)
+
+            results['status'] = '200'
+            results['message'] = 'Datasource deleted succesfully.'
+        else:
+            results['status'] = '403'
+            results['message'] = "Datasource does not exist."
+    else:
+        results['status'] = '403'
+        results['message'] = 'POST method must be used to delete a datasource.'
+
+    data = json.dumps(results)
+    mimetype = 'application/json'
+    return HttpResponse(data, mimetype)

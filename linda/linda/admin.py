@@ -22,3 +22,9 @@ class VocabularyCommentsAdmin(admin.ModelAdmin):
 
 
 admin.site.register(VocabularyComments, VocabularyCommentsAdmin)
+
+class DatasourceDescriptionAdmin(admin.ModelAdmin):
+    pass
+
+
+admin.site.register(DatasourceDescription, DatasourceDescriptionAdmin)

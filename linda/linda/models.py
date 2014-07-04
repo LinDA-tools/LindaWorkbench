@@ -5,6 +5,8 @@ from django.template.defaultfilters import slugify
 from lists import *
 from athumb.fields import ImageWithThumbsField
 
+from settings import SESAME_LINDA_URL
+
 User.profile = property(lambda u: UserProfile.objects.get_or_create(user=u)[0])
 
 photo_upload_path = 'static/images/photos/'
@@ -90,6 +92,8 @@ class Vocabulary(models.Model):
     def hasVoted(self, user):
         return False
 
+    def __unicode__( self ):
+        return self.title
 
 class VocabularyRanking(models.Model):
     voter = models.ForeignKey(User)
@@ -102,4 +106,13 @@ class VocabularyComments(models.Model):
     vocabularyCommented = models.ForeignKey(Vocabulary)  #Vocabulary-discussion
     user = models.ForeignKey(User)  #Comment author
     timePosted = models.DateTimeField(blank=True, null=True)  #Comment timestamp
+
+class DatasourceDescription(models.Model):
+    title = models.CharField(max_length=512, blank=False, null=False)  #datasource title
+    name = models.CharField(max_length=512, blank=False, null=False)  #datasource name - slug
+    uri = models.CharField(max_length=2048, blank=False, null=False)  #sesame uri
+
+    def __unicode__( self ):
+        return self.title
+
 
