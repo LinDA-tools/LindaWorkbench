@@ -17,10 +17,7 @@ from linda.settings import SESAME_LINDA_URL
 
 def index(request):
     params = {}
-    params['datasources'] = {(1, 'Customers data', 'Data about our company''s customers and contact information', 'private'),
-                             (2, 'Sales data', 'Sales for our company in the last 5 years', 'private'),
-                             (3, 'Eurostat', 'Eurostat data', 'public'),
-    }
+    params['datasources'] = DatasourceDescription.objects.all()
 
     return render(request, 'index.html', params)
 
@@ -424,11 +421,99 @@ def autocomplete(request):
 
 #Datasource
 def datasourceCreate(request):
-    params = {}
-    params['types'] = {('public', 'Public'), ('private', 'Private')}
-    params['datatypes'] = {('csv', 'CSV file'), ('db', 'Database (relational)'), ('xls', 'Excel file'), ('rdf', 'RDF file')}
+    if request.POST:
+        if request.POST.get("type") == "private":
+            return redirect("/datasource/create/" + request.POST.get("datatype"))
+    else:
+        params = {}
+        params['types'] = {('private', 'Private'), ('public', 'Public')}
+        params['datatypes'] = {('csv', 'CSV file'), ('db', 'Database (relational)'), ('xls', 'Excel file'), ('rdf', 'RDF file')}
 
-    return render(request, 'datasource/create.html', params)
+        params['typeSelect'] = forms.Select(choices=params['types']).render('type', '', attrs={"id": 'id_type',})
+        params['datatypeSelect'] = forms.Select(choices=params['datatypes']).render('datatype', '', attrs={"id": 'id_datatype',})
+
+        return render(request, 'datasource/create.html', params)
+
+def datasourceReplace(request, name):
+    if request.POST:
+        if request.POST.get("type") == "private":
+            return redirect("/datasource/" + name + "/replace/" + request.POST.get("datatype"))
+    else:
+        params = {}
+        params['types'] = {('private', 'Private'), ('public', 'Public')}
+        params['datatypes'] = {('csv', 'CSV file'), ('db', 'Database (relational)'), ('xls', 'Excel file'), ('rdf', 'RDF file')}
+
+        params['typeSelect'] = forms.Select(choices=params['types']).render('type', '', attrs={"id": 'id_type',})
+        params['datatypeSelect'] = forms.Select(choices=params['datatypes']).render('datatype', '', attrs={"id": 'id_datatype',})
+
+        return render(request, 'datasource/replace.html', params)
+
+def datasourceCreateRDF(request):
+    if request.POST:
+        headers = {'accept': 'application/json'}
+        callAdd = requests.post("http://localhost:8000/api/datasource/create/", headers=headers, data={"content": request.POST.get("rdfdata"), "title": request.POST.get("title")})
+        j_obj = json.loads(callAdd.text)
+        if j_obj['status'] == '200':
+            return redirect("/")
+        else:
+            params = {}
+
+            params['form_error'] = j_obj['message']
+            params['title'] = request.POST.get("title")
+            params['rdfdata'] = request.POST.get("rdfdata")
+
+            return render(request, 'datasource/create_rdf.html', params)
+    else:
+        params = {}
+        params['title'] = ""
+        params['rdfdata'] = ""
+
+        return render(request, 'datasource/create_rdf.html', params)
+
+def datasourceReplaceRDF(request, dtname):
+    if request.POST:
+        headers = {'accept': 'application/json'}
+        callAdd = requests.post("http://localhost:8000/api/datasource/" + dtname + "/replace/", headers=headers, data={"content": request.POST.get("rdfdata"),})
+        j_obj = json.loads(callAdd.text)
+        if j_obj['status'] == '200':
+            return redirect("/")
+        else:
+            params = {}
+
+            params['form_error'] = j_obj['message']
+            params['rdfdata'] = request.POST.get("rdfdata")
+
+            return render(request, 'datasource/replace_rdf.html', params)
+    else:
+        params = {}
+        params['title'] = DatasourceDescription.objects.filter(name=dtname)[0].title
+        params['rdfdata'] = ""
+
+        return render(request, 'datasource/replace_rdf.html', params)
+
+def datasourceDownloadRDF(request, dtname):
+    callDatasource = requests.get("http://localhost:8000/api/datasource/" + dtname + "/")
+    data = json.loads(callDatasource.text)['content']
+    mimetype = "application/xml+rdf"
+    return HttpResponse(data, mimetype)
+
+def datasourceDelete(request, dtname):
+    if request.POST:
+        headers = {'accept': 'application/json'}
+        callDelete = requests.post("http://localhost:8000/api/datasource/" + dtname + "/delete/", headers=headers)
+        j_obj = json.loads(callDelete.text)
+        if j_obj['status'] == '200':
+            return redirect("/")
+        else:
+            params = {}
+            params['form_error'] = j_obj['message']
+
+            return render(request, 'datasource/delete.html', params)
+    else:
+        params = {}
+        params['title'] = DatasourceDescription.objects.filter(name=dtname)[0].title
+
+        return render(request, 'datasource/delete.html', params)
 
 #Query builder
 def queryBuilder(request):
@@ -599,28 +684,28 @@ def api_datasource_replace(request, dtname):
 @csrf_exempt
 def api_datasource_delete(request, dtname):
     results = {}
-    if request.POST: #request must be POST
-        #check if datasource exists
-        if DatasourceDescription.objects.filter(name=dtname).exists():
-            #delete object from database
-            source = DatasourceDescription.objects.filter(name=dtname)[:1].get()
-            source.delete()
+    #if request.POST: #request must be POST
+    #check if datasource exists
+    if DatasourceDescription.objects.filter(name=dtname).exists():
+        #delete object from database
+        source = DatasourceDescription.objects.filter(name=dtname)[:1].get()
+        source.delete()
 
-            #make REST api call to delete graph
-            callDelete = requests.delete(SESAME_LINDA_URL + 'rdf-graphs/' + dtname)
+        #make REST api call to delete graph
+        callDelete = requests.delete(SESAME_LINDA_URL + 'rdf-graphs/' + dtname)
 
-            if callDelete.text == "":
-                results['status'] = '200'
-                results['message'] = 'Datasource deleted succesfully.'
-            else:
-                results['status'] = '500'
-                results['message'] = 'Error deleting datasource: ' + callDelete.text
+        if callDelete.text == "":
+            results['status'] = '200'
+            results['message'] = 'Datasource deleted succesfully.'
         else:
-            results['status'] = '403'
-            results['message'] = "Datasource does not exist."
+            results['status'] = '500'
+            results['message'] = 'Error deleting datasource: ' + callDelete.text
     else:
-        results['status'] = '403'
-        results['message'] = 'POST method must be used to delete a datasource.'
+         results['status'] = '403'
+         results['message'] = "Datasource does not exist."
+    #else:
+    #    results['status'] = '403'
+    #    results['message'] = 'POST method must be used to delete a datasource.'
 
     data = json.dumps(results)
     mimetype = 'application/json'

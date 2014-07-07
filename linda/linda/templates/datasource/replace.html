@@ -2,12 +2,12 @@
 {% load url from future %}
 {% load i18n thumbnail2 %}
 {% load app_filters %}
-{% block title %}{% trans "Create datasource"%} | LinDA{% endblock %}
+{% block title %}{% trans "Replace datasource"%} | LinDA{% endblock %}
 {% block bodyclass %}datasource-create{% endblock %}
 
 {% block content %}
 <div class="main">
-    <h1 class="page-title inline">{% trans "Create datasource"%}</h1>
+    <h1 class="page-title inline">{% trans "Replace datasource"%}</h1>
 
     <form class="form datasource-create-form" method="post" action="." enctype="multipart/form-data">{% csrf_token %}
 
@@ -31,7 +31,7 @@
 
         <div class="submit-box">
             <label for="datatype"></label>
-            <input type="submit" class="button blue create-datasource-submit" value='{% trans "Continue"%}'/>
+            <input type="submit" class="button blue create-datasource-submit" value='{% trans "Replace"%}'/>
         </div>
     </form>
 </div>

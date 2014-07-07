@@ -893,13 +893,25 @@ form input[type="submit"] {
     text-align: left;
 }
 
-.edit-button {
-    background-image: url('/static/images/edit.png');
+.datasources-private li .button {
     background-repeat: no-repeat;
-    padding: 5px 30px;
+    padding: 5px 20px;
     border-radius: 3px;
-    background-position: 5px 5px;
+    background-position: 5px 10px;
     background-size: 20px 20px;
+    display: none;
+}
+
+.download-button {
+    background-image: url('/static/images/download.png');
+}
+
+.replace-button {
+    background-image: url('/static/images/replace.png');
+}
+
+.delete-button {
+    background-image: url('/static/images/remove.png');
 }
 
 /* Home page */
@@ -934,6 +946,7 @@ form input[type="submit"] {
 
 .homepage .datasources-list li > .datasource-title {
     font-size: 130%;
+    padding-right: 10px;
 }
 
 .homepage .datasources-list li > span {
@@ -945,7 +958,7 @@ form input[type="submit"] {
     margin-left: 10px;
 }
 
-.homepage .datasources-list li:hover .edit-button {
+.homepage .datasources-list li:hover .button {
     display: inline;
 }
 
@@ -1241,4 +1254,14 @@ input, textarea {
 }
 .query-builder > div {
     vertical-align: top;
+}
+
+/*Create RDF datasource*/
+.rdf-form label{
+    vertical-align: top;
+}
+.rdf-form textarea {
+    width: 500px;
+    height: 700px;
+    max-width: 100%;
 }

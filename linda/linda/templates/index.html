@@ -18,7 +18,7 @@
 		</div>
 
         <div class="create-new-datasource clearfix">
-            <p>{% trans "Connecting all your data with each other and with public data sources is easier than ever. Start with creating a new data source!" %}
+            <p>{% trans "Connecting all your data with each other and with public data sources is easier than ever. Start with creating a new datasource!" %}
             <a href="/datasource/create/" class="button blue add-datasource-button">+ {% trans "Create a new datasource" %}</a>
             </p>
 
@@ -29,13 +29,14 @@
             <p>{% trans "In private datasources, you can view protected data that belongs to your business, benefiting from Linked Data technologies."%}</p>
             <ul class="datasources-private">
                 {% for datasource in datasources %}
-                    {% if datasource.3 == "private" %}
                     <li>
-                        <a class="datasource-title" href="/datasource/{{datasource.0}}/visualize/">{{datasource.1}}</a>
-                        <a class="button edit-button" title='{% trans "Edit datasource" %}' href="/datasource/{{datasource.0}}/edit/"></a><br />
-                        <span>{{datasource.2}}</span>
+                        <a class="datasource-title" href="/datasource/{{datasource.name}}/visualize/">{{datasource.title}}</a>
+                        <a class="button download-button" target="_blank" download="{{datasource.name}}.rdf" title='{% trans "Download datasource as RDF" %}' href="/datasource/{{datasource.name}}/download/"></a>
+                        <a class="button replace-button" title='{% trans "Replace datasource" %}' href="/datasource/{{datasource.name}}/replace/"></a>
+                        <a class="button delete-button" title='{% trans "Delete datasource" %}' href="/datasource/{{datasource.name}}/delete/"></a>
                     </li>
-                    {% endif %}
+                {% empty %}
+                    <li><span>{% trans "No private datasources"%}</span></li>
                 {% endfor %}
             </ul>
 
@@ -44,14 +45,13 @@
             <h2>{% trans "Public Datasources" %}</h2>
             <p>{% trans "With public datasources, you access knowledge from any open, linked data repository, enriching your own data with additional information."%}</p>
             <ul class="datasources-public">
-                {% for datasource in datasources %}
-                    {% if datasource.3 == "public" %}
+                {% for endpoint in endpoints %}
                     <li>
                         <a class="datasource-title" href="/datasource/{{datasource.0}}/visualize/">{{datasource.1}}</a>
-                        <a class="button edit-button" title='{% trans "Edit datasource" %}' href="/datasource/{{datasource.0}}/edit/"></a><br />
                         <span>{{datasource.2}}</span>
                     </li>
-                    {% endif %}
+                {% empty %}
+                    <li><span>{% trans "No public datasources"%}</span></li>
                 {% endfor %}
             </ul>
         </div>

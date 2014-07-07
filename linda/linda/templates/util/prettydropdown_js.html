@@ -1,7 +1,7 @@
 <script>
     $(function () {
-        //$("#{{id}}-dropdown").css('left', $("#{{id}}-dropdown-button").offset().left);
-        var text = $("#{{field.auto_id}} option:selected").text();
+        //$("{{id}}-dropdown").css('left', $("#{{id}}-dropdown-button").offset().left);
+        var text = $("#id_{{id}} option:selected").text();
         if (text !== "") {
             $("#{{id}}-dropdown-button > .filter-option").html(text);
         }
@@ -18,6 +18,6 @@
     $("#{{id}}-dropdown > li > div").click( function() {
         $('#{{id}}-dropdown').toggle();
         $('#{{id}}-dropdown-button > .filter-option').html($(this).children('span').text());
-        $('#{{field.id}}').val($(this).children('span').attr("data-option"));
+        $('#id_{{id}}').val($(this).children('span').attr("data-option"));
     });
 </script>

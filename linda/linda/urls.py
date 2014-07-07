@@ -57,8 +57,20 @@ urlpatterns = patterns('',
                            name='vocabulary-visualize'),
 
                        #Datasources
-                       url(r'^datasource/create/', views.datasourceCreate,
+                       url(r'^datasource/create/$', views.datasourceCreate,
                            name='datasource-create'),
+                       url(r'^datasource/create/rdf/$', views.datasourceCreateRDF,
+                           name='datasource-create-rdf'),
+
+                       url(r'^datasource/(?P<dtname>[\w-]+)/download/$', views.datasourceDownloadRDF, name='datasource-download-rdf'),
+
+                       url(r'^datasource/(?P<name>[\w-]+)/replace/$', views.datasourceReplace,
+                           name='datasource-replace'),
+                       url(r'^datasource/(?P<dtname>[\w-]+)/replace/rdf/$', views.datasourceReplaceRDF,
+                           name='datasource-replace-rdf'),
+
+                       url(r'^datasource/(?P<dtname>[\w-]+)/delete/$', views.datasourceDelete,
+                           name='datasource-delete'),
 
                        #Query Builder
                        url(r'^query-builder/', views.queryBuilder,

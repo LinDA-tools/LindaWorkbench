@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% load url from future %}
+{% load i18n thumbnail2 %}
+{% load app_filters %}
+{% block title %}{% trans "Create datasource"%} | LinDA{% endblock %}
+{% block bodyclass %}datasource-create{% endblock %}
+
+{% block content %}
+<div class="main">
+    <h1 class="page-title inline">{% trans "RDF private datasource"%}</h1>
+
+    <form class="form rdf-form datasource-create-form" method="post" action="." enctype="multipart/form-data">{% csrf_token %}
+        {% if form_error %}
+            <p class="error">{{form_error}}</p>
+        {% endif %}
+
+        <div>
+            <label for="title">{% trans "Title"%}:</label>
+            <input type="text" name="title" id="id_title" value="{{title}}"/>
+        </div>
+
+        <div>
+            <label for="rdfdata">{% trans "RDF data"%}:</label>
+            <textarea name="rdfdata">{{rdfdata}}</textarea>
+        </div>
+
+        <div class="submit-box">
+            <label for="datatype"></label>
+            <input type="submit" class="button blue create-datasource-submit" value='{% trans "Create datasource"%}'/>
+        </div>
+    </form>
+</div>
+{% endblock %}
