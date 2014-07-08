@@ -305,6 +305,10 @@ form input[type="submit"] {
     margin-top: 30px;
 }
 
+.form .button {
+    margin: 2px;
+}
+
 .border-top {
     border-top: 1px solid #ccc;
     padding-top: 10px;
@@ -1262,6 +1266,17 @@ input, textarea {
 }
 .rdf-form textarea {
     width: 500px;
-    height: 700px;
+    height: 300px;
     max-width: 100%;
+}
+
+.rdf-form label {
+    min-width: 200px;
+}
+.rdf-form input[type="text"] {
+    width: 260px;
+}
+
+.rdf-form #file-uploader {
+    width: 252px;
 }

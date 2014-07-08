@@ -450,8 +450,17 @@ def datasourceReplace(request, name):
 
 def datasourceCreateRDF(request):
     if request.POST:
+        #Get the posted rdf data
+        if request.FILES["rdffile"]:
+            rdf_content = request.FILES["rdffile"].read()
+        else:
+            rdf_content = request.POST.get("rdfdata")
+
+
+        #Call the corresponding web service
         headers = {'accept': 'application/json'}
-        callAdd = requests.post("http://localhost:8000/api/datasource/create/", headers=headers, data={"content": request.POST.get("rdfdata"), "title": request.POST.get("title")})
+        callAdd = requests.post("http://localhost:8000/api/datasource/create/", headers=headers, data={"content": rdf_content, "title": request.POST.get("title")})
+
         j_obj = json.loads(callAdd.text)
         if j_obj['status'] == '200':
             return redirect("/")
@@ -472,8 +481,16 @@ def datasourceCreateRDF(request):
 
 def datasourceReplaceRDF(request, dtname):
     if request.POST:
+        #Get the posted rdf data
+        if request.FILES["rdffile"]:
+            rdf_content = request.FILES["rdffile"].read()
+        else:
+            rdf_content = request.POST.get("rdfdata")
+
+        #Call the corresponding web service
         headers = {'accept': 'application/json'}
-        callAdd = requests.post("http://localhost:8000/api/datasource/" + dtname + "/replace/", headers=headers, data={"content": request.POST.get("rdfdata"),})
+        callAdd = requests.post("http://localhost:8000/api/datasource/" + dtname + "/replace/", headers=headers, data={"content": rdf_content,})
+
         j_obj = json.loads(callAdd.text)
         if j_obj['status'] == '200':
             return redirect("/")

@@ -20,7 +20,13 @@
         </div>
 
         <div>
-            <label for="rdfdata">{% trans "RDF data"%}:</label>
+            <label for="rdffile">{% trans "Upload an RDF"%}:</label>
+            <div id="file-uploader" class="button green">{% trans "Choose file"%}</div>
+            <input id="id_file" type="file" class="hidden" name="rdffile" />
+        </div>
+
+        <div>
+            <label for="rdfdata">{% trans "or manually insert RDF data"%}:</label>
             <textarea name="rdfdata">{{rdfdata}}</textarea>
         </div>
 
@@ -30,4 +36,17 @@
         </div>
     </form>
 </div>
+{% endblock %}
+
+{% block scripts %}
+        <script>
+
+        $('#id_file').change(function(){
+            $('#file-uploader').html($(this).val().split('\\').pop());
+        })
+
+        $('#file-uploader').click(function(){
+            $('#id_file').click();
+        }).show();
+        </script>
 {% endblock %}
