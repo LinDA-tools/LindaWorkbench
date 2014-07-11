@@ -193,7 +193,7 @@ class VocabularyDeleteView(DeleteView):
             return res
         return object
 
-
+"""
 class VocabularySearchView(ListView):
     model = Vocabulary
     template_name = 'vocabulary-search/index.html'
@@ -242,7 +242,7 @@ class VocabularySearchView(ListView):
         context['page_obj'] = page_vocabularies
 
         return context
-
+"""
 
 class VocabularyVisualize(DetailView):
     model = Vocabulary
@@ -451,7 +451,7 @@ def datasourceReplace(request, name):
 def datasourceCreateRDF(request):
     if request.POST:
         #Get the posted rdf data
-        if request.FILES["rdffile"]:
+        if "rdffile" in request.FILES:
             rdf_content = request.FILES["rdffile"].read()
         else:
             rdf_content = request.POST.get("rdfdata")
@@ -482,7 +482,7 @@ def datasourceCreateRDF(request):
 def datasourceReplaceRDF(request, dtname):
     if request.POST:
         #Get the posted rdf data
-        if request.FILES["rdffile"]:
+        if "rdffile" in request.FILES:
             rdf_content = request.FILES["rdffile"].read()
         else:
             rdf_content = request.POST.get("rdfdata")
@@ -604,7 +604,7 @@ def api_datasource_create(request):
             sname = slugify(request.POST.get("title"))
             source = DatasourceDescription.objects.create(title=request.POST.get("title"),
                                                           name=sname,
-                                                          uri="<" + SESAME_LINDA_URL + "rdf-graphs/" + sname)
+                                                          uri=SESAME_LINDA_URL + "rdf-graphs/" + sname)
 
             #get rdf type
             if request.POST.get("format"):

@@ -27,8 +27,6 @@ urlpatterns = patterns('',
                        (r'^messages/', include('messages.urls')),
 
 					   #Vocabulary search
-                       url(r'^vocabulary-search/$', views.VocabularySearchView.as_view(),
-                           name='vocabulary-search'),
                        url(r'^search/', include('haystack.urls')),
                        url(r'^autocomplete/', views.autocomplete),
                        url(r'^search/vocabulary/', search_view_factory(
