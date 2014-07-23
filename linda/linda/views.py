@@ -17,7 +17,6 @@ from linda.settings import SESAME_LINDA_URL
 
 def index(request):
     params = {}
-    params['datasources'] = DatasourceDescription.objects.all()
 
     return render(request, 'index.html', params)
 
@@ -419,7 +418,20 @@ def autocomplete(request):
     })
     return HttpResponse(the_data, content_type='application/json')
 
-#Datasource
+#Datasources
+def datasources(request):
+    params = {}
+    params['sortOptions'] = {('title', 'Title'), ('date', 'Date')}
+    params['sortBy'] = forms.Select(choices=params['sortOptions']).render('sortBy', '', attrs={"id": 'id_sortBy',})
+
+
+    if request.GET.get("sort") == "title":
+        params['datasources'] = DatasourceDescription.objects.all().order_by('title')
+    else:
+        params['datasources'] = DatasourceDescription.objects.all()
+
+    return render(request, 'datasource/index.html', params)
+
 def datasourceCreate(request):
     if request.POST:
         if request.POST.get("type") == "private":
@@ -600,11 +612,8 @@ def api_datasource_create(request):
             results['status'] = '403'
             results['message'] = "Datasource already exists."
         else:
-            #create datasource description
+            #find the slug
             sname = slugify(request.POST.get("title"))
-            source = DatasourceDescription.objects.create(title=request.POST.get("title"),
-                                                          name=sname,
-                                                          uri=SESAME_LINDA_URL + "rdf-graphs/" + sname)
 
             #get rdf type
             if request.POST.get("format"):
@@ -614,16 +623,19 @@ def api_datasource_create(request):
 
             #make REST api call to add rdf data
             headers = {'accept': 'application/rdf+xml', 'content-type': rdf_format}
-            callAdd = requests.post(SESAME_LINDA_URL + 'rdf-graphs/' + source.name, headers=headers, data=request.POST.get("content"))
+            callAdd = requests.post(SESAME_LINDA_URL + 'rdf-graphs/' + sname, headers=headers, data=request.POST.get("content"))
 
             if callAdd.text == "":
+                #create datasource description
+                source = DatasourceDescription.objects.create(title=request.POST.get("title"),
+                                                          name=sname,
+                                                          uri=SESAME_LINDA_URL + "rdf-graphs/" + sname, createdOn=datetime.now(), lastUpdateOn=datetime.now())
+
                 results['status'] = '200'
                 results['message'] = 'Datasource created succesfully.'
-                results['name'] = source.name
-                results['uri'] = source.uri
+                results['name'] = sname
+                results['uri'] = SESAME_LINDA_URL + "rdf-graphs/" + sname
             else:
-                #remove datasource from database
-                source.delete()
                 results['status'] = '500'
                 results['message'] = 'Error storing rdf data: ' + callAdd.text
     else:
@@ -680,6 +692,11 @@ def api_datasource_replace(request, dtname):
             callReplace = requests.put(SESAME_LINDA_URL + 'rdf-graphs/' + dtname, headers=headers, data=request.POST.get("content"))
 
             if callReplace.text == "":
+                #update datasource database object
+                source = DatasourceDescription.objects.filter(name=dtname)[0]
+                source.lastUpdateOn = datetime.now()
+                source.save()
+
                 results['status'] = '200'
                 results['message'] = 'Datasource updated succesfully.' + callReplace.text
             else:

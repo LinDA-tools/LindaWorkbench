@@ -6,55 +6,37 @@
 
 {% block content %}
 	<div class="main">
-		<h1 class="page-title">{% trans "Welcome to LinDA" %}</h1>
-		
-		<div class="home-search centered">
-			<form method="get" action="/vocabulary-search" class="form">
-				
-				<input type="text" name="q" placeholder='{% trans "Search LinDA" %}'/>
-				<input type="submit" value=""/>
-				
-			</form>
-		</div>
+        <div class="welcome">
+            <img class="welcome-video" src="/static/images/video-placeholder.jpg" />
+            <div class="welcome-message clearfix">
+                <h2>Welcome to LinDA Workbench</h2>
+                <p>{% trans "With LinDa toolset you can easily transform your data into RDF format and enjoy the massive power of Linked Data."%}<br />{% trans "Welcome to the future of interconnected information."%}</p>
 
-        <div class="create-new-datasource clearfix">
-            <p>{% trans "Connecting all your data with each other and with public data sources is easier than ever. Start with creating a new datasource!" %}
-            <a href="/datasource/create/" class="button blue add-datasource-button">+ {% trans "Create a new datasource" %}</a>
-            </p>
+                <div class="welcome-step">
+                    <strong>{%trans "STEP 1"%}</strong>
+                    <img class="right" src="/static/images/photo.png" />
+                    <br/>
+                    <span>{%trans "Turn Data into RDF"%}</span>
+                </div>
 
+                <div class="welcome-step">
+                    <strong>{%trans "STEP 2"%}</strong>
+                    <img class="right" src="/static/images/dir.png" />
+                    <br/>
+                    <span>{%trans "Combine / Link your Data"%}</span>
+                </div>
+
+                <div class="welcome-step">
+                    <strong>{%trans "STEP 3"%}</strong>
+                    <img class="right" src="/static/images/people.png" />
+                    <br/>
+                    <span>{%trans "Visualize / Analyze your Data"%}</span>
+                </div>
+
+                <a href="/get-started" class="button orange right">{% trans "Get started"%}</a>
+            </div>
         </div>
 
-        <div class="datasources-list">
-            <h2>{% trans "Private Datasources" %}</h2>
-            <p>{% trans "In private datasources, you can view protected data that belongs to your business, benefiting from Linked Data technologies."%}</p>
-            <ul class="datasources-private">
-                {% for datasource in datasources %}
-                    <li>
-                        <a class="datasource-title" href="/datasource/{{datasource.name}}/visualize/">{{datasource.title}}</a>
-                        <a class="button download-button" target="_blank" download="{{datasource.name}}.rdf" title='{% trans "Download datasource as RDF" %}' href="/datasource/{{datasource.name}}/download/"></a>
-                        <a class="button replace-button" title='{% trans "Replace datasource" %}' href="/datasource/{{datasource.name}}/replace/"></a>
-                        <a class="button delete-button" title='{% trans "Delete datasource" %}' href="/datasource/{{datasource.name}}/delete/"></a>
-                    </li>
-                {% empty %}
-                    <li><span>{% trans "No private datasources"%}</span></li>
-                {% endfor %}
-            </ul>
-
-            <br />
-
-            <h2>{% trans "Public Datasources" %}</h2>
-            <p>{% trans "With public datasources, you access knowledge from any open, linked data repository, enriching your own data with additional information."%}</p>
-            <ul class="datasources-public">
-                {% for endpoint in endpoints %}
-                    <li>
-                        <a class="datasource-title" href="/datasource/{{datasource.0}}/visualize/">{{datasource.1}}</a>
-                        <span>{{datasource.2}}</span>
-                    </li>
-                {% empty %}
-                    <li><span>{% trans "No public datasources"%}</span></li>
-                {% endfor %}
-            </ul>
-        </div>
 	</div>
 
 {% endblock %}

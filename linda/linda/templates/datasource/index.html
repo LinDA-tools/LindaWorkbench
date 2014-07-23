@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+{% load url from future %}
+{% load i18n thumbnail2 %}
+{% load app_filters %}
+{% block title %}{% trans "Data Sources"%} | LinDA{% endblock %}
+{% block bodyclass %}datasource-create{% endblock %}
+
+{% block content %}
+<div class="main">
+    <h2 class="datasource-index-title">{% trans "Data Sources" %}</h2><a href="/datasource/create">+ {%trans "Create New"%}</a><div class="right">{% trans "Sort by" %}:
+            {% with field=sortBy id="sortBy" options=sortOptions default="Date" small="true"%}
+                {% include 'util/prettydropdown.html' %}
+            {% endwith %}
+        </div>
+    {% if datasources %}
+        <table class="datasources-table">
+            <tr>
+                <th>{% trans "Name" %}</th>
+                <th>{% trans "Created" %}</th>
+                <th>{% trans "Last modified" %}</th>
+                <th>{% trans "Visible" %}</th>
+                <th># {% trans "of Triples" %}</th>
+            </tr>
+            <tbody>
+                {% for datasource in datasources %}
+                    <tr id="{{datasource.name}}" class="datasource">
+                        <td><img src="/static/images/rdf.png" width="15px"/> {{datasource.title}}</td>
+                        <td>{{datasource.createdOn}}</td>
+                        <td>{{datasource.lastUpdateOn}}</td>
+                        <td>Private</td>
+                        <td>0</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>{% trans "No datasource found."%}</p>
+    {% endif %}
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+    {% with field=sortBy id="sortBy" %}
+        {% include 'util/prettydropdown_js.html' %}
+    {% endwith %}
+
+    <link rel="stylesheet" href="/static/css/jquery.contextMenu.css" />
+    <script src="/static/js/jquery.contextMenu.js"></script>
+    <script>
+        $( "#id_sortBy" ).on('change', (function() {
+            window.location = "/datasources/?sort=" + $(this).val();
+        }));
+
+        function downloadWithName(uri, name) {
+
+            function eventFire(el, etype){
+                if (el.fireEvent) {
+                    (el.fireEvent('on' + etype));
+                } else {
+                    var evObj = document.createEvent('Events');
+                    evObj.initEvent(etype, true, false);
+                    el.dispatchEvent(evObj);
+                }
+            }
+
+            var link = document.createElement("a");
+            link.download = name;
+            link.href = uri;
+            eventFire(link, "click");
+
+        }
+
+        $(function(){
+            $.contextMenu({
+                selector: '.datasource',
+                callback: function(key, options) {
+                    var id = options.$trigger.attr('id');
+                    var url;
+
+                    if (key == "Visualize")
+                        url = "/datasource/" + id + "/visualize/";
+                    else
+                    if (key == "Edit")
+                        url = "/datasource/" + id + "/replace/";
+                    else
+                    if (key == "Delete")
+                        url = "/datasource/" + id + "/delete/";
+                    else
+                    if (key == "Download") {
+                        url = "/datasource/" + id + "/download/";
+                        downloadWithName(url, id + ".rdf");
+                        return
+                    }
+
+                    $(this).addClass("show-context-menu");
+                    if (url)
+                        window.location = url;
+                },
+                items: {
+                    "Visualize": {name: "Visualize", icon: "visualize"},
+                    "Analyze": {name: "Analyze", icon: "analyze"},
+                    "Explore / View": {name: "Explore", icon: "explore"},
+                    "sep1": "---------",
+                    "Edit": {name: "Edit", icon: "edit"},
+                    "Delete": {name: "Delete", icon: "delete"},
+                    "sep2": "---------",
+                    "Open": {name: "Open", icon: "open"},
+                    "Download": {name: "Download", icon: "download"},
+                    "Share": {name: "Share", icon: "share"}
+                }
+            });
+        });
+    </script>
+{% endblock %}

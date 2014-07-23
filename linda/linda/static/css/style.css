@@ -66,38 +66,38 @@ img {
 
 /* Body */
 body {
-    background: url('../images/pattern.png');
-    nowhitespace: afterproperty;
+    /*background: url('../images/pattern.png');
+    nowhitespace: afterproperty;*/
     font: 14px/1.8 'Open Sans', Helvetica, Arial, sans-serif;
     color: #666;
+    background: #ccc;
     -webkit-font-smoothing: antialiased;
     -webkit-text-size-adjust: 100%;
 }
 
 body a {
-    color: #F39C12;
+    color: #FC5006;
     text-decoration: none;
 }
 
 body a:hover {
+    color: #FD8036;
     text-decoration: none;
-    color: #F4B350;
 }
 
 body h1, h2 {
-    color: #F4B350;
+    color: #FC5006;
 }
 
 .wrapper {
     margin: 0 auto;
-    margin-top: 10px;
     background: #fff;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
     border-radius: 5px;
 }
 
 /* Responsive */
-
+/*
 @media only screen and (min-width: 960px) {
     .wrapper {
         width: 960px;
@@ -121,32 +121,37 @@ body h1, h2 {
         width: 300px;
     }
 }
+*/
+.wrapper {width: 100%;}
 
 /* Header */
 header {
-    background: #ECF0F1;
+    background: #FC5006;
 }
 
 header a {
-    color: #D35400;
+    color: #eee;
+}
+
+header a:hover {
+    color: #fff;
 }
 
 .site-logo {
-    width: 100px;
+    width: 60px;
     height: auto;
     padding: 5px;
 }
 
-.site-title {
+header .site-title {
     font-size: 200%;
-    color: #E87E04;
+    color: #eee;
     display: inline-block;
     vertical-align: top;
-    margin-top: 15px;
 }
 
-.site-title:hover {
-    color: #F4B350;
+header .site-title:hover {
+    color: #fff;
 }
 
 .banner .username {
@@ -159,22 +164,22 @@ header a {
 }
 
 #menu {
-    background-color: #F4B350;
-    border-top: 2px solid #F4D03F;
-    border-bottom: 2px solid #F4D03F;
-}
-
-#menu > ul > li {
+    background-color: #F3F3F3;
     display: inline-block;
-    text-align: center;
+    width: 260px;
+    min-height: 800px;
 }
 
-#menu > ul > li:hover {
-    background-color: #F39C12;
+#menu > ul {
+    min-height: 400px;
+    border-bottom: 1px solid #d3d3d3;
+}
+#menu > ul > li {
+    display: block;
 }
 
 #menu > ul > li > a {
-    padding: 15px 20px;
+    padding: 5px 20px 5px 5px;
     display: inline-block;
     color: #fff;
 }
@@ -187,25 +192,36 @@ header a {
     background-color: rgba(244, 179, 80, 0.5);
 }
 
-#menu > ul > li > ul > li {
+#menu > ul > li {
     padding: 5px 25px 5px 10px;
 }
 
-#menu > ul > li > ul > li > a {
-    color: #fff;
+#menu > ul > li  a {
+    color: #232323;
 }
 
-#menu > ul > li > ul > li:hover {
-    background-color: rgba(243, 156, 18, 0.5);
+#menu > ul > li:hover {
+    background-color: #D4D4D4;
 }
 
-#menu > ul > li:hover > ul, #menu > ul > li > ul:hover {
-    display: block;
+.secondary-menu {
+    padding: 15px;
+}
+
+.secondary-menu .disk-space {
+    color: #a3a3a3;
+}
+
+#menu a {
+    color: #232323;
 }
 
 /* Main Area */
 .main {
+    width: calc(100% - 350px);
     padding: 10px 10px 50px 10px;
+    display: inline-block;
+    vertical-align: top;
 }
 
 .page-title {
@@ -229,11 +245,11 @@ footer a {
     padding: 20px;
 }
 
-.home-search form input[type="text"] {
+.menu-search input[type="text"] {
     outline: none;
-    width: 250px;
+    width: calc(100% - 50px);
     height: 30px;
-    background: #F2F1EF;
+    background: #fff;
 }
 
 .community .ui-autocomplete {
@@ -256,14 +272,14 @@ footer a {
     }
 }
 
-.home-search form input[type="submit"] {
-    width: 40px;
+.menu-search input[type="submit"], .home-search input[type="submit"] {
+    width: 30px;
     height: 30px;
     padding: 10px;
     border: none;
     background: url('../images/search.png') no-repeat;
     background-size: 20px 20px;
-    background-position: 10px 10px;
+    background-position: 0 5px;
     vertical-align: top;
     cursor: pointer;
 }
@@ -286,6 +302,7 @@ form input[type="submit"] {
 }
 
 .form input[type="text"], input[type="url"], .form input[type="password"], .form select, .form input[type="select"], .form input[type="email"], .form textarea {
+    height: 20px;
     padding: 5px;
     border: 1px solid #ccc;
     color: #727272;
@@ -610,7 +627,7 @@ form input[type="submit"] {
 }
 
 .vocabulary-edit-form #id_title {
-    color: #F4B350;
+    color: #FC5006;
     outline: none;
     padding: 5px;
     width: 250px;
@@ -667,13 +684,9 @@ form input[type="submit"] {
 }
 
 /* Delete vocabulary */
-.delete-page h1 {
-    margin-left: 20px;
-}
 
 .delete-page form {
     max-width: 500px;
-    margin: 0 auto;
 }
 
 /* Sidebar */
@@ -704,17 +717,16 @@ form input[type="submit"] {
     }
 
     .main content {
-        width: 65%;
+        width: 70%;
         padding: 10px;
-        display: table-cell
     }
 
     .main aside {
-        width: 25%;
+        width: calc(30% - 105px);
         padding: 10px 30px 10px 50px;
         border-left: 1px solid #ABB7B7;
-        min-height: 400px;
-        display: table-cell;
+        min-height: 780px;
+        vertical-align: top;
     }
 
 }
@@ -801,11 +813,11 @@ form input[type="submit"] {
 }
 
 .orange {
-    background-color: #F4B350;
+    background-color: #FC5006;
 }
 
 .orange:hover {
-    background-color: #F4D03F;
+    background-color: #FD8036;
 }
 
 .gray {
@@ -861,15 +873,19 @@ form input[type="submit"] {
     display: inline-block;
     vertical-align: top;
     padding: 3px 10px;
-    border-radius: 4px;
     text-shadow: none;
     text-align: center;
     color: #fff;
     border: none;
 }
 
+.button.small {
+    width: 100px;
+}
+
 .tab {
     border-radius: 0;
+    margin: 0 !important;
 }
 
 .button:hover {
@@ -997,7 +1013,7 @@ form input[type="submit"] {
 }
 
 .vocabulary-edit-form  .description:hover:before {
-    border-color: transparent #F4B350;
+    border-color: transparent #FC5006;
 }
 
 @media only screen and (max-width: 759px) {
@@ -1063,6 +1079,10 @@ form input[type="submit"] {
     position: absolute;
 }
 
+.dropdown-menu.small {
+    width: 80px;
+}
+
 .vocabulary-edit-form .dropdown-menu {
     width: 260px;
     overflow-y: auto !important;
@@ -1079,6 +1099,10 @@ form input[type="submit"] {
     border-left: 10px solid transparent;
     border-right: 10px solid transparent;
     border-bottom: 15px solid #34495e;
+}
+
+.dropdown-menu.small .arrow-up {
+    left: 100px;
 }
 
 .vocabulary-edit-form .dropdown-menu .arrow-up {
@@ -1118,7 +1142,7 @@ form input[type="submit"] {
 }
 
 .ui-autocomplete {
-    border: 1px solid #F4B350;
+    border: 1px solid #FC5006;
     background: #fff;
 }
 
@@ -1128,7 +1152,7 @@ form input[type="submit"] {
 
 .ui-autocomplete li:hover {
     cursor: pointer;
-    background: #F4B350;
+    background: #FC5006;
 }
 
 .ui-autocomplete li:hover a {
@@ -1207,7 +1231,7 @@ input, textarea {
 
 /*Query Builder*/
 .query-builder, .sparql-query {
-    border-top: 1px solid #F4B350;
+    border-top: 1px solid #FC5006;
 }
 
 .column-4 {
@@ -1225,6 +1249,7 @@ input, textarea {
 .column-4 input[type="submit"], .column-4 select {
     display: block;
     width: 140px;
+    height: auto;
 }
 
 .column-4 > label {
@@ -1254,7 +1279,7 @@ input, textarea {
 }
 
 #select-classes, #select-properties, #define-limitations {
-    border-left: 1px dotted #F4B350;
+    border-left: 1px dotted #FC5006;
 }
 .query-builder > div {
     vertical-align: top;
@@ -1279,4 +1304,68 @@ input, textarea {
 
 .rdf-form #file-uploader {
     width: 252px;
+}
+
+/*Welcome message*/
+.welcome {
+    width: 100%;
+    background: #F3F3F3;
+    padding: 20px;
+    margin: 10px;
+}
+
+.welcome-video {
+    width: 350px;
+    height: auto;
+}
+
+.welcome-message {
+    width: calc(100% - 370px);
+    display: inline-block;
+    vertical-align: top;
+    padding: 0 5px;
+}
+
+.welcome-step {
+    width: calc((100% - 25px) / 3);
+    margin-right: 5px;
+    display: inline-block;
+    vertical-align: top;
+    min-height: 75px;
+    margin-bottom: 5px;
+    border-bottom: 7px solid #DDDDDD;
+}
+
+.welcome-step img {
+    width: 20px;
+    height: auto;
+    padding-top: 5px;
+}
+
+.welcome-message .button {
+    margin-right: 8px;
+}
+
+.datasource-index-title {
+    display: inline-block;
+    padding-right: 40px;
+}
+
+.datasources-table {
+    width: 100%;
+    border-top: 1px solid #ddd;
+    padding-top: 10px;
+}
+
+.datasources-table th {
+    text-align: left;
+    font-weight: 600;
+}
+
+.datasource.context-menu-active {
+    background: #FC5006;
+}
+
+.datasource.context-menu-active td {
+    color: #fff;
 }
