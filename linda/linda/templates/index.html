@@ -37,6 +37,17 @@
             </div>
         </div>
 
+        <h2 class="recent-datasources-title">{%trans "Recent Data Sources"%}</h2>
+            <div class="recent-datasource-list">
+                {% for datasource in recent_datasources %}
+                    <div class="recent-datasource">
+                        <img src="/static/images/recent.jpg" />
+                        <h3><a href="/datasource/{{datasource.name}}/visualize/">{{datasource.title}}</a></h3>
+                    </div>
+                {% empty %}
+                    <p>{%trans "No recent data sources."%}</p>
+                {% endfor %}
+            </div>
 	</div>
 
 {% endblock %}

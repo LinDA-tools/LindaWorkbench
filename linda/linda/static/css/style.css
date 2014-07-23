@@ -288,6 +288,28 @@ form input[type="submit"] {
     padding: 7px 10px;
 }
 
+/* Home page */
+
+.recent-datasources-title {
+    border-bottom: 1px solid #ddd;
+    color: #333;
+    margin: 5px;
+}
+
+.recent-datasource {
+    width: calc(30% - 40px);
+    padding: 20px;
+    display: inline-block;
+}
+
+.recent-datasource img {
+    width: 100%;
+}
+
+.recent-datasource h3 a{
+    color: #aaa;
+}
+
 /* Generic forms */
 
 .form label {

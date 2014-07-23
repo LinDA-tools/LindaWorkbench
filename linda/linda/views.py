@@ -17,6 +17,7 @@ from linda.settings import SESAME_LINDA_URL
 
 def index(request):
     params = {}
+    params['recent_datasources'] = DatasourceDescription.objects.all().order_by('createdOn')[:3]
 
     return render(request, 'index.html', params)
 
