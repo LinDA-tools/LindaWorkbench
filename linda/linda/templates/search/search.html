@@ -7,7 +7,7 @@
 		<h1 class="page-title">LinDA - {% trans "Vocabulary search" %}</h1>
 
 		<div class="home-search centered">
-			<form method="get" action="/search" class="form">
+			<form method="get" action="/vocabularies" class="form">
 
 				<input type="text" name="q" placeholder='{% trans "Search Vocabularies" %}' value="{% if form.q.value %}{{form.q.value}}{% endif %}"/>
 				<input type="submit" value=""/>

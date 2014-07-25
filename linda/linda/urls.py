@@ -16,6 +16,19 @@ urlpatterns = patterns('',
                        url(r'^terms-of-use/$', views.terms, name='terms'),
                        url(r'^community/$', login_required(views.UserListView.as_view()), name='community'),
 
+                       #Visualizations
+                       url(r'^visualizations/$', views.visualizations, name='visualizations'),
+                       url(r'^visualize/datasource/(?P<dtname>[\w-]+)/$', views.visualizeDatasource,
+                           name='visualize-datasource'),
+
+                       #Analytics
+                       url(r'^analytics/$', views.analytics, name='analytics'),
+                       url(r'^analyze/datasource/(?P<dtname>[\w-]+)/$', views.analyzeDatasource,
+                           name='analyze-datasource'),
+
+                       #Transformations
+                       url(r'^transformations/$', views.transformations, name='transformations'),
+
                        #Authentication
                        url(r'^admin/', include(admin.site.urls)),
                        url(r'^accounts/', include('allauth.urls')),
@@ -27,7 +40,7 @@ urlpatterns = patterns('',
                        (r'^messages/', include('messages.urls')),
 
 					   #Vocabulary search
-                       url(r'^search/', include('haystack.urls')),
+                       url(r'^vocabularies/', include('haystack.urls')),
                        url(r'^autocomplete/', views.autocomplete),
                        url(r'^search/vocabulary/', search_view_factory(
 
@@ -44,7 +57,7 @@ urlpatterns = patterns('',
                            name='vocabulary-edit'),
                        url(r'^vocabulary/(?P<pk>\d+)/delete/$', views.VocabularyDeleteView.as_view(),
                            name='vocabulary-delete'),
-                        url(r'^vocabulary/(?P<pk>\d+)/visualize/$', views.VocabularyVisualize.as_view(),
+                        url(r'^vocabulary/(?P<pk>\d+)/(?P<slug>[\w-]+)/visualize/$', views.VocabularyVisualize.as_view(),
                            name='vocabulary-visualize'),
                        url(r'^vocabulary/(?P<pk>\d+)/comment/', views.postComment, name='vocabulary-comment'),
                        url(r'^vocabulary/(?P<pk>\d+)/rate/(?P<vt>\d+)/', views.rateDataset, name='vocabulary-rate'),
@@ -52,8 +65,6 @@ urlpatterns = patterns('',
                            name='vocabulary-download'),
                        url(r'^vocabulary/(?P<pk>\d+)/(?P<slug>[\w-]+)/$', views.VocabularyDetailsView.as_view(),
                            name='vocabulary-detail'),
-
-
 
                        #Datasources
                        url(r'^datasources/$', views.datasources, name='datasources'),

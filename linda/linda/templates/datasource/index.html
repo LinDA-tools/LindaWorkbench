@@ -79,7 +79,10 @@
                     var url;
 
                     if (key == "Visualize")
-                        url = "/datasource/" + id + "/visualize/";
+                        url = "/visualize/datasource/" + id;
+                    else
+                    if (key == "Analyze")
+                        url = "/analyze/datasource/" + id;
                     else
                     if (key == "Edit")
                         url = "/datasource/" + id + "/replace/";

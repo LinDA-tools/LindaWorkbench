@@ -1,3 +1,4 @@
+from plistlib import Data
 from django.http import HttpResponse, HttpResponseNotFound
 from django.shortcuts import redirect, render, get_object_or_404
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
@@ -21,6 +22,35 @@ def index(request):
 
     return render(request, 'index.html', params)
 
+def visualizations(request):
+    params = {}
+    return render(request, 'visualizations/index.html', params)
+
+def visualizeDatasource(request, **kwargs):
+    params = {}
+    params['datasource'] = DatasourceDescription.objects.get(name=kwargs.get('dtname'))
+
+    return render(request, 'visualizations/datasource.html', params)
+
+def analytics(request):
+    params = {}
+
+
+    return render(request, 'analytics/index.html', params)
+
+def analyzeDatasource(request, **kwargs):
+    params = {}
+    params['datasource'] = DatasourceDescription.objects.get(name=kwargs.get('dtname'))
+
+    return render(request, 'analytics/datasource.html', params)
+
+def transformations(request):
+    params = {}
+    return render(request, 'transformations/index.html', params)
+
+def openDatasource(request):
+    params = {}
+    return render(request, 'datasource/open.html', params)
 
 def terms(request):
     params = {}
