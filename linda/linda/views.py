@@ -13,7 +13,7 @@ from datetime import datetime
 
 
 # from graphdb import views as query_views
-from linda.settings import SESAME_LINDA_URL
+from linda.settings import SESAME_LINDA_URL, LINDA_HOME
 
 
 def index(request):
@@ -502,7 +502,7 @@ def datasourceCreateRDF(request):
 
         #Call the corresponding web service
         headers = {'accept': 'application/json'}
-        callAdd = requests.post("http://localhost:8000/api/datasource/create/", headers=headers, data={"content": rdf_content, "title": request.POST.get("title")})
+        callAdd = requests.post(LINDA_HOME + "api/datasource/create/", headers=headers, data={"content": rdf_content, "title": request.POST.get("title")})
 
         j_obj = json.loads(callAdd.text)
         if j_obj['status'] == '200':
@@ -532,7 +532,7 @@ def datasourceReplaceRDF(request, dtname):
 
         #Call the corresponding web service
         headers = {'accept': 'application/json'}
-        callAdd = requests.post("http://localhost:8000/api/datasource/" + dtname + "/replace/", headers=headers, data={"content": rdf_content,})
+        callAdd = requests.post(LINDA_HOME + "api/datasource/" + dtname + "/replace/", headers=headers, data={"content": rdf_content,})
 
         j_obj = json.loads(callAdd.text)
         if j_obj['status'] == '200':
@@ -552,7 +552,7 @@ def datasourceReplaceRDF(request, dtname):
         return render(request, 'datasource/replace_rdf.html', params)
 
 def datasourceDownloadRDF(request, dtname):
-    callDatasource = requests.get("http://localhost:8000/api/datasource/" + dtname + "/")
+    callDatasource = requests.get(LINDA_HOME + "api/datasource/" + dtname + "/")
     data = json.loads(callDatasource.text)['content']
     mimetype = "application/xml+rdf"
     return HttpResponse(data, mimetype)
@@ -560,7 +560,7 @@ def datasourceDownloadRDF(request, dtname):
 def datasourceDelete(request, dtname):
     if request.POST:
         headers = {'accept': 'application/json'}
-        callDelete = requests.post("http://localhost:8000/api/datasource/" + dtname + "/delete/", headers=headers)
+        callDelete = requests.post(LINDA_HOME + "api/datasource/" + dtname + "/delete/", headers=headers)
         j_obj = json.loads(callDelete.text)
         if j_obj['status'] == '200':
             return redirect("/")

@@ -118,6 +118,9 @@ TEMPLATE_DIRS = (
     'linda\\templates',
 )
 
+#LinDA url
+LINDA_HOME  = 'http://localhost:8000/'
+
 # LinDA reposirtory in Sesamy (OpenRDF) url, in order to access private datasources
 SESAME_LINDA_URL = 'http://localhost:8080/openrdf-sesame/repositories/linda/'
 
