@@ -1,15 +1,19 @@
+from cookielib import logger
 from plistlib import Data
 from django.http import HttpResponse, HttpResponseNotFound
 from django.shortcuts import redirect, render, get_object_or_404
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+import urllib2
+from django.utils import simplejson
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import ListView, UpdateView, DetailView, DeleteView
 
 import json
 import requests
+import sys
 from forms import *
 from rdflib import Graph
-from datetime import datetime
+from datetime import datetime, date
 
 
 # from graphdb import views as query_views
@@ -22,9 +26,11 @@ def index(request):
 
     return render(request, 'index.html', params)
 
+
 def visualizations(request):
     params = {}
     return render(request, 'visualizations/index.html', params)
+
 
 def visualizeDatasource(request, **kwargs):
     params = {}
@@ -32,11 +38,13 @@ def visualizeDatasource(request, **kwargs):
 
     return render(request, 'visualizations/datasource.html', params)
 
+
 def analytics(request):
     params = {}
 
 
     return render(request, 'analytics/index.html', params)
+
 
 def analyzeDatasource(request, **kwargs):
     params = {}
@@ -44,13 +52,16 @@ def analyzeDatasource(request, **kwargs):
 
     return render(request, 'analytics/datasource.html', params)
 
+
 def transformations(request):
     params = {}
     return render(request, 'transformations/index.html', params)
 
+
 def openDatasource(request):
     params = {}
     return render(request, 'datasource/open.html', params)
+
 
 def terms(request):
     params = {}
@@ -67,11 +78,13 @@ def profile(request, pk):
     params = {'userModel': user}
     return render(request, 'users/profile.html', params)
 
+
 class UserListView(ListView):
     model = User
     template_name = 'users/community.html'
     context_object_name = 'users'
     paginate_by = 20
+
 
 class UserUpdateView(UpdateView):
     form_class = UserForm
@@ -176,7 +189,7 @@ class VocabularyUpdateView(UpdateView):
 
     def get_object(self):
         object = super(VocabularyUpdateView, self).get_object()
-        if (object.uploader.id != self.request.user.id):
+        if object.uploader.id != self.request.user.id:
             res = HttpResponse("Unauthorized")
             res.status_code = 401
             return res
@@ -260,7 +273,7 @@ class VocabularySearchView(ListView):
         page = self.request.GET.get('page')
 
         try:
-            page_vocabularies = paginator.page(page)
+      digit      page_vocabularies = paginator.page(page)
         except PageNotAnInteger:
             # If page is not an integer, deliver first page.
             page_vocabularies = paginator.page(1)
@@ -775,3 +788,4 @@ def api_datasource_delete(request, dtname):
     data = json.dumps(results)
     mimetype = 'application/json'
     return HttpResponse(data, mimetype)
+

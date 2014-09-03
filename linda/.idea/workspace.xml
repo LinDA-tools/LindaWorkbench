@@ -32,24 +32,6 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="footer.html" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/linda/templates/util/footer.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="0" column="25" selection-start="25" selection-end="25" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="204">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="index.html" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/linda/templates/transformations/index.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="9" column="19" selection-start="290" selection-end="290" vertical-scroll-proportion="0.0" vertical-offset="153" max-vertical-offset="289">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="datasource.html" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/linda/templates/analytics/datasource.html">
           <provider selected="true" editor-type-id="text-editor">
@@ -71,10 +53,19 @@
       <file leaf-file-name="views.py" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/linda/views.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="15" column="55" selection-start="558" selection-end="558" vertical-scroll-proportion="0.42079207" vertical-offset="0" max-vertical-offset="13294">
+            <state line="791" column="0" selection-start="28428" selection-end="28428" vertical-scroll-proportion="0.9438944" vertical-offset="12875" max-vertical-offset="13549">
               <folding>
-                <element signature="e#0#25#0" expanded="true" />
+                <element signature="e#0#28#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="models.py" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/linda/models.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="72" column="16" selection-start="3437" selection-end="3449" vertical-scroll-proportion="0.0" vertical-offset="613" max-vertical-offset="2023">
+              <folding />
             </state>
           </provider>
         </entry>
@@ -82,7 +73,7 @@
       <file leaf-file-name="settings.py" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/linda/settings.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="122" column="0" selection-start="4197" selection-end="4197" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="3587">
+            <state line="122" column="0" selection-start="4197" selection-end="4197" vertical-scroll-proportion="0.0" vertical-offset="2074" max-vertical-offset="3587">
               <folding />
             </state>
           </provider>
@@ -91,7 +82,16 @@
       <file leaf-file-name="index.html" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/linda/templates/analytics/index.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="10" column="6" selection-start="301" selection-end="301" vertical-scroll-proportion="0.0" vertical-offset="170" max-vertical-offset="289">
+            <state line="10" column="6" selection-start="301" selection-end="301" vertical-scroll-proportion="-6.5384617" vertical-offset="0" max-vertical-offset="289">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="urls.py" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/linda/urls.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="100" column="0" selection-start="5577" selection-end="5577" vertical-scroll-proportion="0.0" vertical-offset="1072" max-vertical-offset="1717">
               <folding />
             </state>
           </provider>
@@ -125,7 +125,6 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/linda/models.py" />
         <option value="$PROJECT_DIR$/linda/static/js/jquery.contextMenu.js" />
         <option value="$PROJECT_DIR$/linda/static/css/jquery.contextMenu.css" />
         <option value="$PROJECT_DIR$/linda/templates/vocabulary/details.html" />
@@ -140,11 +139,12 @@
         <option value="$PROJECT_DIR$/linda/templates/transformations/index.html" />
         <option value="$PROJECT_DIR$/linda/templates/util/header.html" />
         <option value="$PROJECT_DIR$/linda/templates/search/search.html" />
-        <option value="$PROJECT_DIR$/linda/urls.py" />
         <option value="$PROJECT_DIR$/linda/templates/analytics/datasource.html" />
         <option value="$PROJECT_DIR$/linda/templates/visualizations/datasource.html" />
         <option value="$PROJECT_DIR$/linda/templates/datasource/index.html" />
         <option value="$PROJECT_DIR$/linda/settings.py" />
+        <option value="$PROJECT_DIR$/linda/models.py" />
+        <option value="$PROJECT_DIR$/linda/urls.py" />
         <option value="$PROJECT_DIR$/linda/views.py" />
       </list>
     </option>
@@ -181,6 +181,7 @@
       <sortByType />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -427,7 +428,6 @@
           </PATH>
         </subPane>
       </pane>
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -602,14 +602,14 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
+    <frame x="-8" y="-8" width="1936" height="1056" extended-state="7" />
     <editor active="true" />
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.12760417" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.12708333" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
@@ -673,7 +673,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state line="40" column="39" selection-start="1203" selection-end="1203" vertical-scroll-proportion="0.0" vertical-offset="187" max-vertical-offset="13294">
           <folding>
-            <element signature="e#0#25#0" expanded="true" />
+            <element signature="e#0#28#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -753,7 +753,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state line="424" column="0" selection-start="14645" selection-end="14645" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="12563">
           <folding>
-            <element signature="e#0#25#0" expanded="true" />
+            <element signature="e#0#28#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -801,7 +801,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state line="307" column="21" selection-start="10527" selection-end="10527" vertical-scroll-proportion="0.0" vertical-offset="5049" max-vertical-offset="12308">
           <folding>
-            <element signature="e#0#25#0" expanded="true" />
+            <element signature="e#0#28#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -810,7 +810,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state line="222" column="7" selection-start="7450" selection-end="7450" vertical-scroll-proportion="0.0" vertical-offset="3774" max-vertical-offset="5321">
           <folding>
-            <element signature="e#0#25#0" expanded="true" />
+            <element signature="e#0#28#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -833,11 +833,6 @@
     <entry file="file://$PROJECT_DIR$/linda/templates/util/prettydropdown_js.html">
       <provider selected="true" editor-type-id="text-editor">
         <state line="27" column="92" selection-start="1043" selection-end="1043" vertical-scroll-proportion="0.0" vertical-offset="459" max-vertical-offset="595" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/linda/models.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="113" column="13" selection-start="4996" selection-end="5005" vertical-scroll-proportion="0.0" vertical-offset="1276" max-vertical-offset="2142" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/linda/templates/util/prettydropdown.html">
@@ -867,13 +862,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/linda/templates/analytics/index.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="10" column="6" selection-start="301" selection-end="301" vertical-scroll-proportion="0.0" vertical-offset="170" max-vertical-offset="289">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/linda/templates/util/footer.html">
       <provider selected="true" editor-type-id="text-editor">
         <state line="0" column="25" selection-start="25" selection-end="25" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="619">
@@ -897,9 +885,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/linda/templates/vocabulary/index.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="766">
-          <folding />
-        </state>
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="766" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/linda/templates/search/search.html">
@@ -933,9 +919,11 @@
         <state line="84" column="39" selection-start="3024" selection-end="3024" vertical-scroll-proportion="0.32956383" vertical-offset="1224" max-vertical-offset="2091" />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/linda/urls.py">
+    <entry file="file://$PROJECT_DIR$/linda/templates/analytics/index.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="25" column="59" selection-start="1132" selection-end="1132" vertical-scroll-proportion="0.4744186" vertical-offset="0" max-vertical-offset="1717" />
+        <state line="10" column="6" selection-start="301" selection-end="301" vertical-scroll-proportion="-6.5384617" vertical-offset="0" max-vertical-offset="289">
+          <folding />
+        </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/linda/settings.py">
@@ -945,11 +933,25 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/linda/models.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="72" column="16" selection-start="3437" selection-end="3449" vertical-scroll-proportion="0.0" vertical-offset="613" max-vertical-offset="2023">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/linda/urls.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="100" column="0" selection-start="5577" selection-end="5577" vertical-scroll-proportion="0.0" vertical-offset="1072" max-vertical-offset="1734">
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/linda/views.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="15" column="55" selection-start="558" selection-end="558" vertical-scroll-proportion="0.42079207" vertical-offset="0" max-vertical-offset="13294">
+        <state line="791" column="0" selection-start="28428" selection-end="28428" vertical-scroll-proportion="0.9438944" vertical-offset="12875" max-vertical-offset="13549">
           <folding>
-            <element signature="e#0#25#0" expanded="true" />
+            <element signature="e#0#28#0" expanded="true" />
           </folding>
         </state>
       </provider>
