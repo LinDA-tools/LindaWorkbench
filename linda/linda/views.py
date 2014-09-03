@@ -1,5 +1,6 @@
 from cookielib import logger
 from plistlib import Data
+import urllib
 from django.http import HttpResponse, HttpResponseNotFound
 from django.shortcuts import redirect, render, get_object_or_404
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
@@ -297,7 +298,8 @@ class VocabularyVisualize(DetailView):
 
         #Parse rdf
         g = Graph()
-        g.parse(context['vocabulary'].downloadUrl)
+        n3data = urllib.urlopen(context['vocabulary'].downloadUrl).read()
+        g.parse(data=n3data, format='n3')
 
         #Load subjects
         subjects = {}
@@ -440,7 +442,8 @@ def downloadRDF(request, pk, type):
 
     #Convert rdf to the appropriate type
     g = Graph()
-    g.parse(voc.downloadUrl)
+    n3data = urllib.urlopen(voc.downloadUrl).read()
+    g.parse(data=n3data, format='n3')
 
     #Return response
     mimetype = "application/octet-stream"
