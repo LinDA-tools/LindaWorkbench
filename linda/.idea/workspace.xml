@@ -50,10 +50,10 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="views.py" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="views.py" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/linda/views.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="791" column="0" selection-start="28428" selection-end="28428" vertical-scroll-proportion="0.9438944" vertical-offset="12875" max-vertical-offset="13549">
+            <state line="791" column="0" selection-start="28428" selection-end="28428" vertical-scroll-proportion="-22.0" vertical-offset="12875" max-vertical-offset="13549">
               <folding>
                 <element signature="e#0#28#0" expanded="true" />
               </folding>
@@ -88,10 +88,10 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="urls.py" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="urls.py" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/linda/urls.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="100" column="0" selection-start="5577" selection-end="5577" vertical-scroll-proportion="0.0" vertical-offset="1072" max-vertical-offset="1717">
+            <state line="42" column="42" selection-start="1954" selection-end="1966" vertical-scroll-proportion="0.33279485" vertical-offset="389" max-vertical-offset="1717">
               <folding />
             </state>
           </provider>
@@ -940,19 +940,19 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/linda/urls.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="100" column="0" selection-start="5577" selection-end="5577" vertical-scroll-proportion="0.0" vertical-offset="1072" max-vertical-offset="1734">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/linda/views.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="791" column="0" selection-start="28428" selection-end="28428" vertical-scroll-proportion="0.9438944" vertical-offset="12875" max-vertical-offset="13549">
+        <state line="791" column="0" selection-start="28428" selection-end="28428" vertical-scroll-proportion="-22.0" vertical-offset="12875" max-vertical-offset="13549">
           <folding>
             <element signature="e#0#28#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/linda/urls.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="42" column="42" selection-start="1954" selection-end="1966" vertical-scroll-proportion="0.33279485" vertical-offset="389" max-vertical-offset="1717">
+          <folding />
         </state>
       </provider>
     </entry>
