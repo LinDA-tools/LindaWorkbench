@@ -218,7 +218,7 @@ header .site-title:hover {
 
 /* Main Area */
 .main {
-    width: calc(100% - 350px);
+    width: calc(100% - 265px);
     padding: 10px 10px 50px 10px;
     display: inline-block;
     vertical-align: top;
