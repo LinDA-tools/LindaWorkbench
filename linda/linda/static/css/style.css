@@ -218,10 +218,14 @@ header .site-title:hover {
 
 /* Main Area */
 .main {
-    width: calc(100% - 265px);
+    width: calc(100% - 350px);
     padding: 10px 10px 50px 10px;
     display: inline-block;
     vertical-align: top;
+}
+
+.vocabulary-details .main {
+    width: calc(100% - 265px);
 }
 
 .page-title {
