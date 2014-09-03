@@ -143,6 +143,7 @@ INSTALLED_APPS = (
 'messages',
 'athumb',
 'graphdb',
+'coreapi',
 
 # Uncomment the next line to enable the admin:
 # 'django.contrib.admin',
