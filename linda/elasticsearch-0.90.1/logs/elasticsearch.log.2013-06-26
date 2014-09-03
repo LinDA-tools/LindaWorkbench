@@ -1,0 +1,32 @@
+[2013-06-26 11:31:30,998][INFO ][node                     ] [Jekyll] {0.90.1}[16028]: initializing ...
+[2013-06-26 11:31:31,071][INFO ][plugins                  ] [Jekyll] loaded [], sites []
+[2013-06-26 11:31:43,420][INFO ][node                     ] [Jekyll] {0.90.1}[16028]: initialized
+[2013-06-26 11:31:43,423][INFO ][node                     ] [Jekyll] {0.90.1}[16028]: starting ...
+[2013-06-26 11:31:44,230][INFO ][transport                ] [Jekyll] bound_address {inet[/0.0.0.0:9300]}, publish_address {inet[/147.102.6.54:9300]}
+[2013-06-26 11:31:47,620][INFO ][cluster.service          ] [Jekyll] new_master [Jekyll][YKWjSiztSZ6LEOjAIqV3qQ][inet[/147.102.6.54:9300]], reason: zen-disco-join (elected_as_master)
+[2013-06-26 11:31:47,725][INFO ][discovery                ] [Jekyll] elasticsearch/YKWjSiztSZ6LEOjAIqV3qQ
+[2013-06-26 11:31:47,797][INFO ][http                     ] [Jekyll] bound_address {inet[/0.0.0.0:9200]}, publish_address {inet[/147.102.6.54:9200]}
+[2013-06-26 11:31:47,798][INFO ][node                     ] [Jekyll] {0.90.1}[16028]: started
+[2013-06-26 11:31:52,057][INFO ][gateway                  ] [Jekyll] recovered [1] indices into cluster_state
+[2013-06-26 12:09:38,116][INFO ][cluster.metadata         ] [Jekyll] [haystack] deleting index
+[2013-06-26 12:09:38,583][INFO ][cluster.metadata         ] [Jekyll] [haystack] creating index, cause [api], shards [5]/[1], mappings []
+[2013-06-26 12:09:38,833][INFO ][cluster.metadata         ] [Jekyll] [haystack] create_mapping [modelresult]
+[2013-06-26 12:09:43,568][INFO ][cluster.metadata         ] [Jekyll] [haystack] update_mapping [modelresult] (dynamic)
+[2013-06-26 12:35:12,127][INFO ][node                     ] [Jekyll] {0.90.1}[16028]: stopping ...
+[2013-06-26 12:35:12,606][INFO ][node                     ] [Jekyll] {0.90.1}[16028]: stopped
+[2013-06-26 12:35:12,606][INFO ][node                     ] [Jekyll] {0.90.1}[16028]: closing ...
+[2013-06-26 12:35:12,636][INFO ][node                     ] [Jekyll] {0.90.1}[16028]: closed
+[2013-06-26 12:45:13,580][INFO ][node                     ] [Kogar] {0.90.1}[14248]: initializing ...
+[2013-06-26 12:45:13,589][INFO ][plugins                  ] [Kogar] loaded [], sites []
+[2013-06-26 12:45:17,679][INFO ][node                     ] [Kogar] {0.90.1}[14248]: initialized
+[2013-06-26 12:45:17,680][INFO ][node                     ] [Kogar] {0.90.1}[14248]: starting ...
+[2013-06-26 12:45:17,856][INFO ][transport                ] [Kogar] bound_address {inet[/0.0.0.0:9300]}, publish_address {inet[/147.102.6.54:9300]}
+[2013-06-26 12:45:21,034][INFO ][cluster.service          ] [Kogar] new_master [Kogar][fJLjjcHvS4-qFk6IrU81zA][inet[/147.102.6.54:9300]], reason: zen-disco-join (elected_as_master)
+[2013-06-26 12:45:21,084][INFO ][discovery                ] [Kogar] elasticsearch/fJLjjcHvS4-qFk6IrU81zA
+[2013-06-26 12:45:21,156][INFO ][http                     ] [Kogar] bound_address {inet[/0.0.0.0:9200]}, publish_address {inet[/147.102.6.54:9200]}
+[2013-06-26 12:45:21,157][INFO ][node                     ] [Kogar] {0.90.1}[14248]: started
+[2013-06-26 12:45:22,331][INFO ][gateway                  ] [Kogar] recovered [1] indices into cluster_state
+[2013-06-26 13:03:39,571][INFO ][node                     ] [Kogar] {0.90.1}[14248]: stopping ...
+[2013-06-26 13:03:39,640][INFO ][node                     ] [Kogar] {0.90.1}[14248]: stopped
+[2013-06-26 13:03:39,641][INFO ][node                     ] [Kogar] {0.90.1}[14248]: closing ...
+[2013-06-26 13:03:39,650][INFO ][node                     ] [Kogar] {0.90.1}[14248]: closed

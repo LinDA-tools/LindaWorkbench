@@ -1,0 +1,14 @@
+[2014-06-06 12:48:45,628][INFO ][node                     ] [Sauron] {0.90.1}[6900]: initializing ...
+[2014-06-06 12:48:45,642][INFO ][plugins                  ] [Sauron] loaded [], sites []
+[2014-06-06 12:48:50,470][INFO ][node                     ] [Sauron] {0.90.1}[6900]: initialized
+[2014-06-06 12:48:50,470][INFO ][node                     ] [Sauron] {0.90.1}[6900]: starting ...
+[2014-06-06 12:48:51,047][INFO ][transport                ] [Sauron] bound_address {inet[/0:0:0:0:0:0:0:0:9300]}, publish_address {inet[/192.168.100.24:9300]}
+[2014-06-06 12:48:55,020][INFO ][cluster.service          ] [Sauron] new_master [Sauron][iBAxktDxRXGARBQDPma2wA][inet[/192.168.100.24:9300]], reason: zen-disco-join (elected_as_master)
+[2014-06-06 12:48:55,070][INFO ][discovery                ] [Sauron] elasticsearch/iBAxktDxRXGARBQDPma2wA
+[2014-06-06 12:48:55,541][INFO ][http                     ] [Sauron] bound_address {inet[/0:0:0:0:0:0:0:0:9200]}, publish_address {inet[/192.168.100.24:9200]}
+[2014-06-06 12:48:55,547][INFO ][node                     ] [Sauron] {0.90.1}[6900]: started
+[2014-06-06 12:48:56,837][INFO ][gateway                  ] [Sauron] recovered [1] indices into cluster_state
+[2014-06-06 13:36:50,331][INFO ][node                     ] [Sauron] {0.90.1}[6900]: stopping ...
+[2014-06-06 13:36:50,411][INFO ][node                     ] [Sauron] {0.90.1}[6900]: stopped
+[2014-06-06 13:36:50,411][INFO ][node                     ] [Sauron] {0.90.1}[6900]: closing ...
+[2014-06-06 13:36:50,423][INFO ][node                     ] [Sauron] {0.90.1}[6900]: closed

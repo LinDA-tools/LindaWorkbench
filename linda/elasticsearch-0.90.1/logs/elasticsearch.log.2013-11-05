@@ -1,0 +1,28 @@
+[2013-11-05 07:15:39,039][INFO ][node                     ] [Gateway] {0.90.1}[1048]: initializing ...
+[2013-11-05 07:15:39,146][INFO ][plugins                  ] [Gateway] loaded [], sites []
+[2013-11-05 07:16:00,004][INFO ][node                     ] [Gateway] {0.90.1}[1048]: initialized
+[2013-11-05 07:16:00,006][INFO ][node                     ] [Gateway] {0.90.1}[1048]: starting ...
+[2013-11-05 07:16:00,890][INFO ][transport                ] [Gateway] bound_address {inet[/0.0.0.0:9300]}, publish_address {inet[User-PC15/127.0.0.1:9300]}
+[2013-11-05 07:16:04,916][INFO ][cluster.service          ] [Gateway] new_master [Gateway][p_cgoc_ET8OGO3KcCSh9EA][inet[User-PC15/127.0.0.1:9300]], reason: zen-disco-join (elected_as_master)
+[2013-11-05 07:16:05,056][INFO ][discovery                ] [Gateway] elasticsearch/p_cgoc_ET8OGO3KcCSh9EA
+[2013-11-05 07:16:05,230][INFO ][http                     ] [Gateway] bound_address {inet[/0.0.0.0:9200]}, publish_address {inet[User-PC15/127.0.0.1:9200]}
+[2013-11-05 07:16:05,231][INFO ][node                     ] [Gateway] {0.90.1}[1048]: started
+[2013-11-05 07:16:19,688][INFO ][gateway                  ] [Gateway] recovered [1] indices into cluster_state
+[2013-11-05 12:17:47,544][INFO ][node                     ] [Gateway] {0.90.1}[1048]: stopping ...
+[2013-11-05 12:17:48,366][INFO ][node                     ] [Gateway] {0.90.1}[1048]: stopped
+[2013-11-05 12:17:48,366][INFO ][node                     ] [Gateway] {0.90.1}[1048]: closing ...
+[2013-11-05 12:17:48,718][INFO ][node                     ] [Gateway] {0.90.1}[1048]: closed
+[2013-11-05 12:19:01,409][INFO ][node                     ] [Ultimus] {0.90.1}[6452]: initializing ...
+[2013-11-05 12:19:01,430][INFO ][plugins                  ] [Ultimus] loaded [], sites []
+[2013-11-05 12:19:11,803][INFO ][node                     ] [Ultimus] {0.90.1}[6452]: initialized
+[2013-11-05 12:19:11,804][INFO ][node                     ] [Ultimus] {0.90.1}[6452]: starting ...
+[2013-11-05 12:19:12,654][INFO ][transport                ] [Ultimus] bound_address {inet[/0.0.0.0:9300]}, publish_address {inet[User-PC15/127.0.0.1:9300]}
+[2013-11-05 12:19:16,068][INFO ][cluster.service          ] [Ultimus] new_master [Ultimus][eeiaJQfSTjqONbkDilz3yQ][inet[User-PC15/127.0.0.1:9300]], reason: zen-disco-join (elected_as_master)
+[2013-11-05 12:19:16,194][INFO ][discovery                ] [Ultimus] elasticsearch/eeiaJQfSTjqONbkDilz3yQ
+[2013-11-05 12:19:16,337][INFO ][http                     ] [Ultimus] bound_address {inet[/0.0.0.0:9200]}, publish_address {inet[User-PC15/127.0.0.1:9200]}
+[2013-11-05 12:19:16,337][INFO ][node                     ] [Ultimus] {0.90.1}[6452]: started
+[2013-11-05 12:19:19,216][INFO ][gateway                  ] [Ultimus] recovered [1] indices into cluster_state
+[2013-11-05 15:09:34,407][INFO ][node                     ] [Ultimus] {0.90.1}[6452]: stopping ...
+[2013-11-05 15:09:34,640][INFO ][node                     ] [Ultimus] {0.90.1}[6452]: stopped
+[2013-11-05 15:09:34,640][INFO ][node                     ] [Ultimus] {0.90.1}[6452]: closing ...
+[2013-11-05 15:09:34,674][INFO ][node                     ] [Ultimus] {0.90.1}[6452]: closed

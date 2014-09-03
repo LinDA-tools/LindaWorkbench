@@ -1,0 +1,14 @@
+[2013-10-09 12:11:35,204][INFO ][node                     ] [Poltergeist] {0.90.1}[7256]: initializing ...
+[2013-10-09 12:11:35,235][INFO ][plugins                  ] [Poltergeist] loaded [], sites []
+[2013-10-09 12:11:44,517][INFO ][node                     ] [Poltergeist] {0.90.1}[7256]: initialized
+[2013-10-09 12:11:44,517][INFO ][node                     ] [Poltergeist] {0.90.1}[7256]: starting ...
+[2013-10-09 12:11:44,892][INFO ][transport                ] [Poltergeist] bound_address {inet[/0.0.0.0:9300]}, publish_address {inet[/192.168.1.73:9300]}
+[2013-10-09 12:11:48,230][INFO ][cluster.service          ] [Poltergeist] new_master [Poltergeist][aUK5s0WhTyiacXOsAgavVg][inet[/192.168.1.73:9300]], reason: zen-disco-join (elected_as_master)
+[2013-10-09 12:11:48,308][INFO ][discovery                ] [Poltergeist] elasticsearch/aUK5s0WhTyiacXOsAgavVg
+[2013-10-09 12:11:48,386][INFO ][http                     ] [Poltergeist] bound_address {inet[/0.0.0.0:9200]}, publish_address {inet[/192.168.1.73:9200]}
+[2013-10-09 12:11:48,386][INFO ][node                     ] [Poltergeist] {0.90.1}[7256]: started
+[2013-10-09 12:11:56,966][INFO ][gateway                  ] [Poltergeist] recovered [1] indices into cluster_state
+[2013-10-09 13:17:03,737][INFO ][node                     ] [Poltergeist] {0.90.1}[7256]: stopping ...
+[2013-10-09 13:17:03,837][INFO ][node                     ] [Poltergeist] {0.90.1}[7256]: stopped
+[2013-10-09 13:17:03,838][INFO ][node                     ] [Poltergeist] {0.90.1}[7256]: closing ...
+[2013-10-09 13:17:03,856][INFO ][node                     ] [Poltergeist] {0.90.1}[7256]: closed

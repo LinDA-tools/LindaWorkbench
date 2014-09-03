@@ -1,0 +1,30 @@
+[2013-06-20 15:00:46,997][INFO ][node                     ] [Inza] {0.90.1}[35860]: initializing ...
+[2013-06-20 15:00:47,009][INFO ][plugins                  ] [Inza] loaded [], sites []
+[2013-06-20 15:01:00,807][INFO ][node                     ] [Pipeline] {0.90.1}[20620]: initializing ...
+[2013-06-20 15:01:00,816][INFO ][plugins                  ] [Pipeline] loaded [], sites []
+[2013-06-20 15:01:04,952][INFO ][node                     ] [Pipeline] {0.90.1}[20620]: initialized
+[2013-06-20 15:01:04,953][INFO ][node                     ] [Pipeline] {0.90.1}[20620]: starting ...
+[2013-06-20 15:01:05,109][INFO ][transport                ] [Pipeline] bound_address {inet[/0.0.0.0:9300]}, publish_address {inet[/192.168.1.30:9300]}
+[2013-06-20 15:01:08,216][INFO ][cluster.service          ] [Pipeline] new_master [Pipeline][BMp_xEfvRF-_JreY17_pkQ][inet[/192.168.1.30:9300]], reason: zen-disco-join (elected_as_master)
+[2013-06-20 15:01:08,331][INFO ][discovery                ] [Pipeline] elasticsearch/BMp_xEfvRF-_JreY17_pkQ
+[2013-06-20 15:01:08,387][INFO ][http                     ] [Pipeline] bound_address {inet[/0.0.0.0:9200]}, publish_address {inet[/192.168.1.30:9200]}
+[2013-06-20 15:01:08,388][INFO ][node                     ] [Pipeline] {0.90.1}[20620]: started
+[2013-06-20 15:01:14,652][INFO ][gateway                  ] [Pipeline] recovered [1] indices into cluster_state
+[2013-06-20 18:51:01,695][INFO ][node                     ] [Pipeline] {0.90.1}[20620]: stopping ...
+[2013-06-20 18:51:01,833][INFO ][node                     ] [Pipeline] {0.90.1}[20620]: stopped
+[2013-06-20 18:51:01,835][INFO ][node                     ] [Pipeline] {0.90.1}[20620]: closing ...
+[2013-06-20 18:51:01,924][INFO ][node                     ] [Pipeline] {0.90.1}[20620]: closed
+[2013-06-20 22:04:01,146][INFO ][node                     ] [Jeffries, Madison] {0.90.1}[38496]: initializing ...
+[2013-06-20 22:04:01,155][INFO ][plugins                  ] [Jeffries, Madison] loaded [], sites []
+[2013-06-20 22:04:05,344][INFO ][node                     ] [Jeffries, Madison] {0.90.1}[38496]: initialized
+[2013-06-20 22:04:05,345][INFO ][node                     ] [Jeffries, Madison] {0.90.1}[38496]: starting ...
+[2013-06-20 22:04:05,525][INFO ][transport                ] [Jeffries, Madison] bound_address {inet[/0.0.0.0:9300]}, publish_address {inet[/192.168.1.4:9300]}
+[2013-06-20 22:04:08,630][INFO ][cluster.service          ] [Jeffries, Madison] new_master [Jeffries, Madison][0DZeXsWxS7qPLwBdvS2mkw][inet[/192.168.1.4:9300]], reason: zen-disco-join (elected_as_master)
+[2013-06-20 22:04:08,754][INFO ][discovery                ] [Jeffries, Madison] elasticsearch/0DZeXsWxS7qPLwBdvS2mkw
+[2013-06-20 22:04:08,821][INFO ][http                     ] [Jeffries, Madison] bound_address {inet[/0.0.0.0:9200]}, publish_address {inet[/192.168.1.4:9200]}
+[2013-06-20 22:04:08,822][INFO ][node                     ] [Jeffries, Madison] {0.90.1}[38496]: started
+[2013-06-20 22:04:12,572][INFO ][gateway                  ] [Jeffries, Madison] recovered [1] indices into cluster_state
+[2013-06-20 22:34:29,986][INFO ][cluster.metadata         ] [Jeffries, Madison] [haystack] deleting index
+[2013-06-20 22:34:31,392][INFO ][cluster.metadata         ] [Jeffries, Madison] [haystack] creating index, cause [api], shards [5]/[1], mappings []
+[2013-06-20 22:34:31,561][INFO ][cluster.metadata         ] [Jeffries, Madison] [haystack] create_mapping [modelresult]
+[2013-06-20 22:34:36,961][INFO ][cluster.metadata         ] [Jeffries, Madison] [haystack] update_mapping [modelresult] (dynamic)

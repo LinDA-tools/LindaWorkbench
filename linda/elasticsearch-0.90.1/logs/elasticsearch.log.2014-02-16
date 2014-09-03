@@ -1,0 +1,28 @@
+[2014-02-16 01:04:03,915][INFO ][node                     ] [Chrome] {0.90.1}[6376]: initializing ...
+[2014-02-16 01:04:04,213][INFO ][plugins                  ] [Chrome] loaded [], sites []
+[2014-02-16 01:04:16,727][INFO ][node                     ] [Chrome] {0.90.1}[6376]: initialized
+[2014-02-16 01:04:16,728][INFO ][node                     ] [Chrome] {0.90.1}[6376]: starting ...
+[2014-02-16 01:04:17,207][INFO ][transport                ] [Chrome] bound_address {inet[/0.0.0.0:9300]}, publish_address {inet[/192.168.1.61:9300]}
+[2014-02-16 01:04:20,483][INFO ][cluster.service          ] [Chrome] new_master [Chrome][RDb6p0BDRDOSQXUodjwPyA][inet[/192.168.1.61:9300]], reason: zen-disco-join (elected_as_master)
+[2014-02-16 01:04:20,622][INFO ][discovery                ] [Chrome] elasticsearch/RDb6p0BDRDOSQXUodjwPyA
+[2014-02-16 01:04:20,684][INFO ][http                     ] [Chrome] bound_address {inet[/0.0.0.0:9200]}, publish_address {inet[/192.168.1.61:9200]}
+[2014-02-16 01:04:20,685][INFO ][node                     ] [Chrome] {0.90.1}[6376]: started
+[2014-02-16 01:04:27,640][INFO ][gateway                  ] [Chrome] recovered [1] indices into cluster_state
+[2014-02-16 01:09:06,455][INFO ][node                     ] [Chrome] {0.90.1}[6376]: stopping ...
+[2014-02-16 01:09:06,605][INFO ][node                     ] [Chrome] {0.90.1}[6376]: stopped
+[2014-02-16 01:09:06,605][INFO ][node                     ] [Chrome] {0.90.1}[6376]: closing ...
+[2014-02-16 01:09:06,647][INFO ][node                     ] [Chrome] {0.90.1}[6376]: closed
+[2014-02-16 01:10:35,055][INFO ][node                     ] [Speed] {0.90.1}[6696]: initializing ...
+[2014-02-16 01:10:35,064][INFO ][plugins                  ] [Speed] loaded [], sites []
+[2014-02-16 01:10:39,116][INFO ][node                     ] [Speed] {0.90.1}[6696]: initialized
+[2014-02-16 01:10:39,117][INFO ][node                     ] [Speed] {0.90.1}[6696]: starting ...
+[2014-02-16 01:10:39,302][INFO ][transport                ] [Speed] bound_address {inet[/0.0.0.0:9300]}, publish_address {inet[/192.168.1.61:9300]}
+[2014-02-16 01:10:42,390][INFO ][cluster.service          ] [Speed] new_master [Speed][HKj_77BJSoOOvHkIGaIoNA][inet[/192.168.1.61:9300]], reason: zen-disco-join (elected_as_master)
+[2014-02-16 01:10:42,461][INFO ][discovery                ] [Speed] elasticsearch/HKj_77BJSoOOvHkIGaIoNA
+[2014-02-16 01:10:42,501][INFO ][http                     ] [Speed] bound_address {inet[/0.0.0.0:9200]}, publish_address {inet[/192.168.1.61:9200]}
+[2014-02-16 01:10:42,502][INFO ][node                     ] [Speed] {0.90.1}[6696]: started
+[2014-02-16 01:10:43,721][INFO ][gateway                  ] [Speed] recovered [1] indices into cluster_state
+[2014-02-16 01:32:03,664][INFO ][node                     ] [Speed] {0.90.1}[6696]: stopping ...
+[2014-02-16 01:32:04,163][INFO ][node                     ] [Speed] {0.90.1}[6696]: stopped
+[2014-02-16 01:32:04,163][INFO ][node                     ] [Speed] {0.90.1}[6696]: closing ...
+[2014-02-16 01:32:04,163][INFO ][node                     ] [Speed] {0.90.1}[6696]: closed

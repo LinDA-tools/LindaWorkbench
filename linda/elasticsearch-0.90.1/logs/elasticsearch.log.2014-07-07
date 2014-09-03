@@ -1,0 +1,44 @@
+[2014-07-07 14:19:59,989][INFO ][node                     ] [Leonus] {0.90.1}[3060]: initializing ...
+[2014-07-07 14:20:00,022][INFO ][plugins                  ] [Leonus] loaded [], sites []
+[2014-07-07 14:20:07,017][INFO ][node                     ] [Leonus] {0.90.1}[3060]: initialized
+[2014-07-07 14:20:07,017][INFO ][node                     ] [Leonus] {0.90.1}[3060]: starting ...
+[2014-07-07 14:20:07,721][INFO ][transport                ] [Leonus] bound_address {inet[/0:0:0:0:0:0:0:0:9300]}, publish_address {inet[/147.102.6.43:9300]}
+[2014-07-07 14:20:11,980][INFO ][cluster.service          ] [Leonus] new_master [Leonus][4dmpLP55RouCMkURAXiMHQ][inet[/147.102.6.43:9300]], reason: zen-disco-join (elected_as_master)
+[2014-07-07 14:20:12,058][INFO ][discovery                ] [Leonus] elasticsearch/4dmpLP55RouCMkURAXiMHQ
+[2014-07-07 14:20:12,489][INFO ][http                     ] [Leonus] bound_address {inet[/0:0:0:0:0:0:0:0:9200]}, publish_address {inet[/147.102.6.43:9200]}
+[2014-07-07 14:20:12,489][INFO ][node                     ] [Leonus] {0.90.1}[3060]: started
+[2014-07-07 14:20:14,855][INFO ][gateway                  ] [Leonus] recovered [1] indices into cluster_state
+[2014-07-07 14:22:37,568][WARN ][discovery.zen.ping.multicast] [Leonus] failed to read requesting data from /146.48.82.84:54328
+java.io.IOException: Expected handle header, got [13]
+	at org.elasticsearch.common.io.stream.HandlesStreamInput.readString(HandlesStreamInput.java:65)
+	at org.elasticsearch.cluster.ClusterName.readFrom(ClusterName.java:64)
+	at org.elasticsearch.cluster.ClusterName.readClusterName(ClusterName.java:58)
+	at org.elasticsearch.discovery.zen.ping.multicast.MulticastZenPing$Receiver.run(MulticastZenPing.java:402)
+	at java.lang.Thread.run(Thread.java:745)
+[2014-07-07 14:57:41,518][WARN ][discovery.zen.ping.multicast] [Leonus] failed to read requesting data from /132.199.144.192:54328
+java.lang.NullPointerException
+	at org.elasticsearch.cluster.ClusterName.readFrom(ClusterName.java:64)
+	at org.elasticsearch.cluster.ClusterName.readClusterName(ClusterName.java:58)
+	at org.elasticsearch.discovery.zen.ping.multicast.MulticastZenPing$Receiver.run(MulticastZenPing.java:402)
+	at java.lang.Thread.run(Thread.java:745)
+[2014-07-07 15:34:41,330][WARN ][discovery.zen.ping.multicast] [Leonus] failed to connect to requesting node [Spider-Slayer][FnfdEF0LSi64qVbVkz-V-A][inet[/10.0.2.15:9300]]
+org.elasticsearch.transport.ConnectTransportException: [Spider-Slayer][inet[/10.0.2.15:9300]] connect_timeout[30s]
+	at org.elasticsearch.transport.netty.NettyTransport.connectToChannels(NettyTransport.java:671)
+	at org.elasticsearch.transport.netty.NettyTransport.connectToNode(NettyTransport.java:610)
+	at org.elasticsearch.transport.netty.NettyTransport.connectToNode(NettyTransport.java:580)
+	at org.elasticsearch.transport.TransportService.connectToNode(TransportService.java:127)
+	at org.elasticsearch.discovery.zen.ping.multicast.MulticastZenPing$Receiver$2.run(MulticastZenPing.java:539)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1145)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:615)
+	at java.lang.Thread.run(Thread.java:745)
+Caused by: java.net.ConnectException: Connection timed out: no further information: /10.0.2.15:9300
+	at sun.nio.ch.SocketChannelImpl.checkConnect(Native Method)
+	at sun.nio.ch.SocketChannelImpl.finishConnect(SocketChannelImpl.java:739)
+	at org.elasticsearch.common.netty.channel.socket.nio.NioClientBoss.connect(NioClientBoss.java:150)
+	at org.elasticsearch.common.netty.channel.socket.nio.NioClientBoss.processSelectedKeys(NioClientBoss.java:105)
+	at org.elasticsearch.common.netty.channel.socket.nio.NioClientBoss.process(NioClientBoss.java:79)
+	at org.elasticsearch.common.netty.channel.socket.nio.AbstractNioSelector.run(AbstractNioSelector.java:312)
+	at org.elasticsearch.common.netty.channel.socket.nio.NioClientBoss.run(NioClientBoss.java:42)
+	at org.elasticsearch.common.netty.util.ThreadRenamingRunnable.run(ThreadRenamingRunnable.java:108)
+	at org.elasticsearch.common.netty.util.internal.DeadLockProofWorker$1.run(DeadLockProofWorker.java:42)
+	... 3 more

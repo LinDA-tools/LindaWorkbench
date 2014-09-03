@@ -1,0 +1,14 @@
+[2013-09-17 10:42:57,851][INFO ][node                     ] [Thinker] {0.90.1}[8048]: initializing ...
+[2013-09-17 10:42:57,888][INFO ][plugins                  ] [Thinker] loaded [], sites []
+[2013-09-17 10:43:07,972][INFO ][node                     ] [Thinker] {0.90.1}[8048]: initialized
+[2013-09-17 10:43:07,973][INFO ][node                     ] [Thinker] {0.90.1}[8048]: starting ...
+[2013-09-17 10:43:08,580][INFO ][transport                ] [Thinker] bound_address {inet[/0.0.0.0:9300]}, publish_address {inet[/192.168.1.5:9300]}
+[2013-09-17 10:43:11,879][INFO ][cluster.service          ] [Thinker] new_master [Thinker][mHxdke4sTxSu00T_zdu17Q][inet[/192.168.1.5:9300]], reason: zen-disco-join (elected_as_master)
+[2013-09-17 10:43:12,093][INFO ][discovery                ] [Thinker] elasticsearch/mHxdke4sTxSu00T_zdu17Q
+[2013-09-17 10:43:12,144][INFO ][http                     ] [Thinker] bound_address {inet[/0.0.0.0:9200]}, publish_address {inet[/192.168.1.5:9200]}
+[2013-09-17 10:43:12,145][INFO ][node                     ] [Thinker] {0.90.1}[8048]: started
+[2013-09-17 10:43:16,540][INFO ][gateway                  ] [Thinker] recovered [1] indices into cluster_state
+[2013-09-17 13:01:29,120][INFO ][node                     ] [Thinker] {0.90.1}[8048]: stopping ...
+[2013-09-17 13:01:29,280][INFO ][node                     ] [Thinker] {0.90.1}[8048]: stopped
+[2013-09-17 13:01:29,280][INFO ][node                     ] [Thinker] {0.90.1}[8048]: closing ...
+[2013-09-17 13:01:29,303][INFO ][node                     ] [Thinker] {0.90.1}[8048]: closed

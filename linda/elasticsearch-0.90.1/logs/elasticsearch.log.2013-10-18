@@ -1,0 +1,14 @@
+[2013-10-18 11:31:45,561][INFO ][node                     ] [Matador] {0.90.1}[5008]: initializing ...
+[2013-10-18 11:31:45,731][INFO ][plugins                  ] [Matador] loaded [], sites []
+[2013-10-18 11:32:06,051][INFO ][node                     ] [Matador] {0.90.1}[5008]: initialized
+[2013-10-18 11:32:06,051][INFO ][node                     ] [Matador] {0.90.1}[5008]: starting ...
+[2013-10-18 11:32:06,551][INFO ][transport                ] [Matador] bound_address {inet[/0.0.0.0:9300]}, publish_address {inet[/192.168.1.2:9300]}
+[2013-10-18 11:32:10,031][INFO ][cluster.service          ] [Matador] new_master [Matador][qPi1A1a-TAu_1AxQwTDZew][inet[/192.168.1.2:9300]], reason: zen-disco-join (elected_as_master)
+[2013-10-18 11:32:10,191][INFO ][discovery                ] [Matador] elasticsearch/qPi1A1a-TAu_1AxQwTDZew
+[2013-10-18 11:32:10,301][INFO ][http                     ] [Matador] bound_address {inet[/0.0.0.0:9200]}, publish_address {inet[/192.168.1.2:9200]}
+[2013-10-18 11:32:10,301][INFO ][node                     ] [Matador] {0.90.1}[5008]: started
+[2013-10-18 11:32:18,692][INFO ][gateway                  ] [Matador] recovered [1] indices into cluster_state
+[2013-10-18 11:36:00,489][INFO ][node                     ] [Matador] {0.90.1}[5008]: stopping ...
+[2013-10-18 11:36:00,619][INFO ][node                     ] [Matador] {0.90.1}[5008]: stopped
+[2013-10-18 11:36:00,619][INFO ][node                     ] [Matador] {0.90.1}[5008]: closing ...
+[2013-10-18 11:36:00,649][INFO ][node                     ] [Matador] {0.90.1}[5008]: closed

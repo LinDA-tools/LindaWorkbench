@@ -1,0 +1,14 @@
+[2014-01-27 13:20:45,277][INFO ][node                     ] [War V] {0.90.1}[13156]: initializing ...
+[2014-01-27 13:20:45,385][INFO ][plugins                  ] [War V] loaded [], sites []
+[2014-01-27 13:20:55,555][INFO ][node                     ] [War V] {0.90.1}[13156]: initialized
+[2014-01-27 13:20:55,556][INFO ][node                     ] [War V] {0.90.1}[13156]: starting ...
+[2014-01-27 13:20:56,097][INFO ][transport                ] [War V] bound_address {inet[/0.0.0.0:9300]}, publish_address {inet[/147.102.6.54:9300]}
+[2014-01-27 13:20:59,663][INFO ][cluster.service          ] [War V] new_master [War V][TrfWc5nHTOaPOTJ2CobigQ][inet[/147.102.6.54:9300]], reason: zen-disco-join (elected_as_master)
+[2014-01-27 13:20:59,788][INFO ][discovery                ] [War V] elasticsearch/TrfWc5nHTOaPOTJ2CobigQ
+[2014-01-27 13:20:59,911][INFO ][http                     ] [War V] bound_address {inet[/0.0.0.0:9200]}, publish_address {inet[/147.102.6.54:9200]}
+[2014-01-27 13:20:59,912][INFO ][node                     ] [War V] {0.90.1}[13156]: started
+[2014-01-27 13:21:05,648][INFO ][gateway                  ] [War V] recovered [1] indices into cluster_state
+[2014-01-27 13:23:42,492][INFO ][node                     ] [War V] {0.90.1}[13156]: stopping ...
+[2014-01-27 13:23:42,618][INFO ][node                     ] [War V] {0.90.1}[13156]: stopped
+[2014-01-27 13:23:42,619][INFO ][node                     ] [War V] {0.90.1}[13156]: closing ...
+[2014-01-27 13:23:42,643][INFO ][node                     ] [War V] {0.90.1}[13156]: closed

@@ -1,0 +1,14 @@
+[2013-09-03 19:20:15,918][INFO ][node                     ] [Armory] {0.90.1}[5488]: initializing ...
+[2013-09-03 19:20:15,958][INFO ][plugins                  ] [Armory] loaded [], sites []
+[2013-09-03 19:20:24,968][INFO ][node                     ] [Armory] {0.90.1}[5488]: initialized
+[2013-09-03 19:20:24,968][INFO ][node                     ] [Armory] {0.90.1}[5488]: starting ...
+[2013-09-03 19:20:25,518][INFO ][transport                ] [Armory] bound_address {inet[/0.0.0.0:9300]}, publish_address {inet[/192.168.1.5:9300]}
+[2013-09-03 19:20:28,818][INFO ][cluster.service          ] [Armory] new_master [Armory][hse6xep2TCexKiEWpsP9Ng][inet[/192.168.1.5:9300]], reason: zen-disco-join (elected_as_master)
+[2013-09-03 19:20:28,928][INFO ][discovery                ] [Armory] elasticsearch/hse6xep2TCexKiEWpsP9Ng
+[2013-09-03 19:20:28,998][INFO ][http                     ] [Armory] bound_address {inet[/0.0.0.0:9200]}, publish_address {inet[/192.168.1.5:9200]}
+[2013-09-03 19:20:28,998][INFO ][node                     ] [Armory] {0.90.1}[5488]: started
+[2013-09-03 19:20:32,288][INFO ][gateway                  ] [Armory] recovered [1] indices into cluster_state
+[2013-09-03 19:21:42,658][INFO ][node                     ] [Armory] {0.90.1}[5488]: stopping ...
+[2013-09-03 19:21:42,778][INFO ][node                     ] [Armory] {0.90.1}[5488]: stopped
+[2013-09-03 19:21:42,778][INFO ][node                     ] [Armory] {0.90.1}[5488]: closing ...
+[2013-09-03 19:21:42,808][INFO ][node                     ] [Armory] {0.90.1}[5488]: closed
