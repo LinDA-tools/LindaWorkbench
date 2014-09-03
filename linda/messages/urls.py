@@ -1,8 +1,9 @@
-from django.conf.urls.defaults import *
+# from django.conf.urls.defaults import *
 # from django.views.generic.simple import redirect_to
 from django.views.generic import RedirectView
+from django.conf.urls import patterns, url
 
-from messages.views import *
+from .views import *
 
 urlpatterns = patterns('',
                        # url(r'^$', redirect_to, {'url': 'inbox/'}),

@@ -8,7 +8,7 @@ class UserProfileForm(forms.ModelForm):
 
     class Meta:
         model = UserProfile
-        exclude = ('user')
+        exclude = ('user',)
         widgets = {
             'country': Select(attrs={'class': 'chzn-select'}),
             'scientific_background': Select(attrs={'class': 'chzn-select'}),
