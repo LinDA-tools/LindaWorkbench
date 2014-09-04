@@ -283,7 +283,7 @@ footer a {
     }
 }
 
-.menu-search input[type="submit"], .home-search input[type="submit"] {
+.menu-search input[type="submit"], .home-search input[type="submit"], .clear-search {
     width: 30px;
     height: 30px;
     padding: 10px;
@@ -952,7 +952,6 @@ form input[type="submit"] {
     border-radius: 3px;
     background-position: 5px 10px;
     background-size: 20px 20px;
-    display: none;
 }
 
 .download-button {
@@ -1224,11 +1223,15 @@ input, textarea {
     position: relative;
 }
 
+.vocabulary-teaser p {
+    text-align: justify;
+}
+
 .vocabulary-teaser .read-more {
     width: 50px;
     font-size: 70%;
     position: relative;
-    left: 80%;
+    left: calc(100% - 50px);;
     display: block;
 }
 

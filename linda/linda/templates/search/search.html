@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 
 {% load i18n %}
+{% block title %}{% trans "Vocabularies" %} | LinDA{% endblock %}
 
 {% block content %}
     <div class="main">
@@ -11,7 +12,9 @@
 
 				<input type="text" name="q" placeholder='{% trans "Search Vocabularies" %}' value="{% if form.q.value %}{{form.q.value}}{% endif %}"/>
 				<input type="submit" value=""/>
-
+                {% if query %}
+                    <a href="/vocabularies/all" class="button delete-button clear-search" title='Clear search'></a>
+                {% endif %}
 			</form>
 
             <div class="search-filters">
@@ -25,7 +28,7 @@
                     {% for vocabulary in page.object_list %}
                     <div class="vocabulary-teaser">
                         <h3><a href="{{ vocabulary.object.get_absolute_url }}">{{vocabulary.title}}</a></h3>
-                        <span>{{vocabulary.description|slice:"150"}}...</span>
+                        <p>{{vocabulary.description|slice:"150"}} {% if vocabulary.description|length > 150 %}...{% endif %}</p>
                         <a href="{{ vocabulary.object.get_absolute_url }}" class="read-more button gray">{% trans "Read more" %}</a>
                     </div>
 
@@ -43,7 +46,7 @@
                     {% for vocabulary in vocabularies %}
                     <div class="vocabulary-teaser">
                         <h3><a href="{{ vocabulary.get_absolute_url }}">{{vocabulary.title}}</a></h3>
-                        <span>{{vocabulary.description|slice:"150"}}...</span>
+                        <p>{{vocabulary.description|slice:"150"}} {% if vocabulary.description|length > 150 %}...{% endif %}</p>
                         <a href="{{ vocabulary.get_absolute_url }}" class="read-more button gray">{% trans "Read more" %}</a>
                     </div>
 
