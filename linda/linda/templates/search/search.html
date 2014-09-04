@@ -24,7 +24,7 @@
                 <div class="search-results">
                     {% for vocabulary in page.object_list %}
                     <div class="vocabulary-teaser">
-                        <h3><a href="{{ vocabulary.object.get_absolute_url }}">{{vocabulary.object.title}}</a></h3>
+                        <h3><a href="{{ vocabulary.object.get_absolute_url }}">{{vocabulary.title}}</a></h3>
                         <a href="{{vocabulary.preferredNamespacePrefix}}"></a>
                         <span>{{vocabulary.description|slice:"150"}}...</span>
                         <a href="{{ vocabulary.object.get_absolute_url }}" class="read-more button gray">{% trans "Read more" %}</a>
@@ -35,12 +35,32 @@
                     {% endfor %}
 
                 </div>
+
+                {% with current_url="/vocabularies" %}
+                    {% include 'util/paginator.html' %}
+                {% endwith %}
+            {% else %}
+                <div class="search-results">
+                    {% for vocabulary in vocabularies %}
+                    <div class="vocabulary-teaser">
+                        <h3><a href="{{ vocabulary.object.get_absolute_url }}">{{vocabulary.title}}</a></h3>
+                        <a href="{{vocabulary.preferredNamespacePrefix}}"></a>
+                        <span>{{vocabulary.description|slice:"150"}}...</span>
+                        <a href="{{ vocabulary.object.get_absolute_url }}" class="read-more button gray">{% trans "Read more" %}</a>
+                    </div>
+
+                    {% empty %}
+                        <p>{% trans "No vocabularies in the database." %}</p>
+                    {% endfor %}
+
+                    {% with current_url="/vocabularies/all" %}
+                        {% include 'util/paginator.html' %}
+                    {% endwith %}
+                </div>
             {% endif %}
 
 
-        {% with current_url="/search" %}
-            {% include 'util/paginator.html' %}
-        {% endwith %}
+
 		</div>
 	</div>
 

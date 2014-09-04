@@ -330,20 +330,15 @@ class VocabularyVisualize(DetailView):
         context['subjects'] = subjects
         context['objects'] = objects
         context['predicates'] = predicates
-        """
-        #Load objects
-        context['objects'] = {}
-        for object in g.objects():
-            context['objects'][object] = object.split("/")[-1]
-
-        #Load predicates
-        context['predicates'] = []
-        for subj, pred, obj in g:
-            context['predicates'].append( (subj, pred, obj) )
-        """
 
         return context
 
+
+class VocabularyListView(ListView):
+    model = Vocabulary
+    template_name = 'search/search.html'
+    context_object_name = 'vocabularies'
+    paginate_by = 10
 
 def rateDataset(request, pk, vt):
     vocid = int(pk)

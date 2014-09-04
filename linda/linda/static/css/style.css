@@ -168,6 +168,7 @@ header .site-title:hover {
     display: inline-block;
     width: 260px;
     min-height: 800px;
+    display: table-cell;
 }
 
 #menu > ul {
@@ -217,11 +218,17 @@ header .site-title:hover {
 }
 
 /* Main Area */
+#main-container {
+    display: table;
+    width: 100%;
+}
+
 .main {
     width: calc(100% - 350px);
     padding: 10px 10px 50px 10px;
     display: inline-block;
     vertical-align: top;
+    display: table-cell;
 }
 
 .vocabulary-details .main {

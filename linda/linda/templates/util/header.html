@@ -31,29 +31,30 @@
 
 </header>
 
-<div id="menu" class="clearfix">
-	<ul>
-        <li><form class="form menu-search" method="get" action="/vocabulary-search" class="form">
-
-				<input type="text" name="q" placeholder="Search LinDA">
-				<input type="submit" value="">
-
-			</form></li>
-		<li><a href="/datasources">{% trans "Data Sources" %}</a></li>
-        <li><a href="/query-builder">{% trans "Query builder" %}</a></li>
-        <li><a href="/visualizations">{% trans "Visualizations" %}</a></li>
-	    <li><a href="/analytics">{% trans "Analytics" %}</a></li>
-		<li><a href="/transformations">{% trans "Transformations" %}</a></li>
-		<li><a href="/vocabularies">{% trans "Vocabularies" %}</a></li>
-	</ul>
-
-    <div class="secondary-menu">
-
+<div id="main-container">
+    <div id="menu" class="clearfix">
         <ul>
-            <li><a href="/settings">{% trans "Settings" %}</a></li>
-            <li><a href="/config">{% trans "Configuration" %}</a></li>
-            <li><a href="/sparql">{% trans "SPARQL Endpoint"%}</a></li>
+            <li><form class="form menu-search" method="get" action="/vocabulary-search" class="form">
+
+                    <input type="text" name="q" placeholder="Search LinDA">
+                    <input type="submit" value="">
+
+                </form></li>
+            <li><a href="/datasources">{% trans "Data Sources" %}</a></li>
+            <li><a href="/query-builder">{% trans "Query builder" %}</a></li>
+            <li><a href="/visualizations">{% trans "Visualizations" %}</a></li>
+            <li><a href="/analytics">{% trans "Analytics" %}</a></li>
+            <li><a href="/transformations">{% trans "Transformations" %}</a></li>
+            <li><a href="/vocabularies/all">{% trans "Vocabularies" %}</a></li>
         </ul>
 
+        <div class="secondary-menu">
+
+            <ul>
+                <li><a href="/settings">{% trans "Settings" %}</a></li>
+                <li><a href="/config">{% trans "Configuration" %}</a></li>
+                <li><a href="/sparql">{% trans "SPARQL Endpoint"%}</a></li>
+            </ul>
+
+        </div>
     </div>
-</div>
