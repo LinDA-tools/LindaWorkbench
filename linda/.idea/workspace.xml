@@ -44,25 +44,16 @@
       <file leaf-file-name="views.py" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/linda/views.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="340" column="20" selection-start="11343" selection-end="11343" vertical-scroll-proportion="0.0" vertical-offset="5202" max-vertical-offset="13243">
+            <state line="340" column="20" selection-start="11343" selection-end="11343" vertical-scroll-proportion="0.0" vertical-offset="4743" max-vertical-offset="13243">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="index.html" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/linda/templates/vocabulary-search/index.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="-0.0" vertical-offset="0" max-vertical-offset="850">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="search.html" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="search.html" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/linda/templates/search/search.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="55" column="58" selection-start="2432" selection-end="2432" vertical-scroll-proportion="-27.346153" vertical-offset="224" max-vertical-offset="1241">
+            <state line="26" column="58" selection-start="945" selection-end="945" vertical-scroll-proportion="0.34087238" vertical-offset="231" max-vertical-offset="1207">
               <folding />
             </state>
           </provider>
@@ -71,7 +62,7 @@
       <file leaf-file-name="details.html" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/linda/templates/vocabulary/details.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="5" column="39" selection-start="184" selection-end="202" vertical-scroll-proportion="0.0" vertical-offset="2244" max-vertical-offset="3791">
+            <state line="5" column="39" selection-start="184" selection-end="202" vertical-scroll-proportion="83.03846" vertical-offset="2244" max-vertical-offset="3791">
               <folding />
             </state>
           </provider>
@@ -89,7 +80,7 @@
       <file leaf-file-name="models.py" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/linda/models.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="85" column="29" selection-start="3961" selection-end="3961" vertical-scroll-proportion="-35.692307" vertical-offset="398" max-vertical-offset="2023">
+            <state line="83" column="16" selection-start="3884" selection-end="3884" vertical-scroll-proportion="-8.884615" vertical-offset="1061" max-vertical-offset="2023">
               <folding />
             </state>
           </provider>
@@ -104,10 +95,10 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="urls.py" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="urls.py" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/linda/urls.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="102" column="24" selection-start="5690" selection-end="5690" vertical-scroll-proportion="0.7627907" vertical-offset="1123" max-vertical-offset="1768">
+            <state line="102" column="24" selection-start="5690" selection-end="5690" vertical-scroll-proportion="0.0" vertical-offset="1123" max-vertical-offset="1768">
               <folding />
             </state>
           </provider>
@@ -136,14 +127,14 @@
         <option value="$PROJECT_DIR$/linda/templates/visualizations/datasource.html" />
         <option value="$PROJECT_DIR$/linda/templates/datasource/index.html" />
         <option value="$PROJECT_DIR$/linda/settings.py" />
-        <option value="$PROJECT_DIR$/linda/models.py" />
         <option value="$PROJECT_DIR$/linda/templates/vocabulary/details.html" />
-        <option value="$PROJECT_DIR$/linda/templates/search/search.html" />
         <option value="$PROJECT_DIR$/linda/views.py" />
         <option value="$PROJECT_DIR$/linda/templates/util/header.html" />
         <option value="$PROJECT_DIR$/linda/templates/util/footer.html" />
         <option value="$PROJECT_DIR$/linda/static/css/style.css" />
         <option value="$PROJECT_DIR$/linda/urls.py" />
+        <option value="$PROJECT_DIR$/linda/models.py" />
+        <option value="$PROJECT_DIR$/linda/templates/search/search.html" />
       </list>
     </option>
   </component>
@@ -704,44 +695,9 @@
         <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="619" />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/linda/templates/vocabulary/details.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="5" column="39" selection-start="184" selection-end="202" vertical-scroll-proportion="0.0" vertical-offset="2244" max-vertical-offset="3791">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/linda/models.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="85" column="29" selection-start="3961" selection-end="3961" vertical-scroll-proportion="-35.692307" vertical-offset="398" max-vertical-offset="2023">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/linda/templates/vocabulary-search/index.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="924">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/linda/templates/search/search.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="55" column="58" selection-start="2432" selection-end="2432" vertical-scroll-proportion="-27.346153" vertical-offset="224" max-vertical-offset="1241">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/linda/search_indexes.py">
       <provider selected="true" editor-type-id="text-editor">
         <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="924">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/linda/views.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="340" column="20" selection-start="11343" selection-end="11343" vertical-scroll-proportion="0.0" vertical-offset="5202" max-vertical-offset="13243">
           <folding />
         </state>
       </provider>
@@ -760,6 +716,27 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/linda/urls.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="102" column="24" selection-start="5690" selection-end="5690" vertical-scroll-proportion="0.0" vertical-offset="1123" max-vertical-offset="1768">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/linda/templates/vocabulary/details.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="5" column="39" selection-start="184" selection-end="202" vertical-scroll-proportion="83.03846" vertical-offset="2244" max-vertical-offset="3791">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/linda/models.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="83" column="16" selection-start="3884" selection-end="3884" vertical-scroll-proportion="-8.884615" vertical-offset="1061" max-vertical-offset="2023">
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/linda/static/css/style.css">
       <provider selected="true" editor-type-id="text-editor">
         <state line="170" column="24" selection-start="3030" selection-end="3030" vertical-scroll-proportion="-14.52" vertical-offset="2527" max-vertical-offset="23953">
@@ -767,9 +744,23 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/linda/urls.py">
+    <entry file="file://$PROJECT_DIR$/linda/templates/vocabulary-search/index.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="102" column="24" selection-start="5690" selection-end="5690" vertical-scroll-proportion="0.7627907" vertical-offset="1123" max-vertical-offset="1768">
+        <state line="29" column="29" selection-start="1138" selection-end="1167" vertical-scroll-proportion="0.549273" vertical-offset="153" max-vertical-offset="850">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/linda/views.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="340" column="20" selection-start="11343" selection-end="11343" vertical-scroll-proportion="0.0" vertical-offset="5202" max-vertical-offset="13243">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/linda/templates/search/search.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="26" column="58" selection-start="945" selection-end="945" vertical-scroll-proportion="0.34087238" vertical-offset="231" max-vertical-offset="1207">
           <folding />
         </state>
       </provider>

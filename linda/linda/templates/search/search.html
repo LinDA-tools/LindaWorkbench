@@ -25,7 +25,6 @@
                     {% for vocabulary in page.object_list %}
                     <div class="vocabulary-teaser">
                         <h3><a href="{{ vocabulary.object.get_absolute_url }}">{{vocabulary.title}}</a></h3>
-                        <a href="{{vocabulary.preferredNamespacePrefix}}"></a>
                         <span>{{vocabulary.description|slice:"150"}}...</span>
                         <a href="{{ vocabulary.object.get_absolute_url }}" class="read-more button gray">{% trans "Read more" %}</a>
                     </div>
@@ -43,10 +42,9 @@
                 <div class="search-results">
                     {% for vocabulary in vocabularies %}
                     <div class="vocabulary-teaser">
-                        <h3><a href="{{ vocabulary.object.get_absolute_url }}">{{vocabulary.title}}</a></h3>
-                        <a href="{{vocabulary.preferredNamespacePrefix}}"></a>
+                        <h3><a href="{{ vocabulary.get_absolute_url }}">{{vocabulary.title}}</a></h3>
                         <span>{{vocabulary.description|slice:"150"}}...</span>
-                        <a href="{{ vocabulary.object.get_absolute_url }}" class="read-more button gray">{% trans "Read more" %}</a>
+                        <a href="{{ vocabulary.get_absolute_url }}" class="read-more button gray">{% trans "Read more" %}</a>
                     </div>
 
                     {% empty %}
