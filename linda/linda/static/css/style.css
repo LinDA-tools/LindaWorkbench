@@ -17,6 +17,11 @@ html {
     overflow-y: scroll;
 }
 
+html, body
+{
+  height: 100%;
+}
+
 p {
     font-weight: 400;
     margin-bottom: 10px;
@@ -221,6 +226,7 @@ header .site-title:hover {
 #main-container {
     display: table;
     width: 100%;
+    height: calc(100vh - 109px);
 }
 
 .main {
@@ -1344,7 +1350,7 @@ input, textarea {
 
 /*Welcome message*/
 .welcome {
-    width: 100%;
+    width: calc(100% - 60px);
     background: #F3F3F3;
     padding: 20px;
     margin: 10px;
