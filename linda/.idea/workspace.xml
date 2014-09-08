@@ -35,43 +35,45 @@
       <file leaf-file-name="footer.html" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/linda/templates/util/footer.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="1" column="0" selection-start="35" selection-end="35" vertical-scroll-proportion="-0.65384614" vertical-offset="0" max-vertical-offset="238">
+            <state line="1" column="0" selection-start="35" selection-end="35" vertical-scroll-proportion="0.0" vertical-offset="17" max-vertical-offset="238">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="views.py" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/linda/views.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="340" column="20" selection-start="11343" selection-end="11343" vertical-scroll-proportion="0.0" vertical-offset="4743" max-vertical-offset="13243">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="search.html" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="search.html" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/linda/templates/search/search.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="26" column="58" selection-start="945" selection-end="945" vertical-scroll-proportion="0.34087238" vertical-offset="231" max-vertical-offset="1207">
+            <state line="15" column="88" selection-start="603" selection-end="615" vertical-scroll-proportion="0.0" vertical-offset="255" max-vertical-offset="1258">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="details.html" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/linda/templates/vocabulary/details.html">
+      <file leaf-file-name="edit.html" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/linda/templates/vocabulary/edit.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="5" column="39" selection-start="184" selection-end="202" vertical-scroll-proportion="83.03846" vertical-offset="2244" max-vertical-offset="3791">
-              <folding />
+            <state line="72" column="14" selection-start="2647" selection-end="2647" vertical-scroll-proportion="-7.8461537" vertical-offset="1020" max-vertical-offset="1717">
+              <folding>
+                <element signature="n#style#0;n#label#0;n#div#6;n#form#0;n#div#0;n#!!top" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="style.css" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="style.css" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/linda/static/css/style.css">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="170" column="24" selection-start="3030" selection-end="3030" vertical-scroll-proportion="-14.52" vertical-offset="2527" max-vertical-offset="23953">
+            <state line="1044" column="29" selection-start="16585" selection-end="16585" vertical-scroll-proportion="0.7199341" vertical-offset="17311" max-vertical-offset="24344">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="index.html" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/linda/templates/datasource/index.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="75" column="24" selection-start="2821" selection-end="2821" vertical-scroll-proportion="-9.692307" vertical-offset="1023" max-vertical-offset="1921">
               <folding />
             </state>
           </provider>
@@ -80,8 +82,19 @@
       <file leaf-file-name="models.py" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/linda/models.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="83" column="16" selection-start="3884" selection-end="3884" vertical-scroll-proportion="-8.884615" vertical-offset="1061" max-vertical-offset="2023">
+            <state line="53" column="31" selection-start="2220" selection-end="2220" vertical-scroll-proportion="0.0" vertical-offset="538" max-vertical-offset="2074">
               <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="forms.py" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/linda/forms.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="26" column="45" selection-start="690" selection-end="690" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="884">
+              <folding>
+                <element signature="e#0#24#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -89,7 +102,7 @@
       <file leaf-file-name="search_indexes.py" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/linda/search_indexes.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="340">
+            <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="374">
               <folding />
             </state>
           </provider>
@@ -98,7 +111,7 @@
       <file leaf-file-name="urls.py" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/linda/urls.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="102" column="24" selection-start="5690" selection-end="5690" vertical-scroll-proportion="0.0" vertical-offset="1123" max-vertical-offset="1768">
+            <state line="102" column="24" selection-start="5690" selection-end="5690" vertical-scroll-proportion="0.0" vertical-offset="1734" max-vertical-offset="1887">
               <folding />
             </state>
           </provider>
@@ -125,16 +138,18 @@
         <option value="$PROJECT_DIR$/linda/templates/transformations/index.html" />
         <option value="$PROJECT_DIR$/linda/templates/analytics/datasource.html" />
         <option value="$PROJECT_DIR$/linda/templates/visualizations/datasource.html" />
-        <option value="$PROJECT_DIR$/linda/templates/datasource/index.html" />
         <option value="$PROJECT_DIR$/linda/settings.py" />
-        <option value="$PROJECT_DIR$/linda/templates/vocabulary/details.html" />
         <option value="$PROJECT_DIR$/linda/views.py" />
         <option value="$PROJECT_DIR$/linda/templates/util/header.html" />
         <option value="$PROJECT_DIR$/linda/templates/util/footer.html" />
-        <option value="$PROJECT_DIR$/linda/static/css/style.css" />
         <option value="$PROJECT_DIR$/linda/urls.py" />
-        <option value="$PROJECT_DIR$/linda/models.py" />
         <option value="$PROJECT_DIR$/linda/templates/search/search.html" />
+        <option value="$PROJECT_DIR$/linda/templates/datasource/index.html" />
+        <option value="$PROJECT_DIR$/linda/models.py" />
+        <option value="$PROJECT_DIR$/linda/forms.py" />
+        <option value="$PROJECT_DIR$/linda/templates/vocabulary/edit.html" />
+        <option value="$PROJECT_DIR$/linda/templates/vocabulary/details.html" />
+        <option value="$PROJECT_DIR$/linda/static/css/style.css" />
       </list>
     </option>
   </component>
@@ -239,6 +254,28 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
+              <option name="myItemId" value="vocabulary" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="linda" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="linda" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="linda" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="templates" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
               <option name="myItemId" value="util" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
@@ -262,6 +299,68 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="search" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="linda" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="linda" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="linda" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="templates" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="datasource" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="linda" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="linda" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="linda" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="static" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="linda" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="linda" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="linda" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="static" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="css" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -441,8 +540,8 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1936" height="1056" extended-state="7" />
-    <editor active="true" />
+    <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
+    <editor active="false" />
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
@@ -452,7 +551,7 @@
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.2936842" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.2936842" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -480,16 +579,6 @@
     <breakpoint-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/linda/templates/analytics/datasource.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="9" column="58" selection-start="311" selection-end="311" vertical-scroll-proportion="0.0" vertical-offset="153" max-vertical-offset="289" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/linda/templates/visualizations/datasource.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="9" column="86" selection-start="354" selection-end="354" vertical-scroll-proportion="0.0" vertical-offset="153" max-vertical-offset="289" />
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/linda/views.py">
       <provider selected="true" editor-type-id="text-editor">
         <state line="40" column="39" selection-start="1203" selection-end="1203" vertical-scroll-proportion="0.0" vertical-offset="187" max-vertical-offset="13294">
@@ -665,11 +754,6 @@
         <state line="9" column="86" selection-start="354" selection-end="354" vertical-scroll-proportion="0.0" vertical-offset="153" max-vertical-offset="289" />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/linda/templates/datasource/index.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="84" column="39" selection-start="3024" selection-end="3024" vertical-scroll-proportion="0.32956383" vertical-offset="1224" max-vertical-offset="2091" />
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/linda/templates/visualizations/index.html">
       <provider selected="true" editor-type-id="text-editor">
         <state line="7" column="0" selection-start="0" selection-end="336" vertical-scroll-proportion="0.19224556" vertical-offset="0" max-vertical-offset="619" />
@@ -695,23 +779,9 @@
         <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="619" />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/linda/search_indexes.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="924">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/linda/templates/util/header.html">
       <provider selected="true" editor-type-id="text-editor">
         <state line="59" column="10" selection-start="2050" selection-end="2050" vertical-scroll-proportion="-20.538462" vertical-offset="469" max-vertical-offset="1105">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/linda/templates/util/footer.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="1" column="0" selection-start="35" selection-end="35" vertical-scroll-proportion="-0.65384614" vertical-offset="0" max-vertical-offset="238">
           <folding />
         </state>
       </provider>
@@ -723,30 +793,21 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/linda/templates/vocabulary/details.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="5" column="39" selection-start="184" selection-end="202" vertical-scroll-proportion="83.03846" vertical-offset="2244" max-vertical-offset="3791">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/linda/models.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="83" column="16" selection-start="3884" selection-end="3884" vertical-scroll-proportion="-8.884615" vertical-offset="1061" max-vertical-offset="2023">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/linda/static/css/style.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="170" column="24" selection-start="3030" selection-end="3030" vertical-scroll-proportion="-14.52" vertical-offset="2527" max-vertical-offset="23953">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/linda/templates/vocabulary-search/index.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="29" column="29" selection-start="1138" selection-end="1167" vertical-scroll-proportion="0.549273" vertical-offset="153" max-vertical-offset="850">
+        <state line="29" column="29" selection-start="1138" selection-end="1167" vertical-scroll-proportion="0.549273" vertical-offset="153" max-vertical-offset="850" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/linda/search_indexes.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="924">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/linda/templates/util/footer.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="1" column="0" selection-start="35" selection-end="35" vertical-scroll-proportion="0.0" vertical-offset="17" max-vertical-offset="238">
           <folding />
         </state>
       </provider>
@@ -760,7 +821,53 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/linda/templates/search/search.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="26" column="58" selection-start="945" selection-end="945" vertical-scroll-proportion="0.34087238" vertical-offset="231" max-vertical-offset="1207">
+        <state line="15" column="88" selection-start="603" selection-end="615" vertical-scroll-proportion="0.0" vertical-offset="102" max-vertical-offset="1258">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/linda/templates/datasource/index.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="75" column="24" selection-start="2821" selection-end="2821" vertical-scroll-proportion="-9.692307" vertical-offset="1023" max-vertical-offset="1921">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/linda/models.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="53" column="31" selection-start="2220" selection-end="2220" vertical-scroll-proportion="0.0" vertical-offset="538" max-vertical-offset="2074">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/linda/forms.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="26" column="45" selection-start="690" selection-end="690" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="884">
+          <folding>
+            <element signature="e#0#24#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/linda/templates/vocabulary/edit.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="72" column="14" selection-start="2647" selection-end="2647" vertical-scroll-proportion="-7.8461537" vertical-offset="1020" max-vertical-offset="1717">
+          <folding>
+            <element signature="n#style#0;n#label#0;n#div#6;n#form#0;n#div#0;n#!!top" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/linda/templates/vocabulary/details.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="23" column="33" selection-start="1037" selection-end="1037" vertical-scroll-proportion="0.19224556" vertical-offset="272" max-vertical-offset="3893">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/linda/static/css/style.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="1044" column="29" selection-start="16585" selection-end="16585" vertical-scroll-proportion="0.7199341" vertical-offset="17311" max-vertical-offset="24344">
           <folding />
         </state>
       </provider>

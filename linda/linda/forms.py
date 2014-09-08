@@ -27,6 +27,7 @@ class VocabularyUpdateForm(forms.ModelForm):
         exclude = ('uploader', 'datePublished', 'dateCreated', 'score', 'votes', 'downloads')
         widgets = {
         'description': forms.Textarea,
+        'example': forms.Textarea,
         }
 
 from haystack.forms import ModelSearchForm

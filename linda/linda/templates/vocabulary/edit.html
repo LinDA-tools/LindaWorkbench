@@ -72,6 +72,14 @@
             {% endif %}
         </div>
 
+        <div>
+            <label for="example" style="vertical-align: top;">{% trans "Usage example"%}:</label>
+            {{form.example}}
+            {% if form.example.errors %}
+            <span class="error">{{ form.example.errors.as_text }}</span>
+            {% endif %}
+        </div>
+
         <div class="action-buttons">
             <a href="/vocabulary/{{vocabulary.id}}" class="button blue right">{% trans "Cancel" %}</a>
             <input type="submit" value='{% trans "Update vocabulary" %}' class="button red left"/>

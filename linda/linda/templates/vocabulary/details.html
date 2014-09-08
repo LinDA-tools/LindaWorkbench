@@ -19,6 +19,12 @@
         
         <p class="description">{{vocabulary.description}}</p>
 
+        {% if vocabulary.example %}
+            <h4>{% trans "Usage example" %}</h4>
+            <div class="example">
+                <pre>{{vocabulary.example}}</pre>
+            </div>
+        {% endif %}
 
         <div class="comments">
             <h2>{% trans "Discussion" %}</h2>
@@ -47,27 +53,27 @@
 
                 {% if user.is_authenticated %}
 
-            <div class="comment">
-                {% if user.profile.avatar.photo_original %}
-                {% thumbnail user.profile.avatar.photo_original "50x50" as avatar %}
-                <img src="{{avatar}}" width=50 height=50 class="profile-image-small"/>
-                {% else %}
-                <img src="/static/images/avatar.jpg" width=50 height=50 class="profile-image-small"/>
-                {% endif %}
+                    <div class="comment">
+                        {% if user.profile.avatar.photo_original %}
+                        {% thumbnail user.profile.avatar.photo_original "50x50" as avatar %}
+                        <img src="{{avatar}}" width=50 height=50 class="profile-image-small"/>
+                        {% else %}
+                        <img src="/static/images/avatar.jpg" width=50 height=50 class="profile-image-small"/>
+                        {% endif %}
 
-                <div class="comment-content">
-                    <div class="comment-author"><a href="/profile/{{comment.user.id}}/">{{user|nice_name}}</a></div>
-                    <div class="comment-text comment-text-new-comment">
-                        <textarea id="comment-text-input" name="comment-text-input"
-                                  placeholder="Add your comment"></textarea>
+                        <div class="comment-content">
+                            <div class="comment-author"><a href="/profile/{{comment.user.id}}/">{{user|nice_name}}</a></div>
+                            <div class="comment-text comment-text-new-comment">
+                                <textarea id="comment-text-input" name="comment-text-input"
+                                          placeholder="Add your comment"></textarea>
 
-                        <div id="comment-post-button" class="button blue right">{% trans "Post comment" %}</div>
+                                <div id="comment-post-button" class="button blue right">{% trans "Post comment" %}</div>
+                            </div>
+                        </div>
                     </div>
-                </div>
-            </div>
-            {% else %}
-                <a class="button blue" href="/accounts/login/?next=/vocabulary/{{vocabulary.id}}">{% trans "Log in to comment" %}</a>
-            {% endif %}
+                {% else %}
+                    <a class="button blue" href="/accounts/login/?next=/vocabulary/{{vocabulary.id}}">{% trans "Log in to comment" %}</a>
+                {% endif %}
         </div>
 
     </content>

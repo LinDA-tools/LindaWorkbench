@@ -1037,6 +1037,20 @@ form input[type="submit"] {
     border-radius: 5px;
 }
 
+.vocabulary .example {
+    width: 70%;
+    /* left: 20%; */
+    margin-left: 40px;
+    /* position: relative; */
+    border: 2px solid #DADFE1;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.vocabulary .example pre {
+    word-break: break-word;
+}
+
 .comment-content:before, .vocabulary .description:before {
     top: 10px;
     bottom: auto;

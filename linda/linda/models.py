@@ -66,6 +66,9 @@ class Vocabulary(models.Model):
     preferredNamespaceUri = models.URLField(max_length=1024, blank=False, null=True)  #Preferred namespace uri
     preferredNamespacePrefix = models.CharField(max_length=256, blank=False, null=True)  #Preffered namespace prefix
 
+    #Vocabulary example
+    example = models.CharField(max_length=8196, blank=True, null=False)
+
     #Logging
     uploader = models.ForeignKey(User)
     datePublished = models.DateField(blank=True, null=True)  #Original vocabulary publish date
