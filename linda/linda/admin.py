@@ -28,3 +28,15 @@ class DatasourceDescriptionAdmin(admin.ModelAdmin):
 
 
 admin.site.register(DatasourceDescription, DatasourceDescriptionAdmin)
+
+class VocabularyClassAdmin(admin.ModelAdmin):
+    pass
+
+
+admin.site.register(VocabularyClass, VocabularyClassAdmin)
+
+class VocabularyPropertyAdmin(admin.ModelAdmin):
+    pass
+
+
+admin.site.register(VocabularyProperty, VocabularyPropertyAdmin)

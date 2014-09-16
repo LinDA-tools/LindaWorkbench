@@ -237,56 +237,6 @@ class VocabularyDeleteView(DeleteView):
             return res
         return object
 
-"""
-class VocabularySearchView(ListView):
-    model = Vocabulary
-    template_name = 'vocabulary-search/index.html'
-    paginate_by = 20
-
-    def get_context_data(self, **kwargs):
-        context = super(VocabularySearchView, self).get_context_data(**kwargs)
-
-        #Get search results
-        #TODO get search results
-
-        results = []
-
-        # TODO fix the response to actual results and search
-        # actual_results = query_views.query()
-
-
-        for i in range(1, 1000):
-            item = {}
-            item['id'] = "%s" % str(i)
-            item['shortTitle'] = "foaf"
-            item['title'] = "Friend of a Friend vocabulary"
-            item['preferredNamespacePrefix'] = "foaf"
-            item['preferredNamespaceUri'] = "http://xmlns.com/foaf/0.1/"
-            item[
-                'description'] = "FOAF is a project devoted to linking people and information using the Web. Regardless of whether information is in people's heads, in physical or digital documents, or in the form of factual data, it can be linked."
-            item['creator'] = "http://google.com/DanBrickley"
-            item['modified'] = "2014-01-14"
-            results.append(item)
-
-        #paginate results
-        paginator = Paginator(results, self.paginate_by)
-
-        page = self.request.GET.get('page')
-
-        try:
-      digit      page_vocabularies = paginator.page(page)
-        except PageNotAnInteger:
-            # If page is not an integer, deliver first page.
-            page_vocabularies = paginator.page(1)
-        except EmptyPage:
-            # If page is out of range (e.g. 9999), deliver last page of results.
-            page_vocabularies = paginator.page(paginator.num_pages)
-
-        context['vocabularylist'] = page_vocabularies
-        context['page_obj'] = page_vocabularies
-
-        return context
-"""
 
 class VocabularyVisualize(DetailView):
     model = Vocabulary
