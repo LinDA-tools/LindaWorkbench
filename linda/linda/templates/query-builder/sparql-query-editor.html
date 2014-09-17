@@ -1,0 +1,35 @@
+<div class="panel panel-default">
+	<div class="panel-heading">
+	    <h4 class="panel-title"><%if mode == "builder"%>Equivalent SPARQL Query<%else%>SPARQL Query editor<%end%></h4>
+	</div>
+	<div class="panel-body">
+	    <div class="row " > 
+	        <div class="col-md-12">
+	            <textarea rows="12" id="txt_sparql_query" style="width:100%;" placeholder="Type your SPARQL query here ..." class="form-control"></textarea>
+	        </div>
+	    </div>
+	</div>
+	<div class="panel-footer">
+	    <div class="row">
+	        <div class="col-md-9">
+	        	<div class="btn-group">
+		            <button  type="button" class="btn btn-lg btn-success" onclick="execute_sparql_query()">&nbsp;&nbsp;&nbsp;&nbsp;<span class="glyphicon glyphicon-play"></span>&nbsp;&nbsp;&nbsp;&nbsp;</button>
+		            <button  type="button" class="btn btn-lg btn-warning" onclick="show_sparql_download_modal()">&nbsp;&nbsp;&nbsp;&nbsp;<span class="glyphicon glyphicon-floppy-save"></span>&nbsp;&nbsp;&nbsp;&nbsp;</button>
+	        	</div>
+	        </div>
+	        <%if mode == "sparql"%>
+		        <div class="col-md-3">
+		        	<button onclick="generate_sample_query('1')" type="button" class="btn btn-lg btn-info pull-right">Sample Query</button>
+		        </div>
+	        <%end%>
+	    </div>
+	</div>
+</div>
+<div class="hide">
+	<textarea rows="5" id="txt_sample_query_1" >
+        PREFIX rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#&gt;
+        SELECT ?subject ?label
+        WHERE { ?subject rdfs:label ?label.
+        FILTER(langMatches(lang(?label), "EN"))} LIMIT 200
+    </textarea>
+</div>

@@ -1,0 +1,41 @@
+/* line 25, /root/rdf2any/QueryBuilder/app/assets/stylesheets/common.css.scss */
+.main-container {
+  position: relative;
+  margin-top: 30px;
+  margin-bottom: 30px;
+}
+
+/* line 32, /root/rdf2any/QueryBuilder/app/assets/stylesheets/common.css.scss */
+#loading {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1000;
+  #background-color: #02c4fc;
+  opacity: .3;
+}
+
+/* line 44, /root/rdf2any/QueryBuilder/app/assets/stylesheets/common.css.scss */
+.ajax-loader {
+  position: absolute;
+  left: 20%;
+  top: 10%;
+  margin-left: -32px;
+  /* -1 * image width / 2 */
+  margin-top: -32px;
+  /* -1 * image height / 2 */
+  display: block;
+  z-index: 9999999;
+}
+
+/* line 54, /root/rdf2any/QueryBuilder/app/assets/stylesheets/common.css.scss */
+.clickable {
+  cursor: pointer;
+}
+
+/* line 57, /root/rdf2any/QueryBuilder/app/assets/stylesheets/common.css.scss */
+.word-wrap {
+  word-wrap: break-word;
+}

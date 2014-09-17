@@ -944,6 +944,11 @@ form input[type="submit"] {
     display: table-row;
 }
 
+/* fix for query-builder */
+.query-builder .row {
+    display: block;
+}
+
 .container label, .container span, .cell {
     display: table-cell;
 }
@@ -1285,62 +1290,6 @@ input, textarea {
 
 .datasource-create-form input[type="submit"] {
     width: 200px;
-}
-
-/*Query Builder*/
-.query-builder, .sparql-query {
-    border-top: 1px solid #FC5006;
-}
-
-.column-4 {
-    width: 20%;
-    padding-left: 2%;
-    min-width: 200px;
-    display: inline-block;
-}
-
-.column-4 .button {
-    display: block;
-    width: 120px;
-}
-
-.column-4 input[type="submit"], .column-4 select {
-    display: block;
-    width: 140px;
-    height: auto;
-}
-
-.column-4 > label {
-    padding-left: 20px;
-    background: url('/static/images/select.png');
-    background-repeat: no-repeat;
-    background-size: 15px 15px;
-    background-position: 0 5px;
-}
-
-.column-4 > label.done {
-    background: url('/static/images/done.png');
-    background-repeat: no-repeat;
-    background-size: 15px 15px;
-    background-position: 0 5px;
-}
-
-#define-limitations input, #define-limitations .button {
-    width: 180px;
-}
-
-#define-limitations input[type="submit"] {
-    width: 200px;
-}
-#id_limitation-value {
-    width: 188px !important;
-}
-
-#select-classes, #select-properties, #define-limitations {
-    border-left: 1px dotted #FC5006;
-}
-.query-builder > div {
-    vertical-align: top;
 }
 
 /*Create RDF datasource*/

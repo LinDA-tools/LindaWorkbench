@@ -118,11 +118,17 @@ TEMPLATE_DIRS = (
     'linda\\templates',
 )
 
+#LinDA Server
+LINDA_SERVER_IP = 'http://107.170.70.175'
+
 #LinDA url
 LINDA_HOME  = 'http://localhost:8000/'
 
 # LinDA reposirtory in Sesamy (OpenRDF) url, in order to access private datasources
 SESAME_LINDA_URL = 'http://localhost:8080/openrdf-sesame/repositories/linda/'
+
+#Query Builder Server Port
+QUERY_BUILDER_PORT = '3100'
 
 INSTALLED_APPS = (
 'linda',
@@ -204,3 +210,6 @@ SOCIALACCOUNT_PROVIDERS = {
         'METHOD': 'js_sdk'  # instead of 'oauth2'
     }
 }
+
+
+

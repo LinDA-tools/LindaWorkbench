@@ -553,8 +553,8 @@ def datasourceDelete(request, dtname):
 #Query builder
 def queryBuilder(request):
     params = {}
-    params['example_properties'] = {('buyer', 'Buyer'), ('product_price', 'Product price')}
-    params['limitation_relations'] = {('EQ','='), ('NEQ','!='), ('EQ','<'), ('EQ','<='), ('EQ','>'), ('EQ','>=')}
+    params['datasources'] = DatasourceDescription.objects.all()
+
     return render(request, 'query-builder/index.html', params)
 
 #Tools
