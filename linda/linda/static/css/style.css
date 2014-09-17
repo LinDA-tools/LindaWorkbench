@@ -1049,6 +1049,7 @@ form input[type="submit"] {
 
 .vocabulary .example pre {
     word-break: break-word;
+    font-family: Consolas, monospace !important
 }
 
 .comment-content:before, .vocabulary .description:before {
@@ -1241,22 +1242,19 @@ input, textarea {
 
 .vocabulary-teaser {
     position: relative;
+    margin-bottom: 10px;
 }
 
 .vocabulary-teaser p {
     text-align: justify;
 }
 
-.search-results .read-more {
-    width: 50px;
-    font-size: 70%;
-    position: relative;
-    left: calc(100% - 50px);;
-    display: block;
-}
-
 .search-results .uri {
     color: #EB9532;
+}
+
+#vocabulary-search-text {
+    width: 300px;
 }
 
 /*RDB to RDF*/

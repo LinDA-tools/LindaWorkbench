@@ -8,10 +8,10 @@
     <div class="main">
 		<h1 class="page-title">LinDA - {% trans "Vocabulary search" %}</h1>
 
-		<div class="home-search centered">
+		<div class="home-search">
 			<form method="get" action="/vocabularies" class="form">
 
-				<input type="text" name="q" placeholder='{% trans "Search Vocabularies" %}' value="{% if form.q.value %}{{form.q.value}}{% endif %}"/>
+				<input id="vocabulary-search-text" type="text" name="q" placeholder='{% trans "Search Vocabularies" %}' value="{% if form.q.value %}{{form.q.value}}{% endif %}"/>
 				<input type="submit" value=""/>
                 {% if query %}
                     <a href="/vocabularies/all" class="button delete-button clear-search" title='Clear search'></a>
@@ -40,7 +40,11 @@
                         <div class="vocabulary-teaser">
                             <h3><a href="{{ vocabulary.object.get_absolute_url }}">{{vocabulary.title}}</a></h3>
                             <p>{{vocabulary.description|slice:"150"}} {% if vocabulary.description|length > 150 %}...{% endif %}</p>
-                            <a href="{{ vocabulary.object.get_absolute_url }}" class="read-more button gray">{% trans "Read more" %}</a>
+
+                            <a href="{{ vocabulary.object.get_absolute_url }}" class="button blue">{% trans "Read more" %}</a>
+                             {% if vocabulary.object.example %}
+                                <a href="{{ vocabulary.object.get_absolute_url }}#usage-example" class="button green">{% trans "View usage example" %}</a>
+                            {% endif %}
                         </div>
 
                         {% empty %}
@@ -90,7 +94,11 @@
                                 <div class="vocabulary-teaser">
                                     <h3><a href="{{ vocabulary.get_absolute_url }}">{{vocabulary.title}}</a></h3>
                                     <p>{{vocabulary.description|slice:"150"}} {% if vocabulary.description|length > 150 %}...{% endif %}</p>
-                                    <a href="{{ vocabulary.get_absolute_url }}" class="read-more button gray">{% trans "Read more" %}</a>
+
+                                    <a href="{{ vocabulary.get_absolute_url }}" class="button blue">{% trans "Read more" %}</a>
+                                    {% if vocabulary.example %}
+                                        <a href="{{ vocabulary.get_absolute_url }}#usage-example" class="button green">{% trans "View usage example" %}</a>
+                                    {% endif %}
                                 </div>
                             {% endfor %}
                         </div>
