@@ -1255,6 +1255,10 @@ input, textarea {
     display: block;
 }
 
+.search-results .uri {
+    color: #EB9532;
+}
+
 /*RDB to RDF*/
 
 .rdb2rdf .form input[type="text"], .rdb2rdf .form input[type="url"], .rdb2rdf .form input[type="select"] {

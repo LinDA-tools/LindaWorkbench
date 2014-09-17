@@ -53,7 +53,7 @@
 
                         <div class="class-teaser">
                             <h3><a href="{{ class.object.uri }}">{{class.object.label}}</a></h3>
-                            <p>{{ class.object.uri }}</p>
+                            <p class="uri">&lt;{{ class.object.uri }}&gt;</p>
                             <a href="{{ class.object.vocabulary.get_absolute_url }}" class="read-more button gray">{% trans "Vocabulary" %}</a>
                         </div>
 
@@ -67,7 +67,7 @@
 
                         <div class="property-teaser">
                             <h3><a href="{{ property.object.uri }}">{{property.object.label}}</a></h3>
-                            <p>{{ property.object.uri }}</p>
+                            <p class="uri">&lt;{{ property.object.uri }}&gt;</p>
                             <a href="{{ property.object.vocabulary.get_absolute_url }}" class="read-more button gray">{% trans "Vocabulary" %}</a>
                         </div>
 
@@ -101,7 +101,7 @@
                             {% for class in classes %}
                                 <div class="class-teaser">
                                     <h3><a href="{{ class.object.uri }}">{{class.label}}</a></h3>
-                                    <p>{{ class.uri }}</p>
+                                    <p class="uri">&lt;{{ class.uri }}&gt;</p>
                                     <a href="{{ class.vocabulary.get_absolute_url }}" class="read-more button gray">{% trans "Vocabulary" %}</a>
                                 </div>
                             {% endfor %}
@@ -112,7 +112,7 @@
                             {% for property in properties %}
                                 <div class="property-teaser">
                                     <h3><a href="{{ property.uri }}">{{property.label}}</a></h3>
-                                    <p>{{ property.uri }}</p>
+                                    <p class="uri">&lt;{{ property.uri }}&gt;</p>
                                     <a href="{{ property.vocabulary.get_absolute_url }}" class="read-more button gray">{% trans "Vocabulary" %}</a>
                                 </div>
                             {% endfor %}
