@@ -257,8 +257,8 @@ class VocabularyVisualize(DetailView):
         predicates = []
 
         for (subject, predicate, object) in g:
-            subjectName = subject.split("/")[-1]
-            predicateName = predicate.split("#")[-1]
+            subjectName = subject.split("/")[-1].split("#")[-1]
+            predicateName = predicate.split("/")[-1].split("#")[-1]
             objectName = object.split("/")[-1].split("#")[-1]
 
             if (predicateName == "type") and (objectName == "Class"):
@@ -275,7 +275,7 @@ class VocabularyVisualize(DetailView):
                 predicates.append((subject, predicate, object))
 
             if predicateName == "range":  #Attribute type
-                objects[subject] = subject.split("/")[-1] + ": " + object.split("/")[-1].split("#")[-1]
+                objects[subject] = subjectName + ": " + objectName
 
         context['subjects'] = subjects
         context['objects'] = objects
