@@ -1240,7 +1240,7 @@ input, textarea {
     border-radius: 5px 5px 0 0;
 }
 
-.vocabulary-teaser {
+.vocabulary-teaser, .property-teaser, .class-teaser {
     position: relative;
     margin-bottom: 10px;
 }

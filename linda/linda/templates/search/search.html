@@ -58,7 +58,7 @@
                         <div class="class-teaser">
                             <h3><a href="{{ class.object.uri }}">{{class.object.label}}</a></h3>
                             <p class="uri">&lt;{{ class.object.uri }}&gt;</p>
-                            <a href="{{ class.object.vocabulary.get_absolute_url }}" class="read-more button gray">{% trans "Vocabulary" %}</a>
+                            <a href="{{ class.object.vocabulary.get_absolute_url }}" class="button blue">{% trans "Vocabulary" %}</a>
                         </div>
 
                         {% empty %}
@@ -72,7 +72,7 @@
                         <div class="property-teaser">
                             <h3><a href="{{ property.object.uri }}">{{property.object.label}}</a></h3>
                             <p class="uri">&lt;{{ property.object.uri }}&gt;</p>
-                            <a href="{{ property.object.vocabulary.get_absolute_url }}" class="read-more button gray">{% trans "Vocabulary" %}</a>
+                            <a href="{{ property.object.vocabulary.get_absolute_url }}" class="button blue">{% trans "Vocabulary" %}</a>
                         </div>
 
                         {% empty %}
@@ -110,7 +110,7 @@
                                 <div class="class-teaser">
                                     <h3><a href="{{ class.object.uri }}">{{class.label}}</a></h3>
                                     <p class="uri">&lt;{{ class.uri }}&gt;</p>
-                                    <a href="{{ class.vocabulary.get_absolute_url }}" class="read-more button gray">{% trans "Vocabulary" %}</a>
+                                    <a href="{{ class.vocabulary.get_absolute_url }}" class="button blue">{% trans "Vocabulary" %}</a>
                                 </div>
                             {% endfor %}
                         </div>
@@ -121,7 +121,7 @@
                                 <div class="property-teaser">
                                     <h3><a href="{{ property.uri }}">{{property.label}}</a></h3>
                                     <p class="uri">&lt;{{ property.uri }}&gt;</p>
-                                    <a href="{{ property.vocabulary.get_absolute_url }}" class="read-more button gray">{% trans "Vocabulary" %}</a>
+                                    <a href="{{ property.vocabulary.get_absolute_url }}" class="button blue">{% trans "Vocabulary" %}</a>
                                 </div>
                             {% endfor %}
                         </div>
