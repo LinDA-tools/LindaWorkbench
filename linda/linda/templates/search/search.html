@@ -18,11 +18,19 @@
                 {% endif %}
 			</form>
 
-            <div class="search-filters">
-                <a id="show-res-vocabularies" href="#" class="button white active">Vocabularies</a>
-                <a id="show-res-classes" href="#" class="button white">Classes</a>
-                <a id="show-res-properties" href="#" class="button white">Properties</a>
-            </div>
+            {% if query %}
+                <div class="search-filters">
+                    <a id="show-res-vocabularies" href="#" class="button white active">Vocabularies</a>
+                    <a id="show-res-classes" href="#" class="button white">Classes</a>
+                    <a id="show-res-properties" href="#" class="button white">Properties</a>
+                </div>
+            {% else %}
+                <div class="search-filters">
+                    <a href="/vocabularies/all/" class="button white {% if vocabularies %}active{% endif %}">Vocabularies</a>
+                    <a href="/classes/all/" class="button white {% if classes %}active{% endif %}">Classes</a>
+                    <a href="/properties/all/" class="button white {% if properties %}active{% endif %}">Properties</a>
+                </div>
+            {% endif %}
 
             {% if query %}
                 <div class="search-results">
@@ -46,7 +54,7 @@
                         <div class="class-teaser">
                             <h3><a href="{{ class.object.uri }}">{{class.object.label}}</a></h3>
                             <p>{{ class.object.uri }}</p>
-                            <a href="{{ class.object.vocabulary.get_absolute_url }}" class="read-more button gray">{% trans "Read more" %}</a>
+                            <a href="{{ class.object.vocabulary.get_absolute_url }}" class="read-more button gray">{% trans "Vocabulary" %}</a>
                         </div>
 
                         {% empty %}
@@ -60,7 +68,7 @@
                         <div class="property-teaser">
                             <h3><a href="{{ property.object.uri }}">{{property.object.label}}</a></h3>
                             <p>{{ property.object.uri }}</p>
-                            <a href="{{ property.object.vocabulary.get_absolute_url }}" class="read-more button gray">{% trans "Read more" %}</a>
+                            <a href="{{ property.object.vocabulary.get_absolute_url }}" class="read-more button gray">{% trans "Vocabulary" %}</a>
                         </div>
 
                         {% empty %}
@@ -75,16 +83,41 @@
                 {% endwith %}
             {% else %}
                 <div class="search-results">
-                    {% for vocabulary in vocabularies %}
-                    <div class="vocabulary-teaser">
-                        <h3><a href="{{ vocabulary.get_absolute_url }}">{{vocabulary.title}}</a></h3>
-                        <p>{{vocabulary.description|slice:"150"}} {% if vocabulary.description|length > 150 %}...{% endif %}</p>
-                        <a href="{{ vocabulary.get_absolute_url }}" class="read-more button gray">{% trans "Read more" %}</a>
-                    </div>
+                    {% if vocabularies %}
 
-                    {% empty %}
-                        <p>{% trans "No vocabularies in the database." %}</p>
-                    {% endfor %}
+                        <div class="result-vocabularies" >
+                            {% for vocabulary in vocabularies %}
+                                <div class="vocabulary-teaser">
+                                    <h3><a href="{{ vocabulary.get_absolute_url }}">{{vocabulary.title}}</a></h3>
+                                    <p>{{vocabulary.description|slice:"150"}} {% if vocabulary.description|length > 150 %}...{% endif %}</p>
+                                    <a href="{{ vocabulary.get_absolute_url }}" class="read-more button gray">{% trans "Read more" %}</a>
+                                </div>
+                            {% endfor %}
+                        </div>
+
+                    {% elif classes %}
+
+                        <div class="result-classes">
+                            {% for class in classes %}
+                                <div class="class-teaser">
+                                    <h3><a href="{{ class.object.uri }}">{{class.label}}</a></h3>
+                                    <p>{{ class.uri }}</p>
+                                    <a href="{{ class.vocabulary.get_absolute_url }}" class="read-more button gray">{% trans "Vocabulary" %}</a>
+                                </div>
+                            {% endfor %}
+                        </div>
+
+                    {% elif properties %}
+                        <div class="result-properties">
+                            {% for property in properties %}
+                                <div class="property-teaser">
+                                    <h3><a href="{{ property.uri }}">{{property.label}}</a></h3>
+                                    <p>{{ property.uri }}</p>
+                                    <a href="{{ property.vocabulary.get_absolute_url }}" class="read-more button gray">{% trans "Vocabulary" %}</a>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
 
                     {% with current_url="/vocabularies/all" %}
                         {% include 'util/paginator.html' %}

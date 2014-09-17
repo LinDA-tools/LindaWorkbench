@@ -290,6 +290,20 @@ class VocabularyListView(ListView):
     context_object_name = 'vocabularies'
     paginate_by = 10
 
+
+class ClassListView(ListView):
+    model = VocabularyClass
+    template_name = 'search/search.html'
+    context_object_name = 'classes'
+    paginate_by = 10
+
+class PropertyListView(ListView):
+    model = VocabularyProperty
+    template_name = 'search/search.html'
+    context_object_name = 'properties'
+    paginate_by = 10
+
+
 def rateDataset(request, pk, vt):
     vocid = int(pk)
     voteSubmitted = int(vt)

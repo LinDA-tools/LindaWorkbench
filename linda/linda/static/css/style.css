@@ -1247,7 +1247,7 @@ input, textarea {
     text-align: justify;
 }
 
-.vocabulary-teaser .read-more {
+.search-results .read-more {
     width: 50px;
     font-size: 70%;
     position: relative;
