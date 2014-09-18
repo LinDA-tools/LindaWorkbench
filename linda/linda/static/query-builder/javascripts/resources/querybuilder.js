@@ -38,7 +38,7 @@ QueryBuilder = {
 		$.ajax(
 			{
 				'type': 'GET',
-				'url': "http://" + rdf2any_server + "/rdf2any/v1.0/builder/classes?search="+search_string+"&dataset="+dataset,
+				'url': rdf2any_server + "/rdf2any/v1.0/builder/classes?search="+search_string+"&dataset="+dataset,
 				'contentType': 'application/json',
 				'dataType': 'json',
 			}
