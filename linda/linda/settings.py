@@ -127,8 +127,8 @@ LINDA_HOME  = 'http://localhost:8000/'
 # LinDA reposirtory in Sesamy (OpenRDF) url, in order to access private datasources
 SESAME_LINDA_URL = 'http://localhost:8080/openrdf-sesame/repositories/linda/'
 
-#Query Builder Server Port
-QUERY_BUILDER_PORT = '3100'
+#Rdf2any Server
+RDF2ANY_SERVER = 'http://107.170.70.175:8081'
 
 INSTALLED_APPS = (
 'linda',

@@ -39,13 +39,9 @@ QueryBuilder = {
 		$.ajax(
 			{
 				'type': 'GET',
-				'url': "http://107.170.70.175:3100/query/builder_classes.js?search="+search_string+"&dataset="+dataset,
+				'url': "http://" + rdf2any_server + "/rdf2any/v1.0/builder/classes?search="+search_string+"&dataset="+dataset,
 				'contentType': 'application/json',
-				'crossDomain': true,
 				'dataType': 'json',
-				'data': {
-					'csrfmiddlewaretoken': csrftoken,
-				},
 			}
 		);
     },
