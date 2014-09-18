@@ -35,7 +35,6 @@ QueryBuilder = {
         $("#qb_class_search_loading").show();
         var search_string = $("#hdn_searched_class_value").val();
         var dataset = $("#hdn_qb_dataset").val();
-		
 		$.ajax(
 			{
 				'type': 'GET',
