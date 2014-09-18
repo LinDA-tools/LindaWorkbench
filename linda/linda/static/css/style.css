@@ -1369,6 +1369,10 @@ input, textarea {
     font-weight: 600;
 }
 
+.datasources-table tbody tr:hover {
+    background: #eee;
+}
+
 .datasource.context-menu-active {
     background: #FC5006;
 }

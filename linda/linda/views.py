@@ -433,8 +433,10 @@ def datasources(request):
 
     if request.GET.get("sort") == "title":
         params['datasources'] = DatasourceDescription.objects.all().order_by('title')
+        params['sort_default'] = "Title"
     else:
         params['datasources'] = DatasourceDescription.objects.all()
+        params['sort_default'] = "Date"
 
     return render(request, 'datasource/index.html', params)
 

@@ -7,20 +7,24 @@
 
 {% block content %}
 <div class="main">
-    <h2 class="datasource-index-title">{% trans "Data Sources" %}</h2><a href="/datasource/create">+ {%trans "Create New"%}</a><div class="right">{% trans "Sort by" %}:
-            {% with field=sortBy id="sortBy" options=sortOptions default="Date" small="true"%}
+    <h2 class="datasource-index-title">{% trans "Data Sources" %}</h2><a href="/datasource/create">+ {%trans "Create New"%}</a>
+        <div class="right" style="margin-right: 40px;">{{sort_default}}
+            {% trans "Sort by" %}:
+            {% with field=sortBy id="sortBy" options=sortOptions default="{{sort_default}}" small="true"%}
                 {% include 'util/prettydropdown.html' %}
             {% endwith %}
         </div>
     {% if datasources %}
         <table class="datasources-table">
-            <tr>
-                <th>{% trans "Name" %}</th>
-                <th>{% trans "Created" %}</th>
-                <th>{% trans "Last modified" %}</th>
-                <th>{% trans "Visible" %}</th>
-                <th># {% trans "of Triples" %}</th>
-            </tr>
+            <thead>
+                <tr>
+                    <th>{% trans "Name" %}</th>
+                    <th>{% trans "Created" %}</th>
+                    <th>{% trans "Last modified" %}</th>
+                    <th>{% trans "Visible" %}</th>
+                    <th># {% trans "of Triples" %}</th>
+                </tr>
+            </thead>
             <tbody>
                 {% for datasource in datasources %}
                     <tr id="{{datasource.name}}" class="datasource">
