@@ -1114,7 +1114,7 @@ form input[type="submit"] {
     border-top: 7px solid #fff;
 }
 
-:not(".query-builder") .dropdown-menu {
+.pretty-dropdown-menu {
     max-height: 470px;
     min-height: 70px;
     margin-top: 10px !important;
@@ -1137,18 +1137,18 @@ form input[type="submit"] {
     position: absolute;
 }
 
-.dropdown-menu.small {
+.pretty-dropdown-menu.small {
     width: 80px;
 }
 
-.vocabulary-edit-form .dropdown-menu {
+.vocabulary-edit-form .pretty-dropdown-menu {
     width: 260px;
     overflow-y: auto !important;
     overflow-x: hidden !important;
     margin-top: 5px !important;
 }
 
-.dropdown-menu .arrow-up {
+.pretty-dropdown-menu .arrow-up {
     position: absolute;
     top: -10px;
     left: 165px;
@@ -1159,33 +1159,33 @@ form input[type="submit"] {
     border-bottom: 15px solid #34495e;
 }
 
-.dropdown-menu.small .arrow-up {
+.pretty-dropdown-menu.small .arrow-up {
     left: 100px;
 }
 
-.vocabulary-edit-form .dropdown-menu .arrow-up {
+.vocabulary-edit-form .pretty-dropdown-menu .arrow-up {
     left: 225px;
 }
 
-.dropdown-menu > li {
+.pretty-dropdown-menu > li {
     margin: 0 4px -2px;
     padding: 5px;
     border-radius: 4px;
 }
 
-.dropdown-menu > li > div {
+.pretty-dropdown-menu > li > div {
     outline: none;
     border-radius: 2px;
     padding-bottom: 7px;
     padding-top: 5px;
 }
 
-.dropdown-menu > li:hover {
+.pretty-dropdown-menu > li:hover {
     background-color: #428bca;
     cursor: pointer;
 }
 
-.dropdown-menu > .empty-options {
+.pretty-dropdown-menu > .empty-options {
     padding: 5px;
 }
 

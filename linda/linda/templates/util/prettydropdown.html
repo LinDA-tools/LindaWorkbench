@@ -7,7 +7,7 @@
         <span class="filter-option">{% if default %}{{default}}{{options.0}}{% endif %}</span>&nbsp;<span class="caret"></span>
     </div>
 
-    <ul id="{{id}}-dropdown" class="dropdown-menu {% if small %}small{% endif %}" role="menu">
+    <ul id="{{id}}-dropdown" class="pretty-dropdown-menu {% if small %}small{% endif %}" role="menu">
         <span class="arrow-up"></span>
         {% for option in options %}
             <li>
