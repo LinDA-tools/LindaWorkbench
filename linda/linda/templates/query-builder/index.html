@@ -41,7 +41,7 @@
                                   </button>
                                   <ul class="dropdown-menu col-md-12" role="menu" aria-labelledby="dd_select_dataset">
                                     {% for datasource in datasources %}
-                                       <li role="presentation"><a role="menuitem" tabindex="-1" onclick="QueryBuilder.datasets.select('{{datasource.name}}')">{{datasource.name}}</a></li>
+                                       <li role="presentation"><a role="menuitem" tabindex="-1" onclick="QueryBuilder.datasets.select('{{PRIVATE_SPARQL_ENDPOINT}}')">{{datasource.name}}</a></li>
                                     {% endfor %}
                                   </ul>
                                 </div>

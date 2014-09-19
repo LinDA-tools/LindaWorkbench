@@ -18,7 +18,7 @@ from datetime import datetime, date
 
 
 # from graphdb import views as query_views
-from linda.settings import SESAME_LINDA_URL, LINDA_HOME, RDF2ANY_SERVER
+from linda.settings import SESAME_LINDA_URL, LINDA_HOME, RDF2ANY_SERVER, PRIVATE_SPARQL_ENDPOINT
 
 
 def index(request):
@@ -556,6 +556,7 @@ def datasourceDelete(request, dtname):
 def queryBuilder(request):
     params = {}
     params['datasources'] = DatasourceDescription.objects.all()
+    params['PRIVATE_SPARQL_ENDPOINT'] = PRIVATE_SPARQL_ENDPOINT
     params['RDF2ANY_SERVER'] = RDF2ANY_SERVER
     return render(request, 'query-builder/index.html', params)
 
