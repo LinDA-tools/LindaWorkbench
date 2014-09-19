@@ -38,7 +38,7 @@ QueryBuilder = {
 		$.ajax(
 			{
 				'type': 'GET',
-				'url': "http://107.170.70.175:3100/query/builder_classes.js?search="+search_string+"&dataset="+dataset
+				'url': "/query-builder/classes?search="+search_string+"&dataset="+dataset
 			}
 		);
     },
@@ -186,7 +186,7 @@ QueryBuilder = {
         },
         get_subclasses : function(class_uri){
             $("#qb_properties_sub_classes_loading").show();
-            $.get("/query/subclasses.js?dataset="+QueryBuilder.datasets.get_selected()+"&class_uri="+class_uri);
+            $.get("/query-builder/subclasses?dataset="+QueryBuilder.datasets.get_selected()+"&class_uri="+class_uri);
         },
         get_subclasses_for_selected_class : function(){
             QueryBuilder.properties.get_subclasses(QueryBuilder.classes.get_selected_class());
@@ -197,12 +197,12 @@ QueryBuilder = {
                 $("#btn_properties_properties_"+type+"_more").hide("fast");
             else
                 $("#btn_properties_properties_"+type+"_more").show("fast");
-            $.get("/query/class_properties.js?dataset="+QueryBuilder.datasets.get_selected()+"&class_uri="+QueryBuilder.classes.get_selected_class()+"&all="+all.toString()+"&type="+type);
+            $.get("/query-builder/class-properties?dataset="+QueryBuilder.datasets.get_selected()+"&class_uri="+QueryBuilder.classes.get_selected_class()+"&all="+all.toString()+"&type="+type);
         },
         get_schema_properties_for_selected_class : function(){
             $("#property_main_schema_properties_group").html("");
             $("#qb_properties_schema_properties_loading").show();
-            $.get("/query/class_schema_properties.js?dataset="+QueryBuilder.datasets.get_selected()+"&class_uri="+QueryBuilder.classes.get_selected_class());
+            $.get("/query-builder/class-schema-properties?dataset="+QueryBuilder.datasets.get_selected()+"&class_uri="+QueryBuilder.classes.get_selected_class());
 
         },
         get_subclasses_triples : function(){
@@ -285,7 +285,7 @@ QueryBuilder = {
         // type is "object" or "datatype"
         property_click : function(uri, name, type){
             show_loading();
-            $.get("/query/property_ranges.js?property_uri="+uri+"&type="+type+"&dataset="+QueryBuilder.datasets.get_selected()+"&property_name="+name);
+            $.get("/query-builder/property-ranges?property_uri="+uri+"&type="+type+"&dataset="+QueryBuilder.datasets.get_selected()+"&property_name="+name);
         },
         filter : {
             add_objects : function(property_uri, property_name,  data){

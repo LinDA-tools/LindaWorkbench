@@ -18,7 +18,7 @@ from datetime import datetime, date
 
 
 # from graphdb import views as query_views
-from linda.settings import SESAME_LINDA_URL, LINDA_HOME, RDF2ANY_SERVER, PRIVATE_SPARQL_ENDPOINT
+from linda.settings import SESAME_LINDA_URL, LINDA_HOME, RDF2ANY_SERVER, PRIVATE_SPARQL_ENDPOINT, QUERY_BUILDER_SERVER
 
 
 def index(request):
@@ -558,9 +558,45 @@ def queryBuilder(request):
     params['datasources'] = DatasourceDescription.objects.all()
     params['PRIVATE_SPARQL_ENDPOINT'] = PRIVATE_SPARQL_ENDPOINT
     params['RDF2ANY_SERVER'] = RDF2ANY_SERVER
+    params['mode'] = "builder" # Alternatively sparql
     return render(request, 'query-builder/index.html', params)
 
-#Tools
+
+def query_get_class(request):
+    js = requests.get(QUERY_BUILDER_SERVER + 'query/builder_classes.js?search=' + request.GET['search'] + '&dataset=' + request.GET['dataset'])
+    return HttpResponse(js, "application/javascript")
+
+
+def query_class_properties(request):
+    js = requests.get(QUERY_BUILDER_SERVER + '/query/class_properties.js?dataset=" ' + request.GET['dataset'] + "&class_uri=" + request.GET['class_uri'] + "&all=" + request.GET['all'] + "&type=" + request.GET['type'])
+    return HttpResponse(js, "application/javascript")
+
+
+def query_class_schema_properties(request):
+    js = requests.get(QUERY_BUILDER_SERVER + "/query/class_schema_properties.js?dataset=" + request.GET['dataset'] + "&class_uri=" + request.GET['class_uri'])
+    return HttpResponse(js, "application/javascript")
+
+
+def query_subclasses(request):
+    js = requests.get(QUERY_BUILDER_SERVER + "/query/subclasses.js?dataset=" +  request.GET['dataset'] + "&class_uri=" + request.GET['class_uri'])
+    return HttpResponse(js, "application/javascript")
+
+
+def query_property_ranges(request):
+    js = requests.get(QUERY_BUILDER_SERVER + "/query/property_ranges.js?property_uri=" + request.GET['property_uri'] + "&type=" + request.GET['type'] + "&dataset=" + request.GET['dataset'] + "&property_name=" + request.GET['property_name'])
+    return HttpResponse(js, "application/javascript")
+
+def query_execute_sparql(request):
+    # Set headers
+    headers = {'accept': 'application/json'}
+
+    # Send the request
+    resp = requests.get(QUERY_BUILDER_SERVER + "/query/execute_sparql", headers=headers, data={"query": request.GET['query'], "dataset": request.GET['dataset']})
+
+    return HttpResponse(resp.content, "application/json")
+
+
+# Tools
 def rdb2rdf(request):
     params = {}
     params['datasources'] = {}

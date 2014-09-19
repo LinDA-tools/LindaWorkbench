@@ -1114,7 +1114,7 @@ form input[type="submit"] {
     border-top: 7px solid #fff;
 }
 
-.dropdown-menu {
+:not(".query-builder") .dropdown-menu {
     max-height: 470px;
     min-height: 70px;
     margin-top: 10px !important;
