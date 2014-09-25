@@ -8,7 +8,7 @@
 {% block content %}
 <div class="main">
     <h2 class="datasource-index-title">{% trans "Data Sources" %}</h2><a href="/datasource/create">+ {%trans "Create New"%}</a>
-        <div class="right" style="margin-right: 40px;">{{sort_default}}
+        <div class="right" style="margin-right: 40px;">
             {% trans "Sort by" %}:
             {% with field=sortBy id="sortBy" options=sortOptions default="{{sort_default}}" small="true"%}
                 {% include 'util/prettydropdown.html' %}

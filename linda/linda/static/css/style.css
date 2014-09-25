@@ -1283,6 +1283,11 @@ input, textarea {
     font-family:Consolas, monospace !important;
 }
 
+.builder-loading {
+    width: 130px;
+    margin-top: 10px;
+}
+
 /* Create datasource */
 .datasource-create-form input[type="text"]{
     width: 190px;

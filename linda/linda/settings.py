@@ -128,13 +128,13 @@ LINDA_HOME  = 'http://localhost:8000/'
 SESAME_LINDA_URL = 'http://localhost:8080/openrdf-sesame/repositories/linda/'
 
 # LinDA private resources SparQL endpoint
-PRIVATE_SPARQL_ENDPOINT = 'http://dbpedia.org/sparql'
+PRIVATE_SPARQL_ENDPOINT =  'http://localhost:8080/openrdf-sesame/repositories/linda' # 'http://dbpedia.org/sparql'
 
 # QueryBuilder URL
-QUERY_BUILDER_SERVER = 'http://107.170.70.175:3100/'
+QUERY_BUILDER_SERVER = LINDA_SERVER_IP + ':3100/'
 
 #Rdf2any Server
-RDF2ANY_SERVER = 'http://107.170.70.175:8081'
+RDF2ANY_SERVER = LINDA_SERVER_IP + ':8081'
 
 INSTALLED_APPS = (
 'linda',
