@@ -128,7 +128,7 @@ LINDA_HOME  = 'http://localhost:8000/'
 SESAME_LINDA_URL = 'http://localhost:8080/openrdf-sesame/repositories/linda/'
 
 # LinDA private resources SparQL endpoint
-PRIVATE_SPARQL_ENDPOINT =  'http://localhost:8080/openrdf-sesame/repositories/linda' # 'http://dbpedia.org/sparql'
+PRIVATE_SPARQL_ENDPOINT =  'http://dbpedia.org/sparql' # 'http://localhost:8080/openrdf-sesame/repositories/linda'
 
 # QueryBuilder URL
 QUERY_BUILDER_SERVER = LINDA_SERVER_IP + ':3100/'
