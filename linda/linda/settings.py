@@ -137,30 +137,30 @@ QUERY_BUILDER_SERVER = LINDA_SERVER_IP + ':3100/'
 RDF2ANY_SERVER = LINDA_SERVER_IP + ':8081'
 
 INSTALLED_APPS = (
-'linda',
-'linda.models',
-'django.contrib.admin',
-'django.contrib.auth',
-'django.contrib.contenttypes',
-'django.contrib.sessions',
-'django.contrib.sites',
-'django.contrib.messages',
-'django.contrib.staticfiles',
-'django.contrib.humanize',
-'haystack',
-'allauth',
-'allauth.account',
-'allauth.socialaccount',
-# 'allauth.socialaccount.providers.facebook',
-'messages',
-'athumb',
-'graphdb',
-'coreapi',
+    'linda',
+    'linda.models',
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.sites',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+    'django.contrib.humanize',
+    'haystack',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    # 'allauth.socialaccount.providers.facebook',
+    'messages',
+    'athumb',
+    'graphdb',
+    'coreapi',
 
-# Uncomment the next line to enable the admin:
-# 'django.contrib.admin',
-# Uncomment the next line to enable admin documentation:
-# 'django.contrib.admindocs',
+    # Uncomment the next line to enable the admin:
+    # 'django.contrib.admin',
+    # Uncomment the next line to enable admin documentation:
+    # 'django.contrib.admindocs',
 )
 
 # A sample logging configuration. The only tangible logging

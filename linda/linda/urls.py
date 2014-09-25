@@ -31,6 +31,8 @@ urlpatterns = patterns('',
 
                        #Authentication
                        url(r'^admin/', include(admin.site.urls)),
+
+                       url(r'^accounts/logout/$', 'django.contrib.auth.views.logout', {'next_page': '/'}, name='iamapps.logout'),
                        url(r'^accounts/', include('allauth.urls')),
                        url(r'^profile/(?P<pk>\d+)/$', login_required(views.profile), name='profile'),
                        url(r'^profile/(?P<pk>\w+)/edit$', login_required(views.UserUpdateView.as_view()),

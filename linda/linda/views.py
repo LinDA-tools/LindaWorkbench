@@ -1,17 +1,12 @@
-from cookielib import logger
-from plistlib import Data
-import urllib
 from django.http import HttpResponse, HttpResponseNotFound
 from django.shortcuts import redirect, render, get_object_or_404
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-import urllib2
-from django.utils import simplejson
+
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import ListView, UpdateView, DetailView, DeleteView
 
 import json
 import requests
-import sys
+
 from forms import *
 from rdflib import Graph
 from datetime import datetime, date
