@@ -581,6 +581,11 @@ def query_property_ranges(request):
     js = requests.get(QUERY_BUILDER_SERVER + "/query/property_ranges.js?property_uri=" + request.GET['property_uri'] + "&type=" + request.GET['type'] + "&dataset=" + request.GET['dataset'] + "&property_name=" + request.GET['property_name'])
     return HttpResponse(js, "application/javascript")
 
+
+def query_objects(request):
+    js = requests.get(QUERY_BUILDER_SERVER + "/query/builder_objects.js?search=" + request.GET['search'] + "&dataset=" + request.GET['dataset'] + "&classes="  + request.GET['classes'])
+    return HttpResponse(js, "application/javascript")
+
 def query_execute_sparql(request):
     # Set headers
     headers = {'accept': 'application/json'}
