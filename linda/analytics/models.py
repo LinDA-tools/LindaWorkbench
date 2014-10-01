@@ -1,6 +1,5 @@
 from django.db import models
 from django.forms import ModelForm
-from smart_selects.db_fields import ChainedForeignKey
 import os
 
 
@@ -11,8 +10,6 @@ EXPORT_CHOICES = (
     ('csv', 'csv'),
     ('arff', 'arff'),
     ('txt', 'txt'),
-    ('xml', 'xml'),
-    ('html', 'html'),
 )
 
 class Category(models.Model):
@@ -47,14 +44,7 @@ class Document(models.Model):
 
 class Analytics(models.Model):
     category = models.ForeignKey(Category)
-    algorithm = ChainedForeignKey(
-        Algorithm,
-        chained_field="category",
-        chained_model_field="name",
-        show_all=False,
-        auto_choose=True
-    )
-    #algorithm = models.ForeignKey(Algorithm)
+    algorithm = models.ForeignKey(Algorithm)
     #document = models.ForeignKey(Document)
     document = models.FileField(upload_to='./analytics/documents/datasets/')
     testdocument = models.FileField(upload_to='./analytics/documents/datasets/')
