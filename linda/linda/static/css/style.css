@@ -3,7 +3,7 @@
 
 /* Reset
 ================================================== */
-html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, embed, figure, figcaption, footer, header, hgroup, menu, nav, output, ruby, section, summary, time, mark, audio, video {
+html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside,aside1, canvas, details, embed, figure, figcaption, footer, header, hgroup, menu, nav, output, ruby, section, summary, time, mark, audio, video {
     margin: 0;
     padding: 0;
     border: 0;
@@ -27,7 +27,7 @@ p {
     margin-bottom: 10px;
 }
 
-article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section {
+article, aside,aside1, details, figcaption, figure, footer, header, hgroup, menu, nav, section {
     display: block;
 }
 
@@ -737,8 +737,11 @@ form input[type="submit"] {
     background: #DADFE1;
     color: #859596;
 }
+.main aside1 {
+    color: #859596;
+}
 
-.main aside h3 {
+.main aside h3,.main aside1 h3 {
     font-size: 150%;
     margin: 10px 0 10px 0;
     padding: 5px 0 5px 0;
@@ -746,12 +749,12 @@ form input[type="submit"] {
     width: 200px;
 }
 
-.main aside p {
+.main aside p,.main aside1 p {
     font-weight: 300;
 }
 
 @media only screen and (min-width: 760px) {
-    .main content, .main aside {
+    .main content, .main aside,.main aside1 {
         display: inline-block;
     }
 
@@ -767,11 +770,17 @@ form input[type="submit"] {
         min-height: 780px;
         vertical-align: top;
     }
+        .main aside1 {
+        width: calc(30% - 105px);
+        padding: 10px 30px 10px 50px;
+        min-height: 780px;
+        vertical-align: top;
+    }
 
 }
 
 @media only screen and (max-width: 759px) {
-    .main content, .main aside {
+    .main content, .main aside, .main aside1 {
         display: block;
         margin-left: 20px;
         margin-right: 20px;
@@ -781,7 +790,7 @@ form input[type="submit"] {
         width: 100%;
     }
 
-    .main aside {
+    .main aside ,.main aside1{
         border-top: 1px solid #ABB7B7;
         width: 80%;
         padding: 10px 0 10px 20px;
@@ -944,11 +953,6 @@ form input[type="submit"] {
     display: table-row;
 }
 
-/* fix for query-builder */
-.query-builder .row {
-    display: block;
-}
-
 .container label, .container span, .cell {
     display: table-cell;
 }
@@ -1054,7 +1058,6 @@ form input[type="submit"] {
 
 .vocabulary .example pre {
     word-break: break-word;
-    font-family: Consolas, monospace !important
 }
 
 .comment-content:before, .vocabulary .description:before {
@@ -1114,7 +1117,7 @@ form input[type="submit"] {
     border-top: 7px solid #fff;
 }
 
-.pretty-dropdown-menu {
+.dropdown-menu {
     max-height: 470px;
     min-height: 70px;
     margin-top: 10px !important;
@@ -1137,18 +1140,18 @@ form input[type="submit"] {
     position: absolute;
 }
 
-.pretty-dropdown-menu.small {
+.dropdown-menu.small {
     width: 80px;
 }
 
-.vocabulary-edit-form .pretty-dropdown-menu {
+.vocabulary-edit-form .dropdown-menu {
     width: 260px;
     overflow-y: auto !important;
     overflow-x: hidden !important;
     margin-top: 5px !important;
 }
 
-.pretty-dropdown-menu .arrow-up {
+.dropdown-menu .arrow-up {
     position: absolute;
     top: -10px;
     left: 165px;
@@ -1159,33 +1162,33 @@ form input[type="submit"] {
     border-bottom: 15px solid #34495e;
 }
 
-.pretty-dropdown-menu.small .arrow-up {
+.dropdown-menu.small .arrow-up {
     left: 100px;
 }
 
-.vocabulary-edit-form .pretty-dropdown-menu .arrow-up {
+.vocabulary-edit-form .dropdown-menu .arrow-up {
     left: 225px;
 }
 
-.pretty-dropdown-menu > li {
+.dropdown-menu > li {
     margin: 0 4px -2px;
     padding: 5px;
     border-radius: 4px;
 }
 
-.pretty-dropdown-menu > li > div {
+.dropdown-menu > li > div {
     outline: none;
     border-radius: 2px;
     padding-bottom: 7px;
     padding-top: 5px;
 }
 
-.pretty-dropdown-menu > li:hover {
+.dropdown-menu > li:hover {
     background-color: #428bca;
     cursor: pointer;
 }
 
-.pretty-dropdown-menu > .empty-options {
+.dropdown-menu > .empty-options {
     padding: 5px;
 }
 
@@ -1245,21 +1248,20 @@ input, textarea {
     border-radius: 5px 5px 0 0;
 }
 
-.vocabulary-teaser, .property-teaser, .class-teaser {
+.vocabulary-teaser {
     position: relative;
-    margin-bottom: 10px;
 }
 
 .vocabulary-teaser p {
     text-align: justify;
 }
 
-.search-results .uri {
-    color: #EB9532;
-}
-
-#vocabulary-search-text {
-    width: 300px;
+.vocabulary-teaser .read-more {
+    width: 50px;
+    font-size: 70%;
+    position: relative;
+    left: calc(100% - 50px);;
+    display: block;
 }
 
 /*RDB to RDF*/
@@ -1283,11 +1285,6 @@ input, textarea {
     font-family:Consolas, monospace !important;
 }
 
-.builder-loading {
-    width: 130px;
-    margin-top: 10px;
-}
-
 /* Create datasource */
 .datasource-create-form input[type="text"]{
     width: 190px;
@@ -1295,6 +1292,62 @@ input, textarea {
 
 .datasource-create-form input[type="submit"] {
     width: 200px;
+}
+
+/*Query Builder*/
+.query-builder, .sparql-query {
+    border-top: 1px solid #FC5006;
+}
+
+.column-4 {
+    width: 20%;
+    padding-left: 2%;
+    min-width: 200px;
+    display: inline-block;
+}
+
+.column-4 .button {
+    display: block;
+    width: 120px;
+}
+
+.column-4 input[type="submit"], .column-4 select {
+    display: block;
+    width: 140px;
+    height: auto;
+}
+
+.column-4 > label {
+    padding-left: 20px;
+    background: url('/static/images/select.png');
+    background-repeat: no-repeat;
+    background-size: 15px 15px;
+    background-position: 0 5px;
+}
+
+.column-4 > label.done {
+    background: url('/static/images/done.png');
+    background-repeat: no-repeat;
+    background-size: 15px 15px;
+    background-position: 0 5px;
+}
+
+#define-limitations input, #define-limitations .button {
+    width: 180px;
+}
+
+#define-limitations input[type="submit"] {
+    width: 200px;
+}
+#id_limitation-value {
+    width: 188px !important;
+}
+
+#select-classes, #select-properties, #define-limitations {
+    border-left: 1px dotted #FC5006;
+}
+.query-builder > div {
+    vertical-align: top;
 }
 
 /*Create RDF datasource*/
@@ -1372,10 +1425,6 @@ input, textarea {
 .datasources-table th {
     text-align: left;
     font-weight: 600;
-}
-
-.datasources-table tbody tr:hover {
-    background: #eee;
 }
 
 .datasource.context-menu-active {

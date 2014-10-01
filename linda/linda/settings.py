@@ -17,7 +17,16 @@ DATABASES = {
         'PASSWORD': '', # Not used with sqlite3.
         'HOST': '', # Set to empty string for localhost. Not used with sqlite3.
         'PORT': '', # Set to empty string for default. Not used with sqlite3.
-    }
+    },
+    'analytics': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'analytics',
+        'USER': 'root',
+        'PASSWORD': '!uflow!',
+        'character': 'utf8',
+        'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
+        'PORT': '',                      # Set to empty string for default. Not used with sqlite3.        
+    }  
 }
 
 HAYSTACK_CONNECTIONS = {
@@ -156,6 +165,7 @@ INSTALLED_APPS = (
     'athumb',
     'graphdb',
     'coreapi',
+    'analytics',
 
     # Uncomment the next line to enable the admin:
     # 'django.contrib.admin',
@@ -216,6 +226,8 @@ SOCIALACCOUNT_PROVIDERS = {
         'METHOD': 'js_sdk'  # instead of 'oauth2'
     }
 }
+
+DATABASE_ROUTERS = ['analytics.routers.analyticsRouter']
 
 
 

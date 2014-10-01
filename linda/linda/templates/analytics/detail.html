@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+
+{% load staticfiles %}
+{% load url from future %}
+{% load i18n %}
+{% block title %}LinDA | {% trans "Analytics" %}{% endblock %}
+{% block bodyclass %}analytics{% endblock %}
+
+{% block scripts %}
+<script>
+$(document).ready(function(){
+    $( "#toggleAlgorithmDescription" ).click(function() {
+        $( "#algorithmDescription" ).toggle();
+    });
+    $( "#toggleAnalyticsModel" ).click(function() {
+        $( "#model" ).toggle();
+    });
+    $( "#toggleResultDocument" ).click(function() {
+        $( "#resultdocument" ).toggle();
+    });
+    $( "#toggleprocessinfo" ).click(function() {
+        $( "#processinfo" ).toggle();
+    });
+});
+</script>
+{% endblock %}
+
+
+
+
+{% block content %}
+<div class="main content-sidebar">
+   <content>
+          
+          <table>
+	    <tr>
+	      <td><h1 class="page-title inline">Analytic ID: {{ analytics.id }}</h1></td>
+	      <td>
+		  <form id="DeleteAnalytics" action="/analytics/{{ analytics.id }}/delete" method="get" style="margin-right:10px;margin-left:10px;">{% csrf_token %}
+		    <input type="submit" value="Delete" style="padding:0px;font-size: 12px;"/>
+		  </form>
+	      </td>
+	      <td>
+		  <form id="ReEvaluateAnalytics" action="/analytics/{{ analytics.id }}/reevaluate" method="get">
+		    {% csrf_token %}
+		    <input type="submit" value="Re-Evaluate" style="padding:0px;font-size: 12px;"/>
+		  </form>
+	      </td>
+	    </tr>
+          </table>
+          <p>Analytics Category : {{ analytics.category }}</p>
+          <p>Analytics Algorithm : {{ analytics.algorithm }}
+          <button id="toggleAlgorithmDescription">see/hide Info</button>
+          <div id="algorithmDescription" style="background: none repeat scroll 0% 0% #DADFE1;overflow:auto;width:inherit;" >
+	    {{analytics.display_algorithm_description}}
+          </div>
+          </p>
+          <p>Export Format : {{ analytics.exportFormat }}</p>
+
+          <p>Analytics input dataset : {{ analytics.document }}</p>
+
+          {% if analytics.testdocument %}
+          <p>Analytics test dataset : {{ analytics.testdocument }}</p>
+          {% endif %}
+
+          {% if analytics.modelReadable %}
+          <p>Analytics model file : {{ analytics.modelReadable }}
+             <button id="toggleAnalyticsModel">see/hide Info</button>
+            <div id="model"  style="background: none repeat scroll 0% 0% #DADFE1;overflow:auto;">
+                <pre>{{analytics.display_model_file}}</pre>
+              </div>
+          </p>
+          {% endif %}
+
+          {% if analytics.processinfo %}
+          <p>Process Info : {{ analytics.processinfo }}
+             <button id="toggleprocessinfo">see/hide Info</button>
+            <div id="processinfo"  style="background: none repeat scroll 0% 0% #DADFE1;overflow:auto;">
+                <pre>{{analytics.display_processinfo_file}}</pre>
+              </div>
+          </p>
+          {% endif %}
+
+
+          {% if analytics.resultdocument %}
+          <p>Result document : {{ analytics.resultdocument.name }}
+             <button id="toggleResultDocument" type="button">see/hide Info</button>
+            <div id="resultdocument"  style="overflow:auto;width:700px;background: none repeat scroll 0% 0% #DADFE1;">
+                <pre>{{analytics.display_resultdocument_file}}</pre>
+            </div>
+           </p>
+           {% endif %}
+
+    </content>
+<aside1>
+        <div class="sidebar-block" id="analytics_list">
+            <h3 class="sidebar-title">{% trans "My Analytics" %}</h3>
+                     <table>
+                        {% if analytics_list %}
+
+                            {% for analytics in analytics_list %}
+                                 <tr>
+				    <td>
+                                    <a href="/analytics/{{ analytics.id }}/">({{ analytics.algorithm }}) -- analytics ID : {{ analytics.id }} </a>
+				    </td>
+				  </tr>
+                            {% endfor %}
+
+                        {% else %}
+                            <p>No analytics are available.</p>
+                        {% endif %}
+                    </table>
+       </div>
+</aside1>
+
+</div>
+{% endblock %}
+

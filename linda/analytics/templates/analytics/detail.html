@@ -1,0 +1,105 @@
+{% load staticfiles %}
+<link rel="stylesheet" type="text/css" href="{% static 'analytics/style.css' %}" />
+ 
+<!DOCTYPE html>
+<html>
+<head>
+<!--script type="text/javascript" src="{ { STATIC_URL } } /jquery-1.11.1.min.js"/-->
+<script type='text/javascript' src='https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js'></script>
+<script>
+$(document).ready(function(){
+    $( "#toggleAlgorithmDescription" ).click(function() {
+        $( "#algorithmDescription" ).toggle();
+    });
+    $( "#toggleAnalyticsModel" ).click(function() {
+        $( "#model" ).toggle();
+    });
+    $( "#toggleResultDocument" ).click(function() {
+        $( "#resultdocument" ).toggle();
+    });
+    $( "#toggleprocessinfo" ).click(function() {
+        $( "#processinfo" ).toggle();
+    });
+});
+</script>
+
+
+</head>
+
+<body>
+<div id="header">
+        <div id="branding">
+        </div>
+        <div id="user-tools">
+            Explore LINDA Ecosystem     
+            <ul>
+              <li>  <a href="http://community.pentaho.com/projects/data-integration/">Data Integration - Kettle - Pentaho Community</a> </li>
+              <li>  <a href="/admin/logout1/">Linda Tranformation Engine</a></li>
+            </ul>
+        </div>
+    </div>
+
+<section  id="content">
+
+<h1>Analytic ID: {{ analytics.id }}</h1>
+
+
+  <p>Analytics Category : {{ analytics.category }}</p>
+  <p>Analytics Algorithm : {{ analytics.algorithm }} 
+      <button id="toggleAlgorithmDescription">see/hide Info</button>
+    <div id="algorithmDescription" >{{analytics.display_algorithm_description}}</div>
+  </p> 
+  <p>Export Format : {{ analytics.exportFormat }}</p>
+  
+  <p>Analytics input dataset : {{ analytics.document }}</p>
+  
+  {% if analytics.testdocument %}  
+  <p>Analytics test dataset : {{ analytics.testdocument }}</p>
+  {% endif %}
+  
+  {% if analytics.modelReadable %}  
+  <p>Analytics model file : {{ analytics.modelReadable }}
+     <button id="toggleAnalyticsModel">see/hide Info</button>    
+    <div id="model" >
+        <pre>{{analytics.display_model_file}}</pre>
+      </div>  
+  </p>
+  {% endif %}
+
+  {% if analytics.processinfo %}  
+  <p>Process Info : {{ analytics.processinfo }}
+     <button id="toggleprocessinfo">see/hide Info</button>    
+    <div id="processinfo" >
+        <pre>{{analytics.display_processinfo_file}}</pre>
+      </div>  
+  </p>
+  {% endif %}
+  
+  
+  {% if analytics.resultdocument %}
+  <p>Result document : {{ analytics.resultdocument.name }}
+     <button id="toggleResultDocument" type="button">see/hide Info</button>
+    <div id="resultdocument" >
+        <pre>{{analytics.display_resultdocument_file}}</pre>
+      </div>
+   </p>
+   {% endif %}         
+      
+
+
+</div>
+<!--h3>Result Document Content</h3-->
+
+
+<!--
+
+
+{ % for choice in Analytics.choice_set.all % }
+    <li>{ { choice.choice_text }} -- { { choice.votes }} vote{ { choice.votes|pluralize } }</li>
+{ % endfor % }
+</ul>
+
+<a href="{ % url 'Analytics:thanks' Analytics.id % }">Vote again?</a--> 
+
+</body>
+</html>
