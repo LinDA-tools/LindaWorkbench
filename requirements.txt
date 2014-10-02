@@ -9,3 +9,4 @@ django-imagekit
 django-haystack
 pyelasticsearch
 elasticsearch
+MySQL-python

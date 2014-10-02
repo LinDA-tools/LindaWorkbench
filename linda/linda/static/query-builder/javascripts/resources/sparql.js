@@ -41,7 +41,14 @@ SPARQL = {
     },
     download : {
         rdb : function(){
-            window.open(Utils.rdf2any.server+Utils.rdf2any.actions.convert+"rdb-converter.sql?dataset="+QueryBuilder.datasets.get_selected()+"&query="+encodeURIComponent($("#txt_sparql_query").val()));
+            var download_url = Utils.rdf2any.server+Utils.rdf2any.actions.convert+"rdb-converter.sql?dataset="+QueryBuilder.datasets.get_selected()+"&query="+encodeURIComponent($("#txt_sparql_query").val());
+            var selected_class = QueryBuilder.classes.get_selected_class();
+            if(selected_class != undefined && selected_class != ''){
+               download_url += "&for_class="+selected_class;
+               download_url += "&properties="+encodeURIComponent(window.btoa(QueryBuilder.properties.get_checked_properties())); 
+            }
+                
+            window.open(download_url);
         },
         csv : function(){
             window.open(Utils.rdf2any.server+Utils.rdf2any.actions.convert+"csv-converter.csv?dataset="+QueryBuilder.datasets.get_selected()+"&query="+encodeURIComponent($("#txt_sparql_query").val()));

@@ -164,8 +164,8 @@ QueryBuilder = {
     properties : {
         generate : function(){
             QueryBuilder.properties.get_properties_for_selected_class(false,"object");
-            QueryBuilder.properties.get_properties_for_selected_class(false,"datatype");
-            QueryBuilder.properties.get_schema_properties_for_selected_class();
+			QueryBuilder.properties.get_properties_for_selected_class(false,"datatype");
+			QueryBuilder.properties.get_schema_properties_for_selected_class();
             $("#div_qb_properties").show("fast");
         },
         hide : function(){
@@ -186,18 +186,23 @@ QueryBuilder = {
         },
         get_subclasses : function(class_uri){
             $("#qb_properties_sub_classes_loading").show();
-            $.get("/query-builder/subclasses?dataset="+QueryBuilder.datasets.get_selected()+"&class_uri="+class_uri);
+			$.get("/query-builder/subclasses?dataset="+QueryBuilder.datasets.get_selected()+"&class_uri="+class_uri);
         },
         get_subclasses_for_selected_class : function(){
             QueryBuilder.properties.get_subclasses(QueryBuilder.classes.get_selected_class());
         },
         get_properties_for_selected_class : function(all, type){
-            $("#qb_properties_properties_"+type+"_loading").show();
+            $("#qb_properties_properties_object_loading").show();
+            $("#qb_properties_properties_datatype_loading").show();
+            /*
             if(all)
                 $("#btn_properties_properties_"+type+"_more").hide("fast");
             else
-                $("#btn_properties_properties_"+type+"_more").show("fast");
+                $("#btn_properties_properties_"+type+"_more").show("fast");*/
             $.get("/query-builder/class-properties?dataset="+QueryBuilder.datasets.get_selected()+"&class_uri="+QueryBuilder.classes.get_selected_class()+"&all="+all.toString()+"&type="+type);
+            $(".cb-property-range-all").each(function(index){
+                $(this).prop("checked",true);
+            });
         },
         get_schema_properties_for_selected_class : function(){
             $("#property_main_schema_properties_group").html("");
@@ -281,11 +286,54 @@ QueryBuilder = {
             });
             QueryBuilder.generate_equivalent_sparql_query();
         },
+        //This method assigns colors to the badges of ranges of properties
+        generate_range_badge_colors : function(){
+            var colors =    [  "#E52B50","#9966CC","#007FFF","#964B00","#0095B6","#800020","#CD7F32","#702963","#007BA7","#808000",
+                                "#D2B48C","#483C32","#FF4500", "#FFA500", "#D1E231", "#1C2841", "#FA8072", "#7B3F00", "#2F4F4F",
+                                "#483D8B", "#FFD700", "#3CB371", "#BC8F8F", "#FF69B4", "#00CED1", "#0000CD"
+                            ];
+            var badge_classes = [".span-property-range-data",".span-property-range-object"];
+            for(var i=0;i<badge_classes.length;i++){
+                var color_counter = 0;
+                var range_color_lookup = {};
+                $(badge_classes[i]).each(function(index){
+                    var range_name = $(this).html();
+                    if(range_color_lookup[range_name] == undefined){
+                        range_color_lookup[range_name] = colors[color_counter];
+                        color_counter++;
+                        if(color_counter>=colors.length)
+                            color_counter = 0;
+                    }
+                    $(this).attr("style","background-color:"+range_color_lookup[range_name]+";");
+                });
+            }
+        },
         //This function is called when a property is clicked 
         // type is "object" or "datatype"
         property_click : function(uri, name, type){
             show_loading();
             $.get("/query-builder/property-ranges?property_uri="+uri+"&type="+type+"&dataset="+QueryBuilder.datasets.get_selected()+"&property_name="+name);
+        },
+        //this method returns a comma separated string of selected properties
+        // returns "ALL" if all of them are checked
+        get_checked_properties : function(){
+            var all_ranges = $('.cb-property-range').map(function() {return this.value;}).get().join(',');
+            var checked_ranges = $('.cb-property-range:checked').map(function() {return this.value;}).get().join(',');
+            if(all_ranges == checked_ranges)
+                return "ALL";
+            else
+                return checked_ranges;
+        },
+        click_check_all : function(type){
+            var item = $("#cb_property_range_all_"+type);
+            var to_check = false;
+            if(item.prop('checked'))
+                to_check = true;
+            $(".cb-property-range").each(function(index){
+                if($(this).attr("range-type") == type){
+                    $(this).prop('checked',to_check);
+                }
+            });
         },
         filter : {
             add_objects : function(property_uri, property_name,  data){

@@ -605,7 +605,8 @@ def rdb2rdf(request):
 
     return render(request, 'rdb2rdf/rdb2rdf.html', params)
 
-#Api view
+# Api view
+
 
 #Get a list with all users - used in autocomplete
 def api_users(request):

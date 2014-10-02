@@ -21,10 +21,7 @@
 
 {% block content %}
 
-<div class="main">
-    <h1 class="page-title">{% trans "Query Builder"%}</h1>
-
-    <div class="query-builder panel panel-default main-container">
+<div class="panel panel-default main-container">
     <div class="panel-heading"><strong>Query Builder</strong> : Please follow the steps to build your query</div>
     <div class="panel-body">
         <div class="row">
@@ -42,18 +39,18 @@
                                   <ul class="dropdown-menu col-md-12" role="menu" aria-labelledby="dd_select_dataset">
                                     {% for datasource in datasources %}
                                        <li role="presentation"><a role="menuitem" tabindex="-1" onclick="QueryBuilder.datasets.select('{{PRIVATE_SPARQL_ENDPOINT}}')">{{datasource.name}}</a></li>
-                                    {% endfor %}
+                                   {% endfor %}
                                   </ul>
                                 </div>
-
+                                
                                 {% with hidden_value_id="hdn_qb_dataset" div_classes="done-dataset" div_id="div_select_dataset" remove_function="QueryBuilder.datasets.reset()" hidden_value_value="" %}
                                     {% include 'query-builder/selector.html' %}
                                 {% endwith %}
-                            </div>
+                              </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> 
             <div class="col-md-4" id="div_qb_select_class" style="display:none;">
                 <div class="panel panel-default">
                     <div class="panel-heading"><strong>STEP 2 :</strong> Select Class</div>
@@ -81,11 +78,9 @@
                         </div>
                         <div class="row" id="div_classes_search_result">
                             <div class="col-md-12">
-
                                 {% with hidden_value_id="hdn_qb_class" div_classes="done-search-class" div_id="div_selected_class" remove_function="QueryBuilder.reset_searched_class()" hidden_value_value="" %}
                                     {% include 'query-builder/selector.html' %}
                                 {% endwith %}
-
                             </div>
                         </div>
                         <div class="row" id="div_classes_search_more" style="display:none;">
@@ -97,7 +92,7 @@
                     <div class="list-group" id="tbl_classes_search_result"></div>
                 </div>
             </div>
-
+           
         </div>
         <div class="row" style="display:none;" id="div_qb_properties">
             <div class="col-md-12"  >
@@ -124,7 +119,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="list-group" id="property_main_subclasses_group" subclasses="all">
+                                    <div class="list-group" id="property_main_subclasses_group" subclasses="all"> 
                                         <a class="list-group-item property-subclass-group" href="javascript:void(0)" onclick="QueryBuilder.properties.select_subclass('all')" uri="all" clicked='true' display-name="All"><span class="glyphicon glyphicon-ok"></span>&nbsp;&nbsp;<strong>All</strong></a>
                                     </div>
                                     <div class="row" id="qb_properties_sub_classes_loading" style="display:none;">
@@ -154,7 +149,7 @@
                                     <div class="panel-heading alert" style="display:none;" id="qb_properties_properties_selected_filters_header">
                                         Selected filters
                                     </div>
-                                    <div class="list-group" id="qb_properties_properties_selected_filters_list" style="display:none;">
+                                    <div class="list-group" id="qb_properties_properties_selected_filters_list" style="display:none;"> 
                                     </div>
                                     <div class="panel-heading alert">
                                         <div class="row">
@@ -166,7 +161,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="list-group" id="property_main_properties_object_group" >
+                                    <div class="list-group" id="property_main_properties_object_group" > 
 
                                     </div>
                                     <div class="row" id="qb_properties_properties_object_loading">
@@ -184,7 +179,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="list-group" id="property_main_properties_datatype_group" >
+                                    <div class="list-group" id="property_main_properties_datatype_group" > 
 
                                     </div>
                                     <div class="row" id="qb_properties_properties_datatype_loading">
@@ -209,7 +204,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="list-group" id="property_main_schema_properties_group" >
+                                    <div class="list-group" id="property_main_schema_properties_group" > 
 
                                     </div>
                                     <div class="row" id="qb_properties_schema_properties_loading">
@@ -223,7 +218,7 @@
                         </div>
                     </div>
 
-                </div>
+                </div>    
             </div>
         </div>
         <div class="row qb-equivalent-query-main" style="display:none;">
@@ -234,26 +229,24 @@
 
         {% include 'query-builder/search-results.html' %}
     </div>
-
-    <div class="modal fade in" id="class_selector_modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h4 class="modal-title" ></h4>
-                </div>
-                <div class="modal-body">
-
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Done</button>
-                </div>
+    
+</div>
+<div class="modal fade in" id="class_selector_modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" ></h4>
+            </div>
+            <div class="modal-body">
+               
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Done</button>
             </div>
         </div>
     </div>
-
 </div>
-
 
 {% include 'query-builder/alert.html' %}
 {% include 'query-builder/uri-viewer.html' %}

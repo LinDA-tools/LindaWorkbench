@@ -1,6 +1,7 @@
 from django.contrib import admin
 from django.conf.urls import patterns, include, url
 from django.contrib.auth.decorators import login_required
+from django.views.generic import RedirectView
 
 from forms import AutocompleteModelSearchForm
 from haystack.views import SearchView, search_view_factory
@@ -102,6 +103,7 @@ urlpatterns = patterns('',
                        url(r'^query-builder/execute-sparql', views.query_execute_sparql, name='query-execute-sparql'),
                        url(r'^query-builder/', views.queryBuilder,
                            name='query-builder'),
+                       url(r'^assets/jar-loading.gif$', RedirectView.as_view(url='/static/images/jar-loading.gif')),
 
                        #Tools
                        url(r'^rdb2rdf/', views.rdb2rdf, name='rdb2rdf'),
