@@ -953,7 +953,7 @@ form input[type="submit"] {
     display: table-row;
 }
 
-.query-builder .row {
+.query-builder .row, .sparql .row {
 	display: block;
 }
 

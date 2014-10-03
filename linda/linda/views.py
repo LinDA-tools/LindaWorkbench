@@ -66,6 +66,8 @@ def terms(request):
 
 def sparql(request):
     params = {}
+    params['mode'] = "sparql"
+
     return render(request, 'sparql.html', params)
 
 
@@ -553,7 +555,7 @@ def queryBuilder(request):
     params['datasources'] = DatasourceDescription.objects.all()
     params['PRIVATE_SPARQL_ENDPOINT'] = PRIVATE_SPARQL_ENDPOINT
     params['RDF2ANY_SERVER'] = RDF2ANY_SERVER
-    params['mode'] = "builder" # Alternatively sparql
+    params['mode'] = "builder"
     return render(request, 'query-builder/index.html', params)
 
 

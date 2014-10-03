@@ -3,9 +3,64 @@
 {% block bodyclass %}sparql{% endblock %}
 {% load i18n %}
 
+{%block css %}
+    <link rel="stylesheet" src="/static/css/query-builder.css" />
+    <link rel="stylesheet" src="/static/css/bootstrap.min.css" />
+
+    <link data-turbolinks-track="true" href="/static/query-builder/stylesheets/_variables.css?body=1" media="all" rel="stylesheet" />
+    <link data-turbolinks-track="true" href="/static/query-builder/stylesheets/bootstrap.css?body=1" media="all" rel="stylesheet" />
+    <link data-turbolinks-track="true" href="/static/query-builder/stylesheets/bootstrap.min.css?body=1" media="all" rel="stylesheet" />
+    <link data-turbolinks-track="true" href="/static/query-builder/stylesheets/common.css?body=1" media="all" rel="stylesheet" />
+    <link data-turbolinks-track="true" href="/static/query-builder/stylesheets/developer.css?body=1" media="all" rel="stylesheet" />
+    <link data-turbolinks-track="true" href="/static/query-builder/stylesheets/query.css?body=1" media="all" rel="stylesheet" />
+    <link data-turbolinks-track="true" href="/static/query-builder/stylesheets/application.css?body=1" media="all" rel="stylesheet" />
+    <link data-turbolinks-track="true" href="/static/query-builder/stylesheets/gritter.css?body=1" media="all" rel="stylesheet" />
+{% endblock %}
+
+
 {% block content %}
-<div class="main">
+<div class="main sparql">
     <h1 class="page-title">SparQL Endpoint</h1>
 
+    <div class="main-container panel panel-default">
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-md-12">
+                    {% include 'query-builder/sparql-query-editor.html' %}
+                </div>
+            </div>
+
+            {% include 'query-builder/search-results.html' %}
+
+            <input type="hidden" id="hdn_qb_dataset" value="http://dbpedia.org/sparql">
+        </div>
+    </div>
 </div>
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        rdf2any_server = "{{RDF2ANY_SERVER}}";
+	</script>
+
+    <script data-turbolinks-track="true" src="/static/query-builder/javascripts/jquery_ujs.js?body=1"></script>
+    <script data-turbolinks-track="true" src="/static/query-builder/javascripts/turbolinks.js?body=1"></script>
+    <script data-turbolinks-track="true" src="/static/query-builder/javascripts/bootstrap.js?body=1"></script>
+    <script data-turbolinks-track="true" src="/static/query-builder/javascripts/bootstrap.min.js?body=1"></script>
+    <script data-turbolinks-track="true" src="/static/query-builder/javascripts/developer.js?body=1"></script>
+    <script data-turbolinks-track="true" src="/static/query-builder/javascripts/query.js?body=1"></script>
+    <script data-turbolinks-track="true" src="/static/query-builder/javascripts/resources/common.js?body=1"></script>
+    <script data-turbolinks-track="true" src="/static/query-builder/javascripts/resources/querybuilder.js?body=1"></script>
+    <script data-turbolinks-track="true" src="/static/query-builder/javascripts/resources/sparql.js?body=1"></script>
+    <script data-turbolinks-track="true" src="/static/query-builder/javascripts/resources/utilities.js?body=1"></script>
+    <script data-turbolinks-track="true" src="/static/query-builder/javascripts/codemirror.js?body=1"></script>
+    <script data-turbolinks-track="true" src="/static/query-builder/javascripts/gritter.js?body=1"></script>
+    <script data-turbolinks-track="true" src="/static/query-builder/javascripts/application.js?body=1"></script>
+
+    <script>
+        jQuery(function () {
+            jQuery('.dropdown-toggle').dropdown();
+        });
+        jQuery("#txt_search_classes").bind('input',function(){QueryBuilder.search_classes_change();});
+    </script>
 {% endblock %}
