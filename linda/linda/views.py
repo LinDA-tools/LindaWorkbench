@@ -565,7 +565,16 @@ def query_get_class(request):
 
 
 def query_class_properties(request):
-    js = requests.get(QUERY_BUILDER_SERVER + '/query/class_properties.js?dataset=' + request.GET['dataset'] + "&class_uri=" + request.GET['class_uri'] + "&all=" + request.GET['all'] + "&type=" + request.GET['type'])
+    if "all" in request.GET.keys():
+        all = request.GET['all']
+    else:
+        all = "true"
+
+    link = QUERY_BUILDER_SERVER + '/query/class_properties.js?dataset=' + request.GET['dataset'] + "&class_uri=" + request.GET['class_uri'] + "&all=" + all
+    if "type" in request.GET.keys():
+        link = link + "&type=" + request.GET['type']
+        
+    js = requests.get(link)
     return HttpResponse(js, "application/javascript")
 
 
