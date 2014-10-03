@@ -137,7 +137,7 @@
                 <span class="filter-option">{% trans "Download as" %}</span>&nbsp;<span class="caret"></span>
             </div>
 
-            <ul id="download-drop-down" class="dropdown-menu" role="menu">
+            <ul id="download-drop-down" class="pretty-dropdown-menu" role="menu">
                 <span class="arrow-up"></span>
                 <li rel="1" class="">
                     <div tabindex="-1">
@@ -173,51 +173,55 @@
 {% endblock %}
 
 {% block scripts %}
-{% if not hasVoted %}
-<script>
-    $(".rating input[type='radio']").click(function () {
-        $.ajax({
-            url: "/vocabulary/{{vocabulary.id}}/rate/" + $(".rating input[type='radio']:checked").val() + "/",
-            dataType: 'json',
+    {% if not hasVoted %}
+        <script>
+            $(".rating input[type='radio']").click(function () {
+                $.ajax({
+                    url: "/vocabulary/{{vocabulary.id}}/rate/" + $(".rating input[type='radio']:checked").val() + "/",
+                    dataType: 'json',
 
-            success: function (result) {
-                window.location.reload();
-            },
-            error: function (result) {
-                console.log(JSON.stringify(result));
-            },
+                    success: function (result) {
+                        window.location.reload();
+                    },
+                    error: function (result) {
+                        console.log(JSON.stringify(result));
+                    },
+                });
+            });
+        </script>
+    {% endif %}
+
+    <script>
+        $("#download-dropdown-button").click(function (e) {
+            $('.pretty-dropdown-menu').toggle();
+            e.stopPropagation();
         });
-    });
-</script>
-{% endif %}
 
-<script>
-
-    $("#download-dropdown-button").click(function () {
-        $('.dropdown-menu').toggle();
-    });
-
-    $("#download-drop-down > li").click(function () {
-        window.location = $(this).find("a:first").attr("href"); //download the rdf
-        $('.dropdown-menu').toggle();
-    });
-
-    $("#comment-post-button").click(function () {
-        $.ajax({
-            url: "/vocabulary/{{vocabulary.id}}/comment/",
-            type: 'POST',
-            data: {"comment": $("#comment-text-input").val(),
-                "csrfmiddlewaretoken": '{{ csrf_token }}'
-            },
-
-            success: function (result) {
-                $("#comment-text-input").val('');
-                window.location.reload();
-            },
-            error: function (result) {
-                console.log(JSON.stringify(result));
-            },
+        $("aside, content").click(function () {
+            $('.pretty-dropdown-menu').hide();
         });
-    });
-</script>
+
+        $("#download-drop-down > li").click(function () {
+            window.location = $(this).find("a:first").attr("href"); //download the rdf
+            $('.pretty-dropdown-menu').toggle();
+        });
+
+        $("#comment-post-button").click(function () {
+            $.ajax({
+                url: "/vocabulary/{{vocabulary.id}}/comment/",
+                type: 'POST',
+                data: {"comment": $("#comment-text-input").val(),
+                    "csrfmiddlewaretoken": '{{ csrf_token }}'
+                },
+
+                success: function (result) {
+                    $("#comment-text-input").val('');
+                    window.location.reload();
+                },
+                error: function (result) {
+                    console.log(JSON.stringify(result));
+                },
+            });
+        });
+    </script>
 {% endblock %}
