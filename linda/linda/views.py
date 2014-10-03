@@ -48,12 +48,6 @@ def analyzeDatasource(request, **kwargs):
 
     return render(request, 'analytics/datasource.html', params)
 
-
-def transformations(request):
-    params = {}
-    return render(request, 'transformations/index.html', params)
-
-
 def openDatasource(request):
     params = {}
     return render(request, 'datasource/open.html', params)

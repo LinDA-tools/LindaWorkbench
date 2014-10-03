@@ -166,6 +166,7 @@ INSTALLED_APPS = (
     'graphdb',
     'coreapi',
     'analytics',
+    'r2r'
 
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',

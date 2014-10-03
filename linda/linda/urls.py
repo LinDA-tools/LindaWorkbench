@@ -31,7 +31,7 @@ urlpatterns = patterns('',
                        url(r'^analytics/', include('analytics.urls', namespace="analytics")),
 
                        #Transformations
-                       url(r'^transformations/$', views.transformations, name='transformations'),
+                       url(r'^transformations/', include('r2r.urls')),
 
                        #Authentication
                        url(r'^admin/', include(admin.site.urls)),
