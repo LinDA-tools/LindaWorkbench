@@ -26,7 +26,7 @@ urlpatterns = patterns('',
                        #url(r'^analytics/$', views.analytics, name='analytics'),
                        #url(r'^analyze/datasource/(?P<dtname>[\w-]+)/$', views.analyzeDatasource,
                        #    name='analyze-datasource'),
-		       url(r'^analyze/datasource/(?P<dtname>[\w-]+)/$', views.analyzeDatasource,
+		               url(r'^analyze/datasource/(?P<dtname>[\w-]+)/$', views.analyzeDatasource,
                            name='analyze-datasource'),
                        url(r'^analytics/', include('analytics.urls', namespace="analytics")),
 

@@ -11,7 +11,7 @@
 		<div class="home-search">
 			<form method="get" action="/vocabularies" class="form">
 
-				<input id="vocabulary-search-text" type="text" name="q" placeholder='{% trans "Search Vocabularies" %}' value="{% if form.q.value %}{{form.q.value}}{% endif %}"/>
+				<input id="vocabulary-search-text" type="text" name="q" required="required" placeholder='{% trans "Search Vocabularies" %}' value="{% if form.q.value %}{{form.q.value}}{% endif %}"/>
 				<input type="submit" value=""/>
                 {% if query %}
                     <a href="/vocabularies/all" class="button delete-button clear-search" title='Clear search'></a>

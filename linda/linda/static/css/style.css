@@ -1313,8 +1313,9 @@ input, textarea {
     border-top: 1px solid #FC5006;
 }*/
 
-.query-builder .builder-loading {
-	width: 130px;
+.builder-loading {
+	height: 130px;
+	width: 172px;
 	margin-top: 10px;
 }
 
