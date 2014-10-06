@@ -6,7 +6,7 @@ from linda.settings import LINDA_SERVER_IP
 
 from django.views.decorators.csrf import csrf_exempt
 
-R2R_SERVER = LINDA_SERVER_IP + ":3000"
+R2R_SERVER = LINDA_SERVER_IP + ":3000/"
 R2R_PROXY = LINDA_SERVER_IP + ":8000/transformations"
 
 
