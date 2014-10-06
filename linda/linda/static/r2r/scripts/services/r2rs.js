@@ -4,7 +4,7 @@
   angular.module('app').factory('R2rs', function($http, Jsedn) {
     var dbAdapter, getSuggestedEntities, host, lovAdapter, recommenderAdapter, rowValuesToArray;
     //host = 'http://localhost:3000';
-    host = 'http://localhost:8000/transformations';
+    host = R2R_PROXY;
     dbAdapter = host + '/api/v1/db';
     lovAdapter = host + '/api/v1/lov';
     recommenderAdapter = host + '/api/v1/recommender';
