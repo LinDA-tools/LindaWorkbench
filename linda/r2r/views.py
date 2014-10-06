@@ -5,8 +5,8 @@ import requests
 
 from linda.settings import LINDA_SERVER_IP
 
-R2R_SERVER = LINDA_SERVER_IP + ":3000/"
-R2R_PROXY = LINDA_SERVER_IP + ":8000/transformations"
+R2R_SERVER = "http://localhost" + ":3000/"
+R2R_PROXY = "http://localhost" + ":8000/transformations"
 
 
 # Transformation page view
@@ -20,6 +20,12 @@ def transform(request):
 
 #Proxy calls - exist as middle-mans between LinDA tranformations page and the r2r server
 def get_api_call(request, link):
+    total_link = R2R_SERVER + "api/" + link
+    if request.GET:
+        total_link += "?"
+    for param in request.GET:
+        total_link += param + "=" + request.GET[param] + "&"
+
     data = requests.get(R2R_SERVER + "api/" + link)
 
     return HttpResponse(data, "application/json")

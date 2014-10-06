@@ -11,5 +11,5 @@ urlpatterns = patterns('',
                        url(r'^$', views.transform, name='transform'),
 
                        #js proxies
-                       url(r'^api/(?P<link>\w+)', views.get_api_call, name='get-api-call'),
+                       url(r'^api/(?P<link>.*)', views.get_api_call, name='get-api-call'),
 )
