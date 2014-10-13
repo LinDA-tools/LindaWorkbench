@@ -1,3 +1,4 @@
+from types import NoneType
 from django import template
 from linda_app.models import Vocabulary, VocabularyClass, VocabularyProperty
 

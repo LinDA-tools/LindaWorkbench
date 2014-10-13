@@ -117,6 +117,7 @@ urlpatterns = patterns('',
                        url(r'^api/datasource/(?P<dtname>[\w-]+)/delete/', views.api_datasource_delete, name='datasource-delete'),
                        url(r'^api/datasource/(?P<dtname>[\w-]+)/', views.api_datasource_get, name='datasource-get'),
 
+                       url(r'update_all/', views.update_vocabulary_stats, name='update-all'),
                        #url(r'coreapi/', include('coreapi.urls')),
 
 )

@@ -42,14 +42,13 @@
             {% endif %}
         </p>
 
-        <label for="description">{% trans "LOD reference counter"%}:</label>
-
-        <p class="description">
-            {{lodRanking.description}}
-            {% if lodRanking.description.errors %}
-            <span class="error">{{ lodRanking.description.errors.as_text }}</span>
+        <div>
+            <label for="description">{% trans "LOD reference counter"%}:</label>
+            {{form.lodRanking}}
+            {% if form.lodRanking.errors %}
+            <span class="error">{{ form.lodRanking.errors.as_text }}</span>
             {% endif %}
-        </p>
+        </div>
 
 		<div>
             <label for="originalUrl">{% trans "Preferred namespace URI"%}:</label>
