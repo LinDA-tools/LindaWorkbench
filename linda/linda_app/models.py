@@ -175,7 +175,6 @@ class VocabularyClass(models.Model):  # A class inside an RDF vocabulary
     vocabulary = models.ForeignKey(Vocabulary)
     uri = models.URLField(max_length=1024, blank=False, null=True)
     label = models.CharField(max_length=128, blank=False, null=False)
-    ranking = models.FloatField()
 
     def __unicode__(self):
         return self.label
@@ -185,10 +184,11 @@ class VocabularyProperty(models.Model):  # A property inside an RDF vocabulary
     vocabulary = models.ForeignKey(Vocabulary)
     uri = models.URLField(max_length=1024, blank=False, null=True)
     label = models.CharField(max_length=128, blank=False, null=False)
-    ranking = models.FloatField()
 
     def __unicode__(self):
         return self.label
+
+Vocabulary.property = property(lambda d: VocabularyProperty.objects.get_or_create(vocabulary=d)[0])
 
 
 class VocabularyComments(models.Model):
