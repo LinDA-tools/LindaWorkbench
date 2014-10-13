@@ -12,6 +12,7 @@ from django.db.models.fields.files import ImageFieldFile
 from django.conf import settings
 from django.core.cache import cache
 from django.core.files.base import ContentFile
+from django.utils.deconstruct import deconstructible
 from athumb.exceptions import UploadedImageIsUnreadableError
 from athumb.pial.engines.pil_engine import PILEngine
 
@@ -238,3 +239,6 @@ class ImageWithThumbsField(ImageField):
             kwargs['max_length'] = 255
 
         super(ImageWithThumbsField, self).__init__(*args, **kwargs)
+
+    def __eq__(self, other):
+        return self.attr_class == other.attr_class

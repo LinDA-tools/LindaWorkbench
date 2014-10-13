@@ -43,7 +43,7 @@ UserProfile.avatar = property(lambda d: Photo.objects.get_or_create(user_profile
 
 class Photo(models.Model):
     user_profile = models.ForeignKey(UserProfile)
-    photo_original = ImageWithThumbsField(
+    '''photo_original = ImageWithThumbsField(
         upload_to=photo_upload_path,
         thumbs=(
             ('48x48', {'size': (48, 48), 'crop': True}),
@@ -52,7 +52,7 @@ class Photo(models.Model):
             ('150x150', {'size': (150, 150), 'crop': True}),
         ),
         blank=True,
-        null=True)
+        null=True)'''
 
     def __unicode__(self):
         return "%d" % self.id
@@ -74,7 +74,7 @@ class Vocabulary(models.Model):
     preferredNamespacePrefix = models.CharField(max_length=256, blank=False, null=True)  # Preferred namespace prefix
 
     #Usage statistics
-    lodRanking = models.IntegerField(default=0),
+    lodRanking = models.IntegerField(default=0)
 
     #Vocabulary example
     example = models.CharField(max_length=8196, blank=True, null=False)
