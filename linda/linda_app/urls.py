@@ -120,4 +120,5 @@ urlpatterns = patterns('',
                        url(r'update_all/', views.update_vocabulary_stats, name='update-all'),
                        url(r'coreapi/', include('coreapi.urls')),
 
+
 )

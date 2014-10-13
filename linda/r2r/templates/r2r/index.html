@@ -1,25 +1,14 @@
-<!doctype html>
-<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
-<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
-<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
-  <head>
-    <meta charset="utf-8">
-    <title></title>
-    <meta name="description" content="">
-    <meta name="viewport" content="width=device-width">
-    <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
-    <!-- build:css styles/vendor.css -->
-    <!-- bower:css -->
-    <!-- endbower -->
-    <!-- endbuild -->
-    <!-- build:css({.tmp,app}) styles/main.css -->
+{% extends "base.html" %}
+{% load i18n %}
+{% block bodyclass %}transformations{% endblock %}
+{% block bodytype %}ng-app="app"{% endblock %}
+{% block css %}
     <link rel="stylesheet" href="/static/r2r/styles/main.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
-    <!-- endbuild -->
-  </head>
-  <body ng-app="app">
+{% endblock %}
+
+{% block content %}
     <!--[if lt IE 7]>
       <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
     <![endif]-->
@@ -90,5 +79,4 @@
         <script src="/static/r2r/scripts/controllers/config.js"></script>
         <script src="/static/r2r/scripts/controllers/oracle.js"></script>
         <!-- endbuild -->
-</body>
-</html>
+{% endblock %}
