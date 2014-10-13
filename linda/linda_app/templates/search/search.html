@@ -85,6 +85,7 @@
                 {% with current_url="/vocabularies" %}
                     {% include 'util/paginator.html' %}
                 {% endwith %}
+
             {% else %}
                 <div class="search-results">
                     {% if vocabularies %}
@@ -127,7 +128,7 @@
                         </div>
                     {% endif %}
 
-                    {% with current_url="/vocabularies/all" %}
+                    {% with current_url="" %}
                         {% include 'util/paginator.html' %}
                     {% endwith %}
                 </div>
