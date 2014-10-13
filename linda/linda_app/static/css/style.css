@@ -184,6 +184,7 @@ header .site-title:hover {
     width: 260px;
     min-height: 800px;
     display: table-cell;
+    vertical-align: top;
 }
 
 #menu > ul {

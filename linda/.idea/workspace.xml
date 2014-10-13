@@ -43,28 +43,46 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="views.py" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="views.py" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/linda_app/views.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="286" column="17" selection-start="9423" selection-end="9423" vertical-scroll-proportion="0.36138615" vertical-offset="4456" max-vertical-offset="13940">
+            <state line="286" column="17" selection-start="9423" selection-end="9423" vertical-scroll-proportion="-8.423077" vertical-offset="4456" max-vertical-offset="13940">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="forms.py" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/linda_app/forms.py">
+      <file leaf-file-name="index.html" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/linda_app/templates/transformations/index.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="22" column="0" selection-start="556" selection-end="556" vertical-scroll-proportion="0.0" vertical-offset="99" max-vertical-offset="850">
+            <state line="9" column="19" selection-start="290" selection-end="290" vertical-scroll-proportion="-5.8846154" vertical-offset="0" max-vertical-offset="289">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="edit.html" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/linda_app/templates/vocabulary/edit.html">
+      <file leaf-file-name="index.html" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/r2r/templates/r2r/index.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="43" column="0" selection-start="1433" selection-end="1433" vertical-scroll-proportion="-7.8461537" vertical-offset="527" max-vertical-offset="1853">
+            <state line="9" column="0" selection-start="450" selection-end="450" vertical-scroll-proportion="0.24717286" vertical-offset="0" max-vertical-offset="1496">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="base.html" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/linda_app/templates/base.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="15" column="77" selection-start="478" selection-end="478" vertical-scroll-proportion="-9.769231" vertical-offset="1" max-vertical-offset="646">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="style.css" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/linda_app/static/css/style.css">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="186" column="24" selection-start="3244" selection-end="3244" vertical-scroll-proportion="-5.7843137" vertical-offset="2867" max-vertical-offset="24922">
               <folding />
             </state>
           </provider>
@@ -107,8 +125,6 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/linda/static/js/jquery.contextMenu.js" />
-        <option value="$PROJECT_DIR$/linda/static/css/jquery.contextMenu.css" />
         <option value="$PROJECT_DIR$/linda/templates/util/prettydropdown.html" />
         <option value="$PROJECT_DIR$/linda/templates/util/prettydropdown_js.html" />
         <option value="$PROJECT_DIR$/linda/templates/index.html" />
@@ -157,6 +173,9 @@
         <option value="$PROJECT_DIR$/linda_app/urls.py" />
         <option value="$PROJECT_DIR$/linda_app/templates/search/search.html" />
         <option value="$PROJECT_DIR$/linda_app/views.py" />
+        <option value="$PROJECT_DIR$/r2r/templates/r2r/index.html" />
+        <option value="$PROJECT_DIR$/linda_app/templates/base.html" />
+        <option value="$PROJECT_DIR$/linda_app/static/css/style.css" />
       </list>
     </option>
   </component>
@@ -221,7 +240,7 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="linda_app" />
+              <option name="myItemId" value="r2r" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -235,43 +254,7 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="linda_app" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="templatetags" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="linda" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="linda" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="linda_app" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="templates" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="linda" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="linda" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="linda_app" />
+              <option name="myItemId" value="r2r" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
@@ -279,33 +262,7 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="search" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="linda" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="linda" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="linda_app" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="templates" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="search" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="indexes" />
+              <option name="myItemId" value="r2r" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -563,21 +520,6 @@
     <breakpoint-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/linda_app/static/js/jquery.contextMenu.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="28764" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/linda_app/static/css/jquery.contextMenu.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="96" column="80" selection-start="2642" selection-end="2642" vertical-scroll-proportion="-32.0" vertical-offset="0" max-vertical-offset="2499" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/linda_app/templates/util/prettydropdown_js.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="27" column="92" selection-start="1043" selection-end="1043" vertical-scroll-proportion="0.0" vertical-offset="459" max-vertical-offset="595" />
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/linda_app/templates/util/prettydropdown.html">
       <provider selected="true" editor-type-id="text-editor">
         <state line="9" column="80" selection-start="412" selection-end="412" vertical-scroll-proportion="0.0" vertical-offset="153" max-vertical-offset="459" />
@@ -591,11 +533,6 @@
     <entry file="file://$PROJECT_DIR$/linda_app/templates/datasource/create.html">
       <provider selected="true" editor-type-id="text-editor">
         <state line="8" column="0" selection-start="247" selection-end="335" vertical-scroll-proportion="-5.230769" vertical-offset="0" max-vertical-offset="901" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/linda_app/templates/transformations/index.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="9" column="19" selection-start="290" selection-end="290" vertical-scroll-proportion="0.0" vertical-offset="153" max-vertical-offset="289" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/linda_app/templates/analytics/datasource.html">
@@ -641,11 +578,6 @@
     <entry file="file://$PROJECT_DIR$/linda_app/templates/datasource/index.html">
       <provider selected="true" editor-type-id="text-editor">
         <state line="75" column="24" selection-start="2821" selection-end="2821" vertical-scroll-proportion="0.2806236" vertical-offset="1023" max-vertical-offset="1921" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/linda_app/static/css/style.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="1044" column="29" selection-start="16585" selection-end="16585" vertical-scroll-proportion="0.493228" vertical-offset="17311" max-vertical-offset="24344" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/../../../Lib/importlib/__init__.py">
@@ -748,13 +680,6 @@
     <entry file="file://$PROJECT_DIR$/linda_app/templates/vocabulary/details.html">
       <provider selected="true" editor-type-id="text-editor">
         <state line="132" column="37" selection-start="6674" selection-end="6674" vertical-scroll-proportion="-13.269231" vertical-offset="1899" max-vertical-offset="3961">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/linda_app/templates/base.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="29" column="48" selection-start="783" selection-end="783" vertical-scroll-proportion="-18.961538" vertical-offset="0" max-vertical-offset="646">
           <folding />
         </state>
       </provider>
@@ -893,7 +818,49 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/linda_app/views.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="286" column="17" selection-start="9423" selection-end="9423" vertical-scroll-proportion="0.36138615" vertical-offset="4456" max-vertical-offset="13940">
+        <state line="286" column="17" selection-start="9423" selection-end="9423" vertical-scroll-proportion="-8.423077" vertical-offset="4456" max-vertical-offset="13940">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/linda_app/templates/transformations/index.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="9" column="19" selection-start="290" selection-end="290" vertical-scroll-proportion="-5.8846154" vertical-offset="0" max-vertical-offset="289">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/allauth/templates/socialaccount/base.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="645">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/messages/templates/messages/base.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="1" column="0" selection-start="26" selection-end="84" vertical-scroll-proportion="-0.65384614" vertical-offset="0" max-vertical-offset="170">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/linda_app/templates/base.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="15" column="77" selection-start="478" selection-end="478" vertical-scroll-proportion="-9.769231" vertical-offset="1" max-vertical-offset="646">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/linda_app/static/css/style.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="186" column="24" selection-start="3244" selection-end="3244" vertical-scroll-proportion="-5.7843137" vertical-offset="2867" max-vertical-offset="24922">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/r2r/templates/r2r/index.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="9" column="0" selection-start="450" selection-end="450" vertical-scroll-proportion="0.24717286" vertical-offset="0" max-vertical-offset="1496">
           <folding />
         </state>
       </provider>
