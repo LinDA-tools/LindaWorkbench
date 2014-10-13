@@ -73,6 +73,9 @@ class Vocabulary(models.Model):
     preferredNamespaceUri = models.URLField(max_length=1024, blank=False, null=True)  # Preferred namespace uri
     preferredNamespacePrefix = models.CharField(max_length=256, blank=False, null=True)  # Preferred namespace prefix
 
+    #Usage statistics
+    lodRanking = models.IntegerField(default=0),
+
     #Vocabulary example
     example = models.CharField(max_length=8196, blank=True, null=False)
 

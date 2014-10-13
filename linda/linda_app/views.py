@@ -13,7 +13,7 @@ from datetime import datetime, date
 
 
 # from graphdb import views as query_views
-from linda.settings import SESAME_LINDA_URL, LINDA_HOME, RDF2ANY_SERVER, PRIVATE_SPARQL_ENDPOINT, QUERY_BUILDER_SERVER
+from settings import SESAME_LINDA_URL, LINDA_HOME, RDF2ANY_SERVER, PRIVATE_SPARQL_ENDPOINT, QUERY_BUILDER_SERVER
 
 
 def index(request):

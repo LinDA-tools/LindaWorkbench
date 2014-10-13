@@ -3,7 +3,7 @@ from django.http import HttpResponse
 from django.shortcuts import render_to_response
 import requests
 
-from linda.settings import LINDA_SERVER_IP
+from linda_app.settings import LINDA_SERVER_IP
 
 R2R_SERVER = "http://localhost" + ":3000/"
 R2R_PROXY = "http://localhost" + ":8000/transformations"

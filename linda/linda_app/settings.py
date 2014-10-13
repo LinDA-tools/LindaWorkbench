@@ -84,7 +84,7 @@ STATICFILES_DIRS = (
     # Put strings here, like "/home/html/static" or "C:/www/django/static".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
-    'linda\\static',
+    'linda_app\\static',
 )
 
 # List of finder classes that know how to find static files in
@@ -115,16 +115,16 @@ MIDDLEWARE_CLASSES = (
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
 
-ROOT_URLCONF = 'linda.urls'
+ROOT_URLCONF = 'linda_app.urls'
 
 # Python dotted path to the WSGI application used by Django's runserver.
-WSGI_APPLICATION = 'linda.wsgi.application'
+WSGI_APPLICATION = 'linda_app.wsgi.application'
 
 TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
-    'linda\\templates',
+    'linda_app\\templates',
 )
 
 #LinDA Server
@@ -146,8 +146,7 @@ QUERY_BUILDER_SERVER = LINDA_SERVER_IP + ':3100/'
 RDF2ANY_SERVER = LINDA_SERVER_IP + ':8081'
 
 INSTALLED_APPS = (
-    'linda',
-    'linda.models',
+    'linda_app',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -227,6 +226,9 @@ SOCIALACCOUNT_PROVIDERS = {
 }
 
 DATABASE_ROUTERS = ['analytics.routers.analyticsRouter']
+
+# necessarily specified under Django 1.7
+TEST_RUNNER = 'django.test.runner.DiscoverRunner'
 
 
 

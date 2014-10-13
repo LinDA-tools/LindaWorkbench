@@ -1,5 +1,5 @@
 from django import template
-from linda.models import Vocabulary, VocabularyClass, VocabularyProperty
+from linda_app.models import Vocabulary, VocabularyClass, VocabularyProperty
 
 register = template.Library()
 

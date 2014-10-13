@@ -13,6 +13,10 @@ from messages.models import Message
 
 
 class MessageAdminForm(forms.ModelForm):
+    class Meta:
+        model = Message
+        fields = ['recipient', 'group']
+
     """
     Custom AdminForm to enable messages to groups and all users.
     """
@@ -29,9 +33,6 @@ class MessageAdminForm(forms.ModelForm):
     def _get_group_choices(self):
         return [('', u'---------'), ('all', _('All users'))] + \
                [(group.pk, group.name) for group in Group.objects.all()]
-
-    class Meta:
-        model = Message
 
 
 class MessageAdmin(admin.ModelAdmin):
