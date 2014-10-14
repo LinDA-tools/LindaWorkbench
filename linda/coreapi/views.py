@@ -57,7 +57,7 @@ def api_datasources_list(request):
 
 @csrf_exempt
 def recommend_dataset(request):
-    type = request.GET.get("type", "")
+
     property = request.GET.get("property", "")
     class_ = request.GET.get("class", "")
     q = request.GET.get("q", "")
