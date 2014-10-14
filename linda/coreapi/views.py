@@ -64,12 +64,37 @@ def recommend_dataset(request):
 
     page = request.GET.get('page')
 
-    property = 0
-    class_ = 1
-    results = []
+    flag = False
 
     if property:
-        vocabs = VocabularyProperty.objects.all()#.filter(label=property)
+        flag = "Property"
+    elif class_:
+        flag = "Class"
+    else:
+        flag = "General"
+
+    results = []
+
+    if flag=="General":
+
+        # vocabs = VocabularyProperty.objects.filter(label__iregex=r'/\b%s\b/'%property)
+        vocabs = Vocabulary.objects.filter(title__iregex = property,  description__iregex= property)
+        for source in vocabs:
+            source_info = {}
+            source_info['vocabulary'] = source.title
+            source_info['uri'] = source.originalUrl
+            source_info['label'] = source.description
+            if source.lodRanking >0:
+                source_info['ranking'] = source.lodRanking
+            else:
+                continue
+            results.append(source_info)
+
+    if flag == "Property" or flag=="General":
+        if flag == "General":
+            property = q
+        # vocabs = VocabularyProperty.objects.filter(label__iregex=r'/\b%s\b/'%property)
+        vocabs = VocabularyProperty.objects.filter(label__iregex = property)
         for source in vocabs:
             source_info = {}
             source_info['vocabulary'] = source.vocabulary.title
@@ -81,8 +106,10 @@ def recommend_dataset(request):
                 continue
             results.append(source_info)
 
-    if class_:
-        vocabs = VocabularyClass.objects.all()#.filter(label=class_)
+    if flag == "Class" or flag=="General":
+        if flag == "General":
+            class_ = q
+        vocabs = VocabularyClass.objects.filter(label__iregex = class_)
         for source in vocabs:
             source_info = {}
             source_info["vocabulary"] = str(source.vocabulary.title.encode('ascii', 'ignore'))
