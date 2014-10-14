@@ -6,7 +6,7 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 import json
 
 from linda_app.forms import *
-from linda_app.models import Vocabulary
+from operator import itemgetter
 
 
 
@@ -64,8 +64,8 @@ def recommend_dataset(request):
 
     page = request.GET.get('page')
 
-    property = 1
-    class_ = 0
+    property = 0
+    class_ = 1
     results = []
 
     if property:
@@ -85,13 +85,21 @@ def recommend_dataset(request):
         vocabs = VocabularyClass.objects.all()#.filter(label=class_)
         for source in vocabs:
             source_info = {}
-            source_info['vocabulary'] = source.vocabulary.title
-            source_info['uri'] = source.uri
-            source_info['label'] = source.label
-            source_info['ranking'] = source.vocabulary.lodRanking
+            source_info["vocabulary"] = str(source.vocabulary.title.encode('ascii', 'ignore'))
+            source_info["uri"] = str(source.uri)
+            source_info["label"] = str(source.label.encode('ascii', 'ignore'))
+            # source_info['ranking'] = source.vocabulary.lodRanking
+            if source.vocabulary.lodRanking >0:
+                source_info["ranking"] = int(source.vocabulary.lodRanking)
+            else:
+                continue
             results.append(source_info)
 
-    paginator = Paginator(results, 100)
+    results = sorted(results, key=itemgetter('ranking'), reverse=True)
+
+    # results = results.reverse()
+
+    paginator = Paginator(results, 20)
 
     try:
         vocabularies = paginator.page(page)
@@ -102,7 +110,10 @@ def recommend_dataset(request):
         # If page is out of range (e.g. 9999), deliver last page of results.
         vocabularies = paginator.page(paginator.num_pages)
 
-    # data = json.dumps(vocabularies)
+    data = []
+    for vocab in vocabularies:
+        data.append(vocab)
+    data = json.dumps(data)
     mimetype = 'application/json'
-    return HttpResponse(vocabularies, mimetype)
+    return HttpResponse(data, mimetype)
 
