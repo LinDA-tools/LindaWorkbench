@@ -1,0 +1,80 @@
+<!--List with recommended visualizations-->
+<div class="row workflow_step">
+    <h6>Visualize Data</h6>
+</div>
+<div class="row box">
+    <div class="row" data-equalizer>
+        <div class="large-10 medium-9 columns">
+            <div class="inner_box" data-equalizer-watch>
+                <!-- Visualization -->
+                <div class="inner_box">
+                    <div id="visualisation">Visualization</div>
+                </div>
+                <!-- Consumption -->                       
+                <div id="consumption">
+                    <ul>
+                        <li> <a {{action 'export'}}>Export</a> </li>
+                        <li> <a {{action 'publish'}}>Publish</a> </li>
+                        <li> <a {{action 'save'}}>Save</a> </li>
+                        <li> <a {{action 'share'}}>Share</a> </li>
+                    </ul>
+                </div> 
+                <!-- Customization -->
+                <div class="inner_title_box">
+                    <h7>Customize Visualization</h7>
+                </div>
+                <div class="inner_box">
+                    {{view App.ContainerView tagName="ul" elementId="tuningOptionsView"}}
+                </div>
+            </div>
+        </div>
+        <div class="large-2 medium-3 columns">
+            <div data-equalizer-watch>
+                <div class="inner_title_box">
+                    <h7>Suggestions</h7>
+                </div>
+                <div class="inner_box" >
+                    <ul >              
+                        {{#each tool in suggestions}}
+                        <li>
+                            <div><a {{action 'configure' tool}}> {{tool.name}} </a></div>
+                            <img {{bind-attr src="tool.thumbnail"}} />
+                        </li>
+                        {{/each}}
+                    </ul>
+                </div> 
+            </div>
+        </div>
+    </div>
+    <!-- Configuration -->        
+    <div class="row inner_title_box">
+        <h7>Configure Visualization</h7>
+    </div>
+    <div class="row inner_box">
+        <!-- Tree (selected data) -->
+        <div class="large-4 medium-5 columns">   
+            <div class="inner_subtitle_box">
+                <h7> Selected Data </h7>
+            </div>
+            <div class="inner_box">
+                Tree
+            </div>
+        </div>
+        <!-- Dimension Mapping -->
+        <div class="large-8 medium-7 columns">
+            <div class="inner_subtitle_box">
+                <h7> Dimension Mapping </h7>
+            </div>
+            <div class="inner_box">
+                <!--{{view App.ContainerView classNames="list" tagName="ul" elementId="structureOptionsView"}}-->
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
+<script>
+    $(document).foundation();
+</script>

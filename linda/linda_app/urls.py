@@ -18,9 +18,7 @@ urlpatterns = patterns('',
                        url(r'^community/$', login_required(views.UserListView.as_view()), name='community'),
 
                        #Visualizations
-                       url(r'^visualizations/$', views.visualizations, name='visualizations'),
-                       url(r'^visualize/datasource/(?P<dtname>[\w-]+)/$', views.visualizeDatasource,
-                           name='visualize-datasource'),
+                       url(r'^visualizations/', include('visualisation.urls')),
 
                        #Analytics
                        #url(r'^analytics/$', views.analytics, name='analytics'),

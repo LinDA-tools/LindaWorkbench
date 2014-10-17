@@ -1,0 +1,425 @@
+$form-spacing: 0.5rem; // to reduce input field height _forms.scss
+$fieldset-padding:  0.5rem; // see _forms.scss
+$list-side-margin: 0.5rem; // Remove margin from list _types.scss
+$list-nested-margin: 0.2rem;
+$column-gutter: 0.5rem; // Für Spaltenlayout
+
+select {
+    height: auto !important;
+}
+
+@import "../bower_components/foundation/scss/foundation.scss";
+
+/* Put your CSS here */
+html, body {
+    background-color: #ffffff;
+}
+
+.clear{
+    clear:both;
+}
+
+ul {
+    list-style-type: none;
+}
+
+h6 {
+    font-weight: bold;
+    font-size: 16pt;
+}
+
+h7 {
+    font-size: 12pt;
+    font-weight: bold;
+}
+
+.top-bar .name h1 a:before {
+    background-image: url('../images/logo.png');
+    background-repeat: no-repeat;
+    width: 50px; 
+    height: 35px;
+    content: "";
+    display: inline-block;
+    position: relative;
+    top: 5px;
+    background-size: contain;
+}
+
+.top-bar .name h1 a {
+    font-size: 20pt;
+    font-weight: bold;
+}
+
+.workflow{
+    margin: 2.5rem auto; 
+    max-width: 85%;
+}
+
+.workflow_step{
+    border-style:solid;
+    border-color:black;
+    border-width: 1px;
+    background-color:orange;
+    padding: 3px;
+    padding-left: 10px;
+    font-size: 15pt;
+    font-weight: bold;
+}
+
+.workflow_step + .box {
+    margin-top: -1px;
+}
+
+
+.box{
+    border-style:solid;
+    border-width: 1px;
+    border-color:black;
+    padding: 15px 10px 10px 10px;
+    box-shadow: 5px 5px 2px darkgray
+}
+
+.inner_title_box{
+    border-style:solid;
+    border-width: 1px;
+    border-color:darkgray;
+    background-color:bisque;
+    padding: 1px;
+    padding-left: 10px;
+    margin-top: 1px;
+}
+
+.inner_title_box + .inner_box {
+    margin-top: -1px;
+}
+
+.inner_subtitle_box{
+    border-style:solid;
+    border-width: 1px;
+    border-color:darkgray;
+    padding: 2px;
+    padding-left: 10px;
+}
+
+.inner_subtitle_box + .inner_box {
+    margin-top: 5px;
+}
+
+.inner_box {
+    border-style:solid;
+    border-width: 1px;
+    border-color:darkgray;
+    padding: 10px;
+    margin-top: 1px;
+    margin-bottom: 12px;
+    box-shadow: 5px 5px 2px darkgray
+}
+
+#consumption ul {
+    margin: 10px;
+    margin-left: 0px;
+    padding: 0;
+    list-style-type: none;
+    text-align: left;
+}
+
+#consumption ul li { display: inline; }
+
+#consumption ul li a
+{
+    text-decoration: none;
+    padding: .5em 1.5em;
+    color:  darkslategray;
+    background-color: bisque;
+}
+
+#consumption ul li a:hover
+{
+    color: darkslategray;
+    background-color: orange;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+#structureOptionsView {
+    > li {
+        width: 100%;
+        list-style-type: none;
+        >.box {
+            width: 100%;
+            > .boxContent  {
+                width: 100%;
+                > li {                   
+                    width: 24%;
+                }
+            }
+        }
+    }
+}
+
+.blanklist {
+    list-style-type: none;
+}
+
+
+
+.verticalTabButtonUnselected {
+    padding: 0.5rem;
+    margin-bottom: 0.1rem;
+    width: 100%;
+    background-color: #eeeeee;
+    color: #555555;
+    font-size: 10pt;
+    text-align: left;
+
+    &:hover { 
+        background-color: #dddddd;
+        color: #555555; 
+    }
+    &:focus { 
+        background-color: #eeeeee;
+        color: #555555; 
+    }
+}
+
+.verticalTabButtonSelected  {
+    padding: 0.5rem;
+    margin-bottom: 0.1rem;
+    width: 100%;
+    background-color: #ffffff;
+    color: #555555;
+    font-size: 10pt;
+    text-align: left;
+
+    &:hover { 
+        background-color: #dddddd;
+        color: #555555; 
+    }
+    &:focus { 
+        background-color: #ffffff;
+        color: #555555; 
+    }
+}
+
+.custom-panel {   
+    margin-top:20px;  
+    @include panel(
+    // Sets the panel background color. Default: $panel-pg
+    $bg:#FFFFFF,
+        // Sets the panel padding amount. Default: $panel-padding
+        $padding:10px,
+        // Sets the font color based on the darkness of the bg & resets header line-heights for panels. Default: $panel-header-adjust
+        $adjust:true    
+        );             
+}
+.box{
+    //background-color: #eeeeee;
+
+}
+
+.boxTitle {
+    font-size: 10pt;
+    font-weight: bold;
+    background-color: #ffffff;
+    padding-bottom: 0.2rem;
+}
+
+.boxContent {
+    font-size: 10pt;
+    background-color: #ffffff;
+}
+
+.optionContainer {
+    font-size: 10pt;
+    background-color: #ffffff;
+    /*padding-top: 0.5rem;*/
+}
+
+.textfield{
+    height: 1px;
+}
+
+.logo {   
+    height: 40px;
+    padding-left: 5px;
+}
+
+.minicolors-theme-default .minicolors-swatch {
+    top: 2px !important;
+    left: 2px !important;
+    width: 20px !important;
+    height: 16px !important;
+}
+
+.sidebar {
+    background-color: #FAFAFA;
+    padding: 6px;
+}
+
+.stage {
+    background-color: #FAFAFA;
+    padding: 6px;
+}
+
+@media only screen { 
+    .columns {
+        padding-left: 0;
+        padding-right: $column-gutter;
+    }
+}
+
+.row {
+    margin: 0px;
+    width: 100%;
+    max-width: none;
+}
+
+// div after a div inside a .row
+.row > div + div { 
+    padding-left: 0.5em;
+}
+
+.heading {
+    font-weight: bold;
+}
+
+.side-nav a:hover {
+    background-color: #cccccc;
+
+}
+
+
+.toolframe {
+    width: 100%; 
+    height: 800px;
+    border: white 1px;
+    overflow: visible;
+}
+.title{
+    font-weight: bold;
+    color: white;
+    padding-top: 10px;
+    padding-left:5px;
+    font-size: 14pt;
+}
+
+.workflowStepTitle {
+    font-weight: bold;
+    // background-color: #ff9933;
+    padding: 0.2rem;
+}
+
+.toolthumbnail {
+    width:120px;
+    margin: 10px;
+}
+
+.showElement, .show-element {
+    visibility:visible;
+}
+
+.export{
+    padding-left:10px;
+}
+.hideElement, .hide-element{
+    display: none !important;
+    visibility: hidden;
+}
+
+.list_default{
+    ul {
+        list-style-type: none;
+    }
+}
+
+
+select {
+    // override setting from _forms.scss
+    padding: 0.5px !important;
+}
+
+select[size], select[multiple] {
+    background-image: none;
+}
+
+// TREE VIEW
+
+/* Branch */
+.tree-branch {
+    padding: 0px;
+    margin: 0px;
+}
+.tree-node .tree-branch {
+    padding-left: 10px; /* Nested tree branches should be indented */
+}
+
+/* Node */
+.tree-node {
+    list-style: none;
+    line-height: 20px;
+    display:list-item;
+
+}
+
+/* Arrow */
+.tree-node .toggle-icon {
+    cursor: pointer;
+    display: inline-block;
+    margin-right: 0px;
+    font-size: 10px;
+}
+.tree-node .toggle-icon:hover {
+    opacity: 0.8;
+}
+.tree-node .toggle-icon.leaf {
+    visibility: hidden;
+}
+
+/* Node text */
+.tree-node .text {
+    cursor: pointer;
+    text-decoration: underline;
+}
+.tree-node .text:hover {
+    text-decoration: none;
+}
+.contents {
+    width: 90%;
+    margin: auto;
+}
+
+.file {
+    border: 5px solid #FAFAFA;
+    border-radius: 3px;
+    margin: 5px 0;
+    padding: 3px 5px 3px 5px;
+    background: #ff3232;
+    width: 100%;
+}
+
+.droparea {
+    border: 1px dotted #4b4b4b;
+    border-radius: 5px;
+}
+
+.droparea-active {
+    background: #c8c8c8;
+    font-weight: bold;
+}
+
+.areas{
+    li {display:inline-block; vertical-align:top}
+    list-style-type: none; 
+}
+
+.area-box {
+    border: 3px solid #e1e1e1;
+    padding: 0.5rem;
+    padding-top: 0.1rem;
+    text-align: center;
+}

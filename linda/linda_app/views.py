@@ -22,19 +22,6 @@ def index(request):
 
     return render(request, 'index.html', params)
 
-
-def visualizations(request):
-    params = {}
-    return render(request, 'visualizations/index.html', params)
-
-
-def visualizeDatasource(request, **kwargs):
-    params = {}
-    params['datasource'] = DatasourceDescription.objects.get(name=kwargs.get('dtname'))
-
-    return render(request, 'visualizations/datasource.html', params)
-
-
 def analytics(request):
     params = {}
 

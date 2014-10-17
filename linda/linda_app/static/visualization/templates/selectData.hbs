@@ -1,0 +1,41 @@
+<div class="row workflow_step">
+    <h6>Explore and Select Data</h6>
+</div>
+<div class="row box">
+    <div class="large-4 medium-6 columns">
+        <div class="inner_subtitle_box"><h7>Select Data</h7></div>
+        <div class="inner_box">
+            <!--title bar with search field and 'order by' select field-->
+             <div class="row collapse">                             
+                <div class="large-11 medium-11 columns">
+                    <!--search field-->
+                    {{input action="search" on="key-press" placeholder="Search"}}
+                </div>
+                <div class="large-1 medium-1 columns">
+                    <i class="postfix fi-magnifying-glass"></i>
+                </div>
+            </div>
+
+            <div class="col-xs-6">
+               {{tree-branch node=controller.treeContent selection=controller.dataSelection expansion=controller.tableContent}} <!--tree component-->
+            </div>
+        </div>
+    </div>
+    <div class="large-8 medium-6 columns">
+        <div class="inner_subtitle_box">
+            <h7>Preview Selected Data</h7> <a class="right" {{action 'visualize'}}>Visualize</a> 
+        </div>
+        <div class="inner_box">
+            <!--title bar plus 'visualize' button-->
+            <div>
+                <!--'visualize' button-->
+            </div>
+        
+            <div>
+                <!---->
+                 {{data-table list=controller.tableContent}}
+                 
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,24 @@
+<div class="row left-collapse">
+    <div class="large-3 medium-3 columns">
+        <h6 class="workflowStepTitle"  style="background-color: #eeeeee; padding: 0.17rem;">Data View</h6>
+        <div class="contents"> 
+            <div class="row">
+                <div class="col-xs-6">
+                    {{tree-branch node=controller.treeContent}}
+                </div>              
+            </div>                       
+        </div>                      
+    </div>    
+    <div class="stage large-9 medium-9 columns" style="background-color: #ffffff; padding-top:0rem;">
+        <h6 class="workflowStepTitle"  style="background-color: #eeeeee; padding: 0.10rem;">Dimensions Mapping</h6>
+        <ul class="small-block-grid-4 medium-block-grid-4 large-block-grid-4 areas" style="background-color: #ffffff">
+
+            {{#each childView in view.childrenViews}}    
+
+                {{view childView}}
+                
+            {{/each}} 
+            
+        </ul>
+    </div>        
+</div>                

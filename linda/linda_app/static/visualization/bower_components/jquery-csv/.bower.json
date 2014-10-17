@@ -1,0 +1,13 @@
+{
+  "name": "jquery-csv",
+  "homepage": "https://github.com/mirlord/jquery-csv",
+  "_release": "78724d620c",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "78724d620cc5e4d151142a7954535d27758396e8"
+  },
+  "_source": "git://github.com/mirlord/jquery-csv.git",
+  "_target": "*",
+  "_originalSource": "jquery-csv"
+}
