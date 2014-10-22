@@ -1,5 +1,6 @@
 from django.http import HttpResponse, HttpResponseNotFound
 from django.shortcuts import redirect, render, get_object_or_404
+from django.utils.http import urlquote
 
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import ListView, UpdateView, DetailView, DeleteView
@@ -844,9 +845,8 @@ def api_datasource_delete(request, dtname):
 
 #Get a query for a specific private datasource and execute it
 @csrf_exempt
-def datasource_sparql(request, dtname):
-    print "hey!"
-    datasource = DatasourceDescription.objects.filter(name=dtname)[0]
+def datasource_sparql(request, dtname):  # Acts as a "fake" seperate sparql endpoint for each datasource
+
 
     results = {}
 
@@ -858,7 +858,9 @@ def datasource_sparql(request, dtname):
         mimetype = 'application/json'
         return HttpResponse(data, mimetype)
 
-    if not datasource:  # datasource not found by name
+    datasources = DatasourceDescription.objects.filter(name=dtname)
+
+    if not datasources:  # datasource not found by name
         results['status'] = '404'
         results['message'] = "Datasource does not exist."
 
@@ -866,7 +868,9 @@ def datasource_sparql(request, dtname):
         mimetype = 'application/json'
         return HttpResponse(data, mimetype)
 
-    if not datasource.is_public:  # only for private data sources
+    datasource = datasources[0]
+
+    if datasource.is_public:  # only for private data sources
         results['status'] = '404'
         results['message'] = "Invalid operation."
 
@@ -874,12 +878,17 @@ def datasource_sparql(request, dtname):
         mimetype = 'application/json'
         return HttpResponse(data, mimetype)
 
-
-
-
-
     # Find where to add the FROM NAMED clause
-    query = request.GET("query")
+    query = request.GET.get("query")
     pos = query.find("WHERE")
-    query = query[:pos] + " FROM NAMED <" + datasource.uri + ">" + query[pos:]
-    print query
+    query = query[:pos] + " FROM <" + datasource.uri + "> " + query[pos:]
+    query = query.replace('?object rdf:type ?class', '')
+
+    # encode the query
+    query_enc = urlquote(query, safe='')
+
+    data = requests.get(PRIVATE_SPARQL_ENDPOINT + "?query=" + query_enc).text
+
+    # return the response
+    return HttpResponse(data, "application/sparql-results+xml")
+

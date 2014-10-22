@@ -60,7 +60,7 @@
 
     <script>
         $("#id_type").on('change', function (e) { //show the appropriate input each time
-            var optionSelected = $("option:selected", this);
+            var optionSelected = $("#id_type option:selected", this);
             var valueSelected = this.value;
 
             if (valueSelected == "public") {
