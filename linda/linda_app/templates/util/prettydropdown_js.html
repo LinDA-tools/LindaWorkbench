@@ -6,13 +6,15 @@
         }
     });
 
-    $(function () {
-        //$("{{id}}-dropdown").css('left', $("#{{id}}-dropdown-button").offset().left);
-        var text = $("#id_{{id}} option:selected").text();
-        if (text !== "") {
-            $("#{{id}}-dropdown-button > .filter-option").html(text);
-        }
-    });
+    {% if not teaser %}
+        $(function () {
+            //$("{{id}}-dropdown").css('left', $("#{{id}}-dropdown-button").offset().left);
+            var text = $("#id_{{id}} option:selected").text();
+            if (text !== "") {
+                $("#{{id}}-dropdown-button > .filter-option").html(text);
+            }
+        });
+    {% endif %}
 
     $( window ).resize(function() {
         $("#{{id}}-dropdown").css('left', $("#{{id}}-dropdown-button").offset().left);

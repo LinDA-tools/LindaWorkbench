@@ -13,10 +13,12 @@ admin.autodiscover()
 urlpatterns = patterns('',
                        #Basic pages
                        url(r'^$', views.index, name='home'),
-                       url(r'^sparql/$', views.sparql, name='sparql'),
                        url(r'^terms-of-use/$', views.terms, name='terms'),
                        url(r'^community/$', login_required(views.UserListView.as_view()), name='community'),
 
+                       #Endpoints
+                       url(r'^sparql/$', views.sparql, name='sparql'),
+                       url(r'^sparql/(?P<dtname>[\w-]+)/$', views.datasource_sparql, name='datasource-sparql'),
                        #Visualizations
                        url(r'^visualizations/', include('visualisation.urls')),
 
@@ -115,7 +117,6 @@ urlpatterns = patterns('',
                        url(r'^api/datasource/(?P<dtname>[\w-]+)/delete/', views.api_datasource_delete, name='datasource-delete'),
                        url(r'^api/datasource/(?P<dtname>[\w-]+)/', views.api_datasource_get, name='datasource-get'),
 
-                       # url(r'update_all/', views.update_vocabulary_stats, name='update-all'),
                        url(r'coreapi/', include('coreapi.urls')),
 
 

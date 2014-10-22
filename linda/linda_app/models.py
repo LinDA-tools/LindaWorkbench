@@ -175,6 +175,7 @@ class VocabularyClass(models.Model):  # A class inside an RDF vocabulary
     vocabulary = models.ForeignKey(Vocabulary)
     uri = models.URLField(max_length=1024, blank=False, null=True)
     label = models.CharField(max_length=128, blank=False, null=False)
+    ranking = models.FloatField()
 
     def __unicode__(self):
         return self.label
@@ -184,12 +185,12 @@ class VocabularyProperty(models.Model):  # A property inside an RDF vocabulary
     vocabulary = models.ForeignKey(Vocabulary)
     uri = models.URLField(max_length=1024, blank=False, null=True)
     label = models.CharField(max_length=128, blank=False, null=False)
+    ranking = models.FloatField()
 
     def __unicode__(self):
         return self.label
 
 Vocabulary.property = property(lambda d: VocabularyProperty.objects.get_or_create(vocabulary=d)[0])
-
 
 class VocabularyComments(models.Model):
     commentText = models.CharField(max_length=512, blank=False, null=False)  # Comment content
@@ -200,6 +201,7 @@ class VocabularyComments(models.Model):
 
 class DatasourceDescription(models.Model):
     title = models.CharField(max_length=512, blank=False, null=False)  # datasource title
+    is_public = models.BooleanField(default=False) #true if datasource is public
     name = models.CharField(max_length=512, blank=False, null=False)  # datasource name - slug
     uri = models.CharField(max_length=2048, blank=False, null=False)  # sesame uri
     createdOn = models.DateField(blank=False, null=False)  # daatasource creation date

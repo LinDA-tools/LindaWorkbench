@@ -19,20 +19,25 @@
             <thead>
                 <tr>
                     <th>{% trans "Name" %}</th>
+                    <th>{% trans "Type" %}</th>
+                    <th>{% trans "SparQL Endpoint"%}</th>
                     <th>{% trans "Created" %}</th>
                     <th>{% trans "Last modified" %}</th>
-                    <th>{% trans "Visible" %}</th>
-                    <th># {% trans "of Triples" %}</th>
                 </tr>
             </thead>
             <tbody>
                 {% for datasource in datasources %}
-                    <tr id="{{datasource.name}}" class="datasource">
+                    <tr id="{{datasource.name}}" class="datasource {% if datasource.is_public %}public{% else %}private{% endif %}">
                         <td><img src="/static/images/rdf.png" width="15px"/> {{datasource.title}}</td>
+                        {% if datasource.is_public %}
+                            <td>{% trans "Public" %}</td>
+                            <td>{{datasource.uri}}</td>
+                        {% else %}
+                            <td>{% trans "Private" %}</td>
+                            <td></td>
+                        {% endif %}
                         <td>{{datasource.createdOn}}</td>
                         <td>{{datasource.lastUpdateOn}}</td>
-                        <td>Private</td>
-                        <td>0</td>
                     </tr>
                 {% endfor %}
             </tbody>
@@ -65,15 +70,16 @@
             link.parentNode.removeChild(link);
         }
 
-        $(function(){
+ $(function(){ //private datasource context menu
+
             $.contextMenu({
-                selector: '.datasource',
+                selector: '.datasource.private',
                 callback: function(key, options) {
                     var id = options.$trigger.attr('id');
                     var url;
 
                     if (key == "Visualize")
-                        url = "/visualizations/visualize/datasource/" + id;
+                        url = "/visualize/datasource/" + id;
                     else
                     if (key == "Analyze")
                         url = "/analyze/datasource/" + id;
@@ -104,7 +110,35 @@
                     "sep2": "---------",
                     "Open": {name: "Open", icon: "open"},
                     "Download": {name: "Download", icon: "download"},
-                    "Share": {name: "Share", icon: "share"}
+                }
+            });
+
+            $.contextMenu({ //public datasource context menu
+                selector: '.datasource.public',
+                callback: function(key, options) {
+                    var id = options.$trigger.attr('id');
+                    var url;
+
+                    if (key == "Visualize")
+                        url = "/visualize/datasource/" + id;
+                    else
+                    if (key == "Analyze")
+                        url = "/analyze/datasource/" + id;
+                    else
+                    if (key == "Delete")
+                        url = "/datasource/" + id + "/delete/";
+
+                    $(this).addClass("show-context-menu");
+                    if (url)
+                        window.location = url;
+                },
+                items: {
+                    "Visualize": {name: "Visualize", icon: "visualize"},
+                    "Analyze": {name: "Analyze", icon: "analyze"},
+                    "Explore / View": {name: "Explore", icon: "explore"},
+                    "sep1": "---------",
+                    "Delete": {name: "Delete", icon: "delete"},
+
                 }
             });
         });

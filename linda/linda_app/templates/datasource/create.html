@@ -11,19 +11,31 @@
 
     <form class="form datasource-create-form" method="post" action="." enctype="multipart/form-data">{% csrf_token %}
 
+        {% if error %}
+            <p class="error">{{error}}</p>
+        {% endif %}
+
         <div>
             <label for="type">{% trans "Type"%}:</label>
 
-            {% with field=typeSelect id="type" options=types default="Private"%}
+            {% with field=typeSelect id="type" options=types %}
                 {% include 'util/prettydropdown.html' %}
             {% endwith %}
 
         </div>
 
-        <div>
+        <div class="endpoint-container">
+            <label for="title">{% trans "Title"%}:</label>
+            <input type="text" name="title" />
+
+            <label for="endpoint">{% trans "Public endpoint uri"%}:</label>
+            <input type="url" name="endpoint" placeholder="http://www.example.com/sparql" />
+        </div>
+
+        <div class="datatype-container" style="display: none;">
             <label for="datatype">{% trans "Data type"%}:</label>
 
-            {% with field=datatypeSelect id="datatype" options=datatypes default="Select the data type"%}
+            {% with field=datatypeSelect id="datatype" options=datatypes default="Select a datasource type"%}
                 {% include 'util/prettydropdown.html' %}
             {% endwith %}
 
@@ -31,18 +43,37 @@
 
         <div class="submit-box">
             <label for="datatype"></label>
-            <input type="submit" class="button blue create-datasource-submit" value='{% trans "Continue"%}'/>
+            <input type="submit" class="button blue create-datasource-submit" value='{% trans "Create"%}'/>
         </div>
     </form>
 </div>
 {% endblock %}
 
 {% block scripts %}
-    {% with field="" id="type" %}
+    {% with field=typeSelect id="type" %}
         {% include 'util/prettydropdown_js.html' %}
     {% endwith %}
 
-    {% with field="" id="datatype" %}
+    {% with field=datatypeSelect id="datatype" teaser=True %}
         {% include 'util/prettydropdown_js.html' %}
     {% endwith %}
+
+    <script>
+        $("#id_type").on('change', function (e) { //show the appropriate input each time
+            var optionSelected = $("option:selected", this);
+            var valueSelected = this.value;
+
+            if (valueSelected == "public") {
+                $(".datatype-container").hide();
+                $(".endpoint-container").show();
+
+                $(".submit-box input").val( '{% trans "Create" %}' );
+            } else {
+                $(".endpoint-container").hide();
+                $(".datatype-container").show();
+
+                $(".submit-box input").val( '{% trans "Continue" %}' );
+            }
+        });
+    </script>
 {% endblock %}

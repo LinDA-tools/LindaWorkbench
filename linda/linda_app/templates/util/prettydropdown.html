@@ -4,7 +4,7 @@
 
 <div class="inline">
     <div id="{{id}}-dropdown-button" class="button green clearfix select-button sidebar-button {% if small %}small{% endif %}">
-        <span class="filter-option">{% if default %}{{default}}{{options.0}}{% endif %}</span>&nbsp;<span class="caret"></span>
+        <span class="filter-option">{% if default %}{{default}}{% else %}{{options.0}}{% endif %}</span>&nbsp;<span class="caret"></span>
     </div>
 
     <ul id="{{id}}-dropdown" class="pretty-dropdown-menu {% if small %}small{% endif %}" role="menu">

@@ -1301,12 +1301,22 @@ input, textarea {
 }
 
 /* Create datasource */
-.datasource-create-form input[type="text"]{
-    width: 190px;
-}
 
 .datasource-create-form input[type="submit"] {
-    width: 200px;
+    width: 180px;
+}
+
+.datasource-create-form label {
+    width: 150px;
+}
+
+.datasource-create-form .endpoint-container, .datasource-create-form .datatype-container {
+    padding-top: 10px;
+}
+
+.datasource-create-form .endpoint-container input {
+    margin: 2px;
+    width: 190px
 }
 
 /*Query Builder*/

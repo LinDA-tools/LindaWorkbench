@@ -1,6 +1,7 @@
 from types import NoneType
 from django import template
 from linda_app.models import Vocabulary, VocabularyClass, VocabularyProperty
+from linda_app.settings import LINDA_HOME
 
 register = template.Library()
 
@@ -20,3 +21,10 @@ def vocabulary_classes(objects):
 @register.filter(name="properties")
 def vocabulary_properties(objects):
     return [elem for elem in objects if isinstance(elem.object, VocabularyProperty) or isinstance(elem, VocabularyProperty)]
+
+@register.filter(name="get_endpoint")
+def get_endpoint(datasource):
+    if datasource.is_public:
+        return datasource.uri
+    else:
+        return LINDA_HOME + "sparql/" + datasource.name + "/"
