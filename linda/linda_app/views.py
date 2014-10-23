@@ -2,6 +2,8 @@ from django.http import HttpResponse, HttpResponseNotFound
 from django.shortcuts import redirect, render, get_object_or_404
 from django.utils.http import urlquote
 
+from django.core.validators import URLValidator
+from django.core.exceptions import ValidationError
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import ListView, UpdateView, DetailView, DeleteView
 
