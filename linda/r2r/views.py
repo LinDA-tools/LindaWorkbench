@@ -28,4 +28,4 @@ def get_api_call(request, link):
 
     data = requests.get(R2R_SERVER + "api/" + link)
 
-    return HttpResponse(data, "application/json")
+    return HttpResponse(data, data.headers['content-type'])

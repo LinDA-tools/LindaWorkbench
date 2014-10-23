@@ -637,11 +637,13 @@ def get_qbuilder_call(request, link):
     if request.GET:
         total_link += "?"
     for param in request.GET:
-        total_link += param + "=" + request.GET[param] + "&"
+        total_link += param + "=" + urlquote(request.GET[param]) + "&"
+
+    print total_link + '\n'
 
     data = requests.get(total_link)
 
-    return HttpResponse(data, "application/javascript")
+    return HttpResponse(data, data.headers['content-type'])
 
 
 # Tools
