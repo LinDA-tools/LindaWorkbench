@@ -598,63 +598,15 @@ def queryBuilder(request):
 
 #Proxy calls - exist as middle-mans between LinDA tranformations page and the r2r server
 def get_qbuilder_call(request, link):
-    total_link = QUERY_BUILDER_SERVER + "api/" + link
+    total_link = QUERY_BUILDER_SERVER + "query/" + link
     if request.GET:
         total_link += "?"
     for param in request.GET:
         total_link += param + "=" + request.GET[param] + "&"
 
-    data = requests.get(QUERY_BUILDER_SERVER + "builder/" + link)
+    data = requests.get(total_link)
 
-    return HttpResponse(data, "application/json")
-'''
-def query_get_class(request):
-    js = requests.get(QUERY_BUILDER_SERVER + 'query/builder_classes.js?search=' + request.GET['search'] + '&dataset=' + request.GET['dataset'])
-    return HttpResponse(js, "application/javascript")
-
-
-def query_class_properties(request):
-    if "all" in request.GET.keys():
-        all = request.GET['all']
-    else:
-        all = "true"
-
-    link = QUERY_BUILDER_SERVER + '/query/class_properties.js?dataset=' + request.GET['dataset'] + "&class_uri=" + request.GET['class_uri'] + "&all=" + all
-    if "type" in request.GET.keys():
-        link = link + "&type=" + request.GET['type']
-        
-    js = requests.get(link)
-    return HttpResponse(js, "application/javascript")
-
-
-def query_class_schema_properties(request):
-    js = requests.get(QUERY_BUILDER_SERVER + "/query/class_schema_properties.js?dataset=" + request.GET['dataset'] + "&class_uri=" + request.GET['class_uri'])
-    return HttpResponse(js, "application/javascript")
-
-
-def query_subclasses(request):
-    js = requests.get(QUERY_BUILDER_SERVER + "/query/subclasses.js?dataset=" +  request.GET['dataset'] + "&class_uri=" + request.GET['class_uri'])
-    return HttpResponse(js, "application/javascript")
-
-
-def query_property_ranges(request):
-    js = requests.get(QUERY_BUILDER_SERVER + "/query/property_ranges.js?property_uri=" + request.GET['property_uri'] + "&type=" + request.GET['type'] + "&dataset=" + request.GET['dataset'] + "&property_name=" + request.GET['property_name'])
-    return HttpResponse(js, "application/javascript")
-
-
-def query_objects(request):
-    js = requests.get(QUERY_BUILDER_SERVER + "/query/builder_objects.js?search=" + request.GET['search'] + "&dataset=" + request.GET['dataset'] + "&classes="  + request.GET['classes'])
-    return HttpResponse(js, "application/javascript")
-'''
-
-def query_execute_sparql(request):
-    # Set headers
-    headers = {'accept': 'application/json'}
-
-    # Send the request
-    resp = requests.get(QUERY_BUILDER_SERVER + "/query/execute_sparql", headers=headers, data={"query": request.GET['query'], "dataset": request.GET['dataset']})
-
-    return HttpResponse(resp.content, "application/json")
+    return HttpResponse(data, "application/javascript")
 
 
 # Tools

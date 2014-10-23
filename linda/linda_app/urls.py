@@ -96,7 +96,6 @@ urlpatterns = patterns('',
                        #Query Builde
 
                        url(r'^query/(?P<link>.*)', views.get_qbuilder_call, name='query-builder-proxy'),
-                       url(r'^query-builder/execute-sparql', views.query_execute_sparql, name='query-execute-sparql'),
                        url(r'^query-builder/', views.queryBuilder,
                            name='query-builder'),
                        url(r'^assets/jar-loading.gif$', RedirectView.as_view(url='/static/images/jar-loading.gif')),
