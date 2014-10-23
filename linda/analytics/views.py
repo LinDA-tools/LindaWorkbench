@@ -25,40 +25,46 @@ import requests
 
 
 def analytics(request):
-    if request.method == 'POST': # If the form has been submitted...
-        # ContactForm was defined in the previous section
-        form = AnalyticsForm(request.POST,request.FILES) # A form bound to the POST data
-        #documentForm = DocumentForm(request.POST,request.FILES)
-        if form.is_valid(): # All validation rules pass
-            # Process the data in form.cleaned_data
-            # file is saved
-            #handle_uploaded_file(request.FILES['document'])
-            new_lindaAnalytics = form.save()
-            #upFile = open(new_lindaAnalytics.resultdocument, 'r')
-            #context = {}
-            #upFile = request.FILES['document']
-            #context = {}
-            #if upFile.multiple_chunks():
-            # context["uploadError"] = "Uploaded file is too big (%.2f MB)." % (upFile.size,)
-            #else:
-            #if upFile.multiple_chunks():
-            # context["uploadError"] = "Uploaded file is too big (%.2f MB)." % (upFile.size,)
-            #else:
-            # context["uploadedFile"] = __unicode__(upFile.read())
-            #f.close()
-            #return HttpResponseRedirect('/thanks/') # Redirect after POST
-            callRESTfulLINDA(new_lindaAnalytics.pk,'lindaAnalytics_analytics')
-            return HttpResponseRedirect(reverse('analytics:detail', args=(new_lindaAnalytics.pk,)))
-    else:
-        #print("hoalaaaaaaaaaaa")
-        form = AnalyticsForm() # An unbound form
-        analytics_list = Analytics.objects.all()
-
-
-    return render(request, 'analytics/analytics.html', {
-        'form': form,'analytics_list': analytics_list
-    })
-
+    if request.user.is_authenticated():
+      if request.method == 'POST': # If the form has been submitted...
+	  # ContactForm was defined in the previous section
+	  form = AnalyticsForm(request.POST,request.FILES) # A form bound to the POST data
+	  #documentForm = DocumentForm(request.POST,request.FILES)
+	  if form.is_valid(): # All validation rules pass
+	      # Process the data in form.cleaned_data
+	      # file is saved
+	      #handle_uploaded_file(request.FILES['document'])
+	      current_user = request.user
+	      new_lindaAnalytics = form.save(commit=False)
+	      new_lindaAnalytics.version = 0
+	      new_lindaAnalytics.user_id = current_user.id
+	      new_lindaAnalytics.save()
+	      #new_lindaAnalytics = form.save()
+	      #upFile = open(new_lindaAnalytics.resultdocument, 'r')
+	      #context = {}
+	      #upFile = request.FILES['document']
+	      #context = {}
+	      #if upFile.multiple_chunks():
+	      # context["uploadError"] = "Uploaded file is too big (%.2f MB)." % (upFile.size,)
+	      #else:
+	      #if upFile.multiple_chunks():
+	      # context["uploadError"] = "Uploaded file is too big (%.2f MB)." % (upFile.size,)
+	      #else:
+	      # context["uploadedFile"] = __unicode__(upFile.read())
+	      #f.close()
+	      #return HttpResponseRedirect('/thanks/') # Redirect after POST
+	      callRESTfulLINDA(new_lindaAnalytics.pk,'lindaAnalytics_analytics')
+	      return HttpResponseRedirect(reverse('analytics:detail', args=(new_lindaAnalytics.pk,)))
+      else:
+	  #print("hoalaaaaaaaaaaa")
+	  form = AnalyticsForm() # An unbound form
+	  analytics_list = Analytics.objects.all()
+	  return render(request, 'analytics/analytics.html', {
+	      'form': form,'analytics_list': analytics_list
+	  })
+    else: 
+      return render(request, 'analytics/noAuthenticatedAccess.html',)
+    
 def __unicode__(self):
         return unicode(self)
 
@@ -131,4 +137,34 @@ def reevaluate(request, analytics_id):
         raise Http404
     #return render(request, 'analytics/detail.html', {'analytics': analytics,'analytics_list': analytics_list})
     return HttpResponseRedirect(reverse('analytics:detail', args=(analytics_id,)))
+  
+   
+def sendRDFToTriplestore(request1 , analytics_id):
+    analytics = get_object_or_404(Analytics, pk=analytics_id)
+    analytics_list = Analytics.objects.all()
+    try:
+	request = urllib2.Request('http://localhost:8181/RESTfulLINDA/rest/analytics/loadtotriplestore/' + str(analytics_id))
+	response = urllib2.urlopen(request)
+	print(response.read())
+        analytics = Analytics.objects.get(pk=analytics_id)
+    except Analytics.DoesNotExist:
+        raise Http404
+    return HttpResponseRedirect(reverse('analytics:detail', args=(analytics_id,)))  
+  
+  
+  
+
+  
+  
+#from django.contrib.auth import authenticate
+#user = authenticate(username='john', password='secret')
+#if user is not None:
+    # the password verified for the user
+#    if user.is_active:
+#        print("User is valid, active and authenticated")
+#    else:
+#        print("The password is valid, but the account has been disabled!")
+#else:
+    # the authentication system was unable to verify the username and password
+#    print("The username and password were incorrect.")
 

@@ -8,6 +8,7 @@ urlpatterns = patterns('',
     #url(r'^delete/(?P<analytics_id>\d+)/$', views.analytics_delete,name='analytics_delete',),
     url(r'^(?P<pk>\d+)/delete/$', views.AnalyticsDeleteView.as_view(),name='analytics-delete'),
     url(r'^(?P<analytics_id>\d+)/reevaluate/$', views.reevaluate,name='reevaluate'),
+    url(r'^(?P<analytics_id>\d+)/sendRDFToTriplestore/$', views.sendRDFToTriplestore,name='sendRDFToTriplestore'),
     url(r'^list/$', 'list', name='list'),
     url(r'^ajax$', views.ajax, name='ajax'),
 )

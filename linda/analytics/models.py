@@ -6,7 +6,9 @@ import os
 # Create your models here.
 
 EXPORT_CHOICES = (
-    ('rdf', 'rdf/xml'),
+    ('RDFXML', 'rdf/xml'),
+    ('TTL', 'Turtle'),
+    ('NTRIPLES', 'N-Triples'),   
     ('csv', 'csv'),
     ('arff', 'arff'),
     ('txt', 'txt'),
@@ -16,7 +18,7 @@ class Category(models.Model):
     name = models.CharField(max_length=400)
     description = models.CharField(max_length=400)
     def __str__(self):
-        return self.name
+        return self.name   
 
 
 class Algorithm(models.Model):
@@ -43,6 +45,7 @@ class Document(models.Model):
 
 
 class Analytics(models.Model):
+    description = models.TextField(max_length=500)
     category = models.ForeignKey(Category)
     algorithm = models.ForeignKey(Algorithm)
     #document = models.ForeignKey(Document)
@@ -53,6 +56,11 @@ class Analytics(models.Model):
     processinfo = models.FileField(upload_to='./analytics/documents/results/')
     resultdocument = models.FileField(upload_to='./analytics/documents/results/')
     exportFormat = models.CharField(max_length=20, choices=EXPORT_CHOICES)
+    publishedToTriplestore = models.BooleanField(default=False)
+    version = models.IntegerField()
+    loadedRDFContext = models.TextField(max_length=500)
+    processMessage = models.TextField(max_length=300)
+    user_id = models.IntegerField()
     def __str__(self):
         return self.name
     def display_resultdocument_file(self):
@@ -69,6 +77,15 @@ class Analytics(models.Model):
          if os.path.isfile(self.processinfo.path):
            fp = open(self.processinfo.path);
            return fp.read()
+    def isExportFormatRDFXML(self):
+         if self.exportFormat=="RDFXML":
+           return "RDFXML" 
+    def isExportFormatTTL(self):
+         if self.exportFormat=="TTL":
+           return "TTL" 
+    def isExportFormatNTRIPLES(self):
+         if self.exportFormat=="NTRIPLES":
+           return "NTRIPLES" 	 
     def delete(self, *args, **kwargs):
 	    ##delete document file
 	    # You have to prepare what you need before delete the model

@@ -22,8 +22,8 @@ class analyticsRouter(object):
     
     def allow_syncdb(self, db, model):
         if db == 'analytics' or model._meta.app_label == "analytics":
-            return False # we're not using syncdb on our legacy database
+            return True # we're not using syncdb on our legacy database
         else: # but all other models/databases are fine
-            return True
+            return False
 
  

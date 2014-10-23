@@ -6,8 +6,10 @@ from analytics.models import Category, Algorithm, Analytics, Params, Document
     
 class AnalyticsForm(forms.ModelForm):
     class Meta:
-        model = Analytics  
-            
+        model = Analytics   
+        exclude = ('version','user_id','loadedRDFContext','processMessage',)         
+         
+    description = forms.CharField(widget=forms.Textarea(attrs={'cols': 70, 'rows': 4}))
     document = forms.FileField(
         label='Select a file',
         help_text='max. 42 megabytes'
