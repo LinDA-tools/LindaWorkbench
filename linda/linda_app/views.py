@@ -9,6 +9,7 @@ from django.views.generic import ListView, UpdateView, DetailView, DeleteView
 
 import json
 import requests
+import xmltodict
 
 from forms import *
 from rdflib import Graph
@@ -437,7 +438,8 @@ def datasources(request):
 def datasourceCreate(request):
     params = {'types': {('public', 'Public'), ('private', 'Private')},
                   'datatypes': {('csv', 'CSV file'), ('db', 'Database (relational)'), ('xls', 'Excel file'),
-                                ('rdf', 'RDF file')}}
+                                ('rdf', 'RDF file')},
+                  'action': "create"}
     params['typeSelect'] = forms.Select(choices=params['types']).render('type', '', attrs={"id": 'id_type',})
     params['datatypeSelect'] = forms.Select(choices=params['datatypes']).render('datatype', '', attrs={"id": 'id_datatype',})
 
@@ -448,11 +450,11 @@ def datasourceCreate(request):
         else:
             if not request.POST.get("title"):  # title is obligatory
                 params["error"] = "A datasource title must be specified"
-                return render(request, 'datasource/create.html', params)
+                return render(request, 'datasource/form.html', params)
 
             if not request.POST.get("endpoint"):  # endpoint is obligatory
                 params["error"] = "A public sparql enpoint must be specified"
-                return render(request, 'datasource/create.html', params)
+                return render(request, 'datasource/form.html', params)
 
             # Try to verify that the endpoint uri exists
             validate = URLValidator()
@@ -460,7 +462,7 @@ def datasourceCreate(request):
                 validate('http://www.somelink.com/to/my.pdf')
             except ValidationError, e:
                 params["error"] = "Invalid sparql enpoint (url does not exist) - " + e
-                return render(request, 'datasource/create.html', params)
+                return render(request, 'datasource/form.html', params)
 
             #find the slug
             sname = slugify(request.POST.get("title"))
@@ -471,22 +473,55 @@ def datasourceCreate(request):
             # go to view all datasources
             return redirect("/datasources/")
     else:  # create form elements and various categories
-        return render(request, 'datasource/create.html', params)
+        return render(request, 'datasource/form.html', params)
 
 
 def datasourceReplace(request, name):
+    if not DatasourceDescription.objects.filter(name=name):  #datasource does not exist
+        return redirect("/datasources/")
+
+    datasource = DatasourceDescription.objects.filter(name=name)[0]
+
+    params = {}
+    params['action'] = "replace"
+    params['datasource'] = datasource
+    params['types'] = {('private', 'Private'), ('public', 'Public')}
+    params['datatypes'] = {('csv', 'CSV file'), ('db', 'Database (relational)'), ('xls', 'Excel file'), ('rdf', 'RDF file')}
+
+    params['typeSelect'] = forms.Select(choices=params['types']).render('type', '', attrs={"id": 'id_type',})
+    params['datatypeSelect'] = forms.Select(choices=params['datatypes']).render('datatype', '', attrs={"id": 'id_datatype',})
+
     if request.POST:
         if request.POST.get("type") == "private":
             return redirect("/datasource/" + name + "/replace/" + request.POST.get("datatype"))
+        else:
+            datasource.is_public = True
+
+            if not request.POST.get("title"):  # title is obligatory
+                params["error"] = "A datasource title must be specified"
+                return render(request, 'datasource/form.html', params)
+
+            datasource.title = request.POST.get("title")
+            datasource.name = slugify(datasource.title)
+
+            if not request.POST.get("endpoint"):  # endpoint is obligatory
+                params["error"] = "A public sparql enpoint must be specified"
+                return render(request, 'datasource/form.html', params)
+
+            # Try to verify that the endpoint uri exists
+            validate = URLValidator()
+            try:
+                validate('http://www.somelink.com/to/my.pdf')
+            except ValidationError, e:
+                params["error"] = "Invalid sparql enpoint (url does not exist) - " + e
+                return render(request, 'datasource/form.html', params)
+
+            datasource.uri = request.POST.get("endpoint")
+            datasource.save()  # save changed object to the database
+
+            return redirect("/datasources/")
     else:
-        params = {}
-        params['types'] = {('private', 'Private'), ('public', 'Public')}
-        params['datatypes'] = {('csv', 'CSV file'), ('db', 'Database (relational)'), ('xls', 'Excel file'), ('rdf', 'RDF file')}
-
-        params['typeSelect'] = forms.Select(choices=params['types']).render('type', '', attrs={"id": 'id_type',})
-        params['datatypeSelect'] = forms.Select(choices=params['datatypes']).render('datatype', '', attrs={"id": 'id_datatype',})
-
-        return render(request, 'datasource/replace.html', params)
+        return render(request, 'datasource/form.html', params)
 
 
 def datasourceCreateRDF(request):

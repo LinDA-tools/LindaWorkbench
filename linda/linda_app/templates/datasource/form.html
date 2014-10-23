@@ -2,12 +2,12 @@
 {% load url from future %}
 {% load i18n thumbnail2 %}
 {% load app_filters %}
-{% block title %}{% trans "Create datasource"%} | LinDA{% endblock %}
+{% block title %}{% if action == "create"%}Create a new datasource{% else %}Replace an existing datasource{% endif%} | LinDA{% endblock %}
 {% block bodyclass %}datasource-create{% endblock %}
 
 {% block content %}
 <div class="main">
-    <h1 class="page-title inline">{% trans "Create datasource"%}</h1>
+    <h1 class="page-title inline">{% if action == "create"%}Create a new datasource{% else %}Replace an existing datasource{% endif%}</h1>
 
     <form class="form datasource-create-form" method="post" action="." enctype="multipart/form-data">{% csrf_token %}
 
@@ -26,10 +26,10 @@
 
         <div class="endpoint-container">
             <label for="title">{% trans "Title"%}:</label>
-            <input type="text" name="title" />
+            <input type="text" name="title" {%if datasource%}value="{{datasource.title}}"{% endif %}/>
 
             <label for="endpoint">{% trans "Public endpoint uri"%}:</label>
-            <input type="url" name="endpoint" placeholder="http://www.example.com/sparql" />
+            <input type="url" name="endpoint" placeholder="http://www.example.com/sparql" {%if datasource and datasource.is_public%}value="{{datasource.uri}}"{% endif %}/>
         </div>
 
         <div class="datatype-container" style="display: none;">
@@ -43,7 +43,7 @@
 
         <div class="submit-box">
             <label for="datatype"></label>
-            <input type="submit" class="button blue create-datasource-submit" value='{% trans "Create"%}'/>
+            <input type="submit" class="button blue create-datasource-submit" value='{% if action == "create"%}Create{% else %}Replace{% endif%}'/>
         </div>
     </form>
 </div>
@@ -67,7 +67,11 @@
                 $(".datatype-container").hide();
                 $(".endpoint-container").show();
 
-                $(".submit-box input").val( '{% trans "Create" %}' );
+                {% if action == "create"%}
+                    $(".submit-box input").val( '{% trans "Create" %}' );
+                {% else %}
+                    $(".submit-box input").val( '{% trans "Replace" %}' );
+                {% endif%}
             } else {
                 $(".endpoint-container").hide();
                 $(".datatype-container").show();
