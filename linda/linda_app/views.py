@@ -468,17 +468,11 @@ def datasourceCreate(request):
             new_datasource = DatasourceDescription.objects.create(title=request.POST.get("title"), is_public=True, name=sname, uri=request.POST.get("endpoint"), createdOn=datetime.now(), lastUpdateOn=datetime.now())
             new_datasource.save()
 
-
-
-
-
             # go to view all datasources
             return redirect("/datasources/")
-
-
-
     else:  # create form elements and various categories
         return render(request, 'datasource/create.html', params)
+
 
 def datasourceReplace(request, name):
     if request.POST:
@@ -493,6 +487,7 @@ def datasourceReplace(request, name):
         params['datatypeSelect'] = forms.Select(choices=params['datatypes']).render('datatype', '', attrs={"id": 'id_datatype',})
 
         return render(request, 'datasource/replace.html', params)
+
 
 def datasourceCreateRDF(request):
     if request.POST:
@@ -525,6 +520,7 @@ def datasourceCreateRDF(request):
 
         return render(request, 'datasource/create_rdf.html', params)
 
+
 def datasourceReplaceRDF(request, dtname):
     if request.POST:
         #Get the posted rdf data
@@ -554,11 +550,13 @@ def datasourceReplaceRDF(request, dtname):
 
         return render(request, 'datasource/replace_rdf.html', params)
 
+
 def datasourceDownloadRDF(request, dtname):
     callDatasource = requests.get(LINDA_HOME + "api/datasource/" + dtname + "/")
     data = json.loads(callDatasource.text)['content']
     mimetype = "application/xml+rdf"
     return HttpResponse(data, mimetype)
+
 
 def datasourceDelete(request, dtname):
     # get the datasource with this name
@@ -587,6 +585,8 @@ def datasourceDelete(request, dtname):
         params['title'] = datasource.title
 
         return render(request, 'datasource/delete.html', params)
+
+
 #Query builder
 def queryBuilder(request):
     params = {}
@@ -596,7 +596,18 @@ def queryBuilder(request):
     params['mode'] = "builder"
     return render(request, 'query-builder/index.html', params)
 
+#Proxy calls - exist as middle-mans between LinDA tranformations page and the r2r server
+def get_qbuilder_call(request, link):
+    total_link = QUERY_BUILDER_SERVER + "api/" + link
+    if request.GET:
+        total_link += "?"
+    for param in request.GET:
+        total_link += param + "=" + request.GET[param] + "&"
 
+    data = requests.get(QUERY_BUILDER_SERVER + "api/" + link)
+
+    return HttpResponse(data, "application/json")
+'''
 def query_get_class(request):
     js = requests.get(QUERY_BUILDER_SERVER + 'query/builder_classes.js?search=' + request.GET['search'] + '&dataset=' + request.GET['dataset'])
     return HttpResponse(js, "application/javascript")
@@ -634,6 +645,7 @@ def query_property_ranges(request):
 def query_objects(request):
     js = requests.get(QUERY_BUILDER_SERVER + "/query/builder_objects.js?search=" + request.GET['search'] + "&dataset=" + request.GET['dataset'] + "&classes="  + request.GET['classes'])
     return HttpResponse(js, "application/javascript")
+'''
 
 def query_execute_sparql(request):
     # Set headers

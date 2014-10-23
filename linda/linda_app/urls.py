@@ -94,12 +94,16 @@ urlpatterns = patterns('',
                            name='datasource-delete'),
 
                        #Query Builder
+                       '''
                        url(r'^query-builder/classes', views.query_get_class, name='query-builder-classes'),
                        url(r'^query-builder/subclasses', views.query_subclasses, name='query-subclasses'),
                        url(r'^query-builder/class-properties', views.query_class_properties, name='query-class-properties'),
                        url(r'^query-builder/class-schema-properties', views.query_class_schema_properties, name='query-class-schema-properties'),
                        url(r'^query-builder/property-ranges', views.query_property_ranges, name='query-property-ranges'),
                        url(r'^query-builder/objects', views.query_objects, name='query-objects'),
+                       '''
+
+                       url(r'^query/', url(r'^query-builder/execute-sparql',views.get_qbuilder_call, name='query-builder-proxy'),
                        url(r'^query-builder/execute-sparql', views.query_execute_sparql, name='query-execute-sparql'),
                        url(r'^query-builder/', views.queryBuilder,
                            name='query-builder'),
