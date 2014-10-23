@@ -8,10 +8,8 @@ from django.views.generic import ListView, UpdateView, DetailView, DeleteView
 
 from django.shortcuts import render_to_response
 from django.template import RequestContext
-from django.utils import simplejson
+import simplejson
 import socket
-
-
 
 from analytics.models import Analytics,Algorithm
 

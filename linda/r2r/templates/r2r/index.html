@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block bodyclass %}transformations{% endblock %}
+{% block bodytype %}ng-app="app"{% endblock %}
+{% block css %}
+    <link rel="stylesheet" href="/static/r2r/styles/main.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+{% endblock %}
+
+{% block content %}
+    <!--[if lt IE 7]>
+      <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+    <![endif]-->
+
+    <!-- Add your site or application content here -->
+    <div ng-view="main">
+    </div>
+
+    <!-- Google Analytics: change UA-XXXXX-X to be your site's ID -->
+    <!--  <script> -->
+    <!--    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){ -->
+    <!--    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o), -->
+    <!--    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m) -->
+    <!--    })(window,document,'script','//www.google&#45;analytics.com/analytics.js','ga'); -->
+
+    <!--    ga('create', 'UA&#45;XXXXX&#45;X'); -->
+    <!--    ga('send', 'pageview'); -->
+    <!-- </script> -->
+
+    <script>
+        R2R_PROXY = '{{R2R_PROXY}}'
+    </script>
+    <!--[if lt IE 9]>
+    <script src="/static/r2r/bower_components/es5-shim/es5-shim.js"></script>
+    <script src="/static/r2r/bower_components/json3/lib/json3.min.js"></script>
+    <![endif]-->
+
+    <!-- build:js scripts/vendor.js -->
+    <!-- bower:js -->
+    <!--<script src="/static/r2r/bower_components/jquery/src/jquery.js"></script>-->
+    <script src="/static/js/jquery.min.js"></script>
+    <script src="/static/r2r/bower_components/angular/angular.js"></script>
+
+   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <script src="/static/r2r/bower_components/angular-resource/angular-resource.js"></script>
+    <script src="/static/r2r/bower_components/angular-cookies/angular-cookies.js"></script>
+    <script src="/static/r2r/bower_components/angular-sanitize/angular-sanitize.js"></script>
+    <script src="/static/r2r/bower_components/angular-route/angular-route.js"></script>
+    <script src="/static/r2r/bower_components/angular-animate/angular-animate.js"></script>
+    <script src="/static/r2r/bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
+    <script src="/static/r2r/bower_components/jsedn/jsedn.js"></script>
+    <script src="/static/r2r/bower_components/angular-scroll/angular-scroll.min.js"></script>
+    <script src="/static/r2r/bower_components/underscore/underscore.js"></script>
+    <!-- endbower -->
+    <!-- endbuild -->
+
+        <!-- build:js({.tmp,app}) scripts/scripts.js -->
+        <script src="/static/r2r/scripts/app.js"></script>
+        <script src="/static/r2r/scripts/services/jsedn.js"></script>
+        <script src="/static/r2r/scripts/services/config.js"></script>
+        <script src="/static/r2r/scripts/services/rdb.js"></script>
+        <script src="/static/r2r/scripts/services/rdf.js"></script>
+        <script src="/static/r2r/scripts/services/vocab.js"></script>
+        <script src="/static/r2r/scripts/services/r2rs.js"></script>
+        <script src="/static/r2r/scripts/services/underscore.js"></script>
+        <script src="/static/r2r/scripts/services/oracle.js"></script>
+        <script src="/static/r2r/scripts/directives/config.js"></script>
+        <script src="/static/r2r/scripts/directives/rdb.js"></script>
+        <script src="/static/r2r/scripts/directives/rdf.js"></script>
+        <script src="/static/r2r/scripts/directives/mappings.js"></script>
+        <script src="/static/r2r/scripts/directives/vocab.js"></script>
+        <script src="/static/r2r/scripts/directives/wizard.js"></script>
+        <script src="/static/r2r/scripts/directives/playground.js"></script>
+        <script src="/static/r2r/scripts/controllers/main.js"></script>
+        <script src="/static/r2r/scripts/controllers/rdb.js"></script>
+        <script src="/static/r2r/scripts/controllers/rdf.js"></script>
+        <script src="/static/r2r/scripts/controllers/vocab.js"></script>
+        <script src="/static/r2r/scripts/controllers/config.js"></script>
+        <script src="/static/r2r/scripts/controllers/oracle.js"></script>
+        <!-- endbuild -->
+{% endblock %}

@@ -1,0 +1,15 @@
+<div ng-controller="MappingsCtrl"> 
+  <form class="form-horizontal" role="form">
+    <div class="form-group">
+      <div id="dataSourceSelect" class="col-md-6">
+        <select class="form-control" ng-model="mapping" ng-options="datasource.name for datasource in config.datasources">
+          <option value="">Choose mapping ...</option>
+        </select>
+      </div>
+      <div class="col-md-4">
+        <button class="btn btn-primary" ng-click="newDatasource()"><span class="glyphicon glyphicon-plus"></span><!-- New --></button>
+        <button class="btn btn-default" ng-click="editDatasource()"><span class="glyphicon glyphicon-wrench"></span><!-- Configure --></button>
+      </div>
+    </div>
+  </form>
+</div>

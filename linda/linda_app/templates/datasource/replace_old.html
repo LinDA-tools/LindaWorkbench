@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% load url from future %}
+{% load i18n thumbnail2 %}
+{% load app_filters %}
+{% block title %}{{page_title}} | LinDA{% endblock %}
+{% block bodyclass %}datasource-create{% endblock %}
+
+{% block content %}
+<div class="main">
+    <h1 class="page-title inline">{{page_title}}</h1>
+
+    <form class="form datasource-create-form" method="post" action="." enctype="multipart/form-data">{% csrf_token %}
+
+        <div>
+            <label for="type">{% trans "Type"%}:</label>
+
+            {% with field=typeSelect id="type" options=types default="Private"%}
+                {% include 'util/prettydropdown.html' %}
+            {% endwith %}
+
+        </div>
+
+        <div>
+            <label for="datatype">{% trans "Data type"%}:</label>
+
+            {% with field=datatypeSelect id="datatype" options=datatypes default="Select the data type"%}
+                {% include 'util/prettydropdown.html' %}
+            {% endwith %}
+
+        </div>
+
+        <div class="submit-box">
+            <label for="datatype"></label>
+            <input type="submit" class="button blue create-datasource-submit" value='{% trans "Replace"%}'/>
+        </div>
+    </form>
+</div>
+{% endblock %}
+
+{% block scripts %}
+    {% with field="" id="type" %}
+        {% include 'util/prettydropdown_js.html' %}
+    {% endwith %}
+
+    {% with field="" id="datatype" %}
+        {% include 'util/prettydropdown_js.html' %}
+    {% endwith %}
+{% endblock %}

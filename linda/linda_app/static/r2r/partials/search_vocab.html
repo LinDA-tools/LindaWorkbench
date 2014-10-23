@@ -1,0 +1,16 @@
+<div class="modal-header">
+  <h3>{{title}}</h3>
+</div>
+<div class="modal-body">
+  <ul class="list-group">
+    <a href="#" class="list-group-item" ng-click="select(vocab)" ng-repeat="vocab in items">
+      <p>
+        <span class="link">{{vocab.uri}}</span>
+      </p>
+      <p>
+        <span class="text-muted">{{vocab.prefix}}</span>
+        <span class="score">{{vocab.score}}</span>
+      </p>
+    </a>
+  </ul>
+</div>

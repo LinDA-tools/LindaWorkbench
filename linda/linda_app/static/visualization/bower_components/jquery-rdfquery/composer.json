@@ -1,0 +1,29 @@
+{
+    "name": "components/jquery-rdfquery",
+    "description": "jQuery rdfQuery",
+    "type": "component",
+    "homepage": "https://code.google.com/p/rdfquery/",
+    "license": "MIT",
+    "support": {
+        "issues": "https://code.google.com/p/rdfquery/issues/list",
+        "wiki": "https://code.google.com/p/rdfquery/w/list",
+        "source": "https://code.google.com/p/rdfquery/source/checkout"
+    },
+    "require": {
+        "components/jquery": ">=1.8.0"
+    },
+    "extra": {
+        "component": {
+            "scripts": [
+                "js/jquery.rdfquery.core.js",
+                "js/jquery.rdfquery.rdfa.js",
+                "js/jquery.rdfquery.rules.js"
+            ],
+            "shim": {
+                "deps": [
+                    "jquery"
+                ]
+            }
+        }
+    }
+}

@@ -1,0 +1,20 @@
+<div class="container">
+    <div id="header">
+        <nav class="top-bar" data-topbar role="navigation">
+            <ul class="title-area">
+               <li class="name">
+                    <h1>{{#link-to "index"}}LinDa VIS{{/link-to}}</h1>
+                </li>
+            </ul>
+            <section class="top-bar-section">
+                <ul class="right">
+                    <li>{{#link-to "upload"}}Upload data{{/link-to}}</li>
+                </ul>
+            </section>
+        </nav>
+    </div>
+
+    <div class="row left-collapse">
+        {{outlet}}
+    </div>
+</div>
