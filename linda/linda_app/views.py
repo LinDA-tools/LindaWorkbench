@@ -846,8 +846,6 @@ def api_datasource_delete(request, dtname):
 #Get a query for a specific private datasource and execute it
 @csrf_exempt
 def datasource_sparql(request, dtname):  # Acts as a "fake" seperate sparql endpoint for each datasource
-
-
     results = {}
 
     if not request.GET:  # request must be get
@@ -880,6 +878,7 @@ def datasource_sparql(request, dtname):  # Acts as a "fake" seperate sparql endp
 
     # Find where to add the FROM NAMED clause
     query = request.GET.get("query")
+
     pos = query.find("WHERE")
     query = query[:pos] + " FROM <" + datasource.uri + "> " + query[pos:]
     query = query.replace('?object rdf:type ?class', '')
@@ -887,8 +886,11 @@ def datasource_sparql(request, dtname):  # Acts as a "fake" seperate sparql endp
     # encode the query
     query_enc = urlquote(query, safe='')
 
-    data = requests.get(PRIVATE_SPARQL_ENDPOINT + "?query=" + query_enc).text
+    # get query results and turn them into json
+    data = requests.get(PRIVATE_SPARQL_ENDPOINT + "?Accept=" +urlquote("application/sparql-results+xml") + "&query=" + query_enc).text
+    data_json = json.dumps( xmltodict.parse(data) )
 
     # return the response
-    return HttpResponse(data, "application/sparql-results+xml")
+    return HttpResponse(data_json, "application/json")
+
 

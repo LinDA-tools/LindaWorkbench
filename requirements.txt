@@ -10,3 +10,4 @@ django-haystack
 pyelasticsearch
 elasticsearch
 MySQL-python
+xmltodict
