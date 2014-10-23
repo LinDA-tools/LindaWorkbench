@@ -95,7 +95,7 @@ urlpatterns = patterns('',
 
                        #Query Builde
 
-                       url(r'^query/', views.get_qbuilder_call, name='query-builder-proxy'),
+                       url(r'^query/(?P<link>.*)', views.get_qbuilder_call, name='query-builder-proxy'),
                        url(r'^query-builder/execute-sparql', views.query_execute_sparql, name='query-execute-sparql'),
                        url(r'^query-builder/', views.queryBuilder,
                            name='query-builder'),

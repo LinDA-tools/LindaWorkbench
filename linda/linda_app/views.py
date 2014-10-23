@@ -604,7 +604,7 @@ def get_qbuilder_call(request, link):
     for param in request.GET:
         total_link += param + "=" + request.GET[param] + "&"
 
-    data = requests.get(QUERY_BUILDER_SERVER + "api/" + link)
+    data = requests.get(QUERY_BUILDER_SERVER + "builder/" + link)
 
     return HttpResponse(data, "application/json")
 '''
