@@ -26,6 +26,6 @@ def get_api_call(request, link):
     for param in request.GET:
         total_link += param + "=" + request.GET[param] + "&"
 
-    data = requests.get(R2R_SERVER + "api/" + link)
+    data = requests.get(total_link)
 
     return HttpResponse(data, data.headers['content-type'])
