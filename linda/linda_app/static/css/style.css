@@ -240,7 +240,11 @@ header .site-title:hover {
     height: calc(100vh - 109px);
 }
 
-.main {
+.transformations .container * {
+    box-sizing: border-box;
+}
+
+:not(".main") .main {
     width: calc(100% - 350px);
     padding: 10px 10px 50px 10px;
     display: inline-block;
@@ -956,11 +960,11 @@ form input[type="submit"] {
     padding: 10px 20px;
 }
 
-.container, .table {
+:not(".transformations") .container, .table {
     display: table;
 }
 
-.container div, .row {
+:not(".transformations") .container div, .row {
     display: table-row;
 }
 
@@ -968,7 +972,7 @@ form input[type="submit"] {
 	display: block;
 }
 
-.container label, .container span, .cell {
+:not(".transformations") .container label, .container span, .cell {
     display: table-cell;
 }
 
