@@ -28,6 +28,13 @@
 </body>
 
 <script src="/static/js/jquery.min.js"></script>
+
+<script> <!--mobile menu script -->
+    $( "#menu-select option" ).on('click', (function() {
+        window.location = $(this).val();
+    }));
+</script>
+
 {% block scripts %}{% endblock %}
 
 </html>
