@@ -108,7 +108,7 @@ def ajax(request):
         results = [ob.as_json() for ob in algorithmsPerCategory]
         response_dict = {}
         response_dict.update({'algorithmsPerCategory': results })
-        return HttpResponse(simplejson.dumps(response_dict), mimetype='application/javascript')
+        return HttpResponse(simplejson.dumps(response_dict), content_type='application/javascript')
     else:
         return render_to_response('ajaxexample.html', context_instance=RequestContext(request))
 
