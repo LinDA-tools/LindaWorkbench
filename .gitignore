@@ -65,6 +65,8 @@ jsonLDdump/koukli
 linda/linda.db
 linda/graphdb/deepGraphFile_321763af3ed32e1bb47233944ef6bc74_140512_191741
 
+#Migrations
+
 #ElasticSearch
 linda/elasticsearch-0.90.1/data
 linda/.idea/workspace.xml

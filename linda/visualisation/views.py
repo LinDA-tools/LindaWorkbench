@@ -9,5 +9,6 @@ def visualizations(request):
 def visualizeDatasource(request, **kwargs):
     params = {}
     params['datasource'] = DatasourceDescription.objects.get(name=kwargs.get('dtname'))
+    params['page_visualizations'] = True
 
     return render(request, 'visual/datasource.html', params)

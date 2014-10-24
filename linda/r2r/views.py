@@ -14,6 +14,7 @@ def transform(request):
     params = {}
     params['R2R_PROXY'] = R2R_PROXY
     params['csrf_token'] = csrf(request)
+    params['page_transformations'] = True
 
     return render_to_response("r2r/index.html", params)
 

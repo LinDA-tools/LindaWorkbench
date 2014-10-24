@@ -23,6 +23,11 @@ html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockq
     box-sizing: border-box;
 }
 
+.sparql header *, .sparql #menu, .sparql #menu-select-area,
+.query-builder  header *, .query-builder #menu, .query-builder #menu-select-area {
+    box-sizing: content-box;
+}
+
 html {
     overflow-y: scroll;
 }
@@ -221,6 +226,41 @@ header .site-title:hover {
     background-color: #D4D4D4;
 }
 
+#menu-select-area {
+    background: #F3F3F3;
+    display: none;
+}
+
+@media only screen and (max-width: 690px){
+    #menu {
+        display: block;
+        width: 100%;
+        min-height: 0;
+    }
+
+    #menu {
+        display: none;
+    }
+
+    #menu-select-area {
+        display: block;
+        padding-bottom: 10px;
+    }
+
+    #menu-select-area ul li {
+        display: inline-block;
+    }
+
+    #menu-select-area select {
+        padding: 5px 15px;
+        color: #aaa;
+    }
+
+    .main {
+        padding: 5px;
+    }
+}
+
 .secondary-menu {
     padding: 15px;
 }
@@ -282,6 +322,10 @@ footer a {
     width: calc(100% - 70px);
     height: 30px;
     background: #fff;
+}
+
+.sparql .menu-search input[type="text"] {
+    height: 30px !important;
 }
 
 .community .ui-autocomplete {
@@ -655,7 +699,7 @@ form input[type="submit"] {
 
 .comment-text-new-comment .button {
     border-radius: 0;
-    width: calc(100% - 20px);
+    display: block;
 }
 
 #comment-text-input {
@@ -754,8 +798,14 @@ form input[type="submit"] {
 }
 
 @media only screen and (max-width: 1190px){
+    .main content {
+        display: block;
+        padding: 10px;
+    }
+
     .main aside {
-        width: calc(100% - 82px);
+        display: block;
+        padding: 10px 30px 10px 50px;
     }
 }
 
@@ -1421,6 +1471,7 @@ input, textarea {
 
 .welcome-message {
     width: calc(100% - 370px);
+    min-width: 300px;
     display: inline-block;
     vertical-align: top;
     padding: 0 5px;

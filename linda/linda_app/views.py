@@ -23,20 +23,10 @@ from settings import SESAME_LINDA_URL, LINDA_HOME, RDF2ANY_SERVER, PRIVATE_SPARQ
 def index(request):
     params = {}
     params['recent_datasources'] = DatasourceDescription.objects.all().order_by('createdOn')[:3]
+    params['page_home'] = True
 
     return render(request, 'index.html', params)
-def analytics(request):
-    params = {}
 
-
-    return render(request, 'analytics/index.html', params)
-
-
-def analyzeDatasource(request, **kwargs):
-    params = {}
-    params['datasource'] = DatasourceDescription.objects.get(name=kwargs.get('dtname'))
-
-    return render(request, 'analytics/datasource.html', params)
 
 def openDatasource(request):
     params = {}
@@ -51,6 +41,7 @@ def terms(request):
 def sparql(request):
     params = {}
     params['mode'] = "sparql"
+    params['page_sparql'] = True
 
     return render(request, 'sparql.html', params)
 
@@ -271,9 +262,13 @@ class VocabularyListView(ListView):
     context_object_name = 'vocabularies'
     paginate_by = 10
 
+    def get_context_data(self, **kwargs):
+        context = super(VocabularyListView, self).get_context_data(**kwargs)
+        context['page_vocabularies'] = True
+        return context
+
     def get_queryset(self):
         qs = super(VocabularyListView, self).get_queryset().order_by('-lodRanking')
-        print qs
         return qs
 
 
@@ -424,7 +419,7 @@ def datasources(request):
     params = {}
     params['sortOptions'] = {('title', 'Title'), ('date', 'Date')}
     params['sortBy'] = forms.Select(choices=params['sortOptions']).render('sortBy', '', attrs={"id": 'id_sortBy',})
-
+    params['page_datasources'] = True
 
     if request.GET.get("sort") == "title":
         params['datasources'] = DatasourceDescription.objects.all().order_by('title')
@@ -629,6 +624,8 @@ def queryBuilder(request):
     params['PRIVATE_SPARQL_ENDPOINT'] = PRIVATE_SPARQL_ENDPOINT
     params['RDF2ANY_SERVER'] = RDF2ANY_SERVER
     params['mode'] = "builder"
+    params['page_qbuilder'] = True
+
     return render(request, 'query-builder/index.html', params)
 
 #Proxy calls - exist as middle-mans between LinDA tranformations page and the r2r server
