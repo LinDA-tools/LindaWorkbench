@@ -44,7 +44,9 @@ class AnalyticsForm(forms.ModelForm):
 
 class DocumentForm(forms.ModelForm):
     class Meta:
-            model=Document    
+        model = Document
+        exclude = ()
+
     document = forms.FileField(
         label='Select a file'
     )
