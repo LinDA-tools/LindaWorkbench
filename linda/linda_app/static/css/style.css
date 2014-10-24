@@ -253,7 +253,7 @@ header .site-title:hover {
 }
 
 .vocabulary-details .main {
-    width: calc(100% - 265px);
+    /*width: calc(100% - 265px);*/
 }
 
 .page-title {
@@ -752,6 +752,13 @@ form input[type="submit"] {
     background: #DADFE1;
     color: #859596;
 }
+
+@media only screen and (max-width: 1190px){
+    .main aside {
+        width: calc(100% - 82px);
+    }
+}
+
 .main aside1 {
     color: #859596;
 }
@@ -768,7 +775,7 @@ form input[type="submit"] {
     font-weight: 300;
 }
 
-@media only screen and (min-width: 760px) {
+@media only screen and (min-width: 1190px) {
     .main content, .main aside,.main aside1 {
         display: inline-block;
     }
@@ -778,14 +785,7 @@ form input[type="submit"] {
         padding: 10px;
     }
 
-    .main aside {
-        width: calc(30% - 105px);
-        padding: 10px 30px 10px 50px;
-        border-left: 1px solid #ABB7B7;
-        min-height: 780px;
-        vertical-align: top;
-    }
-        .main aside1 {
+    .main aside, .main aside1 {
         width: calc(30% - 105px);
         padding: 10px 30px 10px 50px;
         min-height: 780px;
@@ -805,7 +805,7 @@ form input[type="submit"] {
         width: 100%;
     }
 
-    .main aside ,.main aside1{
+    .main aside1{
         border-top: 1px solid #ABB7B7;
         width: 80%;
         padding: 10px 0 10px 20px;
