@@ -280,8 +280,11 @@ header .site-title:hover {
     height: calc(100vh - 109px);
 }
 
-.transformations .container * {
-    box-sizing: border-box;
+@media only screen and (max-width: 690px){
+    #main-container {
+        height: 100%;
+        display: block;
+    }
 }
 
 :not(".main") .main {
@@ -298,6 +301,21 @@ header .site-title:hover {
 
 .page-title {
     font-size: 32px;
+}
+
+/* Transformations */
+
+.transformations .container * {
+    box-sizing: border-box;
+}
+
+.ng-scope .header .nav {
+    display: none;
+}
+
+.ng-scope .form-horizontal .form-group {
+    margin-right: 0;
+    margin-left: 0;
 }
 
 /* Footer */

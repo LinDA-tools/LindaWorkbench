@@ -33,6 +33,10 @@
     $( "#menu-select option" ).on('click', (function() {
         window.location = $(this).val();
     }));
+
+    $( "#menu-select" ).on('input', (function() {
+        window.location = $(this).val();
+    }));
 </script>
 
 {% block scripts %}{% endblock %}
