@@ -5,8 +5,8 @@ import requests
 
 from linda_app.settings import LINDA_SERVER_IP
 
-R2R_SERVER = "http://107.170.70.175" + ":3000/"
-R2R_PROXY = "http://localhost" + ":8000/transformations"
+R2R_SERVER = LINDA_SERVER_IP + ":3000/"
+R2R_PROXY = "/transformations"
 
 
 # Transformation page view
