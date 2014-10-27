@@ -273,6 +273,12 @@ header .site-title:hover {
     color: #232323;
 }
 
+@media only screen and (max-width: 450px){
+    .menu-search input[type="text"] {
+        width: 100px !important;
+    }
+}
+
 /* Main Area */
 #main-container {
     display: table;

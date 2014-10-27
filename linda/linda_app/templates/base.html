@@ -37,6 +37,10 @@
     $( "#menu-select" ).on('input', (function() {
         window.location = $(this).val();
     }));
+
+    $( "#menu-select" ).on('change', (function() {
+        window.location = $(this).val();
+    }));
 </script>
 
 {% block scripts %}{% endblock %}

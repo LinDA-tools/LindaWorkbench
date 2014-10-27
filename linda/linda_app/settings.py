@@ -1,3 +1,5 @@
+import passwords
+
 # Django settings for linda project.
 
 DEBUG = True
@@ -10,19 +12,19 @@ ADMINS = (
 MANAGERS = ADMINS
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': 'linda.db', # Or path to database file if using sqlite3.
-        'USER': '', # Not used with sqlite3.
-        'PASSWORD': '', # Not used with sqlite3.
-        'HOST': '', # Set to empty string for localhost. Not used with sqlite3.
-        'PORT': '', # Set to empty string for default. Not used with sqlite3.
-    },
+    #'default': {
+    #    'ENGINE': 'django.db.backends.sqlite3', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
+    #    'NAME': 'linda.db', # Or path to database file if using sqlite3.
+    #    'USER': '', # Not used with sqlite3.
+    #    'PASSWORD': '', # Not used with sqlite3.
+    #    'HOST': '', # Set to empty string for localhost. Not used with sqlite3.
+    #    'PORT': '', # Set to empty string for default. Not used with sqlite3.
+    #},
     'analytics': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'analytics',
-        'USER': 'root',
-        'PASSWORD': '!uflow!',
+        'USER': passwords.DB_USER,  # load from file passwords.py that is !!NOT!! uploaded to github for privacy reasons
+        'PASSWORD': passwords.DB_PASSWORD,
         'character': 'utf8',
         'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
         'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
