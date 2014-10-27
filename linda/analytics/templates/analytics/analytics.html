@@ -1,15 +1,12 @@
+{% extends "base.html" %}
+
 {% load staticfiles %}
 {% load url from future %}
 
-<link rel="stylesheet" type="text/css" href="{% static 'analytics/style.css' %}" />
-<script type='text/javascript' src='https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js'></script>
-
-<!DOCTYPE html>
-<html>
-<head>
+{% block scripts %}
 <script>
 $(document).ready(function(){
-     
+
     $( "#toggleAlgorithmDescription" ).click(function() {
         $( "#algorithmDescription" ).toggle();
     });
@@ -20,28 +17,28 @@ $(document).ready(function(){
         $("#id_testdocument").val("");
         //var htmlString1 = $("#category").html();
         var htmlString =$( "#id_category" ).val();
-       
-        search_results($( "#id_category" ).val());        
-        
+
+        search_results($( "#id_category" ).val());
+
         if (htmlString==1 || htmlString==3)  {
-        $( "#exportFormat" ).show();        
+        //$( "#exportFormat" ).show();
         $( "#testdocument" ).show();
         }
         else {
-        $( "#exportFormat" ).hide();
+        //$( "#exportFormat" ).hide();
         $( "#testdocument" ).hide();
         }
     });
-    
-   
-    function search_results(id_category){       
+
+
+    function search_results(id_category){
     //You have to get in this code the values you need to work with, for example:
             //var input_string = $("#forminput").val();
         var id_category =  $( "#id_category" ).val();
         $.ajax({
             url : "/analytics/ajax",
             type : "POST",
-            dataType: "json", 
+            dataType: "json",
             data : {
             category : id_category,
             csrfmiddlewaretoken: '{{ csrf_token }}'
@@ -52,105 +49,103 @@ $(document).ready(function(){
             $el.empty(); // remove old options
             $('#algorithm_description').empty();
             $('#algorithm_description').append( '<h1>Algorithms description: </h1>');
-            
+
             $.each(json.algorithmsPerCategory, function(key, value) {
-            
+
             $el.append($("<option></option>")
               .attr("value", value.id).text(value.name));
-               
+
                $('#algorithm_description').append( '</br></br><b>'+value.name+' description: </b></br></br>' + value.description) + '</br></br></br></br>';
             });
-           
-            
+
+
 
             },
             error : function(xhr,errmsg,err) {
             alert(xhr.status + ": " + xhr.responseText);
             }
             });
-            return false;          
+            return false;
     }
-    
+
 
 
 });
 </script>
-</head>
-<body>
-<div id="header">
-        <div id="branding">
-        
-<!--<h1> id="site-name">Linda Analytics</h1>-->
+{% endblock %}
 
-        </div>
-        
-        <div id="user-tools">
-            <h3>Explore LINDA Ecosystem</h3>        
-            
+
+
+{% load i18n %}
+{% block title %}LinDA | {% trans "Analytics" %}{% endblock %}
+{% block bodyclass %}analytics{% endblock %}
+
+{% block content %}
+<div style="clear:both;"/>
+<div class="main content-sidebar">
+    <content>
+        <!--div id="user-tools">
+            <h3>Explore LINDA Ecosystem</h3>
+
               <p>  <a href="http://community.pentaho.com/projects/data-integration/">Data Integration - Kettle - Pentaho Community</a> </p>
               <p>  <a href="/admin/logout1/">Linda Tranformation Engine</a></p>
             </ul>
+        </div-->
+    <section  id="content">
+          <div id="instructions">
+                    <b>Welcome to the LinDA Analytics Tool!</b>
+                    By using this tool, you may perform an analysis by selecting the appropriate input file as well as the algorithm to be executed.    Different operational modes are supported based on the expertise of the end user with regards to the algorithms’ configuration.
+                    Thus, you may select to execute an algorithm with predefined configuration or select an advanced view where you may define the input parameters and the type of the analysis. Upon selection of the dataset and configuration of the algorithm,
+                    you may proceed to the execution phase and receive the corresponding output.  For your convenience, detailed information regarding the usability of each algorithm is provided in appropriate text boxes on your screen.
+          </div>
+          <div id="leftside">
+            <h1>Start a new analytic process</h1>
+              <form id="AnalyticForm" action="/analytics/" method="post" enctype="multipart/form-data"  style="font-family: arial,helvetica,sans-serif;">{% csrf_token %}
+              <!--{ { form.as_p } }-->
+                 <fieldset>
+                    <p id="category" class="formitem"> Select an algorithm category : {{form.category}}</p>
+
+                    <p id="algorithm" class="formitem" >Select an algorithm  :{{form.algorithm}}   {{form.algorithm.display_algorithm_description}} </p>
+
+                    <p id=description class="formitem">Insert a breve description of the analytic process : {{form.description}} </p>
+                    
+                    <p id=document class="formitem">Select a dataset : {{form.document}} </p>
+
+                    <p id="testdocument" class="formitem" style="display: none;" >In case of classification Analysis select the dataset to be classified : {{form.testdocument}} </p>
+
+                    <p id="exportFormat" class="formitem" >select an export format: {{form.exportFormat}}</p>
+
+                    <input type="submit" class="nicebutton" value="Submit" />
+                </fieldset>
+              </form>
+
         </div>
-        
-        
-    </div>
-    
-   
-<section  id="content">
-  <h1>Start a new analytic process</h1>
-  <div id="leftside">
-  <div id="instructions">
-Welcome to the LinDA Analytics Tool!</br></br>
-By using this tool, you may perform an analysis by selecting the appropriate input file as well as the algorithm to be executed. </br></br>
-Different operational modes are supported based on the expertise of the end user with regards to the algorithms’ configuration. </br></br>
-Thus, you may select to execute an algorithm with predefined configuration or select an advanced view where you may define the input parameters and the type of the analysis. Upon selection of the dataset and configuration of the algorithm, 
-you may proceed to the execution phase and receive the corresponding output. </br></br>
-For your convenience, detailed information regarding the usability of each algorithm is provided in appropriate text boxes on your screen.</br></br>
-  </div>
+        <div id="algorithm_description" width="300px"></div>
+    </section>
+</content>
 
-  <form id="AnalyticForm" action="/analytics/" method="post" enctype="multipart/form-data"  style="font-family: arial,helvetica,sans-serif;">{% csrf_token %}
-  <!--{ { form.as_p } }-->
-     <fieldset>
-        <legend>Define parameters of new analytic</legend>
 
-        <p id="category" class="formitem"> Select an algorithm category : {{form.category}}</p>  
+<aside>
+        <div class="sidebar-block" id="analytics_list">
+            <h3 class="sidebar-title">{% trans "My Analytics" %}</h3>
+                     <table>
+                        {% if analytics_list %}
 
-        <p id="algorithm" class="formitem" >Select an algorithm  :{{form.algorithm}}   {{form.algorithm.display_algorithm_description}} </p>
+                            {% for analytics in analytics_list %}
+                                 <tr><td>
+                                    <a href="{% url 'analytics:detail' analytics.id %}">({{ analytics.algorithm }}) -- analytics ID : {{ analytics.id }} </a></br>
+                                 </td></tr>
+                            {% endfor %}
 
-        <p id=document class="formitem">Select a dataset : {{form.document}} </p>
-
-        <p id="testdocument" class="formitem" style="display: none;" >In case of classification Analysis select the dataset to be classified : {{form.testdocument}} </p>
-
-        <p id="exportFormat" class="formitem" >select an export format: {{form.exportFormat}}</p>
-
-        <input type="submit" class="nicebutton" value="Submit" />
-    </fieldset>
-  </form>
-  
+                        {% else %}
+                            <p>No analytics are available.</p>
+                        {% endif %}
+                    </table>
+       </div>
+</aside>
 </div>
-    <div id="algorithm_description" width="300px">
- 
-    
-    </div>
-    <div id="analytics_list" width="200px">
-    <h1> My Analytics</h1>
-     <table>
-    {% if analytics_list %}
-     
-        {% for analytics in analytics_list %}
-             <tr><td>
-                <a href="{% url 'analytics:detail' analytics.id %}">({{ analytics.algorithm }}) -- analytics ID : {{ analytics.id }} </a></br>
-             </td></tr>    
-        {% endfor %}
-     
-    {% else %}
-        <p>No analytics are available.</p>
-    {% endif %} 
-    </table>
-    </div>
-</section>
-</body>
-</html>
+{% endblock %}
+
 
 
 

@@ -1,11 +1,12 @@
+{% extends "base.html" %}
+
 {% load staticfiles %}
-<link rel="stylesheet" type="text/css" href="{% static 'analytics/style.css' %}" />
- 
-<!DOCTYPE html>
-<html>
-<head>
-<!--script type="text/javascript" src="{ { STATIC_URL } } /jquery-1.11.1.min.js"/-->
-<script type='text/javascript' src='https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js'></script>
+{% load url from future %}
+{% load i18n %}
+{% block title %}LinDA | {% trans "Analytics" %}{% endblock %}
+{% block bodyclass %}analytics{% endblock %}
+
+{% block scripts %}
 <script>
 $(document).ready(function(){
     $( "#toggleAlgorithmDescription" ).click(function() {
@@ -20,86 +21,130 @@ $(document).ready(function(){
     $( "#toggleprocessinfo" ).click(function() {
         $( "#processinfo" ).toggle();
     });
+     $( "#toggleAnalyticsDescription" ).click(function() {
+        $( "#analyticsDescription" ).toggle();
+    });
+    
+    
+    
+    
 });
 </script>
+{% endblock %}
 
 
-</head>
-
-<body>
-<div id="header">
-        <div id="branding">
-        </div>
-        <div id="user-tools">
-            Explore LINDA Ecosystem     
-            <ul>
-              <li>  <a href="http://community.pentaho.com/projects/data-integration/">Data Integration - Kettle - Pentaho Community</a> </li>
-              <li>  <a href="/admin/logout1/">Linda Tranformation Engine</a></li>
-            </ul>
-        </div>
-    </div>
-
-<section  id="content">
-
-<h1>Analytic ID: {{ analytics.id }}</h1>
 
 
-  <p>Analytics Category : {{ analytics.category }}</p>
-  <p>Analytics Algorithm : {{ analytics.algorithm }} 
-      <button id="toggleAlgorithmDescription">see/hide Info</button>
-    <div id="algorithmDescription" >{{analytics.display_algorithm_description}}</div>
-  </p> 
-  <p>Export Format : {{ analytics.exportFormat }}</p>
-  
-  <p>Analytics input dataset : {{ analytics.document }}</p>
-  
-  {% if analytics.testdocument %}  
-  <p>Analytics test dataset : {{ analytics.testdocument }}</p>
-  {% endif %}
-  
-  {% if analytics.modelReadable %}  
-  <p>Analytics model file : {{ analytics.modelReadable }}
-     <button id="toggleAnalyticsModel">see/hide Info</button>    
-    <div id="model" >
-        <pre>{{analytics.display_model_file}}</pre>
-      </div>  
-  </p>
-  {% endif %}
+{% block content %}
+<div style="clear:both;"/>
+<div class="main content-sidebar">
+   <content>
 
-  {% if analytics.processinfo %}  
-  <p>Process Info : {{ analytics.processinfo }}
-     <button id="toggleprocessinfo">see/hide Info</button>    
-    <div id="processinfo" >
-        <pre>{{analytics.display_processinfo_file}}</pre>
-      </div>  
-  </p>
-  {% endif %}
-  
-  
-  {% if analytics.resultdocument %}
-  <p>Result document : {{ analytics.resultdocument.name }}
-     <button id="toggleResultDocument" type="button">see/hide Info</button>
-    <div id="resultdocument" >
-        <pre>{{analytics.display_resultdocument_file}}</pre>
-      </div>
-   </p>
-   {% endif %}         
-      
+          <table>
+	    <tr>
+	      <td><h1 class="page-title inline">Analytic ID: {{ analytics.id }} - V: {{ analytics.version }}</h1></td>
+	      <td>
+		  <form id="DeleteAnalytics" action="/analytics/{{ analytics.id }}/delete" method="get" style="margin-right:10px;margin-left:10px;">{% csrf_token %}
+		    <input type="submit" value="Delete" style="padding:0px;font-size: 12px;"/>
+		  </form>
+	      </td>
+	      <td>
+		  <form id="ReEvaluateAnalytics" action="/analytics/{{ analytics.id }}/reevaluate" method="get">
+		    {% csrf_token %}
+		    <input type="submit" value="Re-Evaluate" style="padding:0px;font-size: 12px;"/>
+		  </form>		  
+	      </td>
+	    </tr>
+          </table>
+          
+          {% if analytics.processMessage|length > 0 %}
+            <p style= "border:3px solid #FD8036;font-weight:bold">{{ analytics.processMessage|safe }}</p>
+            {% endif %}
+            
+          <p>Analytics Category : {{ analytics.category }}</p>
+          <p>Analytics Algorithm : {{ analytics.algorithm }}
+	    <button id="toggleAlgorithmDescription">see/hide Info</button>
+	    <div id="algorithmDescription" style="background: none repeat scroll 0% 0% #DADFE1;overflow:auto;width:inherit;" >
+	      {{analytics.display_algorithm_description}}
+	    </div>
+          </p>
+          
+          <p>Analytic process Description
+	    <button id="toggleAnalyticsDescription">see/hide Info</button>
+	    <div id="analyticsDescription" style="background: none repeat scroll 0% 0% #DADFE1;overflow:auto;width:inherit;" >
+	      {{analytics.description}}
+	    </div>
+          </p>
+          
+          <p>Export Format : {{ analytics.exportFormat }}</p>
 
+          <p>Analytics input dataset : {{ analytics.document }}</p>
+
+          {% if analytics.testdocument %}
+          <p>Analytics test dataset : {{ analytics.testdocument }}</p>
+          {% endif %}
+
+          {% if analytics.modelReadable %}
+          <p>Analytics model file : {{ analytics.modelReadable }}
+             <button id="toggleAnalyticsModel">see/hide Info</button>
+            <div id="model"  style="overflow:auto;width:700px;background: none repeat scroll 0% 0% #DADFE1;">
+                <pre>{{analytics.display_model_file}}</pre>
+              </div>
+          </p>
+          {% endif %}
+
+          {% if analytics.processinfo %}
+          <p>Process Info : {{ analytics.processinfo }}
+             <button id="toggleprocessinfo">see/hide Info</button>
+            <div id="processinfo"  style="background: none repeat scroll 0% 0% #DADFE1;overflow:auto;">
+                <pre>{{analytics.display_processinfo_file}}</pre>
+              </div>
+          </p>
+          {% endif %}
+
+          {% if analytics.resultdocument %}
+          <p>Result document : {{ analytics.resultdocument.name }}
+          
+	     {% if analytics.loadedRDFContext|length > 0 %}
+             <p style= "border:3px solid #FD8036;font-weight:bold">{{ analytics.loadedRDFContext|safe }}</p>
+             {% endif %}
+             <button id="toggleResultDocument" type="button">see/hide Info</button>
+             {% if  analytics.publishedToTriplestore|lower == 'false' %}
+		{% if  analytics.isExportFormatRDFXML|lower == 'rdfxml' or  analytics.isExportFormatTTL|lower == 'ttl'   or  analytics.isExportFormatNTRIPLES|lower == 'ntriples' %} 
+		    <form id="sendRDFToTriplestore" action="/analytics/{{ analytics.id }}/sendRDFToTriplestore" method="get">
+		      {% csrf_token %}
+		      <input type="submit" value="Send To LinDA TripleStore" style="padding:0px;font-size: 12px;font-weight:bold;margin:5px;background:#FD8036"/>
+		    </form>
+		{% endif %}
+             {% endif %}
+            <div id="resultdocument"  style="overflow:auto;width:700px;background: none repeat scroll 0% 0% #DADFE1;">
+                <pre>{{analytics.display_resultdocument_file}}</pre>
+            </div>
+           </p>
+           {% endif %}
+           
+    </content>
+<aside1>
+        <div class="sidebar-block" id="analytics_list">
+            <h3 class="sidebar-title">{% trans "My Analytics" %}</h3>
+                     <table>
+                        {% if analytics_list %}
+
+                            {% for analytics in analytics_list %}
+                                 <tr>
+				    <td>
+                                    <a href="/analytics/{{ analytics.id }}/">({{ analytics.algorithm }}) -- analytics ID : {{ analytics.id }} </a>
+				    </td>
+				  </tr>
+                            {% endfor %}
+
+                        {% else %}
+                            <p>No analytics are available.</p>
+                        {% endif %}
+                    </table>
+       </div>
+</aside1>
 
 </div>
-<!--h3>Result Document Content</h3-->
+{% endblock %}
 
-
-<!--
-
-
-{ % for choice in Analytics.choice_set.all % }
-    <li>{ { choice.choice_text }} -- { { choice.votes }} vote{ { choice.votes|pluralize } }</li>
-{ % endfor % }
-</ul>
-
-<a href="{ % url 'Analytics:thanks' Analytics.id % }">Vote again?</a--> 
-
-</body>
-</html>
