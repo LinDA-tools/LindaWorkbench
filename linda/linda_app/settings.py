@@ -20,9 +20,9 @@ DATABASES = {
     #    'HOST': '', # Set to empty string for localhost. Not used with sqlite3.
     #    'PORT': '', # Set to empty string for default. Not used with sqlite3.
     #},
-    'analytics': {
+    'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'analytics',
+        'NAME': 'linda',
         'USER': passwords.DB_USER,  # load from file passwords.py that is !!NOT!! uploaded to github for privacy reasons
         'PASSWORD': passwords.DB_PASSWORD,
         'character': 'utf8',
