@@ -1,4 +1,5 @@
-from django.http import HttpResponse, HttpResponseNotFound
+from operator import attrgetter
+from django.http import HttpResponse, HttpResponseNotFound, Http404
 from django.shortcuts import redirect, render, get_object_or_404
 from django.utils.http import urlquote
 
@@ -310,19 +311,31 @@ class PropertyListView(ListView):
 from haystack.query import SearchQuerySet
 
 
-def vocabulary_search(request):
+def vocabulary_search(request):  # view for search in vocabularies - remembers selection (vocabulary - class - property)
+    # get query parameter
     if request.GET['q']:
         q = request.GET['q']
     else:
         q = ''
 
-    if request.GET['type']:
+    # get requested type
+    if request.GET['type'] == "vocabularies":
         tp = request.GET['type']
+        sqs = SearchQuerySet().models(Vocabulary).filter(content=q)
+        qs = sorted(sqs, key=attrgetter('object.lodRanking'), reverse=True)  # order objects manually
+    elif request.GET['type'] == "classes":
+        tp = 'classes'
+        sqs = SearchQuerySet().models(VocabularyClass).filter(content=q)
+        qs = sorted(sqs, key=attrgetter('object.vocabulary.lodRanking'), reverse=True)
+    elif request.GET['type'] == "properties":
+        tp = 'properties'
+        sqs = SearchQuerySet().models(VocabularyProperty).filter(content=q)
+        qs = sorted(sqs, key=attrgetter('object.vocabulary.lodRanking'), reverse=True)
     else:
-        tp = 'vocabularies'
+        raise Http404
 
-    sqs = SearchQuerySet().all().filter(content=q)
-    params = {'q': q, 'type': tp, 'query': True, 'object_list': sqs}
+    # pass parameters and render the search template
+    params = {'q': q, 'type': tp, 'query': True, 'object_list': qs}
     return render(request, 'search/search.html', params)
 
 
