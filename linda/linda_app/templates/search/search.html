@@ -10,19 +10,19 @@
 
 		<div class="home-search">
 			<form method="get" action="/vocabularies" class="form">
-
-				<input id="vocabulary-search-text" type="text" name="q" required="required" placeholder='{% trans "Search Vocabularies" %}' value="{% if form.q.value %}{{form.q.value}}{% endif %}"/>
+                <input style="display:none;" type="text" name="type" value="{{type}}"/>
+				<input id="vocabulary-search-text" type="text" name="q" required="required" placeholder='{% trans "Search Vocabularies" %}' value="{% if q %}{{q}}{% endif %}"/>
 				<input type="submit" value=""/>
                 {% if query %}
-                    <a href="/vocabularies/all" class="button delete-button clear-search" title='Clear search'></a>
+                    <a href="/{{type}}/all" class="button delete-button clear-search" title='Clear search'></a>
                 {% endif %}
 			</form>
 
             {% if query %}
                 <div class="search-filters">
-                    <a id="show-res-vocabularies" href="#" class="button white active">Vocabularies</a>
-                    <a id="show-res-classes" href="#" class="button white">Classes</a>
-                    <a id="show-res-properties" href="#" class="button white">Properties</a>
+                    <a href="/vocabularies/?q={{q}}&type=vocabularies" class='button white {% if type == "vocabularies" %}active{% endif %}'>Vocabularies</a>
+                    <a href="/vocabularies/?q={{q}}&type=classes" class='button white {% if type == "classes" %}active{% endif %}'>Classes</a>
+                    <a href="/vocabularies/?q={{q}}&type=properties" class='button white {% if type == "properties" %}active{% endif %}'>Properties</a>
                 </div>
             {% else %}
                 <div class="search-filters">
@@ -34,8 +34,8 @@
 
             {% if query %}
                 <div class="search-results">
-                    <div class="result-vocabularies" >
-                        {% for vocabulary in page.object_list|vocabularies %}
+                    <div class="result-vocabularies" {% if not type == "vocabularies" %}style="display: none;"{% endif %}>
+                        {% for vocabulary in object_list|vocabularies %}
 
                         <div class="vocabulary-teaser">
                             <h3><a href="{{ vocabulary.object.get_absolute_url }}">{{vocabulary.title}}</a></h3>
@@ -52,8 +52,8 @@
                         {% endfor %}
                     </div>
 
-                    <div class="result-classes" style="display: none;">
-                        {% for class in page.object_list|classes %}
+                    <div class="result-classes" {% if not type == "classes" %}style="display: none;"{% endif %}>
+                        {% for class in object_list|classes %}
 
                         <div class="class-teaser">
                             <h3><a href="{{ class.object.uri }}">{{class.object.label}}</a></h3>
@@ -66,8 +66,8 @@
                         {% endfor %}
                     </div>
 
-                    <div class="result-properties" style="display: none;">
-                        {% for property in page.object_list|properties %}
+                    <div class="result-properties" {% if not type == "properties" %}style="display: none;"{% endif %}>
+                        {% for property in object_list|properties %}
 
                         <div class="property-teaser">
                             <h3><a href="{{ property.object.uri }}">{{property.object.label}}</a></h3>
@@ -81,10 +81,6 @@
                     </div>
 
                 </div>
-
-                {% with current_url="/vocabularies" %}
-                    {% include 'util/paginator.html' %}
-                {% endwith %}
 
             {% else %}
                 <div class="search-results">
@@ -140,26 +136,4 @@
 	</div>
 
 
-{% endblock %}
-
-{% block scripts %}
-    <script>
-        $("#show-res-vocabularies").click(function() {
-            $(".result-vocabularies").show(); $("#show-res-vocabularies").addClass("active");
-            $(".result-classes").hide(); $("#show-res-classes").removeClass("active");
-            $(".result-properties").hide(); $("#show-res-properties").removeClass("active");
-        });
-
-        $("#show-res-classes").click(function() {
-            $(".result-vocabularies").hide(); $("#show-res-vocabularies").removeClass("active");
-            $(".result-classes").show(); $("#show-res-classes").addClass("active");
-            $(".result-properties").hide(); $("#show-res-properties").removeClass("active");
-        });
-
-        $("#show-res-properties").click(function() {
-            $(".result-vocabularies").hide(); $("#show-res-vocabularies").removeClass("active");
-            $(".result-classes").hide(); $("#show-res-classes").removeClass("active");
-            $(".result-properties").show(); $("#show-res-properties").addClass("active");
-        });
-    </script>
 {% endblock %}

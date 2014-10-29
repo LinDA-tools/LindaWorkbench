@@ -102,8 +102,8 @@ class Vocabulary(models.Model):
     def get_score(self):
         return float(self.score) / self.votes
 
-    def hasVoted(self, user):
-        return False
+    def has_voted(self, user):
+        return len(VocabularyRanking.objects.filter(voter=user, vocabularyRanked=self)) > 0
 
     def make_classes_properties(self):
         # Remove all classes and properties from this vocabulary

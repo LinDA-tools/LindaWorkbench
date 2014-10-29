@@ -144,12 +144,12 @@ class VocabularyDetailsView(DetailView):
             if (
                     VocabularyRanking.objects.filter(vocabularyRanked=context['vocabulary'],
                                                      voter=self.request.user).exists()):
-                context['hasVoted'] = True
+                context['has_voted'] = True
                 context['voteSubmitted'] = \
                     VocabularyRanking.objects.filter(vocabularyRanked=context['vocabulary'], voter=self.request.user)[
                         0].vote
             else:
-                context['hasVoted'] = False
+                context['has_voted'] = False
 
         return context
 
@@ -265,6 +265,7 @@ class VocabularyListView(ListView):
     def get_context_data(self, **kwargs):
         context = super(VocabularyListView, self).get_context_data(**kwargs)
         context['page_vocabularies'] = True
+        context['type'] = 'vocabularies'
         return context
 
     def get_queryset(self):
@@ -278,6 +279,12 @@ class ClassListView(ListView):
     context_object_name = 'classes'
     paginate_by = 10
 
+    def get_context_data(self, **kwargs):
+        context = super(ClassListView, self).get_context_data(**kwargs)
+        context['page_classes'] = True
+        context['type'] = 'classes'
+        return context
+
     def get_queryset(self):
         qs = super(ClassListView, self).get_queryset().order_by('-vocabulary__lodRanking')
         return qs
@@ -289,9 +296,45 @@ class PropertyListView(ListView):
     context_object_name = 'properties'
     paginate_by = 10
 
+    def get_context_data(self, **kwargs):
+        context = super(PropertyListView, self).get_context_data(**kwargs)
+        context['page_properties'] = True
+        context['type'] = 'properties'
+        return context
+
     def get_queryset(self):
         qs = super(PropertyListView, self).get_queryset().order_by('-vocabulary__lodRanking')
         return qs
+
+
+from haystack.query import SearchQuerySet
+
+
+def vocabulary_search(request):
+    if request.GET['q']:
+        q = request.GET['q']
+    else:
+        q = ''
+
+    if request.GET['type']:
+        tp = request.GET['type']
+    else:
+        tp = 'vocabularies'
+
+    sqs = SearchQuerySet().all().filter(content=q)
+    params = {'q': q, 'type': tp, 'query': True, 'object_list': sqs}
+    return render(request, 'search/search.html', params)
+
+
+def autocomplete(request):
+    sqs = SearchQuerySet().autocomplete(content_auto=request.GET.get('q', ''))[:5]
+    suggestions = [result.title for result in sqs]
+    # Make sure you return a JSON object, not a bare list.
+    # Otherwise, you could be vulnerable to an XSS attack.
+    the_data = json.dumps({
+        'results': suggestions
+    })
+    return HttpResponse(the_data, content_type='application/json')
 
 
 def rateDataset(request, pk, vt):
@@ -401,19 +444,6 @@ def downloadRDF(request, pk, type):
     return response
 
 
-from haystack.query import SearchQuerySet
-
-
-def autocomplete(request):
-    sqs = SearchQuerySet().autocomplete(content_auto=request.GET.get('q', ''))[:5]
-    suggestions = [result.title for result in sqs]
-    # Make sure you return a JSON object, not a bare list.
-    # Otherwise, you could be vulnerable to an XSS attack.
-    the_data = json.dumps({
-        'results': suggestions
-    })
-    return HttpResponse(the_data, content_type='application/json')
-
 #Datasources
 def datasources(request):
     params = {}
@@ -429,6 +459,7 @@ def datasources(request):
         params['sort_default'] = "Date"
 
     return render(request, 'datasource/index.html', params)
+
 
 def datasourceCreate(request):
     params = {'types': {('public', 'Public'), ('private', 'Private')},
@@ -628,7 +659,8 @@ def queryBuilder(request):
 
     return render(request, 'query-builder/index.html', params)
 
-#Proxy calls - exist as middle-mans between LinDA tranformations page and the r2r server
+
+#Proxy calls - exist as middle-mans between LinDA query builder page and the rdf2any server
 def get_qbuilder_call(request, link):
     total_link = QUERY_BUILDER_SERVER + "query/" + link
     if request.GET:
