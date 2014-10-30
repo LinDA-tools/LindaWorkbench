@@ -11,7 +11,7 @@ from django.views.generic import ListView, UpdateView, DetailView, DeleteView
 
 import json
 import requests
-from rosetta.utils.microsofttranslator import Translator, TranslateApiException
+from microsofttranslator import Translator, TranslateApiException
 import xmltodict
 
 from forms import *
