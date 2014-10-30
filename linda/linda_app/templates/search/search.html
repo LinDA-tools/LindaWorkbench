@@ -35,7 +35,7 @@
             {% if query %}
                 <div class="search-results">
                     <div class="result-vocabularies" {% if not type == "vocabularies" %}style="display: none;"{% endif %}>
-                        {% for vocabulary in object_list %}
+                        {% for vocabulary in page_obj.object_list %}
 
                         <div class="vocabulary-teaser">
                             <h3><a href="{{ vocabulary.object.get_absolute_url }}">{{vocabulary.title}}</a></h3>
@@ -53,7 +53,7 @@
                     </div>
 
                     <div class="result-classes" {% if not type == "classes" %}style="display: none;"{% endif %}>
-                        {% for class in object_list %}
+                        {% for class in page_obj.object_list %}
 
                         <div class="class-teaser">
                             <h3><a href="{{ class.object.uri }}">{{class.object.label}}</a></h3>
@@ -67,7 +67,7 @@
                     </div>
 
                     <div class="result-properties" {% if not type == "properties" %}style="display: none;"{% endif %}>
-                        {% for property in object_list %}
+                        {% for property in page_obj.object_list %}
 
                         <div class="property-teaser">
                             <h3><a href="{{ property.object.uri }}">{{property.object.label}}</a></h3>
@@ -79,6 +79,10 @@
                             <p>{% trans "No properties match this query." %}</p>
                         {% endfor %}
                     </div>
+
+                    {% with current_url=url has_get_variables=True %}
+                        {% include 'util/paginator.html' %}
+                    {% endwith %}
 
                 </div>
 

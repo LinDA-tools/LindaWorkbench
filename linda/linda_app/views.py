@@ -1,4 +1,5 @@
 from operator import attrgetter
+from django.core.paginator import Paginator
 from django.http import HttpResponse, HttpResponseNotFound, Http404
 from django.shortcuts import redirect, render, get_object_or_404
 from django.utils.http import urlquote
@@ -313,29 +314,41 @@ from haystack.query import SearchQuerySet
 
 def vocabulary_search(request):  # view for search in vocabularies - remembers selection (vocabulary - class - property)
     # get query parameter
-    if request.GET['q']:
+    if 'q' in request.GET:
         q = request.GET['q']
     else:
         q = ''
 
+    if 'page' in request.GET:
+        try:
+            page = int(request.GET['page'])
+        except ValueError:
+            page = 1
+    else:
+        page = 1
+
     # get requested type
-    if request.GET['type'] == "vocabularies":
-        tp = request.GET['type']
+    tp = request.GET['type']
+    if tp == "vocabularies":
         sqs = SearchQuerySet().models(Vocabulary).filter(content=q)
         qs = sorted(sqs, key=attrgetter('object.lodRanking'), reverse=True)  # order objects manually
-    elif request.GET['type'] == "classes":
-        tp = 'classes'
+    elif tp == "classes":
         sqs = SearchQuerySet().models(VocabularyClass).filter(content=q)
         qs = sorted(sqs, key=attrgetter('object.vocabulary.lodRanking'), reverse=True)
-    elif request.GET['type'] == "properties":
-        tp = 'properties'
+    elif tp == "properties":
         sqs = SearchQuerySet().models(VocabularyProperty).filter(content=q)
         qs = sorted(sqs, key=attrgetter('object.vocabulary.lodRanking'), reverse=True)
     else:
         raise Http404
 
+    # paginate the results
+    paginator = Paginator(qs, 15)
+    page_object = paginator.page(page)
+    #import pdb; pdb.set_trace()
+
     # pass parameters and render the search template
-    params = {'q': q, 'type': tp, 'query': True, 'object_list': qs}
+    params = {'q': q, 'type': tp, 'query': True,
+              'page_obj': page_object, 'url': "/vocabularies/?q=" + q + '&type=' + tp}
     return render(request, 'search/search.html', params)
 
 
