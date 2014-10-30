@@ -1357,6 +1357,34 @@ input, textarea {
     display: block;
 }
 
+/* Vocabulary search */
+.vocabulary-search-form #id_translate {
+    display: none;
+}
+
+#vocabulary-search-text {
+    vertical-align: top;
+}
+
+.vocabulary-search-form #localization-label {
+    vertical-align: top;
+    min-width: 150px;
+}
+
+.vocabulary-search-form .icon-translate {
+    width: 30px;
+    opacity: 0.3;
+}
+
+.vocabulary-search-form .icon-translate:hover {
+    cursor: pointer;
+    opacity: 0.6 !important;
+}
+
+.vocabulary-search-form .icon-translate.enabled {
+    opacity: 1;
+}
+
 /*RDB to RDF*/
 
 .rdb2rdf .form input[type="text"], .rdb2rdf .form input[type="url"], .rdb2rdf .form input[type="select"] {

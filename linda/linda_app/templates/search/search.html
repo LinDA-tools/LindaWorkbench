@@ -9,13 +9,17 @@
 		<h1 class="page-title">LinDA - {% trans "Vocabulary search" %}</h1>
 
 		<div class="home-search">
-			<form method="get" action="/vocabularies" class="form">
+			<form method="get" action="/vocabularies" class="form vocabulary-search-form">
+                <label id="localization-label">Localization {% if translate %}enabled{% else %}disabled{% endif %}</label>
+                <img id="translate-icon" class="icon-translate {% if translate %}enabled{% endif %}" src="/static/images/localize.png" alt='{% trans "By enabling localization, you can search in your local language and let LinDA translate terms in English!"%}'/>
                 <input style="display:none;" type="text" name="type" value="{{type}}"/>
-				<input id="vocabulary-search-text" type="text" name="q" required="required" placeholder='{% trans "Search Vocabularies" %}' value="{% if q %}{{q}}{% endif %}"/>
-				<input type="submit" value=""/>
+                <input id="vocabulary-search-text" type="text" name="q" required="required" placeholder='{% trans "Search Vocabularies" %}' value="{% if q %}{{q}}{% endif %}"/>
+                <input type="submit" value=""/>
                 {% if query %}
                     <a href="/{{type}}/all" class="button delete-button clear-search" title='Clear search'></a>
                 {% endif %}
+                <br />
+                <input id="id_translate" type="checkbox" name="translate" {% if translate %}checked="checked"{% endif %}/>
 			</form>
 
             {% if query %}
@@ -140,4 +144,20 @@
 	</div>
 
 
+{% endblock %}
+
+{% block scripts %}
+<script>
+    $("#translate-icon").on('click', function() {
+        var value = !$("#id_translate").attr('checked');
+        $("#id_translate").attr('checked', value);
+        if (value) {
+            $("#translate-icon").addClass("enabled");
+            $("#localization-label").html("Localization enabled");
+        } else {
+            $("#translate-icon").removeClass("enabled");
+            $("#localization-label").html("Localization disabled");
+        }
+    });
+</script>
 {% endblock %}

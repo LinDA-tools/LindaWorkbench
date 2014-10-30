@@ -11,6 +11,7 @@ from django.views.generic import ListView, UpdateView, DetailView, DeleteView
 
 import json
 import requests
+from rosetta.utils.microsofttranslator import Translator, TranslateApiException
 import xmltodict
 
 from forms import *
@@ -20,6 +21,7 @@ from datetime import datetime, date
 
 # from graphdb import views as query_views
 from settings import SESAME_LINDA_URL, LINDA_HOME, RDF2ANY_SERVER, PRIVATE_SPARQL_ENDPOINT, QUERY_BUILDER_SERVER
+from passwords import MS_TRANSLATOR_UID, MS_TRANSLATOR_SECRET
 
 
 def index(request):
@@ -315,9 +317,9 @@ from haystack.query import SearchQuerySet
 def vocabulary_search(request):  # view for search in vocabularies - remembers selection (vocabulary - class - property)
     # get query parameter
     if 'q' in request.GET:
-        q = request.GET['q']
+        q_in = request.GET['q']
     else:
-        q = ''
+        q_in = ''
 
     if 'page' in request.GET:
         try:
@@ -326,6 +328,19 @@ def vocabulary_search(request):  # view for search in vocabularies - remembers s
             page = 1
     else:
         page = 1
+
+    # translate non english terms
+    if 'translate' in request.GET:
+        translate = True
+        # create a unique translator object to be used
+        translator = Translator(MS_TRANSLATOR_UID, MS_TRANSLATOR_SECRET)
+        q = translator.translate(text=q_in, to_lang='en', from_lang=None)
+        print q
+        if q.startswith("TranslateApiException:"):
+            q = q_in
+    else:
+        translate = False
+        q = q_in
 
     # get requested type
     tp = request.GET['type']
@@ -347,7 +362,7 @@ def vocabulary_search(request):  # view for search in vocabularies - remembers s
     #import pdb; pdb.set_trace()
 
     # pass parameters and render the search template
-    params = {'q': q, 'type': tp, 'query': True,
+    params = {'q': q, 'type': tp, 'query': True, 'translate': translate,
               'page_obj': page_object, 'url': "/vocabularies/?q=" + q + '&type=' + tp}
     return render(request, 'search/search.html', params)
 
