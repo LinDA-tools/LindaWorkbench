@@ -45,7 +45,7 @@ urlpatterns = patterns('',
                        url(r'^classes/all/$', views.ClassListView.as_view()),
                        url(r'^properties/all/$', views.PropertyListView.as_view()),
 
-                       url(r'^vocabularies/', views.vocabulary_search),
+                       url(r'^vocabularies/$', views.vocabulary_search),
                        url(r'^autocomplete/', views.autocomplete),
                        url(r'^search/vocabulary/', search_view_factory(
 
