@@ -73,3 +73,5 @@ linda/linda_app/passwords.py
 #ElasticSearch
 linda/elasticsearch-0.90.1/data/*
 linda/.idea/workspace.xml
+data
+/linda/elasticsearch-0.90.1/logs
