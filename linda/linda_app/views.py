@@ -344,9 +344,9 @@ def vocabulary_search(request):  # view for search in vocabularies - remembers s
 
     # get requested type
     if 'type' in request.GET:
-        tp = "vocabularies"
-    else:
         tp = request.GET['type']
+    else:
+        tp = "vocabularies"
 
     if tp == "vocabularies":
         sqs = SearchQuerySet().models(Vocabulary).filter(content=q)
