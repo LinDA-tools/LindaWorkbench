@@ -343,7 +343,11 @@ def vocabulary_search(request):  # view for search in vocabularies - remembers s
         q = q_in
 
     # get requested type
-    tp = request.GET['type']
+    if 'type' in request.GET:
+        tp = "vocabularies"
+    else:
+        tp = request.GET['type']
+        
     if tp == "vocabularies":
         sqs = SearchQuerySet().models(Vocabulary).filter(content=q)
         qs = sorted(sqs, key=attrgetter('object.lodRanking'), reverse=True)  # order objects manually

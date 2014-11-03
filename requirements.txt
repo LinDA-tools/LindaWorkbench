@@ -11,3 +11,4 @@ pyelasticsearch
 elasticsearch
 MySQL-python
 xmltodict
+microsofttranslator
