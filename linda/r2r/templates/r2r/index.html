@@ -12,9 +12,9 @@
     <!--[if lt IE 7]>
       <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
     <![endif]-->
-
+    
     <!-- Add your site or application content here -->
-    <div ng-view="main">
+    <div ng-include="'partials/main.html'">
     </div>
 
     <!-- Google Analytics: change UA-XXXXX-X to be your site's ID -->
@@ -39,10 +39,9 @@
     <!-- build:js scripts/vendor.js -->
     <!-- bower:js -->
     <!--<script src="/static/r2r/bower_components/jquery/src/jquery.js"></script>-->
-    <script src="/static/js/jquery.min.js"></script>
+    <script src="/static/r2r/bower_components/jquery/dist/jquery.js"></script>
     <script src="/static/r2r/bower_components/angular/angular.js"></script>
-
-   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <script src="/static/r2r/bower_components/bootstrap-sass-official/vendor/assets/javascripts/bootstrap.js"></script>
     <script src="/static/r2r/bower_components/angular-resource/angular-resource.js"></script>
     <script src="/static/r2r/bower_components/angular-cookies/angular-cookies.js"></script>
     <script src="/static/r2r/bower_components/angular-sanitize/angular-sanitize.js"></script>
@@ -52,11 +51,45 @@
     <script src="/static/r2r/bower_components/jsedn/jsedn.js"></script>
     <script src="/static/r2r/bower_components/angular-scroll/angular-scroll.min.js"></script>
     <script src="/static/r2r/bower_components/underscore/underscore.js"></script>
+    
+    <!--<script src="/static/js/jquery.min.js"></script>
+    <script src="/static/r2r/bower_components/angular/angular.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <script src="/static/r2r/bower_components/angular-resource/angular-resource.js"></script>
+    <script src="/static/r2r/bower_components/angular-cookies/angular-cookies.js"></script>
+    <script src="/static/r2r/bower_components/angular-sanitize/angular-sanitize.js"></script>
+    <script src="/static/r2r/bower_components/angular-route/angular-route.js"></script>
+    <script src="/static/r2r/bower_components/angular-animate/angular-animate.js"></script>
+    <script src="/static/r2r/bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
+    <script src="/static/r2r/bower_components/jsedn/jsedn.js"></script>
+    <script src="/static/r2r/bower_components/angular-scroll/angular-scroll.min.js"></script>
+    <script src="/static/r2r/bower_components/underscore/underscore.js"></script>-->
     <!-- endbower -->
     <!-- endbuild -->
 
         <!-- build:js({.tmp,app}) scripts/scripts.js -->
         <script src="/static/r2r/scripts/app.js"></script>
+        <script src="/static/r2r/scripts/app.templates.js"></script>
+        <script src="/static/r2r/scripts/services/jsedn.js"></script>
+        <script src="/static/r2r/scripts/services/rdb.js"></script>
+        <script src="/static/r2r/scripts/services/rdf.js"></script>
+        <script src="/static/r2r/scripts/services/underscore.js"></script>
+        <script src="/static/r2r/scripts/services/oracle.js"></script>
+        <script src="/static/r2r/scripts/services/sidetip.js"></script>
+        <script src="/static/r2r/scripts/directives/wizard.js"></script>
+        <script src="/static/r2r/scripts/directives/popover.js"></script>
+        <script src="/static/r2r/scripts/directives/badge.js"></script>
+        <script src="/static/r2r/scripts/directives/columntip.js"></script>
+        <script src="/static/r2r/scripts/directives/cursor.js"></script>
+        <script src="/static/r2r/scripts/controllers/main.js"></script>
+        <script src="/static/r2r/scripts/controllers/rdf.js"></script>
+        <script src="/static/r2r/scripts/controllers/config.js"></script>
+        <script src="/static/r2r/scripts/controllers/dbcontents.js"></script>
+        <script src="/static/r2r/scripts/controllers/reconcile.js"></script>
+        <script src="/static/r2r/scripts/controllers/refine.js"></script>
+        <script src="/static/r2r/scripts/filters/score.js"></script>
+
+        <!--<script src="/static/r2r/scripts/app.js"></script>
         <script src="/static/r2r/scripts/services/jsedn.js"></script>
         <script src="/static/r2r/scripts/services/config.js"></script>
         <script src="/static/r2r/scripts/services/rdb.js"></script>
@@ -77,6 +110,6 @@
         <script src="/static/r2r/scripts/controllers/rdf.js"></script>
         <script src="/static/r2r/scripts/controllers/vocab.js"></script>
         <script src="/static/r2r/scripts/controllers/config.js"></script>
-        <script src="/static/r2r/scripts/controllers/oracle.js"></script>
+        <script src="/static/r2r/scripts/controllers/oracle.js"></script>-->
         <!-- endbuild -->
 {% endblock %}
