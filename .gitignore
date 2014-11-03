@@ -71,5 +71,5 @@ linda/linda_app/passwords.py
 #Migrations
 
 #ElasticSearch
-linda/elasticsearch-0.90.1/data
+linda/elasticsearch-0.90.1/data/*
 linda/.idea/workspace.xml

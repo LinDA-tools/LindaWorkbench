@@ -2,7 +2,7 @@
   'use strict';
   angular.module('app').factory('Rdb', function($http, _) {
     var dbAdapter, host, selectedColumns, selectedTables, tableColumns, tables;
-    host = 'http://localhost:3000';
+    host = R2R_PROXY;
     dbAdapter = host + '/api/v1/db';
     tables = [];
     tableColumns = {};

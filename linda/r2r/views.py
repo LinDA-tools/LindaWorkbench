@@ -1,6 +1,7 @@
 from django.core.context_processors import csrf
 from django.http import HttpResponse
 from django.shortcuts import render_to_response
+from django.views.decorators.csrf import csrf_exempt
 import requests
 
 from linda_app.settings import LINDA_SERVER_IP
@@ -20,6 +21,7 @@ def transform(request):
 
 
 #Proxy calls - exist as middle-mans between LinDA tranformations page and the r2r server
+@csrf_exempt
 def get_api_call(request, link):
     total_link = R2R_SERVER + "api/" + link
     if request.GET:
