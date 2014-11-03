@@ -1,0 +1,10 @@
+{
+  "version": 3,
+  "file": "score.js",
+  "sourceRoot": "",
+  "sources": [
+    "score.coffee"
+  ],
+  "names": [],
+  "mappings": "AAAA;AAAA,EAAA,YAAA,CAAA;AAAA,EAEA,OAAO,CAAC,MAAR,CAAe,KAAf,CACE,CAAC,MADH,CACU,aADV,EACyB,SAAA,GAAA;WACrB,SAAC,KAAD,GAAA;aACE,CAAC,MAAA,CAAO,KAAP,CAAD,CAAc,CAAC,WAAf,CAA2B,CAA3B,EADF;IAAA,EADqB;EAAA,CADzB,CAFA,CAAA;AAAA"
+}

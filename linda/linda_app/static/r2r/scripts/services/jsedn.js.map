@@ -1,0 +1,10 @@
+{
+  "version": 3,
+  "file": "jsedn.js",
+  "sourceRoot": "",
+  "sources": [
+    "jsedn.coffee"
+  ],
+  "names": [],
+  "mappings": "AAAA;AAAA,EAAA,YAAA,CAAA;AAAA,EAEA,OAAO,CAAC,MAAR,CAAe,KAAf,CACE,CAAC,OADH,CACW,OADX,EACoB,SAAA,GAAA;WAAG,MAAH;EAAA,CADpB,CAFA,CAAA;AAAA"
+}
