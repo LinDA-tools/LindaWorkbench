@@ -156,7 +156,7 @@ App.VisualizeDataController = Ember.ArrayController.extend({
         selectDS: function(ds) {
             this.set('selectedDatasource', ds);
             var controller = this;
-            Ember.$.getJSON('http://localhost:3002/suggest/' + ds.get('id')).then(function(tools) {
+            Ember.$.getJSON('http://' + window.location.host + '/visualizations/visual/api/suggest/' + ds.get('id')).then(function(tools) {
                 controller.set('suggestedTools', tools);
             });
         },
@@ -183,7 +183,7 @@ App.VisualizeDataController = Ember.ArrayController.extend({
             var dataset_id = dataset.id;
             var visualization_id = selection._id;
 
-            var promise = Ember.$.getJSON('http://localhost:3002/preconfigure/' + dataset_id + "/" + visualization_id);
+            var promise = Ember.$.getJSON('http://' + window.location.host + '/visualizations/visual/api/preconfigure/' + dataset_id + "/" + visualization_id);
 
             return promise.then(function(preconfig) {
                 controller.set('visualisationConfiguration', preconfig);
@@ -243,7 +243,7 @@ App.VisualizeDataController = Ember.ArrayController.extend({
 App.Store = DS.Store.extend({
     revision: 13,
     adapter: DS.RESTAdapter.extend({
-        host: 'http://localhost:3002'
+        host: 'http://' + window.location.host + '/visualizations/visual/api'
     })
 });
 
