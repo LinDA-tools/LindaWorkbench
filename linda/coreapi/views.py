@@ -75,8 +75,7 @@ def recommend_dataset(request):
 
     results = []
 
-    if flag == "General":
-
+    '''if flag == "General":
         vocabs = Vocabulary.objects.filter(title__iregex=property, description__iregex=property)
         for source in vocabs:
             source_info = {}
@@ -87,7 +86,7 @@ def recommend_dataset(request):
             source_info['ranking'] = source.lodRanking
             # else:
             #     continue
-            results.append(source_info)
+            results.append(source_info)'''
 
     if flag == "Property" or flag == "General":
         if flag == "General":
