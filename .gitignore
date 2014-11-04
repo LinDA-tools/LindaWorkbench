@@ -66,7 +66,7 @@ linda/linda.db
 linda/graphdb/deepGraphFile_321763af3ed32e1bb47233944ef6bc74_140512_191741
 
 #Passwords
-linda/linda_app/passwords.py
+#linda/linda_app/passwords.py
 
 #Migrations
 
