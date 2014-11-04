@@ -45,7 +45,18 @@ Go to the cloned LindaWorkbench directory and execute
   ```
   sudo pip install -r requirements.txt
   ```
-  
+##Set passwords
+In order to be able to deploy the workbench locally, in the directory linda/linda_app/ you must create the file passwords.py that will contain the following:
+  ```
+  #MySQL database credentials
+  DB_USER = '{{MySQL database user}}'
+  DB_PASSWORD = '{{MySQL database password}}'
+
+  #Microsoft Translate credentials
+  MS_TRANSLATOR_UID = '{{Microsoft translator user id}}'
+  MS_TRANSLATOR_SECRET = '{{Microsoft translator secret key}}'
+  ```
+
 ##Deploy
 Go to the "linda" directory (cd linda)
 In order to access the LinDA workbench locally (via http://localhost:8000)
