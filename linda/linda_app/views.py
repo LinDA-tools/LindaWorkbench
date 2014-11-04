@@ -484,7 +484,7 @@ def downloadRDF(request, pk, type):
 
     #Return response
     mimetype = "application/octet-stream"
-    response = HttpResponse(g.serialize(format=type), mimetype=mimetype)
+    response = HttpResponse(g.serialize(format=type))
     response["Content-Disposition"] = "attachment; filename=%s.%s" % (voc.title_slug(), type)
     return response
 
