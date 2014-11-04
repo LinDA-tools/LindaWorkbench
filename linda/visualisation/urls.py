@@ -12,5 +12,5 @@ urlpatterns = patterns('',
                        url(r'^visualize/datasource/(?P<dtname>[\w-]+)/$', views.visualizeDatasource,
                            name='visualize-datasource'),
                        #js proxies
-                       #url(r'^api/(?P<link>.*)', views.get_api_call, name='get-api-call'),
+                       url(r'^visual/api/(?P<link>.*)', views.get_api_call, name='get-api-call'),
 )
