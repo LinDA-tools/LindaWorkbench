@@ -12,3 +12,4 @@ elasticsearch
 MySQL-python
 xmltodict
 microsofttranslator
+pattern

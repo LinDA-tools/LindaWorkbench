@@ -39,15 +39,14 @@
                                       </button>
                                       <ul class="dropdown-menu col-md-12" role="menu" aria-labelledby="dd_select_dataset">
                                         {% for datasource in datasources %}
-                                           <li role="presentation"><a role="menuitem" tabindex="-1" onclick="QueryBuilder.datasets.select('{{datasource | get_endpoint}}')">{{datasource.name}}</a></li>
-                                       {% endfor %}
+                                           <li role="presentation"><a role="menuitem" tabindex="-1" onclick="QueryBuilder.datasets.select('{{datasource | get_endpoint}}', '{{datasource.name}}')">{{datasource.name}}</a></li>
+                                        {% endfor %}
                                       </ul>
                                     </div>
-
                                     {% with hidden_value_id="hdn_qb_dataset" div_classes="done-dataset" div_id="div_select_dataset" remove_function="QueryBuilder.datasets.reset()" hidden_value_value="" %}
                                         {% include 'query-builder/selector.html' %}
                                     {% endwith %}
-                                  </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -108,6 +107,68 @@
                                 </div>
                             </div>
                             <div class="row">
+
+
+                                <div class="col-md-8">
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading">
+                                            <div class="row">
+                                                <div class="col-md-9">
+                                                    Properties Histogram
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="panel-body">
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <small> Filter some specific properties of the selected class</small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="panel-heading alert" style="display:none;" id="qb_properties_properties_selected_filters_header">
+                                            Selected filters
+                                        </div>
+                                        <div class="list-group" id="qb_properties_properties_selected_filters_list" style="display:none;">
+                                        </div>
+                                        <div class="panel-heading alert">
+                                            <div class="row">
+                                                <div class="col-md-11">
+                                                    Object Properties
+                                                </div>
+                                                <div class="col-md-1">
+                                                    <input type='checkbox' id='cb_property_range_all_object'  class='cb-property-range-all'  checked='checked' onclick="QueryBuilder.properties.click_check_all('object')"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="list-group" id="property_main_properties_object_group" >
+
+                                        </div>
+                                        <div class="row" id="qb_properties_properties_object_loading">
+                                            <div class="col-md-12">
+                                                <center><img src="/static/images/jar-loading.gif" class="builder-loading"/></center>
+                                            </div>
+                                        </div>
+                                        <div class="panel-heading alert">
+                                            <div class="row">
+                                                <div class="col-md-11">
+                                                    Data type Properties
+                                                </div>
+                                                <div class="col-md-1">
+                                                    <input type='checkbox' id='cb_property_range_all_data'  class='cb-property-range-all'  checked='checked' onclick="QueryBuilder.properties.click_check_all('data')"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="list-group" id="property_main_properties_datatype_group" >
+
+                                        </div>
+                                        <div class="row" id="qb_properties_properties_datatype_loading">
+                                            <div class="col-md-12">
+                                                <center><img src="/static/images/jar-loading.gif" class="builder-loading"/></center>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
                                 <div class="col-md-4">
                                     <div class="panel panel-default">
                                         <div class="panel-heading  property-subclass-header" uri="" id="property_main_subclass_header">
@@ -128,92 +189,6 @@
                                                 <center><img src="/static/images/jar-loading.gif" class="builder-loading"/></center>
                                             </div>
                                         </div>
-                                    </div>
-                                </div>
-
-                                <div class="col-md-4">
-                                    <div class="panel panel-default">
-                                        <div class="panel-heading">
-                                            <div class="row">
-                                                <div class="col-md-9">
-                                                    Properties
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="panel-body">
-                                            <div class="row">
-                                                <div class="col-md-12">
-                                                    <small> Filter some specific properties of the selected class</small>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="panel-heading alert" style="display:none;" id="qb_properties_properties_selected_filters_header">
-                                            Selected filters
-                                        </div>
-                                        <div class="list-group" id="qb_properties_properties_selected_filters_list" style="display:none;">
-                                        </div>
-                                        <div class="panel-heading alert">
-                                            <div class="row">
-                                                <div class="col-md-9">
-                                                    Object Properties
-                                                </div>
-                                                <div class="col-md-3">
-                                                    <button type="button" class="btn btn-primary btn-xs pull-right" onclick="QueryBuilder.properties.get_properties_for_selected_class(true,'object')" id="btn_properties_properties_object_more"><span class="glyphicon glyphicon-plus"></span>&nbsp;more</button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="list-group" id="property_main_properties_object_group" >
-
-                                        </div>
-                                        <div class="row" id="qb_properties_properties_object_loading">
-                                            <div class="col-md-12">
-                                                <center><img src="/static/images/jar-loading.gif" class="builder-loading"/></center>
-                                            </div>
-                                        </div>
-                                        <div class="panel-heading alert">
-                                            <div class="row">
-                                                <div class="col-md-9">
-                                                    Data type Properties
-                                                </div>
-                                                <div class="col-md-3">
-                                                    <button type="button" class="btn btn-primary btn-xs pull-right" onclick="QueryBuilder.properties.get_properties_for_selected_class(true,'datatype')" id="btn_properties_properties_datatype_more"><span class="glyphicon glyphicon-plus"></span>&nbsp;more</button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="list-group" id="property_main_properties_datatype_group" >
-
-                                        </div>
-                                        <div class="row" id="qb_properties_properties_datatype_loading">
-                                            <div class="col-md-12">
-                                                <center><img src="/static/images/jar-loading.gif" class="builder-loading"/></center>
-                                            </div>
-                                        </div>
-
-                                    </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="panel panel-default">
-                                        <div class="panel-heading">
-                                            Schema properties
-                                        </div>
-                                        <div class="panel-body">
-                                            <div class="row" >
-                                                <div class="col-md-12">
-                                                    <small>
-                                                        These are the properties which are defined in the RDF Schema
-                                                    </small>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="list-group" id="property_main_schema_properties_group" >
-
-                                        </div>
-                                        <div class="row" id="qb_properties_schema_properties_loading">
-                                            <div class="col-md-12">
-                                                <center><img src="/static/images/jar-loading.gif" class="builder-loading"/></center>
-                                            </div>
-                                        </div>
-
                                     </div>
                                 </div>
                             </div>
@@ -248,10 +223,10 @@
             </div>
         </div>
     </div>
-</div>
-{% include 'query-builder/alert.html' %}
-{% include 'query-builder/uri-viewer.html' %}
 
+    {% include 'query-builder/alert.html' %}
+    {% include 'query-builder/uri-viewer.html' %}
+</div>
 {% endblock %}
 
 {% block scripts %}
@@ -274,6 +249,29 @@
     <script data-turbolinks-track="true" src="/static/query-builder/javascripts/application.js?body=1"></script>
 
     <script>
+        function save_query() {
+            $.ajax({
+                url: "/query-builder/save/",
+                type: "POST",
+                data: {
+                    endpoint: QueryBuilder.dataset,
+                    endpointName: QueryBuilder.datasetName,
+                    className: QueryBuilder.className,
+                    query: $("textarea").val(),
+                    constraints: JSON.stringify(QueryBuilder.constraints),
+                    csrfmiddlewaretoken: '{{ csrf_token }}'
+                },
+                success: function(data, textStatus, jqXHR)
+                {
+                    document.location.href = '/queries/';
+                },
+                error: function (jqXHR, textStatus, errorThrown)
+                {
+                    alert(textStatus + ': ' + errorThrown);
+                }
+            });
+        }
+
         jQuery(function () {
             jQuery('.dropdown-toggle').dropdown();
         });

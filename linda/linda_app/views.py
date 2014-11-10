@@ -10,6 +10,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import ListView, UpdateView, DetailView, DeleteView
 
 import json
+import re
 import requests
 from microsofttranslator import Translator, TranslateApiException
 import xmltodict
@@ -335,7 +336,6 @@ def vocabulary_search(request):  # view for search in vocabularies - remembers s
         # create a unique translator object to be used
         translator = Translator(MS_TRANSLATOR_UID, MS_TRANSLATOR_SECRET)
         q = translator.translate(text=q_in, to_lang='en', from_lang=None)
-        print q
         if q.startswith("TranslateApiException:"):
             q = q_in
     else:
@@ -713,8 +713,6 @@ def get_qbuilder_call(request, link):
     for param in request.GET:
         total_link += param + "=" + urlquote(request.GET[param]) + "&"
 
-    print total_link + '\n'
-
     data = requests.get(total_link)
 
     return HttpResponse(data, data.headers['content-type'])
@@ -956,7 +954,7 @@ def datasource_sparql(request, dtname):  # Acts as a "fake" seperate sparql endp
     # Find where to add the FROM NAMED clause
     query = request.GET.get("query")
 
-    pos = query.find("WHERE")
+    pos = re.search("WHERE", query, re.IGNORECASE)
     query = query[:pos] + " FROM <" + datasource.uri + "> " + query[pos:]
     query = query.replace('?object rdf:type ?class', '')
 
@@ -965,9 +963,36 @@ def datasource_sparql(request, dtname):  # Acts as a "fake" seperate sparql endp
 
     # get query results and turn them into json
     data = requests.get(PRIVATE_SPARQL_ENDPOINT + "?Accept=" +urlquote("application/sparql-results+xml") + "&query=" + query_enc).text
-    data_json = json.dumps( xmltodict.parse(data) )
+    data_json = json.dumps(xmltodict.parse(data))
 
     # return the response
     return HttpResponse(data_json, "application/json")
 
 
+class QueryListView(ListView):
+    model = Query
+    template_name = 'queries/index.html'
+    context_object_name = 'queries'
+    paginate_by = 20
+
+
+#Save a query
+def query_save(request):
+    #get POST variables
+    endpoint = request.POST.get("endpoint")
+    endpointName = request.POST.get("endpointName")
+    className = request.POST.get("className")
+    query = request.POST.get("query")
+    constraintsStr = request.POST.get("constraints")
+
+    #load constraints as json object
+    constraints = json.loads(constraintsStr)
+    description = create_query_description(endpointName, className, query, constraints)
+
+    print description
+
+    #create the query object
+    Query.objects.create(endpoint=endpoint, sparql=query,
+                            description=description, createdOn=datetime.now())
+
+    return HttpResponse('')  # return empty response

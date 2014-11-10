@@ -821,6 +821,10 @@ form input[type="submit"] {
     color: #859596;
 }
 
+.main {
+    padding: 5px;
+}
+
 @media only screen and (max-width: 1190px){
     .main content {
         display: block;
@@ -1044,6 +1048,16 @@ form input[type="submit"] {
 
 .query-builder .row, .sparql .row {
 	display: block;
+}
+
+.queries .sparql-query {
+    width: 50%;
+    font-family: "Consolas";
+}
+
+.query-id {
+    color: #E87E04;
+    padding-right: 10px;
 }
 
 :not(".transformations") .container label, .container span, .cell {
@@ -1549,7 +1563,7 @@ input, textarea {
     margin-right: 8px;
 }
 
-.datasource-index-title {
+.datasource-index-title, .queries-index-title {
     display: inline-block;
     padding-right: 40px;
 }

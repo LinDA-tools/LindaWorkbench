@@ -3,14 +3,16 @@ import urllib
 from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save, post_delete
-from django.template.defaultfilters import slugify
+from django.template.defaultfilters import slugify, random
 
 import rdflib
 from rdflib import Graph, plugin
 from rdflib.util import guess_format
+import re
 
 from lists import *
 from athumb.fields import ImageWithThumbsField
+from pattern.en import pluralize
 
 from settings import SESAME_LINDA_URL
 
@@ -201,7 +203,7 @@ class VocabularyComments(models.Model):
 
 class DatasourceDescription(models.Model):
     title = models.CharField(max_length=512, blank=False, null=False)  # datasource title
-    is_public = models.BooleanField(default=False) #true if datasource is public
+    is_public = models.BooleanField(default=False)  #true if datasource is public
     name = models.CharField(max_length=512, blank=False, null=False)  # datasource name - slug
     uri = models.CharField(max_length=2048, blank=False, null=False)  # sesame uri
     createdOn = models.DateField(blank=False, null=False)  # daatasource creation date
@@ -211,3 +213,39 @@ class DatasourceDescription(models.Model):
         return self.title
 
 
+def create_query_description(dtname, classname, query, constraints):
+    #create base description
+    find_verbs = ["Find", "Search for", "Look up for", "Get"]
+    description = random(find_verbs) + " " + pluralize(classname.lower()) + " in " + dtname
+
+    #add constraints
+    if constraints:
+        description += " were "
+        for constraint in constraints[:-1]:
+            description += constraint['propertyName'] + " is "
+            for value in constraint['values'][:-1]:
+                description += value + " or "
+            description += constraint['values'][-1]
+            description += " and "
+
+        #handle last constraint differently
+        description += constraints[-1]['propertyName'] + " is "
+        for value in constraints[-1]['values'][:-1]:
+            description += value + " or "
+        description += constraints[-1]['values'][-1]
+
+    #add limit
+    lim_pos = re.search('LIMIT', query, re.IGNORECASE).start()
+    if lim_pos:
+        after_lim = query[lim_pos:]
+        lim = [int(s) for s in after_lim.split() if s.isdigit()][0]
+        description += ' (first ' + str(lim) + ')'
+
+    return description
+
+
+class Query(models.Model):
+    endpoint = models.URLField(blank=False, null=False)  # the query endpoint
+    sparql = models.CharField(max_length=4096, blank=False, null=False)  # the query string (select ?s ?p ?o...)
+    description = models.CharField(max_length=512, blank=True, null=True)  # query description (auto-created)
+    createdOn = models.DateField(blank=False, null=False)  # query creation date

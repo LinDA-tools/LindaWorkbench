@@ -6,24 +6,16 @@ DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
-# ('Your Name', 'your_email@example.com'),
+    # ('Your Name', 'your_email@example.com'),
 )
 
 MANAGERS = ADMINS
 
 DATABASES = {
-    #'default': {
-    #    'ENGINE': 'django.db.backends.sqlite3', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-    #    'NAME': 'linda.db', # Or path to database file if using sqlite3.
-    #    'USER': '', # Not used with sqlite3.
-    #    'PASSWORD': '', # Not used with sqlite3.
-    #    'HOST': '', # Set to empty string for localhost. Not used with sqlite3.
-    #    'PORT': '', # Set to empty string for default. Not used with sqlite3.
-    #},
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'linda',
-        'USER': passwords.DB_USER,  # load from file passwords.py that is !!NOT!! uploaded to github for privacy reasons
+        'USER': passwords.DB_USER,  # load from file passwords.py, the actual contents of which are !!NOT!! uploaded to github for privacy reasons
         'PASSWORD': passwords.DB_PASSWORD,
         'character': 'utf8',
         'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
@@ -134,13 +126,13 @@ TEMPLATE_DIRS = (
 LINDA_SERVER_IP = 'http://107.170.70.175'
 
 #LinDA url
-LINDA_HOME  = 'http://localhost:8000/'
+LINDA_HOME = 'http://localhost:8000/'
 
 # LinDA reposirtory in Sesamy (OpenRDF) url, in order to access private datasources
-SESAME_LINDA_URL = 'http://localhost:8080/openrdf-sesame/repositories/linda/'
+SESAME_LINDA_URL = LINDA_SERVER_IP + 'openrdf-sesame/repositories/linda/'
 
 # LinDA private resources SparQL endpoint
-PRIVATE_SPARQL_ENDPOINT = 'http://localhost:8080/openrdf-sesame/repositories/linda'
+PRIVATE_SPARQL_ENDPOINT = LINDA_SERVER_IP + ':8080/openrdf-sesame/repositories/linda'
 
 # QueryBuilder URL
 QUERY_BUILDER_SERVER = LINDA_SERVER_IP + ':3100/'

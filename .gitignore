@@ -75,3 +75,4 @@ linda/elasticsearch-0.90.1/data/*
 linda/.idea/workspace.xml
 data
 /linda/elasticsearch-0.90.1/logs
+/linda/elasticsearch-0.90.1

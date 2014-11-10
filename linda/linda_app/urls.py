@@ -91,8 +91,10 @@ urlpatterns = patterns('',
                        #Query Builde
 
                        url(r'^query/(?P<link>.*)', views.get_qbuilder_call, name='query-builder-proxy'),
-                       url(r'^query-builder/', views.queryBuilder,
+                       url(r'^query-builder/save/$', views.query_save, name='query-builder-save'),
+                       url(r'^query-builder/$', views.queryBuilder,
                            name='query-builder'),
+                       url(r'^queries', views.QueryListView.as_view(), name='saved-queries'),
                        url(r'^assets/jar-loading.gif$', RedirectView.as_view(url='/static/images/jar-loading.gif')),
 
                        #Tools
