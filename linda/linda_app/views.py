@@ -973,7 +973,7 @@ class QueryListView(ListView):
     model = Query
     template_name = 'queries/index.html'
     context_object_name = 'queries'
-    paginate_by = 20
+    paginate_by = 5
 
 
 #Save a query

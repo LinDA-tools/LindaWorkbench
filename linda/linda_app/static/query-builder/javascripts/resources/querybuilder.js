@@ -3,8 +3,6 @@ if (typeof QueryBuilder == 'undefined') {
 }
 
 QueryBuilder = {
-	constraints : new Array(),
-	
     //The methods related to datasets
     datasets : {
         //this method resets the dataset selected
@@ -43,6 +41,7 @@ QueryBuilder = {
     },
     select_class : function(class_uri, class_name){
 		QueryBuilder.className = class_name;
+		QueryBuilder.constraints = new Array(),
         $("#hdn_qb_class").val(class_uri);
         $("#tbl_classes_search_result").hide("fast");
         $(".clear-search-class").hide("fast");
@@ -241,13 +240,12 @@ QueryBuilder = {
                 if($(this).attr("filter-type") == 'object'){
                     var objects = $(this).attr("filter-value").split(",");
                     var property_uri = $(this).attr("property-uri");
-                    result += "{";
                     for(var i=0;i<objects.length;i++){
                         if(i>0)
                             result += " UNION ";
-                        result += "?concept <"+property_uri+"> <"+objects[i]+">";
+                        result += "{?concept <"+property_uri+"> <"+objects[i]+">}";
                     }
-                    result += "}.\n"
+                    result += ".\n"
                 }
             });
             return result;
