@@ -14,7 +14,7 @@ from lists import *
 from athumb.fields import ImageWithThumbsField
 from pattern.en import pluralize
 
-from settings import SESAME_LINDA_URL
+from settings import SESAME_LINDA_URL, RDF2ANY_SERVER
 
 User.profile = property(lambda u: UserProfile.objects.get_or_create(user=u)[0])
 
@@ -249,3 +249,7 @@ class Query(models.Model):
     sparql = models.CharField(max_length=4096, blank=False, null=False)  # the query string (select ?s ?p ?o...)
     description = models.CharField(max_length=512, blank=True, null=True)  # query description (auto-created)
     createdOn = models.DateField(blank=False, null=False)  # query creation date
+
+    def csv_link(self):
+        return RDF2ANY_SERVER + '/rdf2any/v1.0/convert/csv-converter.csv?dataset=' + self.endpoint + '&query=' \
+            + urllib.quote_plus(self.sparql)

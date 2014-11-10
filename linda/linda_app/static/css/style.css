@@ -184,7 +184,7 @@ header .site-title:hover {
 }
 
 #menu {
-    background-color: #F3F3F3;
+    background-color: #5C97BF;
     display: inline-block;
     width: 260px;
     min-height: 800px;
@@ -218,12 +218,8 @@ header .site-title:hover {
     padding: 5px 25px 5px 10px;
 }
 
-#menu > ul > li  a {
-    color: #232323;
-}
-
-#menu > ul > li:hover {
-    background-color: #D4D4D4;
+#menu > ul > li:hover, #menu > ul >li.selected {
+    background-color: #2574A9;
 }
 
 #menu-select-area {
@@ -270,7 +266,7 @@ header .site-title:hover {
 }
 
 #menu a {
-    color: #232323;
+    color: #eee;
 }
 
 @media only screen and (max-width: 450px){
@@ -1060,6 +1056,23 @@ form input[type="submit"] {
     padding-right: 10px;
 }
 
+.query-row {
+    cursor: pointer;
+}
+
+.query-row .operations {
+    display: none;
+}
+
+.query-row .selected .operations {
+    display: block;
+}
+
+.sparql-query p {
+    height: 65px;
+    overflow: hidden;
+}
+
 :not(".transformations") .container label, .container span, .cell {
     display: table-cell;
 }
@@ -1568,19 +1581,23 @@ input, textarea {
     padding-right: 40px;
 }
 
-.datasources-table {
+.datasources-table, .queries-table {
     width: 100%;
     border-top: 1px solid #ddd;
     padding-top: 10px;
 }
 
-.datasources-table th {
+.datasources-table th, .queries-table th {
     text-align: left;
     font-weight: 600;
 }
 
-.datasources-table tbody tr:hover {
-	background: #eee;
+.queries-table tr.selected {
+    background: #eee;
+}
+
+.datasources-table tbody tr:hover, .queries-table tbody tr:hover {
+	background: #ddd;
 }
 
 .datasource.context-menu-active {

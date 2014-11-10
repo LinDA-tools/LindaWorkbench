@@ -8,7 +8,7 @@
     <h2 class="queries-index-title">{% trans "Queries" %}</h2> <a href="/query-builder/">+ {%trans "Create New"%}</a>
 
     {% if queries %}
-        <table class="datasources-table">
+        <table class="queries-table">
             <thead>
                 <tr>
                     <th>{% trans "ID" %}</th>
@@ -20,8 +20,14 @@
             </thead>
             <tbody>
                 {% for query in queries %}
-                    <tr id="{{datasource.name}}" class="datasource {% if datasource.is_public %}public{% else %}private{% endif %}">
-                        <td class="query-id">#{{query.id}}</td>
+                    <tr id="query_{{query.id}}" class="query-row">
+                        <td class="query-id">#{{query.id}}
+                            <div class="operations">
+                                <p>{{query.csv_link}}</p>
+                                <a href="#">Run</a><br />
+                                <a href="#">Analyze</a>
+                            </div>
+                        </td>
                         <td>{{query.endpoint}}</td>
                         <td>{{query.description}}</td>
                         <td class="sparql-query">{{query.sparql|linebreaks}}</td>
@@ -39,4 +45,25 @@
     {% endwith %}
 
 </div>
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        $(".query-row").on('click', function() {
+            var id = $(this).attr('id');
+
+            if ($("#" + id).hasClass('selected')) {
+                console.log('open');
+                $(".queries-table .selected .sparql-query p").css('height', '65px');
+                $(".queries-table .selected").removeClass("selected");
+            } else {
+                $(".queries-table .selected .sparql-query p").css('height', '65px');
+                $(".queries-table .selected").removeClass("selected");
+
+
+                $("#" + id + " .sparql-query p").css('height', 'auto');
+                $("#" + id).addClass("selected");
+            }
+        });
+    </script>
 {% endblock %}

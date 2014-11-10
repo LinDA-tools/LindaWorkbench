@@ -973,8 +973,12 @@ class QueryListView(ListView):
     model = Query
     template_name = 'queries/index.html'
     context_object_name = 'queries'
-    paginate_by = 5
+    paginate_by = 10
 
+    def get_context_data(self, **kwargs):
+        context = super(QueryListView, self).get_context_data(**kwargs)
+        context['page_queries'] = True
+        return context
 
 #Save a query
 def query_save(request):

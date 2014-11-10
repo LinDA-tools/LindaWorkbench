@@ -40,13 +40,13 @@
                     <input type="submit" value="">
 
                 </form></li>
-            <li><a href="/datasources">{% trans "Data Sources" %}</a></li>
-            <li><a href="/queries/">{% trans "Queries" %}</a></li>
-            <li><a href="/query-builder">{% trans "Query builder" %}</a></li>
-            <li><a href="/visualizations">{% trans "Visualizations" %}</a></li>
-            <li><a href="/analytics">{% trans "Analytics" %}</a></li>
-            <li><a href="/transformations">{% trans "Transformations" %}</a></li>
-            <li><a href="/vocabularies/all/">{% trans "Vocabularies" %}</a></li>
+            <li {%if page_datasources %}class="selected"{% endif %}><a href="/datasources">{% trans "Data Sources" %}</a></li>
+            <li {%if page_queries %}class="selected"{% endif %}><a href="/queries/">{% trans "Queries" %}</a></li>
+            <li {%if page_qbuilder %}class="selected"{% endif %}><a href="/query-builder">{% trans "Query builder" %}</a></li>
+            <li {%if page_visualizations %}class="selected"{% endif %}><a href="/visualizations">{% trans "Visualizations" %}</a></li>
+            <li {%if page_analytics %}class="selected"{% endif %}><a href="/analytics">{% trans "Analytics" %}</a></li>
+            <li {%if page_transformations %}class="selected"{% endif %}><a href="/transformations">{% trans "Transformations" %}</a></li>
+            <li {%if page_vocabularies %}class="selected"{% endif %}><a href="/vocabularies/all/">{% trans "Vocabularies" %}</a></li>
         </ul>
 
         <div class="secondary-menu">
