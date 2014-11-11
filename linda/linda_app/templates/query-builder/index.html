@@ -256,7 +256,7 @@
                 data: {
                     endpoint: QueryBuilder.dataset,
                     endpointName: QueryBuilder.datasetName,
-                    query: $("textarea").val(),
+                    query: $("#txt_sparql_query").val(),
                     csrfmiddlewaretoken: '{{ csrf_token }}'
                 },
                 success: function(data, textStatus, jqXHR)

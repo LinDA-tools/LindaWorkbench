@@ -86,7 +86,7 @@
                         url = "/analytics?q_id=" + q_id;
                     else
                     if (key == "Edit")
-                        url = "/queries/" + q_id + "/edit/";
+                        url = "/sparql/?q_id=" + q_id;
                     else
                     if (key == "Delete")
                         url = "/queries/" + q_id + "/delete/";
@@ -99,7 +99,7 @@
                     "Visualize": {name: "Visualize", icon: "visualize"},
                     "Analyze": {name: "Analyze", icon: "analyze"},
                     "sep1": "---------",
-                    "Edit": {name: "Edit", icon: "edit"},
+                    "Edit": {name: "Run & Edit", icon: "edit"},
                     "Delete": {name: "Delete", icon: "delete"},
                 }
             });

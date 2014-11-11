@@ -21,7 +21,7 @@
 
 {% block content %}
 <div class="main sparql">
-    <h1 class="page-title">SparQL Endpoint</h1>
+    <h1 class="page-title">SparQL Endpoint{% if query %} - Edit Query{% endif %}</h1>
 
     <div>
         <div class="dropdown clear-dataset">
@@ -49,7 +49,9 @@
             <div class="row">
 
                 <div class="col-md-12">
-                    {% include 'query-builder/sparql-query-editor.html' %}
+                    {% with query=query %}
+                        {% include 'query-builder/sparql-query-editor.html' %}
+                    {% endwith %}
                 </div>
             </div>
 
@@ -93,25 +95,38 @@
             $('#hdn_qb_dataset').val(endpoint_uri);
         }
 
-        function save_query() {
-            $.ajax({
-                url: "/query-builder/save/",
-                type: "POST",
-                data: {
-                    endpoint: endpoint_uri,
-                    endpointName: dt_name,
-                    query: $("textarea").val(),
-                    csrfmiddlewaretoken: '{{ csrf_token }}'
-                },
-                success: function(data, textStatus, jqXHR)
-                {
-                    document.location.href = '/queries/';
-                },
-                error: function (jqXHR, textStatus, errorThrown)
-                {
-                    alert(textStatus + ': ' + errorThrown);
-                }
-            });
-        }
+        {% if query %}
+            function save_query() {
+                alert('Query update not implemented yet');
+            }
+        {% else %}
+            function save_query() {
+                $.ajax({
+                    url: "/query-builder/save/",
+                    type: "POST",
+                    data: {
+                        endpoint: endpoint_uri,
+                        endpointName: dt_name,
+                        query: $("#txt_sparql_query").val(),
+                        csrfmiddlewaretoken: '{{ csrf_token }}'
+                    },
+                    success: function(data, textStatus, jqXHR)
+                    {
+                        document.location.href = '/queries/';
+                    },
+                    error: function (jqXHR, textStatus, errorThrown)
+                    {
+                        alert(textStatus + ': ' + errorThrown);
+                    }
+                });
+            }
+        {% endif %}
     </script>
+
+    {% if query %}
+        <script>
+            /*Select the predefined datasource if it's specified*/
+            QueryBuilder.datasets.select('{{query.endpoint}}', '{{query.endpoint}}');
+        </script>
+    {% endif %}
 {% endblock %}

@@ -49,6 +49,12 @@ def sparql(request):
     params['datasources'] = DatasourceDescription.objects.all()
     params['page_sparql'] = True
 
+    #get query parameter
+    if request.GET.get('q_id'):
+        params['query'] = Query.objects.get(pk=request.GET.get('q_id'))
+        if not params['query']:
+            return Http404
+
     return render(request, 'sparql.html', params)
 
 
