@@ -1022,3 +1022,35 @@ def query_save(request):
                          description=description, createdOn=datetime.now())
 
     return HttpResponse('')  # return empty response
+
+
+#Update an existing query
+def query_update(request, pk):
+    obj_list = Query.objects.filter(pk=pk)
+    if not obj_list:
+        return Http404
+
+    #get query object and update its properties
+    q_obj = obj_list[0]
+    q_obj.sparql = request.POST.get("query")
+    q_obj.endpoint = request.POST.get("endpoint")
+    q_obj.endpoint_name = request.POST.get("endpointName")
+    q_obj.description = create_query_description(q_obj.endpoint_name, q_obj.sparql)
+
+    #Save changes
+    q_obj.save()
+
+    return HttpResponse('')
+
+
+#Delete an existing query
+def query_delete(request, pk):
+    obj_list = Query.objects.filter(pk=pk)
+    if not obj_list:
+        return Http404
+
+    #get query object and delete it
+    q_obj = obj_list[0]
+    q_obj.delete()
+
+    return HttpResponse('')

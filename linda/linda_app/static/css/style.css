@@ -933,11 +933,11 @@ form input[type="submit"] {
     background-color: #26C281;
 }
 
-.red {
+.red, .queries .confirm {
     background-color: #D64541;
 }
 
-.red:hover {
+.red:hover, .queries .confirm:hover {
     background-color: #EF4836;
 }
 
@@ -1006,7 +1006,7 @@ form input[type="submit"] {
     color: #F22613;
 }
 
-.button {
+.button, .queries .btn {
     display: inline-block;
     vertical-align: top;
     padding: 3px 10px;
@@ -1025,7 +1025,7 @@ form input[type="submit"] {
     margin: 0 !important;
 }
 
-.button:hover {
+.button:hover, .queries .btn:hover {
     cursor: pointer;
     color: #fff;
 }
@@ -1599,6 +1599,24 @@ input, textarea {
 
 .queries-table tr.selected {
     background: #eee;
+}
+
+.queries .modal-dialog {
+    margin-top: 60px;
+}
+
+.queries .modal-header {
+    color: #fff;
+    background: #D64541;
+}
+
+.queries .btn {
+    box-shadow: 0 0 2px #333;
+    padding: 5 15px;
+}
+
+.queries .confirmation-modal a, .queries .modal-dialog .close {
+    display: none;
 }
 
 .datasources-table tbody tr:hover, .queries-table tbody tr:hover {

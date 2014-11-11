@@ -3,6 +3,11 @@
 {% block title %}Queries | LinDA{% endblock %}
 {% block bodyclass %}queries{% endblock %}
 
+{% block css %}
+    <link rel="stylesheet" href="/static/css/jquery.contextMenu.css" />
+    <link rel="stylesheet" href="/static/css/jquery.modal.css" />
+{% endblock %}
+
 {% block content %}
 <div class="main">
     <h2 class="queries-index-title">{% trans "Queries" %}</h2> <a href="/query-builder/">+ {%trans "Create New"%}</a>
@@ -67,8 +72,11 @@
         });
     </script>
 
-    <link rel="stylesheet" href="/static/css/jquery.contextMenu.css" />
+    <script src="/static/js/jquery-ui.min.js"></script>
+    <script src="/static/js/jquery.modal.min.js"></script>
     <script src="/static/js/jquery.contextMenu.js"></script>
+    <script src="/static/js/jquery.confirm.js"></script>
+
     <script>
         $(function(){ //private datasource context menu
 
@@ -88,8 +96,35 @@
                     if (key == "Edit")
                         url = "/sparql/?q_id=" + q_id;
                     else
-                    if (key == "Delete")
-                        url = "/queries/" + q_id + "/delete/";
+                    if (key == "Delete") {
+                        $.confirm({
+                            title: "Delete Query #" + q_id,
+                            text: "Are you sure you want to delete this query?",
+                            className: "delete-dialog",
+                            confirm: function(button) {
+                                $.ajax({
+                                    url: "/query-builder/delete/" + q_id + '/',
+                                    type: "POST",
+                                    data: {
+                                        csrfmiddlewaretoken: '{{ csrf_token }}'
+                                    },
+                                    success: function(data, textStatus, jqXHR)
+                                    {
+                                        document.location.reload();
+                                    },
+                                    error: function (jqXHR, textStatus, errorThrown)
+                                    {
+                                        console.log(textStatus + ': ' + errorThrown);
+                                    }
+                                });
+                            },
+                            cancel: function(button) {
+                                $('.confirmation-modal').remove();
+                                $('.jquery-modal').remove();
+                            }
+                        });
+                        return;
+                    }
 
                     $(this).addClass("show-context-menu");
                     if (url)

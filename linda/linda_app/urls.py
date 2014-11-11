@@ -91,6 +91,8 @@ urlpatterns = patterns('',
                        #Query Builde
 
                        url(r'^query/(?P<link>.*)', views.get_qbuilder_call, name='query-builder-proxy'),
+                       url(r'^query-builder/save/(?P<pk>\d+)/$', views.query_update, name='query-builder-update'),
+                       url(r'^query-builder/delete/(?P<pk>\d+)/$', views.query_delete, name='query-builder-delete'),
                        url(r'^query-builder/save/$', views.query_save, name='query-builder-save'),
                        url(r'^query-builder/$', views.queryBuilder,
                            name='query-builder'),

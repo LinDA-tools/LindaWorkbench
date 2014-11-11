@@ -95,14 +95,13 @@
             $('#hdn_qb_dataset').val(endpoint_uri);
         }
 
-        {% if query %}
-            function save_query() {
-                alert('Query update not implemented yet');
-            }
-        {% else %}
             function save_query() {
                 $.ajax({
-                    url: "/query-builder/save/",
+                    {% if query %}
+                        url: "/query-builder/save/{{query.id}}/",
+                    {% else %}
+                        url: "/query-builder/save/",
+                    {% endif %}
                     type: "POST",
                     data: {
                         endpoint: endpoint_uri,
@@ -120,13 +119,19 @@
                     }
                 });
             }
-        {% endif %}
+
     </script>
 
     {% if query %}
         <script>
             /*Select the predefined datasource if it's specified*/
-            QueryBuilder.datasets.select('{{query.endpoint}}', '{{query.endpoint}}');
+            dt_name = '{{query.endpoint}}';
+            {% for datasource in datasources %}
+                {% if datasource|get_endpoint == query.endpoint %}
+                    dt_name = '{{datasource.name}}';
+                {% endif %}
+            {% endfor %}
+            select_dataset(dt_name, '{{query.endpoint}}');
         </script>
     {% endif %}
 {% endblock %}
