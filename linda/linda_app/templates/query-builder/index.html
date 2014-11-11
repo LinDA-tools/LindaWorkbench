@@ -275,4 +275,11 @@
         });
         jQuery("#txt_search_classes").bind('input',function(){QueryBuilder.search_classes_change();});
     </script>
+
+    {% if datasource_default %}
+        <script>
+            /*Select the predefined datasource if it's specified*/
+            QueryBuilder.datasets.select('{{datasource_default | get_endpoint}}', '{{datasource_default.name}}')
+        </script>
+    {% endif %}
 {% endblock %}

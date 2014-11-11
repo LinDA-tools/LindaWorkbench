@@ -70,7 +70,7 @@
             link.parentNode.removeChild(link);
         }
 
- $(function(){ //private datasource context menu
+        $(function(){ //private datasource context menu
 
             $.contextMenu({
                 selector: '.datasource.private',
@@ -80,6 +80,9 @@
 
                     if (key == "Visualize")
                         url = "/visualize/datasource/" + id;
+                    else
+                    if (key == "Explore")
+                        url = "/query-builder?dt_id=" + id;
                     else
                     if (key == "Edit")
                         url = "/datasource/" + id + "/replace/";
@@ -99,12 +102,11 @@
                 },
                 items: {
                     "Visualize": {name: "Visualize", icon: "visualize"},
-                    "Explore / View": {name: "Explore", icon: "explore"},
+                    "Explore": {name: "Explore", icon: "explore"},
                     "sep1": "---------",
                     "Edit": {name: "Edit", icon: "edit"},
                     "Delete": {name: "Delete", icon: "delete"},
                     "sep2": "---------",
-                    "Open": {name: "Open", icon: "open"},
                     "Download": {name: "Download", icon: "download"},
                 }
             });
@@ -115,11 +117,8 @@
                     var id = options.$trigger.attr('id');
                     var url;
 
-                    if (key == "Visualize")
-                        url = "/visualize/datasource/" + id;
-                    else
-                    if (key == "Analyze")
-                        url = "/analyze/datasource/" + id;
+                    if (key == "Explore")
+                        url = "/query-builder?dt_id=" + id;
                     else
                     if (key == "Edit")
                         url = "/datasource/" + id + "/replace/";
@@ -132,9 +131,7 @@
                         window.location = url;
                 },
                 items: {
-                    "Visualize": {name: "Visualize", icon: "visualize"},
-                    "Analyze": {name: "Analyze", icon: "analyze"},
-                    "Explore / View": {name: "Explore", icon: "explore"},
+                    "Explore": {name: "Explore", icon: "explore"},
                     "sep1": "---------",
                     "Edit": {name: "Edit", icon: "edit"},
                     "Delete": {name: "Delete", icon: "delete"},

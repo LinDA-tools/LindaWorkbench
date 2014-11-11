@@ -704,6 +704,8 @@ def datasourceDelete(request, dtname):
 def queryBuilder(request):
     params = {}
     params['datasources'] = DatasourceDescription.objects.all()
+    if 'dt_id' in request.GET:
+        params['datasource_default'] = DatasourceDescription.objects.filter(name=request.GET.get('dt_id'))[0]
     params['PRIVATE_SPARQL_ENDPOINT'] = PRIVATE_SPARQL_ENDPOINT
     params['RDF2ANY_SERVER'] = RDF2ANY_SERVER
     params['mode'] = "builder"
