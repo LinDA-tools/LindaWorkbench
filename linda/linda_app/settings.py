@@ -129,7 +129,7 @@ LINDA_SERVER_IP = 'http://107.170.70.175'
 LINDA_HOME = 'http://localhost:8000/'
 
 # LinDA reposirtory in Sesamy (OpenRDF) url, in order to access private datasources
-SESAME_LINDA_URL = LINDA_SERVER_IP + 'openrdf-sesame/repositories/linda/'
+SESAME_LINDA_URL = LINDA_SERVER_IP + ':8080/openrdf-sesame/repositories/linda/'
 
 # LinDA private resources SparQL endpoint
 PRIVATE_SPARQL_ENDPOINT = LINDA_SERVER_IP + ':8080/openrdf-sesame/repositories/linda'

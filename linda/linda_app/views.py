@@ -904,7 +904,7 @@ def api_datasource_replace(request, dtname):
 @csrf_exempt
 def api_datasource_delete(request, dtname):
     results = {}
-    if request.POST:  #request must be POST
+    if request.method == 'POST':  #request must be POST
 
         #check if datasource exists
         if DatasourceDescription.objects.filter(name=dtname).exists():
