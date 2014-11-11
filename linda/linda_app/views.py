@@ -46,6 +46,7 @@ def terms(request):
 def sparql(request):
     params = {}
     params['mode'] = "sparql"
+    params['datasources'] = DatasourceDescription.objects.all()
     params['page_sparql'] = True
 
     return render(request, 'sparql.html', params)
@@ -125,6 +126,7 @@ class UserUpdateView(UpdateView):
                 'userProfileForm': userProfileForm,
                 'userModel': user
             })
+
 
 class VocabularyDetailsView(DetailView):
     model = Vocabulary
@@ -403,7 +405,7 @@ def rateDataset(request, pk, vt):
                     code = 404
                 else:
                     if VocabularyRanking.objects.filter(vocabularyRanked=Vocabulary.objects.get(id=vocid),
-                                                         voter=request.user).exists():
+                                                        voter=request.user).exists():
                         res['result'] = "You have already ranked this vocabulary."
                         code = 403
                     else:
@@ -493,7 +495,7 @@ def downloadRDF(request, pk, type):
 def datasources(request):
     params = {}
     params['sortOptions'] = {('title', 'Title'), ('date', 'Date')}
-    params['sortBy'] = forms.Select(choices=params['sortOptions']).render('sortBy', '', attrs={"id": 'id_sortBy',})
+    params['sortBy'] = forms.Select(choices=params['sortOptions']).render('sortBy', '', attrs={"id": 'id_sortBy', })
     params['page_datasources'] = True
 
     if request.GET.get("sort") == "title":
@@ -508,11 +510,12 @@ def datasources(request):
 
 def datasourceCreate(request):
     params = {'types': {('public', 'Public'), ('private', 'Private')},
-                  'datatypes': {('csv', 'CSV file'), ('db', 'Database (relational)'), ('xls', 'Excel file'),
-                                ('rdf', 'RDF file')},
-                  'action': "create"}
-    params['typeSelect'] = forms.Select(choices=params['types']).render('type', '', attrs={"id": 'id_type',})
-    params['datatypeSelect'] = forms.Select(choices=params['datatypes']).render('datatype', '', attrs={"id": 'id_datatype',})
+              'datatypes': {('csv', 'CSV file'), ('db', 'Database (relational)'), ('xls', 'Excel file'),
+                            ('rdf', 'RDF file')},
+              'action': "create"}
+    params['typeSelect'] = forms.Select(choices=params['types']).render('type', '', attrs={"id": 'id_type', })
+    params['datatypeSelect'] = forms.Select(choices=params['datatypes']).render('datatype', '',
+                                                                                attrs={"id": 'id_datatype', })
 
     if request.POST:  # request to create a public datasource or move to appropriate tool for a private one
 
@@ -538,7 +541,9 @@ def datasourceCreate(request):
             #find the slug
             sname = slugify(request.POST.get("title"))
 
-            new_datasource = DatasourceDescription.objects.create(title=request.POST.get("title"), is_public=True, name=sname, uri=request.POST.get("endpoint"), createdOn=datetime.now(), lastUpdateOn=datetime.now())
+            new_datasource = DatasourceDescription.objects.create(title=request.POST.get("title"), is_public=True,
+                                                                  name=sname, uri=request.POST.get("endpoint"),
+                                                                  createdOn=datetime.now(), lastUpdateOn=datetime.now())
             new_datasource.save()
 
             # go to view all datasources
@@ -557,10 +562,12 @@ def datasourceReplace(request, name):
     params['action'] = "replace"
     params['datasource'] = datasource
     params['types'] = {('private', 'Private'), ('public', 'Public')}
-    params['datatypes'] = {('csv', 'CSV file'), ('db', 'Database (relational)'), ('xls', 'Excel file'), ('rdf', 'RDF file')}
+    params['datatypes'] = {('csv', 'CSV file'), ('db', 'Database (relational)'), ('xls', 'Excel file'),
+                           ('rdf', 'RDF file')}
 
-    params['typeSelect'] = forms.Select(choices=params['types']).render('type', '', attrs={"id": 'id_type',})
-    params['datatypeSelect'] = forms.Select(choices=params['datatypes']).render('datatype', '', attrs={"id": 'id_datatype',})
+    params['typeSelect'] = forms.Select(choices=params['types']).render('type', '', attrs={"id": 'id_type', })
+    params['datatypeSelect'] = forms.Select(choices=params['datatypes']).render('datatype', '',
+                                                                                attrs={"id": 'id_datatype', })
 
     if request.POST:
         if request.POST.get("type") == "private":
@@ -606,7 +613,8 @@ def datasourceCreateRDF(request):
 
         #Call the corresponding web service
         headers = {'accept': 'application/json'}
-        callAdd = requests.post(LINDA_HOME + "api/datasource/create/", headers=headers, data={"content": rdf_content, "title": request.POST.get("title")})
+        callAdd = requests.post(LINDA_HOME + "api/datasource/create/", headers=headers,
+                                data={"content": rdf_content, "title": request.POST.get("title")})
 
         j_obj = json.loads(callAdd.text)
         if j_obj['status'] == '200':
@@ -637,7 +645,8 @@ def datasourceReplaceRDF(request, dtname):
 
         #Call the corresponding web service
         headers = {'accept': 'application/json'}
-        callAdd = requests.post(LINDA_HOME + "api/datasource/" + dtname + "/replace/", headers=headers, data={"content": rdf_content,})
+        callAdd = requests.post(LINDA_HOME + "api/datasource/" + dtname + "/replace/", headers=headers,
+                                data={"content": rdf_content, })
 
         j_obj = json.loads(callAdd.text)
         if j_obj['status'] == '200':
@@ -680,8 +689,6 @@ def datasourceDelete(request, dtname):
                 return redirect("/datasources/")
             else:
                 params = {}
-
-
 
                 params['form_error'] = j_obj['message']
 
@@ -727,6 +734,7 @@ def rdb2rdf(request):
 
     return render(request, 'rdb2rdf/rdb2rdf.html', params)
 
+
 # Api view
 
 
@@ -755,6 +763,7 @@ def api_users(request):
     mimetype = 'application/json'
     return HttpResponse(data, mimetype)
 
+
 #Return a list with all created datasources
 @csrf_exempt
 def api_datasources_list(request):
@@ -770,11 +779,12 @@ def api_datasources_list(request):
     mimetype = 'application/json'
     return HttpResponse(data, mimetype)
 
+
 #Create a new datasource with some rdf data
 @csrf_exempt
 def api_datasource_create(request):
     results = {}
-    if request.POST: #request must be POST
+    if request.POST:  #request must be POST
         #check if datasource already exists
         if DatasourceDescription.objects.filter(title=request.POST.get("title")).exists():
             results['status'] = '403'
@@ -787,17 +797,19 @@ def api_datasource_create(request):
             if request.POST.get("format"):
                 rdf_format = request.POST.get("format")
             else:
-                rdf_format = 'application/rdf+xml' #rdf+xml by default
+                rdf_format = 'application/rdf+xml'  #rdf+xml by default
 
             #make REST api call to add rdf data
             headers = {'accept': 'application/rdf+xml', 'content-type': rdf_format}
-            callAdd = requests.post(SESAME_LINDA_URL + 'rdf-graphs/' + sname, headers=headers, data=request.POST.get("content"))
+            callAdd = requests.post(SESAME_LINDA_URL + 'rdf-graphs/' + sname, headers=headers,
+                                    data=request.POST.get("content"))
 
             if callAdd.text == "":
                 #create datasource description
                 source = DatasourceDescription.objects.create(title=request.POST.get("title"),
-                                                          name=sname,
-                                                          uri=SESAME_LINDA_URL + "rdf-graphs/" + sname, createdOn=datetime.now(), lastUpdateOn=datetime.now())
+                                                              name=sname,
+                                                              uri=SESAME_LINDA_URL + "rdf-graphs/" + sname,
+                                                              createdOn=datetime.now(), lastUpdateOn=datetime.now())
 
                 results['status'] = '200'
                 results['message'] = 'Datasource created succesfully.'
@@ -814,6 +826,7 @@ def api_datasource_create(request):
     mimetype = 'application/json'
     return HttpResponse(data, mimetype)
 
+
 #Retrieve all data from datasource in specified format
 @csrf_exempt
 def api_datasource_get(request, dtname):
@@ -825,7 +838,7 @@ def api_datasource_get(request, dtname):
         if request.GET.get("format"):
             rdf_format = request.GET.get("format")
         else:
-            rdf_format = 'application/rdf+xml' #rdf+xml by default
+            rdf_format = 'application/rdf+xml'  #rdf+xml by default
 
         #make REST api call to update graph
         headers = {'accept': rdf_format, 'content-type': 'application/rdf+xml'}
@@ -842,22 +855,24 @@ def api_datasource_get(request, dtname):
     mimetype = 'application/json'
     return HttpResponse(data, mimetype)
 
+
 #Replace all data from datasource with new rdf data
 @csrf_exempt
 def api_datasource_replace(request, dtname):
     results = {}
-    if request.POST: #request must be POST
+    if request.POST:  #request must be POST
         #check if datasource exists
         if DatasourceDescription.objects.filter(name=dtname).exists():
             #get rdf type
             if request.POST.get("format"):
                 rdf_format = request.POST.get("format")
             else:
-                rdf_format = 'application/rdf+xml' #rdf+xml by default
+                rdf_format = 'application/rdf+xml'  #rdf+xml by default
 
             #make REST api call to update graph
             headers = {'accept': 'application/rdf+xml', 'content-type': rdf_format}
-            callReplace = requests.put(SESAME_LINDA_URL + 'rdf-graphs/' + dtname, headers=headers, data=request.POST.get("content"))
+            callReplace = requests.put(SESAME_LINDA_URL + 'rdf-graphs/' + dtname, headers=headers,
+                                       data=request.POST.get("content"))
 
             if callReplace.text == "":
                 #update datasource database object
@@ -882,11 +897,12 @@ def api_datasource_replace(request, dtname):
     mimetype = 'application/json'
     return HttpResponse(data, mimetype)
 
+
 #Replace all data from datasource with new rdf data
 @csrf_exempt
 def api_datasource_delete(request, dtname):
     results = {}
-    if request.POST: #request must be POST
+    if request.POST:  #request must be POST
 
         #check if datasource exists
         if DatasourceDescription.objects.filter(name=dtname).exists():
@@ -904,19 +920,18 @@ def api_datasource_delete(request, dtname):
                 results['status'] = '500'
                 results['message'] = 'Error deleting datasource: ' + callDelete.text
         else:
-             results['status'] = '404'
-             results['message'] = "Datasource does not exist."
+            results['status'] = '404'
+            results['message'] = "Datasource does not exist."
 
     else:
         results['status'] = '403'
-
-
 
         results['message'] = 'POST method must be used to delete a datasource.'
 
     data = json.dumps(results)
     mimetype = 'application/json'
     return HttpResponse(data, mimetype)
+
 
 #Get a query for a specific private datasource and execute it
 @csrf_exempt
@@ -962,7 +977,8 @@ def datasource_sparql(request, dtname):  # Acts as a "fake" seperate sparql endp
     query_enc = urlquote(query, safe='')
 
     # get query results and turn them into json
-    data = requests.get(PRIVATE_SPARQL_ENDPOINT + "?Accept=" +urlquote("application/sparql-results+xml") + "&query=" + query_enc).text
+    data = requests.get(
+        PRIVATE_SPARQL_ENDPOINT + "?Accept=" + urlquote("application/sparql-results+xml") + "&query=" + query_enc).text
     data_json = json.dumps(xmltodict.parse(data))
 
     # return the response
@@ -980,23 +996,21 @@ class QueryListView(ListView):
         context['page_queries'] = True
         return context
 
+
 #Save a query
 def query_save(request):
     #get POST variables
     endpoint = request.POST.get("endpoint")
-    endpointName = request.POST.get("endpointName")
-    className = request.POST.get("className")
+    endpoint_name = request.POST.get("endpointName")
     query = request.POST.get("query")
-    constraintsStr = request.POST.get("constraints")
 
     #load constraints as json object
-    constraints = json.loads(constraintsStr)
-    description = create_query_description(endpointName, className, query, constraints)
+    description = create_query_description(endpoint_name, query)
 
     print description
 
     #create the query object
     Query.objects.create(endpoint=endpoint, sparql=query,
-                            description=description, createdOn=datetime.now())
+                         description=description, createdOn=datetime.now())
 
     return HttpResponse('')  # return empty response

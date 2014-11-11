@@ -40,8 +40,6 @@ QueryBuilder = {
         $.get("/query/builder_classes.js",{ search: search_string, dataset:dataset});
     },
     select_class : function(class_uri, class_name){
-		QueryBuilder.className = class_name;
-		QueryBuilder.constraints = new Array(),
         $("#hdn_qb_class").val(class_uri);
         $("#tbl_classes_search_result").hide("fast");
         $(".clear-search-class").hide("fast");
@@ -336,12 +334,6 @@ QueryBuilder = {
         },
         filter : {
             add_objects : function(property_uri, property_name,  data){
-				var values = new Array();
-				for (var i=0; i<data.length; i++) {
-					values.push(data[i].name);
-				}
-				QueryBuilder.constraints.push({"propertyName": property_name, "values": values});
-				
                 var identifier = QueryBuilder.properties.filter.get_new_list_identifier();
                 $("#qb_properties_properties_selected_filters_header").show();
                 $("#qb_properties_properties_selected_filters_list").show();
@@ -369,7 +361,6 @@ QueryBuilder = {
             remove : function(identifier){
                 var list_item = $("#qb_properties_properties_selected_filters_list_item_"+identifier);
                 list_item.hide("fast");
-				QueryBuilder.constraints[identifier-1] = null;
                 setTimeout(function(){
                     list_item.remove();
                     if($("#qb_properties_properties_selected_filters_list").find(".list-item").length <= 0){

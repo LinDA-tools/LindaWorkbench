@@ -1592,6 +1592,11 @@ input, textarea {
     font-weight: 600;
 }
 
+.datasources-table th, .queries-table th,
+.datasources-table td, .queries-table td {
+    padding: 5px;
+}
+
 .queries-table tr.selected {
     background: #eee;
 }

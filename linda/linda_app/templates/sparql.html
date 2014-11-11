@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% block title %}SparQL Endpoint | LinDa{% endblock %}
 {% block bodyclass %}sparql{% endblock %}
+{% load app_filters %}
 {% load i18n %}
 
 {%block css %}
@@ -22,9 +23,31 @@
 <div class="main sparql">
     <h1 class="page-title">SparQL Endpoint</h1>
 
+    <div>
+        <div class="dropdown clear-dataset">
+            <button class="btn btn-default dropdown-toggle clear-dataset col-md-12" type="button" id="dd_select_dataset"
+                    data-toggle="dropdown">
+                Choose a Dataset&nbsp;
+                <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu col-md-12" role="menu" aria-labelledby="dd_select_dataset">
+                {% for datasource in datasources %}
+                    <li role="presentation"><a role="menuitem" tabindex="-1"
+                                           onclick="select_dataset('{{datasource.name}}', '{{datasource | get_endpoint}}');">{{datasource.name}}</a>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% with hidden_value_id="hdn_qb_dataset" div_classes="done-dataset" div_id="div_select_dataset" remove_function="QueryBuilder.datasets.reset()" hidden_value_value="" %}
+            {% include 'query-builder/selector.html' %}
+        {% endwith %}
+    </div>
+
     <div class="main-container panel panel-default">
         <div class="panel-body">
+
             <div class="row">
+
                 <div class="col-md-12">
                     {% include 'query-builder/sparql-query-editor.html' %}
                 </div>
@@ -32,7 +55,7 @@
 
             {% include 'query-builder/search-results.html' %}
 
-            <input type="hidden" id="hdn_qb_dataset" value="http://dbpedia.org/sparql">
+            <input type="hidden" id="hdn_qb_dataset" value="">
         </div>
     </div>
 </div>
@@ -62,5 +85,33 @@
             jQuery('.dropdown-toggle').dropdown();
         });
         jQuery("#txt_search_classes").bind('input',function(){QueryBuilder.search_classes_change();});
+
+        function select_dataset(dtn, endp) {
+            dt_name = dtn;
+            endpoint_uri = endp;
+            $('#dd_select_dataset').html(dt_name);
+            $('#hdn_qb_dataset').val(endpoint_uri);
+        }
+
+        function save_query() {
+            $.ajax({
+                url: "/query-builder/save/",
+                type: "POST",
+                data: {
+                    endpoint: endpoint_uri,
+                    endpointName: dt_name,
+                    query: $("textarea").val(),
+                    csrfmiddlewaretoken: '{{ csrf_token }}'
+                },
+                success: function(data, textStatus, jqXHR)
+                {
+                    document.location.href = '/queries/';
+                },
+                error: function (jqXHR, textStatus, errorThrown)
+                {
+                    alert(textStatus + ': ' + errorThrown);
+                }
+            });
+        }
     </script>
 {% endblock %}

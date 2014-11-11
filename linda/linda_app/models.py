@@ -213,32 +213,90 @@ class DatasourceDescription(models.Model):
         return self.title
 
 
-def create_query_description(dtname, classname, query, constraints):
+#Creates a 'label' from an rdf term uri
+def get_label_by_uri(uri):
+    label = uri.split('/')[-1]
+    start_pos = label.find('#')
+    if start_pos < 0:
+        start_pos = 0
+    end_pos = label.find('>')
+    label = label[start_pos:end_pos]
+    label = re.sub(r'([a-z](?=[A-Z])|[A-Z](?=[A-Z][a-z]))', r'\1 ', label)  # insert space for words written in camelCase
+    return re.sub('_', ' ', label)
+
+
+#Given an endpoint name and a query it creates a description of the query
+def create_query_description(dtname, query):
     #create base description
-    find_verbs = ["Find", "Search for", "Look up for", "Get"]
-    description = random(find_verbs) + " " + pluralize(classname.lower()) + " in " + dtname
+    find_verbs = ["Find", "Search for", "Look up for", "Get", "List"]
+
+    #get class name
+    type_pos = re.search('rdf:type', query, re.IGNORECASE).end()
+    class_name = get_label_by_uri(query[type_pos:].split()[0])
+
+    if not class_name:
+        class_name = 'object'
+
+    description = random(find_verbs) + " " + pluralize(class_name.lower()) + " in " + dtname
 
     #add constraints
-    if constraints:
-        description += " were "
-        for constraint in constraints[:-1]:
-            description += constraint['propertyName'] + " is "
-            for value in constraint['values'][:-1]:
-                description += value + " or "
-            description += constraint['values'][-1]
-            description += " and "
+    where_start = re.search('WHERE', query, re.IGNORECASE).end()
+    if where_start:
+        where_end = re.search('FILTER', query, re.IGNORECASE).start()
+        if not where_end:
+            where_end = re.search('LIMIT', query, re.IGNORECASE).start()
+        if not where_end:
+            where_end = len(query)
 
-        #handle last constraint differently
-        description += constraints[-1]['propertyName'] + " is "
-        for value in constraints[-1]['values'][:-1]:
-            description += value + " or "
-        description += constraints[-1]['values'][-1]
+        #split where part to constraints
+        where_str = re.sub('({|}|\n)', '', query[where_start:where_end])  # ignore {, } and \n
+        where_str = re.sub('(<|>|\n)', '"', where_str)
+        r = re.compile(r'(?:[^."]|"[^"]*")+')
+        where_constraints = r.findall(where_str)  # split by . outside of "entities"
+        print where_constraints
+
+        first_constraint = True
+        for constraint in where_constraints:
+            terms = constraint.split()
+            print terms
+
+            if terms[1].lower() == 'rdf:type' or terms[2][0] == '?':
+                continue  # ignore class or non-constant (e.g label) constraints
+
+            tp_pos = 1  # first constraint property
+            old_tp_name = ''
+            constraint_str = ''
+            while tp_pos < len(terms):  # foreach sub-constraint in the union
+                tp_name = get_label_by_uri(terms[tp_pos])
+                # get seperator
+                if tp_pos < len(terms) - 2:
+                    sep = ', '
+                else:
+                    sep = ' or '
+
+                if not old_tp_name:
+                    constraint_str += tp_name + ' is '
+                elif old_tp_name.lower() == tp_name.lower():
+                    constraint_str += sep
+                else:
+                    constraint_str += sep + tp_name + ' is '
+                constraint_str += get_label_by_uri(terms[tp_pos+1])
+
+                old_tp_name = tp_name
+                tp_pos += 4  # move to the next sub-contraint
+
+            # add 'and' if it is not the first constraint
+            if first_constraint:
+                description += ' where ' + constraint_str
+                first_constraint = False
+            else:
+                description += ' and ' + constraint_str
 
     #add limit
     lim_pos = re.search('LIMIT', query, re.IGNORECASE).start()
     if lim_pos:
         after_lim = query[lim_pos:]
-        lim = [int(s) for s in after_lim.split() if s.isdigit()][0]
+        lim = [int(s) for s in after_lim.split() if s.isdigit()][0]  # first number after limit
         description += ' (first ' + str(lim) + ')'
 
     return description

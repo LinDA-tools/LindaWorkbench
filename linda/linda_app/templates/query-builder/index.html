@@ -256,9 +256,7 @@
                 data: {
                     endpoint: QueryBuilder.dataset,
                     endpointName: QueryBuilder.datasetName,
-                    className: QueryBuilder.className,
                     query: $("textarea").val(),
-                    constraints: JSON.stringify(QueryBuilder.constraints),
                     csrfmiddlewaretoken: '{{ csrf_token }}'
                 },
                 success: function(data, textStatus, jqXHR)
