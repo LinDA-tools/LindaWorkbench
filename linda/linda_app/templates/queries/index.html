@@ -66,4 +66,43 @@
             }
         });
     </script>
+
+    <link rel="stylesheet" href="/static/css/jquery.contextMenu.css" />
+    <script src="/static/js/jquery.contextMenu.js"></script>
+    <script>
+        $(function(){ //private datasource context menu
+
+            $.contextMenu({
+                selector: '.query-row',
+                callback: function(key, options) {
+                    var id = options.$trigger.attr('id');
+                    q_id = id.substr(id.indexOf("_")+1)
+                    var url;
+
+                    if (key == "Visualize")
+                        url = "/visualize?q_id=" + q_id;
+                    else
+                    if (key == "Analyze")
+                        url = "/analytics?q_id=" + q_id;
+                    else
+                    if (key == "Edit")
+                        url = "/queries/" + q_id + "/edit/";
+                    else
+                    if (key == "Delete")
+                        url = "/queries/" + q_id + "/delete/";
+
+                    $(this).addClass("show-context-menu");
+                    if (url)
+                        window.location = url;
+                },
+                items: {
+                    "Visualize": {name: "Visualize", icon: "visualize"},
+                    "Analyze": {name: "Analyze", icon: "analyze"},
+                    "sep1": "---------",
+                    "Edit": {name: "Edit", icon: "edit"},
+                    "Delete": {name: "Delete", icon: "delete"},
+                }
+            });
+        });
+    </script>
 {% endblock %}

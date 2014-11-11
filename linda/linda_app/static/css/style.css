@@ -1605,10 +1605,10 @@ input, textarea {
 	background: #ddd;
 }
 
-.datasource.context-menu-active {
+.datasource.context-menu-active, .query-row.context-menu-active {
     background: #FC5006;
 }
 
-.datasource.context-menu-active td {
+.datasource.context-menu-active td, .query-row.context-menu-active td {
     color: #fff;
 }
