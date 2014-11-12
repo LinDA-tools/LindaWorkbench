@@ -17,7 +17,7 @@
             <thead>
                 <tr>
                     <th>{% trans "ID" %}</th>
-                    <th>{% trans "Endpoint" %}</th>
+                    <th>{% trans "Datasource" %}</th>
                     <th>{% trans "Description"%}</th>
                     <th>{% trans "Query" %}</th>
                     <th>{% trans "Created on" %}</th>
@@ -33,7 +33,7 @@
                                 <a href="#">Analyze</a>
                             </div>
                         </td>
-                        <td>{{query.endpoint}}</td>
+                        <td>{{query.get_datasource}}</td>
                         <td>{{query.description}}</td>
                         <td class="sparql-query">{{query.sparql|linebreaks}}</td>
                         <td>{{query.createdOn}}</td>

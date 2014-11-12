@@ -24,7 +24,4 @@ def vocabulary_properties(objects):
 
 @register.filter(name="get_endpoint")
 def get_endpoint(datasource):
-    if datasource.is_public:
-        return datasource.uri
-    else:
-        return LINDA_HOME + "sparql/" + datasource.name + "/"
+    return datasource.get_endpoint()

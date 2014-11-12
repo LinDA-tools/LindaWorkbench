@@ -1612,11 +1612,19 @@ input, textarea {
 
 .queries .btn {
     box-shadow: 0 0 2px #333;
-    padding: 5 15px;
+    padding: 5px 15px;
 }
 
 .queries .confirmation-modal a, .queries .modal-dialog .close {
     display: none;
+}
+
+.queries .cancel {
+    background: #aaa;
+}
+
+.queries .cancel:hover {
+    background: #bbb;
 }
 
 .datasources-table tbody tr:hover, .queries-table tbody tr:hover {

@@ -14,7 +14,7 @@ from lists import *
 from athumb.fields import ImageWithThumbsField
 from pattern.en import pluralize
 
-from settings import SESAME_LINDA_URL, RDF2ANY_SERVER
+from settings import SESAME_LINDA_URL, RDF2ANY_SERVER, LINDA_HOME
 
 User.profile = property(lambda u: UserProfile.objects.get_or_create(user=u)[0])
 
@@ -212,6 +212,11 @@ class DatasourceDescription(models.Model):
     def __unicode__(self):
         return self.title
 
+    def get_endpoint(self):
+        if self.is_public:
+            return self.uri
+        else:
+            return LINDA_HOME + "sparql/" + self.name + "/"
 
 #Creates a 'label' from an rdf term uri
 def get_label_by_uri(uri):
@@ -311,3 +316,10 @@ class Query(models.Model):
     def csv_link(self):
         return RDF2ANY_SERVER + '/rdf2any/v1.0/convert/csv-converter.csv?dataset=' + self.endpoint + '&query=' \
             + urllib.quote_plus(self.sparql)
+
+    def get_datasource(self):
+        for datasource in DatasourceDescription.objects.all():
+            if datasource.get_endpoint() == self.endpoint:
+                return datasource
+
+        return None
