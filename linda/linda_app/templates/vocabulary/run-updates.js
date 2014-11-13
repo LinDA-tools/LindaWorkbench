@@ -129,9 +129,9 @@ $(function(){
                     //detect changes
                     VocabularyChangesTotal = 0;
 
-                    var new_vocabs = new Array();
-                    var changed_vocabs = new Array();
-                    var deleted_vocabs = new Array();
+                    new_vocabs = new Array();
+                    changed_vocabs = new Array();
+                    deleted_vocabs = new Array();
 
                     vs_local.forEach(function(v_local) {
                         v_repo = getEquivalent(v_local, vs_repo);
@@ -156,6 +156,7 @@ $(function(){
                     });
 
                     if (VocabularyChangesTotal == 0) { //no changes detected
+                        $("#initial-fetch").remove();
                         $(".vocabulary-updates .info").html('Local repository is already up to date.');
                         return;
                     }

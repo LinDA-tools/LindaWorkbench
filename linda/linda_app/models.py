@@ -7,6 +7,7 @@ from django.db.models.signals import post_save, post_delete
 from django.template.defaultfilters import slugify, random
 
 from rdflib import Graph
+import rdflib
 from rdflib.util import guess_format
 import re
 
@@ -19,7 +20,6 @@ from settings import RDF2ANY_SERVER, LINDA_HOME
 User.profile = property(lambda u: UserProfile.objects.get_or_create(user=u)[0])
 
 photo_upload_path = 'static/images/photos/'
-
 
 class UserProfile(models.Model):
     """
@@ -62,7 +62,7 @@ class Photo(models.Model):
 
 class Vocabulary(models.Model):
     #General information
-    title = models.CharField(max_length=128, blank=False, null=False)
+    title = models.CharField(max_length=256, blank=False, null=False)
     description = models.CharField(max_length=2048, blank=False, null=False)
     category = models.CharField(max_length=256, blank=True,
                                 choices=CATEGORIES)  # checkbox-list, PREDEFINED LIST - LIST "CATEGORIES"
@@ -84,8 +84,8 @@ class Vocabulary(models.Model):
     #Logging
     uploader = models.ForeignKey(User)
     datePublished = models.DateField(blank=True, null=True)  # Original vocabulary publish date
-    dateCreated = models.DateField(blank=True, null=True, default=datetime.now())  # Vocabulary creation inside LinDa
-    dateModified = models.DateField(blank=True, null=True, default=datetime.now())  # Last vocabulary modification
+    dateCreated = models.DateField(blank=True, null=True, default=datetime.now)  # Vocabulary creation inside LinDa
+    dateModified = models.DateField(blank=True, null=True, default=datetime.now)  # Last vocabulary modification
 
     #Social properties
     score = models.IntegerField(default=0)  # Sum of the votes for the vocabulary
@@ -134,7 +134,11 @@ class Vocabulary(models.Model):
 
         # Store the classes in the database
         for row in q_classes.result:
-            cls = VocabularyClass.objects.create(vocabulary=self, uri=row[0], label=row[1], ranking=0)
+            if isinstance(row[1], rdflib.term.Literal):
+                label = row[1][0]
+            else:
+                label = row[1]
+            cls = VocabularyClass.objects.create(vocabulary=self, uri=row[0], label=label, ranking=0)
             cls.save()
 
         # Run a query to retrieve all properties
@@ -147,7 +151,12 @@ class Vocabulary(models.Model):
 
         # Store the properties in the database
         for row in q_properties.result:
-            prp = VocabularyProperty.objects.create(vocabulary=self, uri=row[0], label=row[1], ranking=0)
+            if isinstance(row[1], rdflib.term.Literal):
+                label = row[1][0]
+            else:
+                label = row[1]
+
+            prp = VocabularyProperty.objects.create(vocabulary=self, uri=row[0], label=label, ranking=0)
             prp.save()
 
     def __unicode__(self):
@@ -178,8 +187,8 @@ class VocabularyRanking(models.Model):  # A specific vote for a vocabulary (1-5)
 
 class VocabularyClass(models.Model):  # A class inside an RDF vocabulary
     vocabulary = models.ForeignKey(Vocabulary)
-    uri = models.URLField(max_length=1024, blank=False, null=True)
-    label = models.CharField(max_length=128, blank=False, null=False)
+    uri = models.URLField(max_length=2048, blank=False, null=True)
+    label = models.CharField(max_length=256, blank=False, null=False)
     ranking = models.FloatField()
 
     def __unicode__(self):
@@ -188,8 +197,8 @@ class VocabularyClass(models.Model):  # A class inside an RDF vocabulary
 
 class VocabularyProperty(models.Model):  # A property inside an RDF vocabulary
     vocabulary = models.ForeignKey(Vocabulary)
-    uri = models.URLField(max_length=1024, blank=False, null=True)
-    label = models.CharField(max_length=128, blank=False, null=False)
+    uri = models.URLField(max_length=2048, blank=False, null=True)
+    label = models.CharField(max_length=256, blank=False, null=False)
     ranking = models.FloatField()
 
     def __unicode__(self):

@@ -23,8 +23,10 @@ from datetime import datetime, date
 
 # from graphdb import views as query_views
 from settings import SESAME_LINDA_URL, LINDA_HOME, RDF2ANY_SERVER, PRIVATE_SPARQL_ENDPOINT, QUERY_BUILDER_SERVER, \
-    VOCABULARY_REPOSITORY
+    VOCABULARY_REPOSITORY, UPDATE_FREEQUENCY_DAYS
 from passwords import MS_TRANSLATOR_UID, MS_TRANSLATOR_SECRET
+
+last_vocabulary_update = datetime.datetime.utcfromtimestamp(0)  # set initial date
 
 
 def index(request):
@@ -283,7 +285,10 @@ class VocabularyListView(ListView):
         context['type'] = 'vocabularies'
 
         # Should updates be run?
-        context['check_for_updates'] = True
+        diff = last_vocabulary_update - datetime.now()
+        if diff.days > UPDATE_FREEQUENCY_DAYS:
+            last_vocabulary_update = datetime.now()
+            context['check_for_updates'] = True
 
         return context
 
