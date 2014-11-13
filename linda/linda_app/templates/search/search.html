@@ -24,6 +24,10 @@
                 </div>
 			</form>
 
+            {% if user.is_superuser and check_for_updates %}
+                {% include "vocabulary/run-updates.html" %}
+            {% endif %}
+
             {% if query %}
                 <div class="search-filters">
                     <a href="/vocabularies/?q={{q}}&type=vocabularies" class='button white {% if type == "vocabularies" %}active{% endif %}'>Vocabularies</a>
@@ -161,5 +165,9 @@
             $("#localization-label").html("Localization OFF");
         }
     });
+
+    {% if user.is_superuser and check_for_updates %}
+        {% include "vocabulary/run-updates.js" %}
+    {% endif %}
 </script>
 {% endblock %}

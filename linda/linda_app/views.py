@@ -1,6 +1,7 @@
 from operator import attrgetter
+from django.core import serializers
 from django.core.paginator import Paginator
-from django.http import HttpResponse, HttpResponseNotFound, Http404
+from django.http import HttpResponse, HttpResponseNotFound, Http404, HttpResponseForbidden
 from django.shortcuts import redirect, render, get_object_or_404
 from django.utils.http import urlquote
 
@@ -21,7 +22,8 @@ from datetime import datetime, date
 
 
 # from graphdb import views as query_views
-from settings import SESAME_LINDA_URL, LINDA_HOME, RDF2ANY_SERVER, PRIVATE_SPARQL_ENDPOINT, QUERY_BUILDER_SERVER
+from settings import SESAME_LINDA_URL, LINDA_HOME, RDF2ANY_SERVER, PRIVATE_SPARQL_ENDPOINT, QUERY_BUILDER_SERVER, \
+    VOCABULARY_REPOSITORY
 from passwords import MS_TRANSLATOR_UID, MS_TRANSLATOR_SECRET
 
 
@@ -279,6 +281,10 @@ class VocabularyListView(ListView):
         context = super(VocabularyListView, self).get_context_data(**kwargs)
         context['page_vocabularies'] = True
         context['type'] = 'vocabularies'
+
+        # Should updates be run?
+        context['check_for_updates'] = True
+
         return context
 
     def get_queryset(self):
@@ -746,7 +752,7 @@ def rdb2rdf(request):
 # Api view
 
 
-#Get a list with all users - used in autocomplete
+#Get a list with all uses - used in autocomplete
 def api_users(request):
     if request.is_ajax():
         q = request.GET.get('term', '')
@@ -1054,3 +1060,123 @@ def query_delete(request, pk):
     q_obj.delete()
 
     return HttpResponse('')
+
+
+#Proxy call - exists as middle-man between local LinDA server and the Vocabulary Repository
+@csrf_exempt
+def vocabulary_repo_api_call(request, link):
+    total_link = VOCABULARY_REPOSITORY + "api/" + link
+    if request.GET:
+        total_link += "?"
+    for param in request.GET:
+        total_link += param + "=" + request.GET[param] + "&"
+
+    data = requests.get(total_link)
+
+    return HttpResponse(data, data.headers['content-type'])
+
+#Get current vocabulary versions
+@csrf_exempt
+def get_vocabulary_versions(request):
+    if not request.user.is_superuser:  # forbidden for non-administrative users
+        return HttpResponseForbidden()
+
+    resp_data = []
+    for vocabulary in Vocabulary.objects.all():  # collect all vocabulary IDs and versions
+        resp_data.append({'slug': vocabulary.title_slug(), 'id': vocabulary.pk, 'version': vocabulary.version})
+
+    data = json.dumps(resp_data)
+    mimetype = 'application/json'
+    return HttpResponse(data, mimetype)
+
+
+#Get vocabulary data
+@csrf_exempt
+def get_vocabulary_data(request, pk):
+    if not request.user.is_superuser:  # forbidden for non-administrative users
+        return HttpResponseForbidden()
+
+    #return the specified vocabulary options
+    vocab = Vocabulary.objects.get(pk=pk)
+
+    if not vocab:  # vocabulary not found
+        return Http404
+
+    serialized_data = serializers.serialize('json', [vocab, ])
+    struct = json.loads(serialized_data)
+    data = json.dumps(struct[0]['fields'])
+    mimetype = 'application/json'
+    return HttpResponse(data, mimetype)
+
+
+#Add a new vocabulary
+def post_vocabulary_data(request):
+    if not request.user.is_superuser:  # forbidden for non-administrative users
+        return HttpResponseForbidden()
+
+    if request.method != 'POST':  # only allow post requests
+        return HttpResponseForbidden()
+
+    data = json.loads(request.PUT.get('data'))
+
+    #Create object
+    vocab = Vocabulary.objects.create(title=data['title'], category=data['category'], originalUrl=data['originalUrl'],
+                                      downloadUrl=data['downloadUrl'], preferredNamespaceUri=data['data.preferredNamespaceUri'],
+                                      preferredNamespacePrefix=data['preferredNamespacePrefix'],
+                                      lodRanking=data['lodRanking'], example=data['example'], uploader=request.user,
+                                      datePublished=data['datePublished'], version=data['version'])
+
+    #Save the new vocabulary (also creates classes and properties)
+    vocab.save()
+
+
+#Update a vocabulary's data
+def update_vocabulary_data(request, pk):
+    if not request.user.is_superuser:  # forbidden for non-administrative users
+        return HttpResponseForbidden()
+
+    if request.method != 'PUT':  # only allow put requests
+        return HttpResponseForbidden()
+
+    data = json.loads(request.PUT.get('vocabulary_data'))
+
+
+    vocab = Vocabulary.objects.get(pk=pk)
+
+    if not vocab:  # vocabulary not found
+        return Http404
+
+    #Updating vocabulary data
+    vocab.title = data['title']
+    vocab.category = data['category']
+    vocab.originalUrl = data['originalUrl']
+    vocab.downloadUrl = data['downloadUrl']
+    vocab.preferredNamespaceUri = data['preferredNamespaceUri']
+    vocab.preferredNamespacePrefix = data['preferredNamespacePrefix']
+    vocab.lodRanking = data['lodRanking']
+    vocab.example = data['example']
+    vocab.version = data['version']
+
+    # Save the updated object (also updates classes and properties)
+    vocab.save()
+
+    return HttpResponse('')  # return OK response
+
+
+#Delete an existing vocabulary
+def delete_vocabulary_data(request, pk):
+    if not request.user.is_superuser:  # forbidden for non-administrative users
+        return HttpResponseForbidden()
+
+    if request.method != 'DELETE':  # only allow put requests
+        return HttpResponseForbidden()
+
+    vocab = Vocabulary.objects.get(pk=pk)
+
+    if not vocab:  # vocabulary not found
+        return Http404
+
+    # Delete the object (also deletes classes and properties)
+    vocab.delete()
+
+    return HttpResponse('')  # return OK response

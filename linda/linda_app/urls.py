@@ -71,6 +71,21 @@ urlpatterns = patterns('',
                        url(r'^vocabulary/(?P<pk>\d+)/(?P<slug>[\w-]+)/$', views.VocabularyDetailsView.as_view(),
                            name='vocabulary-detail'),
 
+                       #Vocabulary updates
+                       url(r'^api/vocabularies/versions/$', views.get_vocabulary_versions,
+                           name='vocabulary-version'),
+                       url(r'^api/vocabularies/(?P<pk>\d+)/$', views.get_vocabulary_data,
+                           name='vocabulary-get'),
+                       url(r'^api/vocabularies/$', views.post_vocabulary_data,
+                           name='vocabulary-get'),
+                       url(r'^api/vocabularies/(?P<pk>\d+)/$', views.update_vocabulary_data,
+                           name='vocabulary-update'),
+                       url(r'^api/vocabularies/(?P<pk>\d+)/$', views.delete_vocabulary_data,
+                           name='vocabulary-delete'),
+
+                       #Vocabulary repo proxy
+                       url(r'^api/vocabulary-repo/(?P<link>.*)', views.vocabulary_repo_api_call, name='vocabulary-repo-api-call'),
+
                        #Datasources
                        url(r'^datasources/$', views.datasources, name='datasources'),
                        url(r'^datasource/create/$', views.datasourceCreate,

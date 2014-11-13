@@ -1,3 +1,4 @@
+from datetime import datetime
 import urllib
 
 from django.db import models
@@ -5,8 +6,7 @@ from django.contrib.auth.models import User
 from django.db.models.signals import post_save, post_delete
 from django.template.defaultfilters import slugify, random
 
-import rdflib
-from rdflib import Graph, plugin
+from rdflib import Graph
 from rdflib.util import guess_format
 import re
 
@@ -14,7 +14,7 @@ from lists import *
 from athumb.fields import ImageWithThumbsField
 from pattern.en import pluralize
 
-from settings import SESAME_LINDA_URL, RDF2ANY_SERVER, LINDA_HOME
+from settings import RDF2ANY_SERVER, LINDA_HOME
 
 User.profile = property(lambda u: UserProfile.objects.get_or_create(user=u)[0])
 
@@ -84,13 +84,16 @@ class Vocabulary(models.Model):
     #Logging
     uploader = models.ForeignKey(User)
     datePublished = models.DateField(blank=True, null=True)  # Original vocabulary publish date
-    dateCreated = models.DateField(blank=True, null=True)  # Vocabulary creation inside LinDa
-    dateModified = models.DateField(blank=True, null=True)  # Last vocabulary modification
+    dateCreated = models.DateField(blank=True, null=True, default=datetime.now())  # Vocabulary creation inside LinDa
+    dateModified = models.DateField(blank=True, null=True, default=datetime.now())  # Last vocabulary modification
 
     #Social properties
-    score = models.IntegerField()  # Sum of the votes for the vocabulary
-    votes = models.IntegerField()  # Number of votes for the vocabulary
-    downloads = models.IntegerField()  # Number of downloads for the vocabulary
+    score = models.IntegerField(default=0)  # Sum of the votes for the vocabulary
+    votes = models.IntegerField(default=0)  # Number of votes for the vocabulary
+    downloads = models.IntegerField(default=0)  # Number of downloads for the vocabulary
+
+    #Versioning
+    version = models.CharField(max_length=128, blank=False, null=False, default="1.0")
 
     def title_slug(self):
         return slugify(self.title)
