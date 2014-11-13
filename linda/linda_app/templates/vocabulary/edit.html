@@ -88,6 +88,17 @@
             {% endif %}
         </div>
 
+        {% if user.is_superuser %}
+            <div>
+            <label for="version" style="vertical-align: top;">{% trans "Version"%}:</label>
+            {{form.version}}
+            {% if form.version.errors %}
+            <span class="error">{{ form.version.errors.as_text }}</span>
+            {% endif %}
+        </div>
+        {% else %}
+            <div class="hidden">{{form.version}}</div>
+        {% endif %}
         <div class="action-buttons">
             <a href="/vocabulary/{{vocabulary.id}}" class="button blue right">{% trans "Cancel" %}</a>
             <input type="submit" value='{% trans "Update vocabulary" %}' class="button red left"/>

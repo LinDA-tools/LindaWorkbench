@@ -12,11 +12,13 @@ function set_percentage(percent) {
 }
 
 function getEquivalent(v, vs) {
-    vs.forEach(function(ve) {
-        if (ve.slug == v.slug) {
-            return ve
+    for (var i=0; i<vs.length; i++) {
+        if (vs[i].slug == v.slug) {
+            return vs[i];
         }
-    });
+    }
+
+    return null;
 }
 
 $(function(){
@@ -37,25 +39,41 @@ $(function(){
 
                     //first pass to count changes
                     var chg_counter = 0;
-                    console.log('VS_REPO = ' + vs_repo);
+
+                    var new_vocabs = new Array();
+                    var changed_vocabs = new Array();
+                    var deleted_vocabs = new Array();
+
                     vs_local.forEach(function(v_local) {
                         v_repo = getEquivalent(v_local, vs_repo);
+
                         if (v_repo && (v_local.version != v_repo.version)) { //find changed/removed vocabularies -- ignore locals-only
                             chg_counter++;
+                            if (v_repo.version == "DELETED") {
+                                deleted_vocabs.push(v_local);
+                            } else {
+                                changed_vocabs.push({"old": v_local, "new": v_repo});
+                            }
                         }
                     });
 
                     vs_repo.forEach(function(v_repo) {
-                        v_local = getEquivalent(v_local, vs_local);
+                        v_local = getEquivalent(v_repo, vs_local);
+
                         if (!v_local) { //new vocabularies
                             chg_counter++;
+                            new_vocabs.push(v_repo);
                         }
                     });
 
                     if (chg_counter == 0) { //no changes detected
                         $(".vocabulary-updates .info").html('Local repository is already up to date.');
+                        return;
                     }
 
+                    console.log(new_vocabs);
+                    console.log(changed_vocabs);
+                    console.log(deleted_vocabs);
                     //second pass to apply changes
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
