@@ -78,9 +78,9 @@ urlpatterns = patterns('',
                            name='vocabulary-get'),
                        url(r'^api/vocabularies/$', views.post_vocabulary_data,
                            name='vocabulary-get'),
-                       url(r'^api/vocabularies/(?P<pk>\d+)/$', views.update_vocabulary_data,
+                       url(r'^api/vocabularies/(?P<pk>\d+)/update/$', views.update_vocabulary_data,
                            name='vocabulary-update'),
-                       url(r'^api/vocabularies/(?P<pk>\d+)/$', views.delete_vocabulary_data,
+                       url(r'^api/vocabularies/(?P<pk>\d+)/delete/$', views.delete_vocabulary_data,
                            name='vocabulary-delete'),
 
                        #Vocabulary repo proxy

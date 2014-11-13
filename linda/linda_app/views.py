@@ -1111,11 +1111,11 @@ def post_vocabulary_data(request):
     if request.method != 'POST':  # only allow post requests
         return HttpResponseForbidden()
 
-    data = json.loads(request.PUT.get('data'))
+    data = json.loads(request.POST.get('vocab_data'))
 
     #Create object
-    vocab = Vocabulary.objects.create(title=data['title'], category=data['category'], originalUrl=data['originalUrl'],
-                                      downloadUrl=data['downloadUrl'], preferredNamespaceUri=data['data.preferredNamespaceUri'],
+    vocab = Vocabulary.objects.create(title=data['title'], category=data['category'], description=data['description'], originalUrl=data['originalUrl'],
+                                      downloadUrl=data['downloadUrl'], preferredNamespaceUri=data['preferredNamespaceUri'],
                                       preferredNamespacePrefix=data['preferredNamespacePrefix'],
                                       lodRanking=data['lodRanking'], example=data['example'], uploader=request.user,
                                       datePublished=data['datePublished'], version=data['version'])
@@ -1123,16 +1123,19 @@ def post_vocabulary_data(request):
     #Save the new vocabulary (also creates classes and properties)
     vocab.save()
 
+    return HttpResponse('')  # return OK response
+
 
 #Update a vocabulary's data
 def update_vocabulary_data(request, pk):
     if not request.user.is_superuser:  # forbidden for non-administrative users
         return HttpResponseForbidden()
 
-    if request.method != 'PUT':  # only allow put requests
+    if request.method != 'POST':  # only allow post requests
         return HttpResponseForbidden()
 
-    data = json.loads(request.PUT.get('vocabulary_data'))
+    print request.POST.get('vocab_data')
+    data = json.loads(request.POST.get('vocab_data'))
 
 
     vocab = Vocabulary.objects.get(pk=pk)
@@ -1162,7 +1165,7 @@ def delete_vocabulary_data(request, pk):
     if not request.user.is_superuser:  # forbidden for non-administrative users
         return HttpResponseForbidden()
 
-    if request.method != 'DELETE':  # only allow put requests
+    if request.method != 'POST':  # only allow post requests
         return HttpResponseForbidden()
 
     vocab = Vocabulary.objects.get(pk=pk)

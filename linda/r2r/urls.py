@@ -10,6 +10,6 @@ urlpatterns = patterns('',
                        #Basic pages
                        url(r'^$', views.transform, name='transform'),
 
-                       #js proxies
+                       #js proxy
                        url(r'^api/(?P<link>.*)', views.get_api_call, name='get-api-call'),
 )

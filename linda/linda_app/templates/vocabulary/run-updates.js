@@ -21,7 +21,97 @@ function getEquivalent(v, vs) {
     return null;
 }
 
+function increaseUpdateStep(text) {
+    if (!hasRunUpdate) {
+        hasRunUpdate = true;
+        $("#initial-fetch").remove();
+        $('.progress-pie-chart').show();
+    }
+
+    VocabularyChangesCounter++;
+
+    $(".vocabulary-updates .info").html(text);
+    set_percentage(Math.round(VocabularyChangesCounter*100.0/VocabularyChangesTotal));
+
+    if (VocabularyChangesCounter == VocabularyChangesTotal) { //updates finished
+        $('.progress-pie-chart').hide();
+        $(".vocabulary-updates .info").html('Vocabularies updated succesfully [' + new_vocabs.length + ' new, ' +
+                                            changed_vocabs.length + ' changed, ' + deleted_vocabs.length + ' deleted]');
+    }
+}
+
+function createVocabulary(new_vocab) {
+    $.ajax({
+        url: '/api/vocabulary-repo/vocabularies/' + new_vocab.id + '/',
+        type: "GET",
+        success: function(server_response, textStatus, jqXHR) {
+            $.ajax({
+                url: '/api/vocabularies/',
+                type: "POST",
+                data: {
+                    vocab_data: JSON.stringify(server_response),
+                    csrfmiddlewaretoken: '{{csrf_token}}'
+                },
+                success: function(vs_repo, textStatus, jqXHR) {
+                    increaseUpdateStep('Created vocabulary ' + new_vocab.slug);
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    increaseUpdateStep('Error creating vocabulary ' + new_vocab.slug);
+                }
+            });
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+           increaseUpdateStep('Error creating vocabulary ' + new_vocab.slug);
+        }
+    });
+}
+
+function updateVocabulary(old_vocab, new_vocab) {
+    $.ajax({
+        url: '/api/vocabulary-repo/vocabularies/' + new_vocab.id + '/',
+        type: "GET",
+        success: function(server_response, textStatus, jqXHR) {
+            $.ajax({
+                url: '/api/vocabularies/' + old_vocab.id + '/update/',
+                type: "POST",
+                data: {
+                    vocab_data: JSON.stringify(server_response),
+                    csrfmiddlewaretoken: '{{csrf_token}}'
+                },
+                success: function(vs_repo, textStatus, jqXHR) {
+                    increaseUpdateStep('Updated vocabulary ' + old_vocab.slug);
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    increaseUpdateStep('Error updating vocabulary ' + old_vocab.slug);
+                }
+            });
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+            increaseUpdateStep('Error updating vocabulary ' + old_vocab.slug);
+        }
+    });
+}
+
+function deleteVocabulary(old_vocab) {
+    $.ajax({
+        url: '/api/vocabularies/' + old_vocab.id + '/delete/',
+        type: "POST",
+        data: {
+            csrfmiddlewaretoken: '{{ csrf_token }}'
+        },
+        success: function(vs_repo, textStatus, jqXHR) {
+            increaseUpdateStep('Deleted vocabulary ' + old_vocab.slug);
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+            increaseUpdateStep('Error deleting vocabulary ' + old_vocab.slug);
+        }
+    });
+}
+
 $(function(){
+    set_percentage(0);
+    hasRunUpdate = false;
+
     //retrieve local vocabularies
     $.ajax({
         url: '/api/vocabularies/versions/',
@@ -34,11 +124,10 @@ $(function(){
                 type: "GET",
 
                 success: function(vs_repo, textStatus, jqXHR) {
-                    $("#initial-fetch").remove();
-                    $(".vocabulary-updates .info").html('Applying changes...');
+                    $(".vocabulary-updates .info").html('Detecting changes...');
 
-                    //first pass to count changes
-                    var chg_counter = 0;
+                    //detect changes
+                    VocabularyChangesTotal = 0;
 
                     var new_vocabs = new Array();
                     var changed_vocabs = new Array();
@@ -48,11 +137,11 @@ $(function(){
                         v_repo = getEquivalent(v_local, vs_repo);
 
                         if (v_repo && (v_local.version != v_repo.version)) { //find changed/removed vocabularies -- ignore locals-only
-                            chg_counter++;
+                            VocabularyChangesTotal++;
                             if (v_repo.version == "DELETED") {
                                 deleted_vocabs.push(v_local);
                             } else {
-                                changed_vocabs.push({"old": v_local, "new": v_repo});
+                                changed_vocabs.push({"old_vocab": v_local, "new_vocab": v_repo});
                             }
                         }
                     });
@@ -61,20 +150,33 @@ $(function(){
                         v_local = getEquivalent(v_repo, vs_local);
 
                         if (!v_local) { //new vocabularies
-                            chg_counter++;
+                            VocabularyChangesTotal++;
                             new_vocabs.push(v_repo);
                         }
                     });
 
-                    if (chg_counter == 0) { //no changes detected
+                    if (VocabularyChangesTotal == 0) { //no changes detected
                         $(".vocabulary-updates .info").html('Local repository is already up to date.');
                         return;
                     }
 
-                    console.log(new_vocabs);
-                    console.log(changed_vocabs);
-                    console.log(deleted_vocabs);
-                    //second pass to apply changes
+                    VocabularyChangesCounter = 0;
+                    $(".vocabulary-updates .info").html('Downloading updates...');
+
+                    //applying changes
+                    var cnt = 0;
+
+                    for (var i=0; i<new_vocabs.length; i++) { //create new vocabularies
+                        createVocabulary(new_vocabs[i]);
+                    }
+
+                    for (var i=0; i<changed_vocabs.length; i++) { //update existing vocabularies
+                        updateVocabulary(changed_vocabs[i].old_vocab, changed_vocabs[i].new_vocab);
+                    }
+
+                    for (var i=0; i<deleted_vocabs.length; i++) { //delete vocabularies
+                        deleteVocabulary(deleted_vocabs[i]);
+                    }
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
                     $("#initial-fetch").remove();
@@ -84,7 +186,7 @@ $(function(){
             });
         },
 
-        error: function (jqXHR_out, textStatus, errorThrown) {
+        error: function (jqXHR, textStatus, errorThrown) {
             $("#initial-fetch").remove();
             $(".vocabulary-updates .info").html('Could not get local vocabulary list. Please try again later.');
         }
