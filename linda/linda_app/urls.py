@@ -9,6 +9,8 @@ from haystack.views import SearchView, search_view_factory
 import views
 
 admin.autodiscover()
+admin.site.site_title = 'LinDA Administration'
+admin.site.site_header = 'LinDA Administration Panel'
 
 urlpatterns = patterns('',
                        #Basic pages
