@@ -1078,9 +1078,6 @@ def vocabulary_repo_api_call(request, link):
 #Get current vocabulary versions
 @csrf_exempt
 def get_vocabulary_versions(request):
-    if not request.user.is_superuser:  # forbidden for non-administrative users
-        return HttpResponseForbidden()
-
     resp_data = []
     for vocabulary in Vocabulary.objects.all():  # collect all vocabulary IDs and versions
         resp_data.append({'slug': vocabulary.title_slug(), 'id': vocabulary.pk, 'version': vocabulary.version})
@@ -1093,9 +1090,6 @@ def get_vocabulary_versions(request):
 #Get vocabulary data
 @csrf_exempt
 def get_vocabulary_data(request, pk):
-    if not request.user.is_superuser:  # forbidden for non-administrative users
-        return HttpResponseForbidden()
-
     #return the specified vocabulary options
     vocab = Vocabulary.objects.get(pk=pk)
 
