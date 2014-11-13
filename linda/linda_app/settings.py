@@ -132,7 +132,7 @@ LINDA_HOME = 'http://localhost:8000/'
 # In local business installations it will be different than the LINDA_SERVER_IP
 VOCABULARY_REPOSITORY = 'http://107.170.70.175:8000/'
 # Maximum days between updates are run
-UPDATE_FREEQUENCY_DAYS = 1
+UPDATE_FREEQUENCY_DAYS = 0
 
 # LinDA reposirtory in Sesamy (OpenRDF) url, in order to access private datasources
 SESAME_LINDA_URL = LINDA_SERVER_IP + ':8080/openrdf-sesame/repositories/linda/'

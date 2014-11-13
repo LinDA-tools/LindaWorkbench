@@ -167,16 +167,7 @@ class Vocabulary(models.Model):
 def on_vocabulary_save(sender, instance, created, **kwargs):
     instance.make_classes_properties()
 
-
-# Remove classes and vocabularies on vocabulary delete
-def on_vocabulary_delete(sender, instance, created, **kwargs):
-    # Remove all classes and properties from this vocabulary
-    VocabularyClass.objects.filter(vocabulary=instance).delete()
-    VocabularyProperty.objects.filter(vocabulary=instance).delete()
-
-
 post_save.connect(on_vocabulary_save, sender=Vocabulary)
-post_delete.connect(on_vocabulary_delete, sender=Vocabulary)
 
 
 class VocabularyRanking(models.Model):  # A specific vote for a vocabulary (1-5)

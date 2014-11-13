@@ -26,8 +26,7 @@ from settings import SESAME_LINDA_URL, LINDA_HOME, RDF2ANY_SERVER, PRIVATE_SPARQ
     VOCABULARY_REPOSITORY, UPDATE_FREEQUENCY_DAYS
 from passwords import MS_TRANSLATOR_UID, MS_TRANSLATOR_SECRET
 
-last_vocabulary_update = datetime.datetime.utcfromtimestamp(0)  # set initial date
-
+last_vocabulary_update = datetime.now()  # set initial date
 
 def index(request):
     params = {}
@@ -285,8 +284,9 @@ class VocabularyListView(ListView):
         context['type'] = 'vocabularies'
 
         # Should updates be run?
-        diff = last_vocabulary_update - datetime.now()
-        if diff.days > UPDATE_FREEQUENCY_DAYS:
+        global last_vocabulary_update
+        diff = datetime.now() - last_vocabulary_update
+        if diff.days >= UPDATE_FREEQUENCY_DAYS:
             last_vocabulary_update = datetime.now()
             context['check_for_updates'] = True
 
@@ -1139,10 +1139,7 @@ def update_vocabulary_data(request, pk):
     if request.method != 'POST':  # only allow post requests
         return HttpResponseForbidden()
 
-    print request.POST.get('vocab_data')
     data = json.loads(request.POST.get('vocab_data'))
-
-
     vocab = Vocabulary.objects.get(pk=pk)
 
     if not vocab:  # vocabulary not found
