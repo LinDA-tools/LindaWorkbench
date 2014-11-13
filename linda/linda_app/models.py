@@ -134,11 +134,10 @@ class Vocabulary(models.Model):
 
         # Store the classes in the database
         for row in q_classes.result:
-            if isinstance(row[1], rdflib.term.Literal):
-                label = row[1][0]
-            else:
-                label = row[1]
-            cls = VocabularyClass.objects.create(vocabulary=self, uri=row[0], label=label, ranking=0)
+            try:
+                cls = VocabularyClass.objects.create(vocabulary=self, uri=row[0], label=row[1], ranking=0)
+            except UnicodeEncodeError:
+                cls = VocabularyClass.objects.create(vocabulary=self, uri=row[0], label=row[0], ranking=0)
             cls.save()
 
         # Run a query to retrieve all properties
@@ -151,12 +150,10 @@ class Vocabulary(models.Model):
 
         # Store the properties in the database
         for row in q_properties.result:
-            if isinstance(row[1], rdflib.term.Literal):
-                label = row[1][0]
-            else:
-                label = row[1]
-
-            prp = VocabularyProperty.objects.create(vocabulary=self, uri=row[0], label=label, ranking=0)
+            try:
+                prp = VocabularyProperty.objects.create(vocabulary=self, uri=row[0], label=row[1], ranking=0)
+            except UnicodeEncodeError:
+                prp = VocabularyProperty.objects.create(vocabulary=self, uri=row[0], label=row[0], ranking=0)
             prp.save()
 
     def __unicode__(self):
