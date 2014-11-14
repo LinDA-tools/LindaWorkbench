@@ -236,13 +236,8 @@ def create_query_description(dtname, query):
     find_verbs = ["Find", "Search for", "Look up for", "Get", "List"]
 
     #get class name
-    type_pos = re.search('rdf:type', query, re.IGNORECASE).end()
-    class_name = get_label_by_uri(query[type_pos:].split()[0])
-
-    if not class_name:
-        class_name = 'object'
-
-    description = random(find_verbs) + " " + pluralize(class_name.lower()) + " in " + dtname
+    classes = ''
+    class_cnt = 0  # no classes yet
 
     #add constraints
     where_start = re.search('WHERE', query, re.IGNORECASE).end()
@@ -260,13 +255,47 @@ def create_query_description(dtname, query):
         where_constraints = r.findall(where_str)  # split by . outside of "entities"
         print where_constraints
 
+        constraints_out = ''
         first_constraint = True
         for constraint in where_constraints:
             terms = constraint.split()
-            print terms
 
-            if terms[1].lower() == 'rdf:type' or terms[2][0] == '?':
-                continue  # ignore class or non-constant (e.g label) constraints
+            if terms[1].lower() == 'rdf:type':  # class constraints
+                tp_pos = 2
+                class_constraint = ''
+                old_class_name = ''
+                while tp_pos < len(terms):
+                    class_name = get_label_by_uri(terms[tp_pos]).lower()
+
+                    # get seperator
+                    if tp_pos < len(terms) - 2:
+                        sep = ', '
+                    else:
+                        sep = ' or '
+
+                    if not old_class_name:
+                        class_constraint += pluralize(class_name)
+                    elif old_class_name.lower() == class_name.lower():
+                        class_constraint += sep + pluralize(class_name)
+                    else:
+                        class_constraint += sep + pluralize(class_name)
+
+                    old_class_name = class_name
+                    tp_pos += 4  # move to the next sub-contraint
+
+                # add these classes to total class constraint
+                if class_cnt == 0:  # first class
+                    classes = class_constraint
+                elif class_cnt == 1:  # second class
+                    classes += ' that are also ' + class_constraint
+                else:
+                    classes += ' and ' + class_constraint
+                class_cnt += 1
+
+                continue
+
+            if terms[2][0] == '?':
+                continue  # ignore static constraints
 
             tp_pos = 1  # first constraint property
             old_tp_name = ''
@@ -292,10 +321,15 @@ def create_query_description(dtname, query):
 
             # add 'and' if it is not the first constraint
             if first_constraint:
-                description += ' where ' + constraint_str
+                constraints_out += ' where ' + constraint_str
                 first_constraint = False
             else:
-                description += ' and ' + constraint_str
+                constraints_out += ' and ' + constraint_str
+
+    if not classes:  # no class detected
+        classes = 'objects'
+
+    description = random(find_verbs) + " " + classes + " in " + dtname + constraints_out
 
     #add limit
     lim_pos = re.search('LIMIT', query, re.IGNORECASE).start()
