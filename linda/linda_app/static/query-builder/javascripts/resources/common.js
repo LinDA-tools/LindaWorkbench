@@ -1,3 +1,4 @@
+var curr_subclass_histogram_level = 0;
 
 function get_server_address() {
   return window.location.protocol + "//" + window.location.host;

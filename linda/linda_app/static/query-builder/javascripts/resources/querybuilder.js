@@ -39,19 +39,6 @@ QueryBuilder = {
         var dataset = $("#hdn_qb_dataset").val();
         $.get("/query/builder_classes.js",{ search: search_string, dataset:dataset});
     },
-    select_class : function(class_uri, class_name){
-        $("#hdn_qb_class").val(class_uri);
-        $("#tbl_classes_search_result").hide("fast");
-        $(".clear-search-class").hide("fast");
-        QueryBuilder.select_body($("#div_selected_class"),class_name);
-        QueryBuilder.show_equivalent_sparql_query();
-        QueryBuilder.properties.generate();
-        $("#div_classes_search_more").show("fast");
-        $("#btn_classes_search_more").html("More details on "+truncate(class_name,25,'...') );
-        $("#btn_classes_search_more").attr("onclick","Utils.show_uri_viewer('"+class_uri+"')");
-        $("#property_main_subclass_header").attr("uri",class_uri);
-        //Utils.flash.notice("Selected class : "+class_name + " &lt;"+class_uri+"&gt;");
-    },
     reset_searched_class : function(){
         $(".clear-search-class").show("fast");
         $("#tbl_classes_search_result").html("");
@@ -59,7 +46,9 @@ QueryBuilder = {
         $(".done-search-class").hide("fast");
         $("#txt_search_classes").val("");
         $("#hdn_qb_class").val("");
+        $(".span-more-subclasses").remove();
         $("#div_classes_search_more").hide("fast");
+        $(".select-class-subclass-row").remove();
         QueryBuilder.hide_equivalent_sparql_query();
         QueryBuilder.hide_searched_query_results();
         QueryBuilder.properties.reset();
@@ -153,6 +142,88 @@ QueryBuilder = {
         },
         get_selected_class : function(){
             return $("#hdn_qb_class").val();
+        },
+        //this method returns a url to retrieve  examples of a class
+        get_examples_action_url : function(class_uri){
+            return "/query/class_examples?class="+class_uri+"&dataset="+QueryBuilder.datasets.get_selected();
+         },
+        //this method returns a url to subclasses  examples of a class
+        get_subclasses_action_url : function(class_uri){
+            return "/query/class_subclasses?class="+class_uri+"&dataset="+QueryBuilder.datasets.get_selected();
+        },
+        select : function(class_uri, class_name){
+            $("#hdn_qb_class").val(class_uri);
+            $("#tbl_classes_search_result").hide("fast");
+            $(".clear-search-class").hide("fast");
+            QueryBuilder.select_body($("#div_selected_class"),"<strong>"+class_name+"</strong>");
+            QueryBuilder.show_equivalent_sparql_query();
+            QueryBuilder.properties.generate();
+            $("#div_classes_search_more").show("fast");
+            $("#btn_classes_search_more").html("More details on "+truncate(class_name,25,'...') );
+            $("#btn_classes_search_more").attr("onclick","Utils.show_uri_viewer('"+class_uri+"')");
+            $("#property_main_subclass_header").attr("uri",class_uri);
+            $("#property_main_subclasses").hide();
+            //Utils.flash.notice("Selected class : "+class_name + " &lt;"+class_uri+"&gt;");
+            QueryBuilder.classes.add_class_details($("#div_selected_class").find('.select-body').first(),class_uri, 0);
+        },
+        add_class_details : function(element,class_uri,tab_level){
+            element.attr('class-uri',class_uri);
+            element.find('strong').first().after("<span class='loading-image'>&nbsp;&nbsp;&nbsp;<img  height=\"10px\" src=\"/static/query-builder/images/horizontal-loading.gif\"></span>");
+            $.getJSON(QueryBuilder.classes.get_examples_action_url(class_uri)).success(function(data){
+                var element_append_html = "&nbsp;&nbsp;&nbsp;<span class='badge'>"+data.total_objects.toString()+"</span>";
+                if(data.total_objects > 0){
+                    element_append_html += "&nbsp;&nbsp;<small>(&nbsp;";
+                    for(i=0;i<data.sample_objects.length;i++){
+                        if(i>0)
+                            element_append_html += ",&nbsp;"
+                        element_append_html += "<a onclick=\"Utils.show_uri_viewer('"+data.sample_objects[i]["uri"]+"')\" href=\"javascript:void(0);\">"+data.sample_objects[i]["label"]+"</a>"
+                    }
+                    element_append_html += "&nbsp;)</small>";
+                }
+                //element.find(".loading-image").first().remove();
+                element.find("strong").after(element_append_html);
+            }).always(function(){
+                element.find(".loading-image").first().remove();
+            });
+            QueryBuilder.classes.add_subclasses_details(element,class_uri,tab_level);
+         },
+        add_subclasses_details : function(element,class_uri, tab_level){
+            $.getJSON(QueryBuilder.classes.get_subclasses_action_url(class_uri),function(data){
+                var right_element = element.parent().find(".select-right-actions").first();
+                if(data.subclasses.length > 0){
+                    if(tab_level == 0) {
+                        $("#property_main_subclasses").show();
+                    }
+                    right_element.prepend("<span class=\"glyphicon glyphicon-plus clickable span-more-subclasses\" class-uri=\""+class_uri+"\" onclick=\"QueryBuilder.classes.expand_selected_class('"+class_uri+"',"+tab_level.toString()+")\"></span>");
+                    var after_html = "";
+                    for(i=data.subclasses.length-1;i>=0;i--){
+                        after_html = "<div class='row select-class-subclass-row' parent-class-uri=\""+class_uri+"\" style='display:none;' class-uri=\""+data.subclasses[i]['uri']+"\">";
+                        after_html += "<div class='col-md-"+(tab_level+1).toString()+"'></div>";
+                        after_html += "<div class=\"col-md-"+(9-tab_level).toString()+" select-class-subclass-body\" class-uri=\""+data.subclasses[i]['uri']+"\" parent-class-uri=\""+class_uri+"\"><strong>"+data.subclasses[i]['label']+"</strong></div>"
+                        after_html += "<div class=\"col-md-2 select-right-actions\" ></div>";
+                        after_html += "</div>";
+                        element.parent().after(after_html);
+                    }
+
+                    right_element.prepend("<span class=\"glyphicon glyphicon-plus clickable span-more-subclasses\" class-uri=\""+class_uri+"\" onclick=\"QueryBuilder.classes.expand_selected_class('"+class_uri+"',"+tab_level.toString()+")\"></span>");
+                }
+                else if(tab_level == 0){
+                    $("#property_main_subclasses").hide();
+                }
+            });
+        },
+        expand_selected_class : function(class_uri,tab_level){
+            $(".span-more-subclasses").each(function(index){
+                if($(this).attr("class-uri") == class_uri){
+                    $(this).remove();
+                }
+            });
+            $(".select-class-subclass-row").each(function(index){
+                if($(this).attr("parent-class-uri") == class_uri){
+                    $(this).show("fast");
+                    QueryBuilder.classes.add_class_details($(this).find('.select-class-subclass-body').first(),$(this).attr("class-uri"),tab_level+1);
+                }
+            });
         }
 
     },
@@ -250,7 +321,7 @@ QueryBuilder = {
         },
         select_subclass : function(uri){
 
-            $("#property_main_subclasses_group").find(".list-group-item").each(function(index){
+            $("#property_main_subclasses").find(".list-group-item").each(function(index){
                 var html = "";
                 if($(this).attr("uri") == uri){
                     if($(this).attr("clicked") == "true"){

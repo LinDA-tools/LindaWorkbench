@@ -1043,7 +1043,12 @@ form input[type="submit"] {
 }
 
 .query-builder .row, .sparql .row {
-	display: block;
+    display: block;
+}
+
+.query-builder .properties-list-group{
+    overflow-y: scroll;
+	height:200px;
 }
 
 .queries .sparql-query {
