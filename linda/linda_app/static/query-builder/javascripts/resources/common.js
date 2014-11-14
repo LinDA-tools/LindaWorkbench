@@ -1,5 +1,3 @@
-var curr_subclass_histogram_level = 0;
-
 function get_server_address() {
   return window.location.protocol + "//" + window.location.host;
 };
@@ -60,6 +58,18 @@ function truncate(string, length, o)
     return string.substring(0,length)+o;
   }
 }
+
+function get_long_number_display(long_number){
+  if(long_number/1000000000 > 1)
+    return (Number((long_number/1000000000).toFixed(1))).toString()+"B";
+  else if(long_number/1000000 > 1)
+    return (Number((long_number/1000000).toFixed(1))).toString()+"M";
+  else if(long_number/1000 > 1)
+    return (Number((long_number/1000).toFixed(1))).toString()+"K";
+  else
+    return long_number.toString();
+}
+
 String.prototype.splice = function( idx, rem, s ) {
     return (this.slice(0,idx) + s + this.slice(idx + Math.abs(rem)));
 };

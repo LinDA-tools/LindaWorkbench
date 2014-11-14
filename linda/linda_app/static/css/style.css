@@ -1046,7 +1046,7 @@ form input[type="submit"] {
     display: block;
 }
 
-.query-builder .properties-list-group{
+.properties-list-group{
     overflow-y: scroll;
 	height:200px;
 }
