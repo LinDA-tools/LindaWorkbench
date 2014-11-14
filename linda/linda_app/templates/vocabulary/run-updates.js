@@ -21,7 +21,7 @@ function getEquivalent(v, vs) {
     return null;
 }
 
-function increaseUpdateStep(text) {
+function increaseUpdateStep(text, status) {
     if (!hasRunUpdate) {
         hasRunUpdate = true;
         $("#initial-fetch").remove();
@@ -30,13 +30,32 @@ function increaseUpdateStep(text) {
 
     VocabularyChangesCounter++;
 
+    if (status == 'NEW') {
+        VocabCntNew++;
+    } else if (status == 'UPDATED') {
+        VocabCntUpdated++;
+    } else if (status == 'DELETED') {
+        VocabCntDeleted++;
+    } else {
+        VocabCntError++;
+    }
+
     $(".vocabulary-updates .info").html(text);
     set_percentage(Math.round(VocabularyChangesCounter*100.0/VocabularyChangesTotal));
 
     if (VocabularyChangesCounter == VocabularyChangesTotal) { //updates finished
         $('.progress-pie-chart').hide();
-        $(".vocabulary-updates .info").html('Vocabularies updated succesfully [' + new_vocabs.length + ' new, ' +
-                                            changed_vocabs.length + ' changed, ' + deleted_vocabs.length + ' deleted]');
+
+        var total_status = '';
+        var str_errors = ''
+        if (VocabCntError > 0) {
+            total_status = 'with errors';
+            str_errors = ', ' + VocabCntError + ' failures';
+        } else {
+            total_status = 'succesfully';
+        }
+        $(".vocabulary-updates .info").html('Vocabularies updated ' + total_status + ' [' + VocabCntNew + ' new, ' +
+                                            VocabCntUpdated + ' changed, ' + VocabCntDeleted + ' deleted' + str_errors + ']');
     }
 }
 
@@ -53,15 +72,15 @@ function createVocabulary(new_vocab) {
                     csrfmiddlewaretoken: '{{csrf_token}}'
                 },
                 success: function(vs_repo, textStatus, jqXHR) {
-                    increaseUpdateStep('Created vocabulary ' + new_vocab.slug);
+                    increaseUpdateStep('Created vocabulary ' + new_vocab.slug, 'NEW');
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
-                    increaseUpdateStep('Error creating vocabulary ' + new_vocab.slug);
+                    increaseUpdateStep('Error creating vocabulary ' + new_vocab.slug, 'ERROR');
                 }
             });
         },
         error: function (jqXHR, textStatus, errorThrown) {
-           increaseUpdateStep('Error creating vocabulary ' + new_vocab.slug);
+           increaseUpdateStep('Error creating vocabulary ' + new_vocab.slug, 'ERROR');
         }
     });
 }
@@ -79,15 +98,15 @@ function updateVocabulary(old_vocab, new_vocab) {
                     csrfmiddlewaretoken: '{{csrf_token}}'
                 },
                 success: function(vs_repo, textStatus, jqXHR) {
-                    increaseUpdateStep('Updated vocabulary ' + old_vocab.slug);
+                    increaseUpdateStep('Updated vocabulary ' + old_vocab.slug, 'UPDATED');
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
-                    increaseUpdateStep('Error updating vocabulary ' + old_vocab.slug);
+                    increaseUpdateStep('Error updating vocabulary ' + old_vocab.slug, 'ERROR');
                 }
             });
         },
         error: function (jqXHR, textStatus, errorThrown) {
-            increaseUpdateStep('Error updating vocabulary ' + old_vocab.slug);
+            increaseUpdateStep('Error updating vocabulary ' + old_vocab.slug, 'ERROR');
         }
     });
 }
@@ -100,10 +119,10 @@ function deleteVocabulary(old_vocab) {
             csrfmiddlewaretoken: '{{ csrf_token }}'
         },
         success: function(vs_repo, textStatus, jqXHR) {
-            increaseUpdateStep('Deleted vocabulary ' + old_vocab.slug);
+            increaseUpdateStep('Deleted vocabulary ' + old_vocab.slug, 'DELETED');
         },
         error: function (jqXHR, textStatus, errorThrown) {
-            increaseUpdateStep('Error deleting vocabulary ' + old_vocab.slug);
+            increaseUpdateStep('Error deleting vocabulary ' + old_vocab.slug, 'ERROR');
         }
     });
 }
@@ -129,9 +148,14 @@ $(function(){
                     //detect changes
                     VocabularyChangesTotal = 0;
 
-                    new_vocabs = new Array();
-                    changed_vocabs = new Array();
-                    deleted_vocabs = new Array();
+                    var new_vocabs = new Array();
+                    var changed_vocabs = new Array();
+                    var deleted_vocabs = new Array();
+
+                    VocabCntNew = 0;
+                    VocabCntUpdated = 0;
+                    VocabCntDeleted = 0;
+                    VocabCntError = 0;
 
                     vs_local.forEach(function(v_local) {
                         v_repo = getEquivalent(v_local, vs_repo);
@@ -149,7 +173,7 @@ $(function(){
                     vs_repo.forEach(function(v_repo) {
                         v_local = getEquivalent(v_repo, vs_local);
 
-                        if (!v_local) { //new vocabularies
+                        if ((!v_local) && (vs_repo != 'DELETED')) { //new vocabularies
                             VocabularyChangesTotal++;
                             new_vocabs.push(v_repo);
                         }

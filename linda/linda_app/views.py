@@ -367,6 +367,11 @@ def vocabulary_search(request):  # view for search in vocabularies - remembers s
     else:
         tp = "vocabularies"
 
+    # remove non existing objects (may have been deleted but are still indexed)
+    for res in sqs:
+        if not res.object:
+            sqs.remove(res)
+
     if tp == "vocabularies":
         sqs = SearchQuerySet().models(Vocabulary).filter(content=q)
         qs = sorted(sqs, key=attrgetter('object.lodRanking'), reverse=True)  # order objects manually
