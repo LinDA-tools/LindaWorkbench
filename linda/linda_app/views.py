@@ -26,7 +26,8 @@ from settings import SESAME_LINDA_URL, LINDA_HOME, RDF2ANY_SERVER, PRIVATE_SPARQ
     VOCABULARY_REPOSITORY, UPDATE_FREEQUENCY_DAYS
 from passwords import MS_TRANSLATOR_UID, MS_TRANSLATOR_SECRET
 
-last_vocabulary_update = datetime.now()  # set initial date
+last_vocabulary_update = datetime.strptime('Jan 1 2014  1:00PM', '%b %d %Y %I:%M%p')  # set initial date on server start
+
 
 def index(request):
     params = {}
@@ -367,22 +368,32 @@ def vocabulary_search(request):  # view for search in vocabularies - remembers s
     else:
         tp = "vocabularies"
 
+    # load the query set
+    if tp == "vocabularies":
+        clsname = 'Vocabulary'
+        sqs = SearchQuerySet().models(Vocabulary).filter(content=q)
+    elif tp == "classes":
+        clsname = 'VocabularyClass'
+        sqs = SearchQuerySet().models(VocabularyClass).filter(content=q)
+    elif tp == "properties":
+        clsname = 'VocabularyProperty'
+        sqs = SearchQuerySet().models(VocabularyProperty).filter(content=q)
+    else:
+        raise Http404
+
     # remove non existing objects (may have been deleted but are still indexed)
     for res in sqs:
         if not res.object:
-            sqs.remove(res)
+            sqs = sqs.exclude(id=u'linda_app.' + clsname + '.%s' % res.pk)
 
+    # order the results
     if tp == "vocabularies":
-        sqs = SearchQuerySet().models(Vocabulary).filter(content=q)
         qs = sorted(sqs, key=attrgetter('object.lodRanking'), reverse=True)  # order objects manually
     elif tp == "classes":
-        sqs = SearchQuerySet().models(VocabularyClass).filter(content=q)
         qs = sorted(sqs, key=attrgetter('object.vocabulary.lodRanking'), reverse=True)
     elif tp == "properties":
-        sqs = SearchQuerySet().models(VocabularyProperty).filter(content=q)
         qs = sorted(sqs, key=attrgetter('object.vocabulary.lodRanking'), reverse=True)
-    else:
-        raise Http404
+
 
     # paginate the results
     paginator = Paginator(qs, 15)
