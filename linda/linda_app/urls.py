@@ -42,6 +42,9 @@ urlpatterns = patterns('',
                        #Messaging
                        (r'^messages/', include('messages.urls')),
 
+                       #Site search
+                       url(r'^find/$', views.site_search, name='site-search'),
+
 					   #Vocabulary search
                        url(r'^vocabularies/all/$', views.VocabularyListView.as_view()),
                        url(r'^classes/all/$', views.ClassListView.as_view()),

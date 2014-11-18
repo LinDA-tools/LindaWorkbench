@@ -98,45 +98,9 @@
 
             {% else %}
                 <div class="search-results">
-                    {% if vocabularies %}
-
-                        <div class="result-vocabularies" >
-                            {% for vocabulary in vocabularies %}
-                                <div class="vocabulary-teaser">
-                                    <h3><a href="{{ vocabulary.get_absolute_url }}">{{vocabulary.title}}</a></h3>
-                                    <p>{{vocabulary.description|slice:"150"}} {% if vocabulary.description|length > 150 %}...{% endif %}</p>
-
-                                    <a href="{{ vocabulary.get_absolute_url }}" class="button blue">{% trans "Read more" %}</a>
-                                    {% if vocabulary.example %}
-                                        <a href="{{ vocabulary.get_absolute_url }}#usage-example" class="button green">{% trans "View usage example" %}</a>
-                                    {% endif %}
-                                </div>
-                            {% endfor %}
-                        </div>
-
-                    {% elif classes %}
-
-                        <div class="result-classes">
-                            {% for class in classes %}
-                                <div class="class-teaser">
-                                    <h3><a href="{{ class.object.uri }}">{{class.label}}</a></h3>
-                                    <p class="uri">&lt;{{ class.uri }}&gt;</p>
-                                    <a href="{{ class.vocabulary.get_absolute_url }}" class="button blue">{% trans "Vocabulary" %}</a>
-                                </div>
-                            {% endfor %}
-                        </div>
-
-                    {% elif properties %}
-                        <div class="result-properties">
-                            {% for property in properties %}
-                                <div class="property-teaser">
-                                    <h3><a href="{{ property.uri }}">{{property.label}}</a></h3>
-                                    <p class="uri">&lt;{{ property.uri }}&gt;</p>
-                                    <a href="{{ property.vocabulary.get_absolute_url }}" class="button blue">{% trans "Vocabulary" %}</a>
-                                </div>
-                            {% endfor %}
-                        </div>
-                    {% endif %}
+                    {% with vocabularies=vocabularies classes=classes properties=properties %}
+                        {% include 'vocabulary/list.html' %}
+                    {% endwith %}
 
                     {% with current_url="" %}
                         {% include 'util/paginator.html' %}

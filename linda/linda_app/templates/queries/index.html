@@ -17,34 +17,9 @@
     </div>
 
     {% if queries %}
-        <table class="queries-table">
-            <thead>
-                <tr>
-                    <th>{% trans "ID" %}</th>
-                    <th>{% trans "Datasource" %}</th>
-                    <th>{% trans "Description"%}</th>
-                    <th>{% trans "Query" %}</th>
-                    <th>{% trans "Created on" %}</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for query in queries %}
-                    <tr id="query_{{query.id}}" class="query-row">
-                        <td class="query-id">#{{query.id}}
-                            <div class="operations">
-                                <p>{{query.csv_link}}</p>
-                                <a href="#">Run</a><br />
-                                <a href="#">Analyze</a>
-                            </div>
-                        </td>
-                        <td>{{query.get_datasource}}</td>
-                        <td class="description">{{query.description}}</td>
-                        <td class="sparql-query">{{query.sparql|linebreaks}}</td>
-                        <td>{{query.createdOn}}</td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+        {% with queries=queries out="html" %}
+            {% include "queries/table.html" %}
+        {% endwith %}
     {% else %}
         <p>{% trans "No queries found."%}</p>
     {% endif %}
@@ -54,103 +29,15 @@
 
 {% block scripts %}
     <script src="/static/js/jquery.datatables.min.js"></script>
-
-    <script>
-        {% if queries %}
-            $(".queries-table").dataTable({
-                "iDisplayLength": 20,
-                "language": {
-                    "info": "Showing _START_ to _END_ of _TOTAL_ queries",
-                    "infoEmpty": "No datasources available",
-                    "infoFiltered": "(filtered from _MAX_ total records)"
-                }
-            });
-        {% endif %}
-
-        $(".query-row").on('click', function() {
-            var id = $(this).attr('id');
-
-            if ($("#" + id).hasClass('selected')) {
-                console.log('open');
-                $(".queries-table .selected .sparql-query p").css('height', '65px');
-                $(".queries-table .selected").removeClass("selected");
-            } else {
-                $(".queries-table .selected .sparql-query p").css('height', '65px');
-                $(".queries-table .selected").removeClass("selected");
-
-
-                $("#" + id + " .sparql-query p").css('height', 'auto');
-                $("#" + id).addClass("selected");
-            }
-        });
-    </script>
-
     <script src="/static/js/jquery-ui.min.js"></script>
     <script src="/static/js/jquery.modal.min.js"></script>
     <script src="/static/js/jquery.contextMenu.js"></script>
     <script src="/static/js/jquery.confirm.js"></script>
 
-    <script>
-        $(function(){ //private datasource context menu
+    {% if queries %}
+        {% with queries=queries out="js" paginate_by=10 %}
+            {% include "queries/table.html" %}
+        {% endwith %}
+    {% endif %}
 
-            $.contextMenu({
-                selector: '.query-row',
-                callback: function(key, options) {
-                    var id = options.$trigger.attr('id');
-                    q_id = id.substr(id.indexOf("_")+1)
-                    var url;
-
-                    if (key == "Visualize")
-                        url = "/visualize?q_id=" + q_id;
-                    else
-                    if (key == "Analyze")
-                        url = "/analytics?q_id=" + q_id;
-                    else
-                    if (key == "Edit")
-                        url = "/sparql/?q_id=" + q_id;
-                    else
-                    if (key == "Delete") {
-                        $.confirm({
-                            title: "Delete Query #" + q_id,
-                            text: "Are you sure you want to delete this query?",
-                            className: "delete-dialog",
-                            confirm: function(button) {
-                                $.ajax({
-                                    url: "/query-builder/delete/" + q_id + '/',
-                                    type: "POST",
-                                    data: {
-                                        csrfmiddlewaretoken: '{{ csrf_token }}'
-                                    },
-                                    success: function(data, textStatus, jqXHR)
-                                    {
-                                        document.location.reload();
-                                    },
-                                    error: function (jqXHR, textStatus, errorThrown)
-                                    {
-                                        console.log(textStatus + ': ' + errorThrown);
-                                    }
-                                });
-                            },
-                            cancel: function(button) {
-                                $('.confirmation-modal').remove();
-                                $('.jquery-modal').remove();
-                            }
-                        });
-                        return;
-                    }
-
-                    $(this).addClass("show-context-menu");
-                    if (url)
-                        window.location = url;
-                },
-                items: {
-                    "Visualize": {name: "Visualize", icon: "visualize"},
-                    "Analyze": {name: "Analyze", icon: "analyze"},
-                    "sep1": "---------",
-                    "Edit": {name: "Run & Edit", icon: "edit"},
-                    "Delete": {name: "Delete", icon: "delete"},
-                }
-            });
-        });
-    </script>
 {% endblock %}

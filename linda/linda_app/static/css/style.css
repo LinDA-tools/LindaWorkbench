@@ -240,7 +240,7 @@ header .site-title:hover {
 
     #menu-select-area {
         display: block;
-        padding-bottom: 10px;
+        padding: 10px;
     }
 
     #menu-select-area ul li {
@@ -333,15 +333,16 @@ footer a {
 }
 
 /* Home page search */
-.home-search {
-    padding: 20px;
-}
 
 .menu-search input[type="text"] {
     outline: none;
     width: calc(100% - 70px);
     height: 30px;
     background: #fff;
+}
+
+.site-search .search-results > div {
+    margin-bottom: 30px;
 }
 
 .sparql .menu-search input[type="text"] {
@@ -1356,11 +1357,12 @@ input, textarea {
 
 /*Search results*/
 .search-results {
-    margin-top: 20px;
     padding-top: 10px;
-    text-align: left;
-    width: 500px;
     max-width: 100%;
+}
+
+.result-vocabularies, .result-classes, .result-properties {
+    width: 500px;
 }
 
 .search-filters {
@@ -1377,6 +1379,18 @@ input, textarea {
     border-radius: 5px 5px 0 0;
 }
 
+.site-search .dataTables_filter, .site-search .dataTables_info, .site-search .dataTables_paginate {
+    display: none;
+}
+
+.site-search .main h2 {
+    padding: 0.1em;
+    background: #eee;
+    color: #aaa;
+    border: 1px dotted #aaa;
+}
+
+/* Vocabulary teaser */
 .vocabulary-teaser {
     position: relative;
 }
@@ -1620,7 +1634,7 @@ input, textarea {
     padding-top: 10px;
 }
 
-.datasources-table {
+.dataTable {
     border-bottom: 1px solid #ddd !important;
 }
 

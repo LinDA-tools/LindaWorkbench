@@ -11,17 +11,14 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import ListView, UpdateView, DetailView, DeleteView
 
 import json
-import re
 import requests
-from microsofttranslator import Translator, TranslateApiException
-import xmltodict
+from microsofttranslator import Translator
+from analytics.models import Analytics
 
 from forms import *
 from rdflib import Graph
-from datetime import datetime, date
+from datetime import datetime
 
-
-# from graphdb import views as query_views
 from settings import SESAME_LINDA_URL, LINDA_HOME, RDF2ANY_SERVER, PRIVATE_SPARQL_ENDPOINT, QUERY_BUILDER_SERVER, \
     VOCABULARY_REPOSITORY, UPDATE_FREEQUENCY_DAYS
 from passwords import MS_TRANSLATOR_UID, MS_TRANSLATOR_SECRET
@@ -60,6 +57,37 @@ def sparql(request):
             return Http404
 
     return render(request, 'sparql.html', params)
+
+
+def site_search(request):
+    if not 'search_q' in request.GET:
+        return Http404
+
+    q = request.GET.get('search_q')
+
+    #for vocabularies, classes & properties use elastic search
+    vocabularies =[]
+    for sqs in SearchQuerySet().models(Vocabulary).filter(content=q):
+        if sqs.object:
+            vocabularies.append(sqs.object)
+
+    classes =[]
+    for sqs in SearchQuerySet().models(VocabularyClass).filter(content=q):
+        if sqs.object:
+            classes.append(sqs.object)
+
+    properties = []
+    for sqs in SearchQuerySet().models(VocabularyProperty).filter(content=q):
+        if sqs.object:
+            properties.append(sqs.object)
+
+    params = {'search_q': q,
+              'datasources': DatasourceDescription.objects.filter(name__icontains=q),
+              'queries': Query.objects.filter(description__icontains=q),
+              'analytics': Analytics.objects.filter(description__icontains=q, user_id=request.user.id),
+              'vocabularies_list': vocabularies, 'classes_list': classes, 'properties_list': properties}
+
+    return render(request, 'search/site-search.html', params)
 
 
 def profile(request, pk):

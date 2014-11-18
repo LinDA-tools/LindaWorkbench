@@ -1,0 +1,124 @@
+{% load i18n %}
+{% load app_filters %}
+
+{% if out == "html" %}
+    <table class="datasources-table">
+        <thead>
+        <tr>
+            <th>{% trans "Name" %}</th>
+            <th>{% trans "Type" %}</th>
+            <th>{% trans "SparQL Endpoint"%}</th>
+            <th>{% trans "Created" %}</th>
+            <th>{% trans "Last modified" %}</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for datasource in datasources %}
+        <tr id="{{datasource.name}}" class="datasource {% if datasource.is_public %}public{% else %}private{% endif %}">
+            <td><img src="/static/images/rdf.png" width="15px"/> {{datasource.title}}</td>
+            {% if datasource.is_public %}
+            <td>{% trans "Public" %}</td>
+            <td>{{datasource.uri}}</td>
+            {% else %}
+            <td>{% trans "Private" %}</td>
+            <td></td>
+            {% endif %}
+            <td>{{datasource.createdOn}}</td>
+            <td>{{datasource.lastUpdateOn}}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% elif out == "js" %}
+        <script>
+            //create the data tables
+            $(".datasources-table").dataTable({
+                "iDisplayLength": {{paginate_by}},
+                "language": {
+                    "info": "Showing _START_ to _END_ of _TOTAL_ datasources",
+                    "infoEmpty": "No datasources available",
+                    "infoFiltered": "(filtered from _MAX_ total records)"
+                }
+            });
+
+            function downloadWithName(uri, name) {
+                var link = document.createElement("a");
+                link.download = name;
+                link.href = uri;
+                document.getElementById("main-container").appendChild(link);
+                link.click();
+                link.parentNode.removeChild(link);
+            }
+
+            $(function(){ //private datasource context menu
+
+                $.contextMenu({
+                    selector: '.datasource.private',
+                    callback: function(key, options) {
+                        var id = options.$trigger.attr('id');
+                        var url;
+
+                        if (key == "Visualize")
+                            url = "/visualize/datasource/" + id;
+                        else
+                        if (key == "Explore")
+                            url = "/query-builder?dt_id=" + id;
+                        else
+                        if (key == "Edit")
+                            url = "/datasource/" + id + "/replace/";
+                        else
+                        if (key == "Delete")
+                            url = "/datasource/" + id + "/delete/";
+                        else
+                        if (key == "Download") {
+                            url = "/datasource/" + id + "/download/";
+                            downloadWithName(url, id + ".rdf");
+                            return
+                        }
+
+                        $(this).addClass("show-context-menu");
+                        if (url)
+                            window.location = url;
+                    },
+                    items: {
+                        "Visualize": {name: "Visualize", icon: "visualize"},
+                        "Explore": {name: "Explore", icon: "explore"},
+                        "sep1": "---------",
+                        "Edit": {name: "Edit", icon: "edit"},
+                        "Delete": {name: "Delete", icon: "delete"},
+                        "sep2": "---------",
+                        "Download": {name: "Download", icon: "download"},
+                    }
+                });
+
+                $.contextMenu({ //public datasource context menu
+                    selector: '.datasource.public',
+                    callback: function(key, options) {
+                        var id = options.$trigger.attr('id');
+                        var url;
+
+                        if (key == "Explore")
+                            url = "/query-builder?dt_id=" + id;
+                        else
+                        if (key == "Edit")
+                            url = "/datasource/" + id + "/replace/";
+                        else
+                        if (key == "Delete")
+                            url = "/datasource/" + id + "/delete/";
+
+                        $(this).addClass("show-context-menu");
+                        if (url)
+                            window.location = url;
+                    },
+                    items: {
+                        "Explore": {name: "Explore", icon: "explore"},
+                        "sep1": "---------",
+                        "Edit": {name: "Edit", icon: "edit"},
+                        "Delete": {name: "Delete", icon: "delete"},
+
+                    }
+                });
+            });
+
+    </script>
+{% endif %}

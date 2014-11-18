@@ -34,12 +34,12 @@
 <div id="main-container">
     <div id="menu" class="clearfix">
         <ul>
-            <li><form class="form menu-search" method="get" action="/vocabulary-search" class="form">
-
-                    <input type="text" name="q" placeholder="Search LinDA">
-                    <input type="submit" value="">
-
-                </form></li>
+            <li class="right">
+                <form class="form menu-search" method="GET" action="/find/" class="form">
+                    <input type="text" name="search_q" class="site-search-input" placeholder="Search LinDA" />
+                    <input type="submit" value=""/>
+                </form>
+            </li>
             <li {%if page_datasources %}class="selected"{% endif %}><a href="/datasources">{% trans "Data Sources" %}</a></li>
             <li {%if page_queries %}class="selected"{% endif %}><a href="/queries/">{% trans "Queries" %}</a></li>
             <li {%if page_qbuilder %}class="selected"{% endif %}><a href="/query-builder">{% trans "Query builder" %}</a></li>
@@ -75,11 +75,12 @@
                     <option value="/sparql" {%if page_sparql %}selected="selected"{% endif %}>{% trans "SPARQL Endpoint"%}</option>
                 </select>
             </li>
-            <li class="right"><form class="form menu-search" method="get" action="/vocabulary-search" class="form">
 
-                <input type="text" name="q" placeholder="Search LinDA">
-                <input type="submit" value="">
-
-            </form></li>
+            <li class="right">
+                <form class="form menu-search" method="GET" action="/find/" class="form">
+                    <input type="text" name="search_q" class="site-search-input" placeholder="Search LinDA" />
+                    <input type="submit" value="">
+                </form>
+            </li>
         </ul>
     </div>
