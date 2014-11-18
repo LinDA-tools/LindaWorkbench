@@ -419,7 +419,7 @@ form input[type="submit"] {
     outline: none;
 }
 
-.form input[type="text"], .form input[type="search"], input[type="url"], .form input[type="password"], .form select, .form input[type="select"], .form input[type="email"], .form textarea {
+.form input[type="text"], .form input[type="search"], .dataTables_wrapper input[type="search"], input[type="url"], .form input[type="password"], .form select, .form input[type="select"], .form input[type="email"], .form textarea {
     height: 20px;
     padding: 5px;
     border: 1px solid #ccc;
@@ -428,7 +428,7 @@ form input[type="submit"] {
     outline: none !important;
 }
 
-.form input[type="text"]:focus, input[type="url"]:focus, .form input[type="password"]:focus, .form select:focus, .form input[type="select"]:focus, .form input[type="email"]:focus, .form textarea:focus {
+.form input[type="text"]:focus, .form input[type="search"]:focus, .dataTables_wrapper input[type="search"]:focus, input[type="url"]:focus, .form input[type="password"]:focus, .form select:focus, .form input[type="select"]:focus, .form input[type="email"]:focus, .form textarea:focus {
     border: 1px solid #E87E04;
 }
 
@@ -1051,8 +1051,12 @@ form input[type="submit"] {
 	height:200px;
 }
 
+.queries .description {
+    width: 40%;
+}
+
 .queries .sparql-query {
-    width: 50%;
+    width: 40%;
     font-family: "Consolas";
 }
 
@@ -1585,8 +1589,12 @@ input, textarea {
     margin-right: 8px;
 }
 
-.datasource-create .dataTables_length {
+.dataTables_length {
     display: none;
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button {
+    padding: 0.25em 0.5em;
 }
 
 .queries-index-title {
@@ -1616,22 +1624,22 @@ input, textarea {
     border-bottom: 1px solid #ddd !important;
 }
 
-.datasources-table thead th, .datasources-table thead td {
+.dataTable thead th, .datasources-table thead td {
     border-bottom: 1px solid #ddd !important;
 }
 
-.datasources-table thead tr {
+.dataTable thead tr {
     background: #5C97BF;
     color: #eee;
 }
 
-.datasources-table th, .queries-table th {
+.dataTable th, .queries-table th {
     text-align: left;
     font-weight: 600;
 }
 
-.datasources-table th, .queries-table th,
-.datasources-table td, .queries-table td {
+.dataTable th, .queries-table th,
+.dataTable td, .queries-table td {
     padding: 5px;
 }
 

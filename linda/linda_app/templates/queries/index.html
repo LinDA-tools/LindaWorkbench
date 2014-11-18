@@ -6,11 +6,15 @@
 {% block css %}
     <link rel="stylesheet" href="/static/css/jquery.contextMenu.css" />
     <link rel="stylesheet" href="/static/css/jquery.modal.css" />
+    <link rel="stylesheet" href="/static/css/jquery.datatables.min.css" />
 {% endblock %}
 
 {% block content %}
 <div class="main">
-    <h2 class="queries-index-title">{% trans "Queries" %}</h2> <a href="/query-builder/">+ {%trans "Create New"%}</a>
+    <div class="datasource-index-title">
+        <h2 class="queries-index-title">{% trans "Queries" %}</h2>
+        <a class="button green" href="/query-builder/">+ {%trans "Create New"%}</a>
+    </div>
 
     {% if queries %}
         <table class="queries-table">
@@ -34,7 +38,7 @@
                             </div>
                         </td>
                         <td>{{query.get_datasource}}</td>
-                        <td>{{query.description}}</td>
+                        <td class="description">{{query.description}}</td>
                         <td class="sparql-query">{{query.sparql|linebreaks}}</td>
                         <td>{{query.createdOn}}</td>
                     </tr>
@@ -45,15 +49,24 @@
         <p>{% trans "No queries found."%}</p>
     {% endif %}
 
-    {% with current_url="/queries" %}
-        {% include 'util/paginator.html' %}
-    {% endwith %}
-
 </div>
 {% endblock %}
 
 {% block scripts %}
+    <script src="/static/js/jquery.datatables.min.js"></script>
+
     <script>
+        {% if queries %}
+            $(".queries-table").dataTable({
+                "iDisplayLength": 20,
+                "language": {
+                    "info": "Showing _START_ to _END_ of _TOTAL_ queries",
+                    "infoEmpty": "No datasources available",
+                    "infoFiltered": "(filtered from _MAX_ total records)"
+                }
+            });
+        {% endif %}
+
         $(".query-row").on('click', function() {
             var id = $(this).attr('id');
 

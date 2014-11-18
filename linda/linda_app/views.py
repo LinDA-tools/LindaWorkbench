@@ -527,16 +527,8 @@ def downloadRDF(request, pk, type):
 #Datasources
 def datasources(request):
     params = {}
-    params['sortOptions'] = {('title', 'Title'), ('date', 'Date')}
-    params['sortBy'] = forms.Select(choices=params['sortOptions']).render('sortBy', '', attrs={"id": 'id_sortBy', })
     params['page_datasources'] = True
-
-    if request.GET.get("sort") == "title":
-        params['datasources'] = DatasourceDescription.objects.all().order_by('title')
-        params['sort_default'] = "Title"
-    else:
-        params['datasources'] = DatasourceDescription.objects.all()
-        params['sort_default'] = "Date"
+    params['datasources'] = DatasourceDescription.objects.all().order_by('title')
 
     return render(request, 'datasource/index.html', params)
 
@@ -1024,7 +1016,6 @@ class QueryListView(ListView):
     model = Query
     template_name = 'queries/index.html'
     context_object_name = 'queries'
-    paginate_by = 10
 
     def get_context_data(self, **kwargs):
         context = super(QueryListView, self).get_context_data(**kwargs)
