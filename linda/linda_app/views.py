@@ -81,6 +81,7 @@ def site_search(request):
         if sqs.object:
             properties.append(sqs.object)
 
+    #also search in datasources, queries and analytics
     params = {'search_q': q,
               'datasources': DatasourceDescription.objects.filter(name__icontains=q),
               'queries': Query.objects.filter(description__icontains=q),
