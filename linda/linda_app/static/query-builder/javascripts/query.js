@@ -11,7 +11,7 @@
     }
     return "<td class='result-col-uri' style=\"word-wrap: break;\">" + display_text + "</td>";
   };
-
+  
   this.display_sparql_uri = function(data) {
     var uri_display;
     uri_display = data.value;
@@ -22,11 +22,14 @@
   };
 
   this.display_sparql_row_entry = function(data) {
+	console.log(data);
     if (data.type === "uri") {
       return display_sparql_uri(data);
     } else if (data.type === "literal") {
       return display_sparql_literal(data);
-    }
+    } else {
+		return data;
+	}
   };
 
   this.execute_sparql_query = function() {

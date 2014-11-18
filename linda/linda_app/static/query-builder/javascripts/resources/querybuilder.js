@@ -154,8 +154,6 @@ QueryBuilder = {
             $("#tbl_classes_search_result").hide("fast");
             $(".clear-search-class").hide("fast");
             QueryBuilder.select_body($("#div_selected_class"),"<strong>"+class_name+"</strong>");
-            QueryBuilder.show_equivalent_sparql_query();
-            QueryBuilder.properties.generate();
             $("#div_classes_search_more").show("fast");
             $("#btn_classes_search_more").html("More details on "+truncate(class_name,25,'...') );
             $("#btn_classes_search_more").attr("onclick","Utils.show_uri_viewer('"+class_uri+"')");
@@ -163,12 +161,13 @@ QueryBuilder = {
             $("#property_main_subclasses").hide();
             //Utils.flash.notice("Selected class : "+class_name + " &lt;"+class_uri+"&gt;");
             QueryBuilder.classes.add_class_details($("#div_selected_class").find('.select-body').first(),class_uri,0);
+            QueryBuilder.show_equivalent_sparql_query();
+            QueryBuilder.properties.generate();
         },
         add_class_details : function(element,class_uri,tab_level){
             element.attr('class-uri',class_uri);
             element.find('strong').first().after("<span class='loading-image'>&nbsp;&nbsp;&nbsp;<img  height=\"10px\" src=\"/static/query-builder/images/horizontal-loading.gif\"></span>");
             $.getJSON(QueryBuilder.classes.get_examples_action_url(class_uri)).success(function(data){
-				console.log(data);
                 var element_append_html = "&nbsp;&nbsp;&nbsp;<span class='badge'>"+get_long_number_display(data.total_objects)+"</span>";
                 if(data.total_objects > 0){
                     element_append_html += "&nbsp;&nbsp;<small>(&nbsp;";
@@ -181,6 +180,8 @@ QueryBuilder = {
                 }
                 //element.find(".loading-image").first().remove();
                 element.find("strong").after(element_append_html);
+                if(tab_level > 0)
+                    element.parent().find(".select-right-actions").first().append("<span class=\"glyphicon glyphicon-globe clickable pull-right\" onclick=\"QueryBuilder.classes.select_again('"+class_uri+"','"+element.find("strong").first().html()+"')\"></span>");
             }).always(function(){
                 element.find(".loading-image").first().remove();
             });
@@ -220,6 +221,10 @@ QueryBuilder = {
                     QueryBuilder.classes.add_class_details($(this).find('.select-class-subclass-body').first(),$(this).attr("class-uri"),tab_level+1);
                 }
             });
+        },
+        select_again : function(class_uri,class_name){
+            QueryBuilder.reset_searched_class();
+            QueryBuilder.classes.select(class_uri,class_name);
         }
     
     },
@@ -227,6 +232,8 @@ QueryBuilder = {
     //the methods related to properties
     properties : {
         generate : function(){
+            $("#property_main_properties_datatype_group").hide();
+            $("#property_main_properties_object_group").hide();
             QueryBuilder.properties.get_properties_for_selected_class();
             $("#div_qb_properties").show("fast");
         },
@@ -349,21 +356,28 @@ QueryBuilder = {
         },
         //This method assigns colors to the badges of ranges of properties
         generate_range_badge_colors : function(){
-            var colors =    [  "#E52B50","#9966CC","#007FFF","#964B00","#0095B6","#800020","#CD7F32","#702963","#007BA7","#808000",
+            var original_colors = [  "#E52B50","#9966CC","#007FFF","#964B00","#0095B6","#800020","#CD7F32","#702963","#007BA7","#808000",
                                 "#D2B48C","#483C32","#FF4500", "#FFA500", "#D1E231", "#1C2841", "#FA8072", "#7B3F00", "#2F4F4F",
                                 "#483D8B", "#FFD700", "#3CB371", "#BC8F8F", "#FF69B4", "#00CED1", "#0000CD"
                             ];
+
             var badge_classes = [".span-property-range-data",".span-property-range-object"];
+            var color_index = 0;
             for(var i=0;i<badge_classes.length;i++){
-                var color_counter = 0;
+                var colors =  [];
+                for(var j = 0 ; j<original_colors.length ; j++)
+                    colors.push(original_colors[j]);
                 var range_color_lookup = {};
                 $(badge_classes[i]).each(function(index){
                     var range_name = $(this).html();
                     if(range_color_lookup[range_name] == undefined){
-                        range_color_lookup[range_name] = colors[color_counter];
-                        color_counter++;
-                        if(color_counter>=colors.length)
-                            color_counter = 0;
+                        color_index = get_random_int(0,colors.length-1);
+                        range_color_lookup[range_name] = colors[color_index];
+                        colors.splice(color_index,1);
+                        if(colors.length <= 0){
+                            for(var k = 0 ; k<original_colors.length ; k++)
+                                colors.push(original_colors[k]); 
+                        }
                     }
                     $(this).attr("style","background-color:"+range_color_lookup[range_name]+";");
                 });

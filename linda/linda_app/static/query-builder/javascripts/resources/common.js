@@ -70,7 +70,10 @@ function get_long_number_display(long_number){
     return long_number.toString();
 }
 
+function get_random_int(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
 String.prototype.splice = function( idx, rem, s ) {
     return (this.slice(0,idx) + s + this.slice(idx + Math.abs(rem)));
 };
-

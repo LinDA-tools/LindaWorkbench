@@ -218,6 +218,7 @@ class DatasourceDescription(models.Model):
         else:
             return LINDA_HOME + "sparql/" + self.name + "/"
 
+
 #Creates a 'label' from an rdf term uri
 def get_label_by_uri(uri):
     label = uri.split('/')[-1]
@@ -242,9 +243,7 @@ def create_query_description(dtname, query):
     #add constraints
     where_start = re.search('WHERE', query, re.IGNORECASE).end()
     if where_start:
-        where_end = re.search('FILTER', query, re.IGNORECASE).start()
-        if not where_end:
-            where_end = re.search('LIMIT', query, re.IGNORECASE).start()
+        where_end = re.search('LIMIT', query, re.IGNORECASE).start()
         if not where_end:
             where_end = len(query)
 
@@ -253,12 +252,14 @@ def create_query_description(dtname, query):
         where_str = re.sub('(<|>|\n)', '"', where_str)
         r = re.compile(r'(?:[^."]|"[^"]*")+')
         where_constraints = r.findall(where_str)  # split by . outside of "entities"
-        print where_constraints
 
         constraints_out = ''
         first_constraint = True
         for constraint in where_constraints:
             terms = constraint.split()
+
+            if len(terms) < 3:
+                continue
 
             if terms[1].lower() == 'rdf:type':  # class constraints
                 tp_pos = 2

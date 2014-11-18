@@ -419,7 +419,7 @@ form input[type="submit"] {
     outline: none;
 }
 
-.form input[type="text"], input[type="url"], .form input[type="password"], .form select, .form input[type="select"], .form input[type="email"], .form textarea {
+.form input[type="text"], .form input[type="search"], input[type="url"], .form input[type="password"], .form select, .form input[type="select"], .form input[type="email"], .form textarea {
     height: 20px;
     padding: 5px;
     border: 1px solid #ccc;
@@ -1519,6 +1519,10 @@ input, textarea {
     vertical-align: top;
 }
 
+.qbuilder .modal-content * {
+    box-sizing: border-box !important;
+}
+
 /*Create RDF datasource*/
 .rdf-form label{
     vertical-align: top;
@@ -1581,15 +1585,44 @@ input, textarea {
     margin-right: 8px;
 }
 
-.datasource-index-title, .queries-index-title {
+.datasource-create .dataTables_length {
+    display: none;
+}
+
+.queries-index-title {
     display: inline-block;
     padding-right: 40px;
 }
 
+.datasource-index-title {
+    border-bottom: 1px solid #aaa;
+    margin-bottom: 5px;
+}
+
+.datasource-index-title h2 {
+    display: inline-block;
+}
+
+.datasource-index-title .button {
+    margin: 5px;
+}
+
 .datasources-table, .queries-table {
     width: 100%;
-    border-top: 1px solid #ddd;
     padding-top: 10px;
+}
+
+.datasources-table {
+    border-bottom: 1px solid #ddd !important;
+}
+
+.datasources-table thead th, .datasources-table thead td {
+    border-bottom: 1px solid #ddd !important;
+}
+
+.datasources-table thead tr {
+    background: #5C97BF;
+    color: #eee;
 }
 
 .datasources-table th, .queries-table th {
