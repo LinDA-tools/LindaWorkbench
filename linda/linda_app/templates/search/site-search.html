@@ -34,8 +34,8 @@
             {% if analytics %}
                 <h2>{% trans "Analytics" %}</h2>
                 {% for analytic in analytics %}
-                    <a href="{% url 'analytics:detail' analytics.id %}">({{ analytics.algorithm }}) -- analytics ID : {{ analytics.id }} </a>
-                    <p>{{analytics.description}}</p>
+                    <a href="/analytics/{{analytic.id}}">({{ analytic.algorithm }}) -- #{{ analytic.id }} </a>
+                    <p>{{analytic.description}}</p>
                 {% endfor %}
             {% endif %}
 
