@@ -2,7 +2,7 @@
   'use strict';
   angular.module('app').factory('Rdb', function($http, _) {
     var dbAdapter, host, selectedColumns, selectedTables, tableColumns, tables;
-    host = R2R_PROXY;
+    host = R2R_PROXY; //points to the proxy /transformations inside django, not the actual server to avoid cors exception
     dbAdapter = host + '/api/v1/db';
     tables = [];
     tableColumns = {};
