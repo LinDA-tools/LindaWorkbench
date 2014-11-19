@@ -166,7 +166,7 @@ QueryBuilder = {
         },
         add_class_details : function(element,class_uri,tab_level){
             element.attr('class-uri',class_uri);
-            element.find('strong').first().after("<span class='loading-image'>&nbsp;&nbsp;&nbsp;<img  height=\"10px\" src=\"/static/query-builder/images/horizontal-loading.gif\"></span>");
+            element.find('strong').first().after("<span class='loading-image'>&nbsp;&nbsp;&nbsp;<img  height=\"10px\" src=\"/assets/horizontal-loading.gif\"></span>");
             $.getJSON(QueryBuilder.classes.get_examples_action_url(class_uri)).success(function(data){
                 var element_append_html = "&nbsp;&nbsp;&nbsp;<span class='badge'>"+get_long_number_display(data.total_objects)+"</span>";
                 if(data.total_objects > 0){
@@ -608,7 +608,189 @@ QueryBuilder = {
             $("#class_selector_modal").modal('hide');
         }
 
-    }
+    },
+    convert : {
+        configured : {
+            check_validity_of_file_content : function(file_data){
+                var result = { valid : true, description: ""};
+                var blocks = QueryBuilder.convert.configured.get_string_blocks(file_data);
+                var block_types = ["variable_dictionary","header","body","footer"];
+                for(i=0;i<block_types.length;i++){
+                    result.valid = QueryBuilder.convert.configured.check_file_body_item(blocks,block_types[i]);
+                    if(result.valid == false){
+                        result.description = "These seems to be some problem with the <strong>"+block_types[i]+"</strong> section of your template. Please correct it and upload again.";
+                        break;
+                    }    
+                }
+                return result;
+            },
+            check_file_body_item : function(blocks,block_type){
+                var result = false;
+
+                var inside = false;
+                var break_loop = false;
+                for(i=0;i<blocks.length;i++){
+                    if(blocks[i].charAt(0) == '{' && blocks[i].charAt(1) == '{' && blocks[i].charAt(blocks[i].length-1) == '}' && blocks[i].charAt(blocks[i].length-2) == '}')
+                    {    
+                        if(blocks[i].indexOf("start") > -1 && inside == false){
+                            if(blocks[i].indexOf(block_type) > -1){
+                                inside = true;
+                            }
+                        }
+                        else if(blocks[i].indexOf("start") > -1 && inside == true){
+                            //nested block.
+                            //will throw an errow.
+                            break_loop = true;
+                            result = false;
+                        }
+                        else if(inside == true && blocks[i].indexOf("end")){
+                            result = true;
+                            break_loop = true;
+                        }
+                    }
+                    if(break_loop == true)
+                        break;
+                }
+                return result;
+            }
+            ,
+            handle_error_output : function(valid,error_description){
+                if(valid == true){
+                    $(".configured-download-file-ok").show("fast");
+                }
+                else{
+                    $("#configured_download_error_message").html(error_description);
+                    $(".configured-download-file-error").show("fast");
+                } 
+            },
+            handle_file_upload : function(evt) {
+                $(".configured-download-file-ok").hide();
+                $(".configured-download-file-error").hide();
+                var files = evt.target.files; // FileList object
+                var valid_file = false;
+                var error_description = "";
+                var output = [];
+                var f = files[0];
+
+                if(get_file_extension(f.name) != "txt"){
+                    QueryBuilder.convert.configured.handle_error_output(false,"The file uploaded is not <strong>.txt</strong> file");
+                }
+                else{
+                    output.push('<li><strong>', escape(f.name), '</strong> (', f.type || 'n/a', ') - ',
+                            f.size, ' bytes, last modified: ',
+                            f.lastModifiedDate ? f.lastModifiedDate.toLocaleDateString() : 'n/a',
+                            '</li>');
+                    var reader = new FileReader();
+                    var file_data = "";
+                    reader.onload = function(e){
+                        var file_validity =  QueryBuilder.convert.configured.check_validity_of_file_content(reader.result);
+                        if(file_validity.valid == true){
+                            var blocks = QueryBuilder.convert.configured.get_string_blocks(reader.result);
+                            configured_convert.header = QueryBuilder.convert.configured.get_block_string_from_blocks(blocks,"header");
+                            configured_convert.body = QueryBuilder.convert.configured.get_block_string_from_blocks(blocks,"body");
+                            configured_convert.footer = QueryBuilder.convert.configured.get_block_string_from_blocks(blocks,"footer");
+                            str_variable_dictionary = QueryBuilder.convert.configured.get_block_string_from_blocks(blocks,"variable_dictionary");
+                            arr_variable_dictionary = str_variable_dictionary.split("\n");
+                            configured_convert.variable_dictionary = [];
+                            for(i=0;i<arr_variable_dictionary.length;i++){
+                                arr_var = arr_variable_dictionary[i].split("=");
+                                if(arr_var.length == 2){
+                                    configured_convert.variable_dictionary.push({variable : arr_var[0].trim(), value: arr_var[1].trim()});
+                                }
+                            }
+                        }
+                        QueryBuilder.convert.configured.handle_error_output(file_validity.valid,file_validity.description);
+                    };
+                    reader.readAsText(f);
+                }
+              
+
+              //document.getElementById('list').innerHTML = '<ul>' + output.join('') + '</ul>';
+  
+
+            },
+
+
+        
+            get_block_string_from_blocks : function(blocks, block_type){
+                var result = "";
+                var inside = false;
+                var break_loop = false;
+                for(i=0;i<blocks.length;i++){
+                    if(blocks[i].charAt(0) == '{' && blocks[i].charAt(1) == '{' && blocks[i].charAt(blocks[i].length-1) == '}' && blocks[i].charAt(blocks[i].length-2) == '}')
+                    {    
+                        if(blocks[i].indexOf("start") > -1){
+                            if(blocks[i].indexOf(block_type) > -1){
+                                inside = true;
+                            }
+                        }
+                        else if(inside == true && blocks[i].indexOf("end")){
+                            result = blocks[i-1].substring(1,blocks[i-1].length-1);
+                            break_loop = true;
+                        }
+                    }
+                    if(break_loop == true)
+                        break;
+                }
+
+                return result;
+
+            },
+            get_string_blocks : function(file_data){
+                var result = [];
+                var index_pairs = QueryBuilder.convert.configured.get_block_index_pairs(file_data);
+                for(i=0;i<index_pairs.length;i++){
+                    result.push(file_data.substring(index_pairs[i].start,index_pairs[i].end));
+                    if(i<index_pairs.length-1){
+                        result.push(file_data.substring(index_pairs[i].end,index_pairs[i+1].start));
+                    }
+                }
+                return result;
+            },
+            get_block_index_pairs : function(file_data){
+                var entered_block = false;
+                var index_pairs = [];
+                var start_index = 0;
+                var end_index = 0;
+                for(i=0;i<file_data.length-1;i++){
+                    if(entered_block == false){
+                        if(file_data.charAt(i) == '{' && file_data.charAt(i+1) == '{'){
+                            start_index = i;
+                            entered_block = true;
+                            i=i+1;
+                        }
+                    }
+                    else{
+                        if(file_data.charAt(i) == '}' && file_data.charAt(i+1) == '}'){
+                            end_index = i+2;
+                            entered_block = false;
+                            index_pairs.push({start: start_index, end : end_index});
+                            i = i+1;
+                        }
+                    }
+                }
+                return index_pairs;
+            },
+                initiate_download : function(){
+                    $(".div-configured-download").show("fast");
+                    $("#btn_group_download").hide("fast");
+                    $("#btn_download_configured_convert_template").attr("href","/query/configured_convert_template?selected_properties="+QueryBuilder.properties.get_checked_properties());
+                    $(".configured-download-file-ok").hide();
+                    $(".configured-download-file-error").hide();
+                    $("#form_configured_template_files")[0].reset();
+                },
+                hide_download : function(motion){
+                    if(motion != undefined && motion != ""){
+                        $(".div-configured-download").hide("fast");
+                        $("#btn_group_download").show("fast");
+                    }
+                    else{
+                        $(".div-configured-download").hide();
+                        $("#btn_group_download").show(); 
+                    }
+                }
+        } // end configured
+    } // end convert
 
 
 };

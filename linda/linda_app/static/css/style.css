@@ -298,7 +298,7 @@ header .site-title:hover {
 }
 
 .vocabulary-details .main {
-    /*width: calc(100% - 265px);*/
+    width: 100%;
 }
 
 .page-title {
@@ -819,7 +819,7 @@ form input[type="submit"] {
 }
 
 .main {
-    padding: 5px;
+    padding: 10px;
 }
 
 @media only screen and (max-width: 1190px){
@@ -856,7 +856,7 @@ form input[type="submit"] {
     }
 
     .main content {
-        width: 70%;
+        width: calc(70% - 20px);
         padding: 10px;
     }
 
@@ -1161,6 +1161,20 @@ form input[type="submit"] {
 
 /* Vocabulary details */
 
+.vocabulary-details .main.content-sidebar {
+    padding: 0;
+}
+
+@media only screen and (min-width: 960px){
+    .vocabulary-details .main.content-sidebar {
+        display: table;
+    }
+
+    .vocabulary-details .vocabulary, .vocabulary-details aside {
+        display: table-cell;
+    }
+}
+
 .vocabulary .upload-info {
     font-weight: 300;
 }
@@ -1362,7 +1376,7 @@ input, textarea {
 }
 
 .result-vocabularies, .result-classes, .result-properties {
-    width: 500px;
+    max-width: 500px;
 }
 
 .search-filters {

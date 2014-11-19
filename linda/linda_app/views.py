@@ -411,18 +411,18 @@ def vocabulary_search(request):  # view for search in vocabularies - remembers s
         raise Http404
 
     # remove non existing objects (may have been deleted but are still indexed)
+    obj_set = []
     for res in sqs:
-        if not res.object:
-            sqs = sqs.exclude(id=u'linda_app.' + clsname + '.%s' % res.pk)
+        if res.object:
+            obj_set.append(res)
 
     # order the results
     if tp == "vocabularies":
-        qs = sorted(sqs, key=attrgetter('object.lodRanking'), reverse=True)  # order objects manually
+        qs = sorted(obj_set, key=attrgetter('object.lodRanking'), reverse=True)  # order objects manually
     elif tp == "classes":
-        qs = sorted(sqs, key=attrgetter('object.vocabulary.lodRanking'), reverse=True)
+        qs = sorted(obj_set, key=attrgetter('object.vocabulary.lodRanking'), reverse=True)
     elif tp == "properties":
-        qs = sorted(sqs, key=attrgetter('object.vocabulary.lodRanking'), reverse=True)
-
+        qs = sorted(obj_set, key=attrgetter('object.vocabulary.lodRanking'), reverse=True)
 
     # paginate the results
     paginator = Paginator(qs, 15)

@@ -74,6 +74,10 @@ function get_random_int(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
+function get_file_extension(file_name){
+  return file_name.split(".")[file_name.split(".").length-1];
+}
+
 String.prototype.splice = function( idx, rem, s ) {
     return (this.slice(0,idx) + s + this.slice(idx + Math.abs(rem)));
 };

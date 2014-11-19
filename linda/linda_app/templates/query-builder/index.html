@@ -39,7 +39,7 @@
                                   </button>
                                   <ul class="dropdown-menu col-md-12" role="menu" aria-labelledby="dd_select_dataset">
                                     {% for datasource in datasources %}
-                                           <li role="presentation"><a role="menuitem" tabindex="-1" onclick="QueryBuilder.datasets.select('{{datasource | get_endpoint}}', '{{datasource.name}}')">{{datasource.name}}</a></li>
+                                           <li role="presentation"><a role="menuitem" tabindex="-1" onclick="select_dataset('{{datasource.name}}', '{{datasource | get_endpoint}}');">{{datasource.name}}</a></li>
                                         {% endfor %}
                                   </ul>
                                 </div>
@@ -204,7 +204,9 @@
             </div>
         </div>
 
-        {% include 'query-builder/search-results.html' %}
+        {% with in_query_builder_action=True %}
+            {% include 'query-builder/search-results.html' %}
+        {% endwith %}
     </div>
 
 </div>
@@ -250,13 +252,19 @@
     <script data-turbolinks-track="true" src="/static/query-builder/javascripts/application.js?body=1"></script>
 
     <script>
+        function select_dataset(dtn, endp) {
+            dt_name = dtn;
+            endpoint_uri = endp;
+            QueryBuilder.datasets.select(endp, dtn);
+        }
+
         function save_query() {
             $.ajax({
                 url: "/query-builder/save/",
                 type: "POST",
                 data: {
-                    endpoint: QueryBuilder.dataset,
-                    endpointName: QueryBuilder.datasetName,
+                    endpoint: endpoint_uri,
+                    endpointName: dt_name,
                     query: $("#txt_sparql_query").val(),
                     csrfmiddlewaretoken: '{{ csrf_token }}'
                 },

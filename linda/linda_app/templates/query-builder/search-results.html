@@ -37,12 +37,49 @@
         <h4 class="modal-title" id="sparql_download_modal_title">Download Result Set</h4>
       </div>
       <div class="modal-body">
-        <div class="btn-group ">
+        <div class="btn-group " id="btn_group_download">
             <button type="button" class="btn btn-default btn-primary" onclick="SPARQL.download.rdb()"><span class="glyphicon glyphicon-list-alt"></span>&nbsp;RDB Script</button>
             <button type="button" class="btn btn-default btn-success" onclick="SPARQL.download.csv()"><span class="glyphicon glyphicon-align-justify"></span>&nbsp;CSV</button>
             <button type="button" class="btn btn-default btn-info" onclick="SPARQL.download.json()"><span class="glyphicon glyphicon-road"></span>&nbsp;JSON</button>
             <button type="button" class="btn btn-default btn-warning" onclick="SPARQL.download.pdf()"><span class="glyphicon glyphicon-file"></span>&nbsp;PDF</button>
+            {% if in_query_builder_action %>
+              <button class="btn btn-default btn-danger" onclick="QueryBuilder.convert.configured.initiate_download()"><span class="glyphicon glyphicon-glass"></span>&nbsp;Generic</button>
+            {% endif %>
         </div>
+        {% if in_query_builder_action %}
+          <div class="div-configured-download row"  style="display:none;">
+            <div class="col-md-12">
+              <p>
+                <button class="btn btn-danger btn-xs" type="button" onclick="QueryBuilder.convert.configured.hide_download('fast')"><span class="glyphicon glyphicon-chevron-left"></span>&nbsp;back</button>
+              </p>
+              <p>
+                <strong>STEP 1 :</strong> You need to write your template in <strong>.txt</strong> file. 
+              </p>
+              <p>
+                Not sure how your template should be? Download the template from here :&nbsp;
+                <a type="button" class="btn btn-default btn-xs btn-success" target="_blank" id="btn_download_configured_convert_template"><span class='glyphicon glyphicon-file'></span>&nbsp;Download template</a>
+              </p>
+              <p >
+                <strong>STEP 2 : </strong> Ready with the template file ? Awesome !! Now all you have to do is upload that file below.
+              </p>
+              <p>
+                <form id="form_configured_template_files">
+                  <input type="file" id="configured_template_files" name="files[]" multiple class="btn btn-warning btn-xs col-md-12"/>
+                  <output id="list"></output>
+                </form>
+              </p>
+              <p class="configured-download-file-error">
+                <span class="badge alert-danger"><span class='glyphicon glyphicon-remove'></span></span>&nbsp;<span id="configured_download_error_message"></span> 
+              </p>
+              <p class="configured-download-file-ok">
+                <span class="badge alert-success"><span class='glyphicon glyphicon-ok'></span></span> The uploaded template file is a valid template. You can now proceed to download your final serialization output :)
+              </p>
+              <p class="configured-download-file-ok">
+                <button type="button" class="btn btn-primary" onclick="SPARQL.download.configured()"><span class='glyphicon glyphicon-glass'></span>&nbsp;download final output file</button>
+              </p>
+            </div>
+          </div>
+        {% endif %}
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -50,3 +87,8 @@
     </div>
   </div>
 </div>
+{% if in_query_builder_action %}
+  <script>
+    document.getElementById('configured_template_files').addEventListener('change', QueryBuilder.convert.configured.handle_file_upload, false);
+  </script>
+{% endif %}
