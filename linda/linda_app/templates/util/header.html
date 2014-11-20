@@ -31,6 +31,8 @@
 
 </header>
 
+<button class="button orange" id="menu-toggle"><div></div></button>
+
 <div id="main-container">
     <div id="menu" class="clearfix">
         <ul>
@@ -40,13 +42,13 @@
                     <input type="submit" value=""/>
                 </form>
             </li>
-            <li {%if page_datasources %}class="selected"{% endif %}><a href="/datasources">{% trans "Data Sources" %}</a></li>
-            <li {%if page_queries %}class="selected"{% endif %}><a href="/queries/">{% trans "Queries" %}</a></li>
-            <li {%if page_qbuilder %}class="selected"{% endif %}><a href="/query-builder">{% trans "Query builder" %}</a></li>
-            <li {%if page_visualizations %}class="selected"{% endif %}><a href="/visualizations">{% trans "Visualizations" %}</a></li>
-            <li {%if page_analytics %}class="selected"{% endif %}><a href="/analytics">{% trans "Analytics" %}</a></li>
-            <li {%if page_transformations %}class="selected"{% endif %}><a href="/transformations">{% trans "Transformations" %}</a></li>
-            <li {%if page_vocabularies %}class="selected"{% endif %}><a href="/vocabularies/all/">{% trans "Vocabularies" %}</a></li>
+            <li {%if page == "Datasources" %}class="selected"{% endif %}><a href="/datasources">{% trans "Data Sources" %}</a></li>
+            <li {%if page == "Queries" %}class="selected"{% endif %}><a href="/queries/">{% trans "Queries" %}</a></li>
+            <li {%if page == "QueryBuilder" %}class="selected"{% endif %}><a href="/query-builder">{% trans "Query builder" %}</a></li>
+            <li {%if page == "Visualizations" %}class="selected"{% endif %}><a href="/visualizations">{% trans "Visualizations" %}</a></li>
+            <li {%if page == "Analytics" %}class="selected"{% endif %}><a href="/analytics">{% trans "Analytics" %}</a></li>
+            <li {%if page == "Transformations" %}class="selected"{% endif %}><a href="/transformations">{% trans "Transformations" %}</a></li>
+            <li {%if page == "Vocabularies" %}class="selected"{% endif %}><a href="/vocabularies/all/">{% trans "Vocabularies" %}</a></li>
         </ul>
 
         <div class="secondary-menu">
@@ -64,15 +66,15 @@
         <ul>
             <li>
                 <select id="menu-select">
-                    <option value="/" {%if page_home %}selected="selected"{% endif %}>{% trans "Home" %}</option>
-                    <option value="/datasources" {%if page_datasources %}selected="selected"{% endif %}>{% trans "Data Sources" %}</option>
-                    <option value="/queries/" {%if page_queries %}selected="selected"{% endif %}>{% trans "Queries" %}</option>
-                    <option value="/query-builder" {%if page_qbuilder %}selected="selected"{% endif %}>{% trans "Query builder" %}</option>
-                    <option value="/visualizations" {%if page_visualizations %}selected="selected"{% endif %}>{% trans "Visualizations" %}</option>
-                    <option value="/analytics" {%if page_analytics %}selected="selected"{% endif %}>{% trans "Analytics" %}</option>
-                    <option value="/transformations" {%if page_transformations %}selected="selected"{% endif %}>{% trans "Transformations" %}</option>
-                    <option value="/vocabularies/all" {%if page_vocabularies %}selected="selected"{% endif %}>{% trans "Vocabularies" %}</option>
-                    <option value="/sparql" {%if page_sparql %}selected="selected"{% endif %}>{% trans "SPARQL Endpoint"%}</option>
+                    <option value="/" {%if page == "Home" %}selected="selected"{% endif %}>{% trans "Home" %}</option>
+                    <option value="/datasources" {%if page == "Datasources" %}selected="selected"{% endif %}>{% trans "Data Sources" %}</option>
+                    <option value="/queries/" {%if page == "Queries" %}selected="selected"{% endif %}>{% trans "Queries" %}</option>
+                    <option value="/query-builder" {%if page == "QueryBuilder" %}selected="selected"{% endif %}>{% trans "Query builder" %}</option>
+                    <option value="/visualizations" {%if page == "Visualizations" %}selected="selected"{% endif %}>{% trans "Visualizations" %}</option>
+                    <option value="/analytics" {%if page == "Analytics" %}selected="selected"{% endif %}>{% trans "Analytics" %}</option>
+                    <option value="/transformations" {%if page == "Transformations" %}selected="selected"{% endif %}>{% trans "Transformations" %}</option>
+                    <option value="/vocabularies/all" {%if page == "Vocabularies" %}selected="selected"{% endif %}>{% trans "Vocabularies" %}</option>
+                    <option value="/sparql" {%if page == "Sparql" %}selected="selected"{% endif %}>{% trans "SPARQL Endpoint"%}</option>
                 </select>
             </li>
 

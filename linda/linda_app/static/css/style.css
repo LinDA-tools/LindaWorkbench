@@ -227,6 +227,25 @@ header .site-title:hover {
     display: none;
 }
 
+#menu-toggle {
+    position: absolute;
+    left: 0;
+    top: 0px;
+    width: 40px;
+    height: 46px;
+    outline: none;
+}
+
+#menu-toggle div{
+    width: 32px;
+    height: 32px;
+    background: url('/static/images/menu.png') no-repeat;
+}
+
+header a {
+    padding-left: 52px;
+}
+
 @media only screen and (max-width: 690px){
     #menu {
         display: block;
@@ -250,6 +269,10 @@ header .site-title:hover {
     #menu-select-area select {
         padding: 5px 15px;
         color: #aaa;
+    }
+
+    #menu-toggle {
+        display: none;
     }
 
     .main {

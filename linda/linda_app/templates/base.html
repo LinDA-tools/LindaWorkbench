@@ -29,7 +29,8 @@
 
 <script src="/static/js/jquery.min.js"></script>
 
-<script> <!--mobile menu script -->
+<script>
+    /* mobile menu script */
     $( "#menu-select option" ).on('click', (function() {
         window.location = $(this).val();
     }));
@@ -40,6 +41,11 @@
 
     $( "#menu-select" ).on('change', (function() {
         window.location = $(this).val();
+    }));
+
+    /* toggle menu */
+    $("#menu-toggle").on('click', (function() {
+        $("#menu").toggle( "slide" );
     }));
 </script>
 

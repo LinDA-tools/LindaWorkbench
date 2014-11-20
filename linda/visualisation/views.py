@@ -15,18 +15,18 @@ def visualizations(request):
     params = {}
     params['VISUAL_PROXY'] = VISUAL_PROXY
     params['csrf_token'] = csrf(request)
-    params['page_transformations'] = True
+    params['page'] = 'Visualizations'
     return render(request, 'visual/index.html', params)
 
 
 def visualizeDatasource(request, **kwargs):
     params = {}
     params['datasource'] = DatasourceDescription.objects.get(name=kwargs.get('dtname'))
-    params['page_visualizations'] = True
+    params['page'] = 'Visualizations'
 
     return render(request, 'visual/datasource.html', params)
 
-#Proxy calls - exist as middle-mans between LinDA tranformations page and the visual server
+#Proxy calls - exist as middle-mans between LinDA visualizations page and the visual server
 @csrf_exempt
 def get_api_call(request, link):
     #TO-DO Improve request handler

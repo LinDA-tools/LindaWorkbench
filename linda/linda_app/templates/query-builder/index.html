@@ -295,6 +295,7 @@
     <script>
         $(function () {
             $('.dropdown-toggle').dropdown();
+            document.getElementById('configured_template_files').addEventListener('change', QueryBuilder.convert.configured.handle_file_upload, false);
         });
         $("#txt_search_classes").bind('input',function(){QueryBuilder.search_classes_change();});
     </script>

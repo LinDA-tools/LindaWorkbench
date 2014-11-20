@@ -29,7 +29,7 @@ last_vocabulary_update = datetime.strptime('Jan 1 2014  1:00PM', '%b %d %Y %I:%M
 def index(request):
     params = {}
     params['recent_datasources'] = DatasourceDescription.objects.all().order_by('createdOn')[:3]
-    params['page_home'] = True
+    params['page'] = 'Home'
 
     return render(request, 'index.html', params)
 
@@ -48,7 +48,7 @@ def sparql(request):
     params = {}
     params['mode'] = "sparql"
     params['datasources'] = DatasourceDescription.objects.all()
-    params['page_sparql'] = True
+    params['page'] = 'Sparql'
 
     #get query parameter
     if request.GET.get('q_id'):
@@ -310,7 +310,7 @@ class VocabularyListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super(VocabularyListView, self).get_context_data(**kwargs)
-        context['page_vocabularies'] = True
+        context['page'] = 'Vocabularies'
         context['type'] = 'vocabularies'
 
         # Should updates be run?
@@ -335,7 +335,7 @@ class ClassListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super(ClassListView, self).get_context_data(**kwargs)
-        context['page_classes'] = True
+        context['page'] = 'Classes'
         context['type'] = 'classes'
         return context
 
@@ -352,7 +352,7 @@ class PropertyListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super(PropertyListView, self).get_context_data(**kwargs)
-        context['page_properties'] = True
+        context['page'] = 'Properties'
         context['type'] = 'properties'
         return context
 
@@ -556,7 +556,7 @@ def downloadRDF(request, pk, type):
 #Datasources
 def datasources(request):
     params = {}
-    params['page_datasources'] = True
+    params['page'] = 'Datasources'
     params['datasources'] = DatasourceDescription.objects.all().order_by('title')
 
     return render(request, 'datasource/index.html', params)
@@ -763,7 +763,7 @@ def queryBuilder(request):
     params['PRIVATE_SPARQL_ENDPOINT'] = PRIVATE_SPARQL_ENDPOINT
     params['RDF2ANY_SERVER'] = RDF2ANY_SERVER
     params['mode'] = "builder"
-    params['page_qbuilder'] = True
+    params['page'] = 'QueryBuilder'
 
     return render(request, 'query-builder/index.html', params)
 
@@ -1048,7 +1048,7 @@ class QueryListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super(QueryListView, self).get_context_data(**kwargs)
-        context['page_queries'] = True
+        context['page'] = 'Queries'
         return context
 
 

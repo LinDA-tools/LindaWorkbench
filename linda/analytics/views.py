@@ -58,10 +58,10 @@ def analytics(request):
 	  form = AnalyticsForm() # An unbound form
 	  analytics_list = Analytics.objects.all()
 	  return render(request, 'analytics/analytics.html', {
-	      'form': form,'analytics_list': analytics_list
+	      'form': form,'analytics_list': analytics_list, 'page': 'Analytics'
 	  })
     else: 
-      return render(request, 'analytics/noAuthenticatedAccess.html',)
+      return render(request, 'analytics/noAuthenticatedAccess.html', {'page': 'Analytics'})
     
 def __unicode__(self):
         return unicode(self)
