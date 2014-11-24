@@ -253,8 +253,8 @@ header a {
         min-height: 0;
     }
 
-    #menu {
-        display: none;
+    #menu, #menu-toggle {
+        display: none !important;
     }
 
     #menu-select-area {
