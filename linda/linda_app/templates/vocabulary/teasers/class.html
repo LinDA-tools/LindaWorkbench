@@ -1,0 +1,9 @@
+{% load i18n %}
+
+<div class="class-teaser">
+    <h3><a href="{{ class.object.uri }}">{{class.label}}</a></h3> (<span
+        class="uri">&lt;{{ class.uri }}&gt;</span>)<br/>
+
+    <span class="description">{{class.description}}</span><br/>
+    <a href="{{ class.vocabulary.get_absolute_url }}" class="button blue">{% trans "Vocabulary" %}</a>
+</div>

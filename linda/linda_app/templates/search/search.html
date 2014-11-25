@@ -47,15 +47,9 @@
                     <div class="result-vocabularies" {% if not type == "vocabularies" %}style="display: none;"{% endif %}>
                         {% for vocabulary in page_obj.object_list %}
 
-                        <div class="vocabulary-teaser">
-                            <h3><a href="{{ vocabulary.object.get_absolute_url }}">{{vocabulary.title}}</a></h3>
-                            <p>{{vocabulary.description|slice:"150"}} {% if vocabulary.description|length > 150 %}...{% endif %}</p>
-
-                            <a href="{{ vocabulary.object.get_absolute_url }}" class="button blue">{% trans "Read more" %}</a>
-                             {% if vocabulary.object.example %}
-                                <a href="{{ vocabulary.object.get_absolute_url }}#usage-example" class="button green">{% trans "View usage example" %}</a>
-                            {% endif %}
-                        </div>
+                            {% with vocabulary=vocabulary.object %}
+                                {% include "vocabulary/teasers/vocabulary.html" %}
+                            {% endwith %}
 
                         {% empty %}
                             <p>{% trans "No vocabularies match this query." %}</p>
@@ -65,11 +59,9 @@
                     <div class="result-classes" {% if not type == "classes" %}style="display: none;"{% endif %}>
                         {% for class in page_obj.object_list %}
 
-                        <div class="class-teaser">
-                            <h3><a href="{{ class.object.uri }}">{{class.object.label}}</a></h3>
-                            <p class="uri">&lt;{{ class.object.uri }}&gt;</p>
-                            <a href="{{ class.object.vocabulary.get_absolute_url }}" class="button blue">{% trans "Vocabulary" %}</a>
-                        </div>
+                            {% with class=class.object %}
+                                {% include "vocabulary/teasers/class.html" %}
+                            {% endwith %}
 
                         {% empty %}
                             <p>{% trans "No classes match this query." %}</p>
@@ -79,11 +71,9 @@
                     <div class="result-properties" {% if not type == "properties" %}style="display: none;"{% endif %}>
                         {% for property in page_obj.object_list %}
 
-                        <div class="property-teaser">
-                            <h3><a href="{{ property.object.uri }}">{{property.object.label}}</a></h3>
-                            <p class="uri">&lt;{{ property.object.uri }}&gt;</p>
-                            <a href="{{ property.object.vocabulary.get_absolute_url }}" class="button blue">{% trans "Vocabulary" %}</a>
-                        </div>
+                            {% with property=property.object %}
+                                {% include "vocabulary/teasers/property.html" %}
+                            {% endwith %}
 
                         {% empty %}
                             <p>{% trans "No properties match this query." %}</p>

@@ -1,0 +1,12 @@
+{% load i18n %}
+
+<div class="vocabulary-teaser">
+    <h3><a href="{{ vocabulary.get_absolute_url }}">{{vocabulary.title}}</a></h3>
+
+    <p>{{vocabulary.description|slice:"150"}} {% if vocabulary.description|length > 150 %}...{% endif %}</p>
+
+    <a href="{{ vocabulary.get_absolute_url }}" class="button blue">{% trans "Read more" %}</a>
+    {% if vocabulary.example %}
+        <a href="{{ vocabulary.get_absolute_url }}#usage-example" class="button green">{% trans "View usage example"%}</a>
+    {% endif %}
+</div>
