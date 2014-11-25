@@ -21,6 +21,7 @@ User.profile = property(lambda u: UserProfile.objects.get_or_create(user=u)[0])
 
 photo_upload_path = 'static/images/photos/'
 
+
 class UserProfile(models.Model):
     """
     Extends basic User class in django.contrib.auth
@@ -60,14 +61,31 @@ class Photo(models.Model):
         return "%d" % self.id
 
 
+# Creates a 'label' from an rdf term uri
+def get_label_by_uri(uri):
+    label = uri.split('/')[-1]
+    start_pos = label.find('#')
+    if start_pos < 0:
+        start_pos = 0
+    else:
+        start_pos += 1
+    end_pos = label.find('>')
+    if end_pos < 0:
+        label = label[start_pos:]
+    else:
+        label = label[start_pos:end_pos]
+    label = re.sub(r'([a-z](?=[A-Z])|[A-Z](?=[A-Z][a-z]))', r'\1 ', label)  # insert space for words written in camelCase
+    return re.sub('_', ' ', label)
+
+
 class Vocabulary(models.Model):
-    #General information
+    # General information
     title = models.CharField(max_length=256, blank=False, null=False)
     description = models.CharField(max_length=2048, blank=False, null=False)
     category = models.CharField(max_length=256, blank=True,
                                 choices=CATEGORIES)  # checkbox-list, PREDEFINED LIST - LIST "CATEGORIES"
 
-    #RDF schema properties
+    # RDF schema properties
     originalUrl = models.URLField(max_length=256, blank=False,
                                   null=True)  # Location of the original vocabulary - link
     downloadUrl = models.URLField(max_length=256, blank=False,
@@ -75,24 +93,24 @@ class Vocabulary(models.Model):
     preferredNamespaceUri = models.URLField(max_length=1024, blank=False, null=True)  # Preferred namespace uri
     preferredNamespacePrefix = models.CharField(max_length=256, blank=False, null=True)  # Preferred namespace prefix
 
-    #Usage statistics
+    # Usage statistics
     lodRanking = models.IntegerField(default=0)
 
-    #Vocabulary example
+    # Vocabulary example
     example = models.CharField(max_length=8196, blank=True, null=False)
 
-    #Logging
+    # Logging
     uploader = models.ForeignKey(User)
     datePublished = models.DateField(blank=True, null=True)  # Original vocabulary publish date
     dateCreated = models.DateField(blank=True, null=True, default=datetime.now)  # Vocabulary creation inside LinDa
     dateModified = models.DateField(blank=True, null=True, default=datetime.now)  # Last vocabulary modification
 
-    #Social properties
+    # Social properties
     score = models.IntegerField(default=0)  # Sum of the votes for the vocabulary
     votes = models.IntegerField(default=0)  # Number of votes for the vocabulary
     downloads = models.IntegerField(default=0)  # Number of downloads for the vocabulary
 
-    #Versioning
+    # Versioning
     version = models.CharField(max_length=128, blank=False, null=False, default="1.0")
 
     def title_slug(self):
@@ -117,43 +135,76 @@ class Vocabulary(models.Model):
 
         # Load the rdf
         g = Graph()
-        rdf_dta = urllib.urlopen(self.downloadUrl).read()
-        g.parse(data=rdf_dta, format=guess_format(self.downloadUrl))
+        document = urllib.urlopen(self.downloadUrl)
+
+        if document.getcode() == 404:  # not found
+            return
+
+        rdf_data = document.read()
+        g.parse(data=rdf_data, format=guess_format(self.downloadUrl))
 
         # Register a temporary SparQL endpoint for this rdf
-        #plugin.register('sparql', rdflib.query.Processor, 'rdfextras.sparql.processor', 'Processor')
-        #plugin.register('sparql', rdflib.query.Result, 'rdfextras.sparql.query', 'SPARQLQueryResult')
+        '''
+        plugin.register('sparql', rdflib.query.Processor, 'rdfextras.sparql.processor', 'Processor')
+        plugin.register('sparql', rdflib.query.Result, 'rdfextras.sparql.query', 'SPARQLQueryResult')
+        '''
 
         # Run a query to retrieve all classes
+        # Use COALESCE to overcome RDFLib bug of KeyError exceptions on unbound optional fields
         q_classes = g.query(
-            """ SELECT ?class ?classLabel
+            """ SELECT ?class (COALESCE(?classLabel, "") AS ?cLabel) (COALESCE(?classComment, "") AS ?cComment)
                 WHERE {
                     ?class rdf:type rdfs:Class.
-                    ?class rdfs:label ?classLabel.
+                    OPTIONAL {
+                        ?class rdfs:label ?classLabel .
+                        ?class rdfs:comment ?classComment.
+                    }.
                 }""")
 
         # Store the classes in the database
+
         for row in q_classes.result:
+            if row[1]:
+                label = row[1]
+            else:
+                label = get_label_by_uri(row[0])
+            if row[2]:
+                description = row[2]
+            else:
+                description = ""
             try:
-                cls = VocabularyClass.objects.create(vocabulary=self, uri=row[0], label=row[1], ranking=0)
+                cls = VocabularyClass.objects.create(vocabulary=self, uri=row[0].encode("utf-8"), label=label.encode("utf-8"), description=description.encode("utf-8"))
             except UnicodeEncodeError:
-                cls = VocabularyClass.objects.create(vocabulary=self, uri=row[0], label=row[0], ranking=0)
+                cls = VocabularyClass.objects.create(vocabulary=self, uri=row[0], label=get_label_by_uri(row[0]), description="")
             cls.save()
 
         # Run a query to retrieve all properties
+        # Use COALESCE to overcome RDFLib bug of KeyError exceptions on unbound optional fields
         q_properties = g.query(
-            """ SELECT DISTINCT ?property ?propertyLabel
+            """ SELECT DISTINCT ?property ?domain ?range (COALESCE(?propertyLabel, "") AS ?pLabel) (COALESCE(?propertyComment, "") AS ?pComment)
                 WHERE {
-                    ?property rdfs:domain ?class .
-                    ?property rdfs:label ?propertyLabel.
+                    ?property rdfs:domain ?domain.
+                    ?property rdfs:range ?range.
+                    OPTIONAL {
+                        ?property rdfs:label ?propertyLabel.
+                        ?property rdfs:comment ?propertyComment.
+                    }.
                 }""")
 
         # Store the properties in the database
         for row in q_properties.result:
+            if row[3]:
+                label = row[3]
+            else:
+                label = get_label_by_uri(row[0])
+            if row[4]:
+                description = row[4]
+            else:
+                description = ""
             try:
-                prp = VocabularyProperty.objects.create(vocabulary=self, uri=row[0], label=row[1], ranking=0)
+                prp = VocabularyProperty.objects.create(vocabulary=self, uri=row[0].encode("utf-8"), domain=row[1].encode("utf-8"), range=row[2].encode("utf-8"), label=label.encode("utf-8"), description=description.encode("utf-8"))
             except UnicodeEncodeError:
-                prp = VocabularyProperty.objects.create(vocabulary=self, uri=row[0], label=row[0], ranking=0)
+                prp = VocabularyProperty.objects.create(vocabulary=self, uri=row[0], domain=row[1], range=row[2], label=get_label_by_uri(row[0]), description="")
             prp.save()
 
     def __unicode__(self):
@@ -177,7 +228,7 @@ class VocabularyClass(models.Model):  # A class inside an RDF vocabulary
     vocabulary = models.ForeignKey(Vocabulary)
     uri = models.URLField(max_length=2048, blank=False, null=True)
     label = models.CharField(max_length=256, blank=False, null=False)
-    ranking = models.FloatField()
+    description = models.CharField(max_length=8196, blank=True, null=True)
 
     def __unicode__(self):
         return self.label
@@ -186,13 +237,16 @@ class VocabularyClass(models.Model):  # A class inside an RDF vocabulary
 class VocabularyProperty(models.Model):  # A property inside an RDF vocabulary
     vocabulary = models.ForeignKey(Vocabulary)
     uri = models.URLField(max_length=2048, blank=False, null=True)
+    domain = models.URLField(max_length=2048, blank=False, null=True)
+    range = models.URLField(max_length=2048, blank=False, null=True)
     label = models.CharField(max_length=256, blank=False, null=False)
-    ranking = models.FloatField()
+    description = models.CharField(max_length=8196, blank=True, null=True)
 
     def __unicode__(self):
         return self.label
 
 Vocabulary.property = property(lambda d: VocabularyProperty.objects.get_or_create(vocabulary=d)[0])
+
 
 class VocabularyComments(models.Model):
     commentText = models.CharField(max_length=512, blank=False, null=False)  # Comment content
@@ -203,11 +257,11 @@ class VocabularyComments(models.Model):
 
 class DatasourceDescription(models.Model):
     title = models.CharField(max_length=512, blank=False, null=False)  # datasource title
-    is_public = models.BooleanField(default=False)  #true if datasource is public
+    is_public = models.BooleanField(default=False)  # true if datasource is public
     name = models.CharField(max_length=512, blank=False, null=False)  # datasource name - slug
     uri = models.CharField(max_length=2048, blank=False, null=False)  # sesame uri
-    createdOn = models.DateField(blank=False, null=False)  # daatasource creation date
-    lastUpdateOn = models.DateField(blank=False, null=False)  # daatasource last edit date
+    createdOn = models.DateField(blank=False, null=False)  # datasource creation date
+    lastUpdateOn = models.DateField(blank=False, null=False)  # datasource last edit date
 
     def __unicode__(self):
         return self.title
@@ -219,35 +273,23 @@ class DatasourceDescription(models.Model):
             return LINDA_HOME + "sparql/" + self.name + "/"
 
 
-#Creates a 'label' from an rdf term uri
-def get_label_by_uri(uri):
-    label = uri.split('/')[-1]
-    start_pos = label.find('#')
-    if start_pos < 0:
-        start_pos = 0
-    end_pos = label.find('>')
-    label = label[start_pos:end_pos]
-    label = re.sub(r'([a-z](?=[A-Z])|[A-Z](?=[A-Z][a-z]))', r'\1 ', label)  # insert space for words written in camelCase
-    return re.sub('_', ' ', label)
-
-
-#Given an endpoint name and a query it creates a description of the query
+# Given an endpoint name and a query it creates a description of the query
 def create_query_description(dtname, query):
-    #create base description
+    # create base description
     find_verbs = ["Find", "Search for", "Look up for", "Get", "List"]
 
-    #get class name
+    # get class name
     classes = ''
     class_cnt = 0  # no classes yet
 
-    #add constraints
+    # add constraints
     where_start = re.search('WHERE', query, re.IGNORECASE).end()
     if where_start:
         where_end = re.search('LIMIT', query, re.IGNORECASE).start()
         if not where_end:
             where_end = len(query)
 
-        #split where part to constraints
+        # split where part to constraints
         where_str = re.sub('({|}|\n)', '', query[where_start:where_end])  # ignore {, } and \n
         where_str = re.sub('(<|>|\n)', '"', where_str)
         r = re.compile(r'(?:[^."]|"[^"]*")+')
@@ -332,7 +374,7 @@ def create_query_description(dtname, query):
 
     description = random(find_verbs) + " " + classes + " in " + dtname + constraints_out
 
-    #add limit
+    # add limit
     lim_pos = re.search('LIMIT', query, re.IGNORECASE).start()
     if lim_pos:
         after_lim = query[lim_pos:]

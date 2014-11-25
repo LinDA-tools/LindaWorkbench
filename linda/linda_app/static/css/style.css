@@ -1191,6 +1191,7 @@ form input[type="submit"] {
 @media only screen and (min-width: 960px){
     .vocabulary-details .main.content-sidebar {
         display: table;
+        min-height: 600px;
     }
 
     .vocabulary-details .vocabulary, .vocabulary-details aside {
