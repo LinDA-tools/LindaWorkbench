@@ -6,14 +6,17 @@
 
 {% block content %}
     <div class="main">
-		<h1 class="page-title">LinDA - {% trans "Vocabulary search" %}</h1>
+		<h1 class="page-title">LinDA - {% trans "Vocabulary search" %}{% if request.GET.definedBy %} {% trans "inside"%} {{vocabulary_define.title}}{% endif %}</h1>
 
 		<div class="home-search">
 			<form method="get" action="/vocabularies" class="form vocabulary-search-form">
                 <input style="display:none;" type="text" name="type" value="{{type}}"/>
+                {% if request.GET.definedBy %}
+                    <input style="display:none;" type="number" name="definedBy" value="{{request.GET.definedBy}}"/>
+                {% endif %}
                 <input id="vocabulary-search-text" type="text" name="q" required="required" placeholder='{% trans "Search Vocabularies" %}' value="{% if q %}{{q}}{% endif %}"/>
                 <input type="submit" value=""/>
-                {% if query %}
+                {% if query or request.GET.definedBy %}
                     <a href="/{{type}}/all" class="button delete-button clear-search" title='Clear search'></a>
                 {% endif %}
 
@@ -30,15 +33,15 @@
 
             {% if query %}
                 <div class="search-filters">
-                    <a href="/vocabularies/?q={{q}}&type=vocabularies" class='button white {% if type == "vocabularies" %}active{% endif %}'>Vocabularies</a>
-                    <a href="/vocabularies/?q={{q}}&type=classes" class='button white {% if type == "classes" %}active{% endif %}'>Classes</a>
-                    <a href="/vocabularies/?q={{q}}&type=properties" class='button white {% if type == "properties" %}active{% endif %}'>Properties</a>
+                    <a href="/vocabularies/?q={{q}}&type=vocabularies{% if request.GET.definedBy %}&definedBy={{request.GET.definedBy}}{% endif %}" class='button white {% if type == "vocabularies" %}active{% endif %}'>Vocabularies</a>
+                    <a href="/vocabularies/?q={{q}}&type=classes{% if request.GET.definedBy %}&definedBy={{request.GET.definedBy}}{% endif %}" class='button white {% if type == "classes" %}active{% endif %}'>Classes</a>
+                    <a href="/vocabularies/?q={{q}}&type=properties{% if request.GET.definedBy %}&definedBy={{request.GET.definedBy}}{% endif %}" class='button white {% if type == "properties" %}active{% endif %}'>Properties</a>
                 </div>
             {% else %}
                 <div class="search-filters">
-                    <a href="/vocabularies/all/" class="button white {% if vocabularies %}active{% endif %}">Vocabularies</a>
-                    <a href="/classes/all/" class="button white {% if classes %}active{% endif %}">Classes</a>
-                    <a href="/properties/all/" class="button white {% if properties %}active{% endif %}">Properties</a>
+                    <a href="/vocabularies/all/{% if request.GET.definedBy %}?definedBy={{request.GET.definedBy}}{% endif %}" class="button white {% if vocabularies %}active{% endif %}">Vocabularies</a>
+                    <a href="/classes/all/{% if request.GET.definedBy %}?definedBy={{request.GET.definedBy}}{% endif %}" class="button white {% if classes %}active{% endif %}">Classes</a>
+                    <a href="/properties/all/{% if request.GET.definedBy %}?definedBy={{request.GET.definedBy}}{% endif %}" class="button white {% if properties %}active{% endif %}">Properties</a>
                 </div>
             {% endif %}
 
@@ -92,7 +95,7 @@
                         {% include 'vocabulary/list.html' %}
                     {% endwith %}
 
-                    {% with current_url="" %}
+                    {% with current_url=request.get_full_path has_get_variables=True %}
                         {% include 'util/paginator.html' %}
                     {% endwith %}
                 </div>

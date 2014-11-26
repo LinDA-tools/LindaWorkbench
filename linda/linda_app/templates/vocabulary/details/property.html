@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}{{property.label}} | LinDA{% endblock %}
+{% block bodyclass %}property-details{% endblock %}
+
+{% block content %}
+<div class="main">
+    <content class="property">
+        <h1 class="page-title inline">{{property.label}}</h1>
+
+        <div class="object-links">
+            <a href="{{property.uri}}" class="button blue" target="_blank">{% trans "Visit definition page"%}</a>
+            <a href="{{property.vocabulary.get_absolute_url}}" class="button green">{% trans "Vocabulary"%}</a>
+        </div>
+
+        <div class="container">
+            <div>
+                <label>{% trans "URI" %}:</label>
+                <span>&lt;{{property.uri}}&gt;</span>
+            </div>
+            <div>
+                <label>{% trans "Defined in" %}:</label>
+                <span><a href="{{property.vocabulary.get_absolute_url}}">{{property.vocabulary.title}}</a></span>
+            </div>
+        </div>
+
+        <p class="description">{{property.description|striptags|default:"No description available"}}</p>
+
+        <h2>{% trans "Domain" %}</h2>
+            {% if property.get_domain_object %}
+                <div class="property-domain-class">
+                    {% with class=property.get_domain_object %}
+                        {% include "vocabulary/teasers/class.html" %}
+                    {% endwith %}
+                </div>
+            {% else %}
+                <p class="domain-plain">&lt;{{property.domain}}&gt; <a href="{{property.domain}}" class="button blue" target="_blank">{% trans "Visit definition page"%}</a></p>
+            {% endif %}
+
+        <h2>{% trans "Range" %}</h2>
+            {% if property.get_range_object %}
+                <div class="property-range-class">
+                    {% with class=property.get_range_object %}
+                        {% include "vocabulary/teasers/class.html" %}
+                    {% endwith %}
+                </div>
+            {% else %}
+                <p class="range-plain">&lt;{{property.range}}&gt; <a href="{{property.range}}" class="button blue" target="_blank">{% trans "Visit definition page"%}</a></p>
+            {% endif %}
+    </content>
+</div>
+{% endblock %}

@@ -62,6 +62,10 @@ urlpatterns = patterns('',
                        #Vocabularies
                        url(r'^vocabulary/(?P<pk>\d+)/$', views.VocabularyDetailsView.as_view(),
                            name='vocabulary-detail'),
+                       url(r'^class/(?P<pk>\d+)/$', views.VocabularyClassDetailsView.as_view(),
+                           name='class-detail'),
+                       url(r'^property/(?P<pk>\d+)/$', views.VocabularyPropertyDetailsView.as_view(),
+                           name='property-detail'),
 
                        url(r'^vocabulary/(?P<pk>\d+)/edit/$', views.VocabularyUpdateView.as_view(),
                            name='vocabulary-edit'),

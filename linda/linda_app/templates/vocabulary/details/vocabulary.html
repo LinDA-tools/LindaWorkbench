@@ -17,8 +17,12 @@
 		<p class="upload-info">{% trans "Namespace prefix" %}: <strong>{{vocabulary.preferredNamespacePrefix}}</strong></p>
         <p><a href="{{vocabulary.originalUrl}}" target="_blank">{% trans "Visit original page" %}</a></p>
         
-        <p class="description">{{vocabulary.description}}</p>
+        <p class="description">{{vocabulary.description|default:"No description available"}}</p>
 
+        <p>{% trans "Defines" %} <strong>{{classes|length}}</strong> classes and <strong>{{properties|length}}</strong> properties.<br/>
+        <a href="/classes/all/?definedBy={{vocabulary.id}}" class="button green">{% trans "Browse classes"%}</a>
+        <a href="/properties/all/?definedBy={{vocabulary.id}}" class="button green">{% trans "Browse properties"%}</a>
+        </p>
         {% if vocabulary.example %}
             <h4>{% trans "Usage example" %}</h4>
             <div id="usage-example" class="example">

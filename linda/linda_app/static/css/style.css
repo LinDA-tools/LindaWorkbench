@@ -1191,7 +1191,7 @@ form input[type="submit"] {
 @media only screen and (min-width: 960px){
     .vocabulary-details .main.content-sidebar {
         display: table;
-        min-height: 600px;
+        min-height: calc(100vh - 60px);
     }
 
     .vocabulary-details .vocabulary, .vocabulary-details aside {
@@ -1203,7 +1203,7 @@ form input[type="submit"] {
     font-weight: 300;
 }
 
-.vocabulary .description {
+.vocabulary > .description, .class > .description, .property > .description {
     width: 70%;
     text-align: justify;
     left: 40px;
@@ -1226,6 +1226,19 @@ form input[type="submit"] {
 
 .vocabulary .example pre {
     white-space: pre-wrap;
+}
+
+.class-details .class-domain-properties, .class-details .class-range-properties {
+    margin-bottom: 20px;
+}
+
+.class-details .object-links, .property-details .object-links {
+    float: right;
+    margin-top: 20px;
+}
+
+.domain-plain, .range-plain {
+    margin-top: 10px;
 }
 
 .comment-content:before, .vocabulary .description:before {
@@ -1421,7 +1434,7 @@ input, textarea {
     display: none;
 }
 
-.site-search .main h2 {
+.site-search .main h2, .class-details content h2, .property-details content h2 {
     padding: 0.1em;
     background: #eee;
     color: #aaa;
@@ -1435,6 +1448,18 @@ input, textarea {
 
 .vocabulary-teaser p {
     text-align: justify;
+}
+
+.class-teaser h3, .property-teaser h3 {
+    display: inline-block;
+}
+
+.class-teaser, .property-teaser {
+    margin-bottom: 5px;
+}
+
+.class-teaser .description, .property-teaser .description {
+    color: #000;
 }
 
 .vocabulary-teaser .read-more {

@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}{{class.label}} | LinDA{% endblock %}
+{% block bodyclass %}class-details{% endblock %}
+
+{% block content %}
+<div class="main">
+    <content class="class">
+        <h1 class="page-title inline">{{class.label}}</h1>
+
+        <div class="object-links">
+            <a href="{{class.uri}}" class="button blue" target="_blank">{% trans "Visit definition page"%}</a>
+            <a href="{{class.vocabulary.get_absolute_url}}" class="button green">{% trans "Vocabulary"%}</a>
+        </div>
+
+        <div class="container">
+            <div>
+                <label>{% trans "URI" %}:</label>
+                <span>&lt;{{class.uri}}&gt;</span>
+            </div>
+            <div>
+                <label>{% trans "Defined in" %}:</label>
+                <span><a href="{{class.vocabulary.get_absolute_url}}">{{class.vocabulary.title}}</a></span>
+            </div>
+        </div>
+
+        <p class="description">{{class.description|striptags|default:"No description available"}}</p>
+
+        <h2>Has <strong>{{class.domain_of|length}}</strong> properties</h2>
+        <div class="class-domain-properties">
+            {% for property in class.domain_of %}
+                {% with property=property %}
+                    {% include "vocabulary/teasers/property.html" %}
+                {% endwith %}
+            {% endfor %}
+        </div>
+
+        <h2>Returned by <strong>{{class.range_of|length}}</strong> properties</h2>
+        <div class="class-range-properties">
+            {% for property in class.range_of %}
+                {% with property=property %}
+                    {% include "vocabulary/teasers/property.html" %}
+                {% endwith %}
+            {% endfor %}
+        </div>
+    </content>
+</div>
+{% endblock %}

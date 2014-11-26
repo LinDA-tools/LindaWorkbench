@@ -1,7 +1,5 @@
-from types import NoneType
 from django import template
 from linda_app.models import Vocabulary, VocabularyClass, VocabularyProperty
-from linda_app.settings import LINDA_HOME
 
 register = template.Library()
 
@@ -25,3 +23,9 @@ def vocabulary_properties(objects):
 @register.filter(name="get_endpoint")
 def get_endpoint(datasource):
     return datasource.get_endpoint()
+
+@register.simple_tag
+def url_replace(request, field, value):
+    dict_ = request.GET.copy()
+    dict_[field] = value
+    return dict_.urlencode()

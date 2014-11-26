@@ -233,6 +233,12 @@ class VocabularyClass(models.Model):  # A class inside an RDF vocabulary
     def __unicode__(self):
         return self.label
 
+    def domain_of(self):
+        return VocabularyProperty.objects.filter(domain=self.uri)
+
+    def range_of(self):
+        return VocabularyProperty.objects.filter(range=self.uri)
+
 
 class VocabularyProperty(models.Model):  # A property inside an RDF vocabulary
     vocabulary = models.ForeignKey(Vocabulary)
@@ -244,6 +250,34 @@ class VocabularyProperty(models.Model):  # A property inside an RDF vocabulary
 
     def __unicode__(self):
         return self.label
+
+    def get_domain_object(self):
+        domain_objects = VocabularyClass.objects.filter(uri=self.domain)
+        if domain_objects:
+            return domain_objects[0]
+        else:
+            return None
+
+    def get_range_object(self):
+        range_objects = VocabularyClass.objects.filter(uri=self.range)
+        if range_objects:
+            return range_objects[0]
+        else:
+            return None
+
+    def get_domain_url(self):
+        domain_object = self.get_domain_object()
+        if domain_object:
+            return '/class/' + str(domain_object.id) + '/'
+        else:
+            return self.domain
+
+    def get_range_url(self):
+        range_object = self.get_range_object()
+        if range_object:
+            return '/class/' + str(range_object.id) + '/'
+        else:
+            return self.range
 
 Vocabulary.property = property(lambda d: VocabularyProperty.objects.get_or_create(vocabulary=d)[0])
 

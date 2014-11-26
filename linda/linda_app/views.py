@@ -169,7 +169,7 @@ class UserUpdateView(UpdateView):
 
 class VocabularyDetailsView(DetailView):
     model = Vocabulary
-    template_name = 'vocabulary/details.html'
+    template_name = 'vocabulary/details/vocabulary.html'
     context_object_name = 'vocabulary'
 
     def get(self, *args, **kwargs):
@@ -182,10 +182,14 @@ class VocabularyDetailsView(DetailView):
     def get_context_data(self, **kwargs):
         context = super(VocabularyDetailsView, self).get_context_data(**kwargs)
 
-        #Load comments
+        # Get defined classes and properties
+        context['classes'] = VocabularyClass.objects.filter(vocabulary=context['vocabulary'])
+        context['properties'] = VocabularyProperty.objects.filter(vocabulary=context['vocabulary'])
+
+        # Load comments
         context['comments'] = VocabularyComments.objects.filter(vocabularyCommented=context['vocabulary'])
 
-        #Check if user has voted for this vocabulary
+        # Check if user has voted for this vocabulary
         if self.request.user.is_authenticated():
             if (
                     VocabularyRanking.objects.filter(vocabularyRanked=context['vocabulary'],
@@ -198,6 +202,18 @@ class VocabularyDetailsView(DetailView):
                 context['has_voted'] = False
 
         return context
+
+
+class VocabularyClassDetailsView(DetailView):
+    model = VocabularyClass
+    template_name = 'vocabulary/details/class.html'
+    context_object_name = 'class'
+
+
+class VocabularyPropertyDetailsView(DetailView):
+    model = VocabularyProperty
+    template_name = 'vocabulary/details/property.html'
+    context_object_name = 'property'
 
 
 class VocabularyUpdateView(UpdateView):
@@ -337,10 +353,17 @@ class ClassListView(ListView):
         context = super(ClassListView, self).get_context_data(**kwargs)
         context['page'] = 'Classes'
         context['type'] = 'classes'
+        if self.request.GET.get('definedBy'):
+            context['vocabulary_define'] = Vocabulary.objects.get(pk=self.request.GET.get('definedBy'))
+
         return context
 
-    def get_queryset(self):
-        qs = super(ClassListView, self).get_queryset().order_by('-vocabulary__lodRanking')
+    def get_queryset(self, **kwargs):
+        v_id = self.request.GET.get('definedBy')
+        if v_id:
+            qs = super(ClassListView, self).get_queryset().filter(vocabulary__id=v_id).order_by('-vocabulary__lodRanking')
+        else:
+            qs = super(ClassListView, self).get_queryset().order_by('-vocabulary__lodRanking')
         return qs
 
 
@@ -354,10 +377,17 @@ class PropertyListView(ListView):
         context = super(PropertyListView, self).get_context_data(**kwargs)
         context['page'] = 'Properties'
         context['type'] = 'properties'
+        if self.request.GET.get('definedBy'):
+            context['vocabulary_define'] = Vocabulary.objects.get(pk=self.request.GET.get('definedBy'))
+
         return context
 
     def get_queryset(self):
-        qs = super(PropertyListView, self).get_queryset().order_by('-vocabulary__lodRanking')
+        v_id = self.request.GET.get('definedBy')
+        if v_id:
+            qs = super(PropertyListView, self).get_queryset().filter(vocabulary__id=v_id).order_by('-vocabulary__lodRanking')
+        else:
+            qs = super(PropertyListView, self).get_queryset().order_by('-vocabulary__lodRanking')
         return qs
 
 
@@ -416,6 +446,20 @@ def vocabulary_search(request):  # view for search in vocabularies - remembers s
         if res.object:
             obj_set.append(res)
 
+    # search only inside a vocabulary
+    if request.GET.get('definedBy'):
+        defined_by = int(request.GET.get('definedBy'))
+        obj_set_old = obj_set[:]
+        obj_set = []
+        for res in obj_set_old:
+            try:
+                if res.object.vocabulary.id == defined_by:
+                    obj_set.append(res)
+            except AttributeError:
+                continue # only return classes or properties
+    else:
+        defined_by = None
+
     # order the results
     if tp == "vocabularies":
         qs = sorted(obj_set, key=attrgetter('object.lodRanking'), reverse=True)  # order objects manually
@@ -427,11 +471,14 @@ def vocabulary_search(request):  # view for search in vocabularies - remembers s
     # paginate the results
     paginator = Paginator(qs, 15)
     page_object = paginator.page(page)
-    #import pdb; pdb.set_trace()
 
     # pass parameters and render the search template
     params = {'q': q, 'type': tp, 'query': True, 'translate': translate,
               'page_obj': page_object, 'url': "/vocabularies/?q=" + q + '&type=' + tp}
+
+    if defined_by:
+        params['vocabulary_define'] = Vocabulary.objects.get(pk=defined_by)
+
     return render(request, 'search/search.html', params)
 
 
