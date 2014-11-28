@@ -1,6 +1,6 @@
 from operator import attrgetter
 from django.core import serializers
-from django.core.paginator import Paginator
+from django.core.paginator import Paginator, EmptyPage
 from django.http import HttpResponse, HttpResponseNotFound, Http404, HttpResponseForbidden
 from django.shortcuts import redirect, render, get_object_or_404
 from django.utils.http import urlquote
@@ -209,6 +209,41 @@ class VocabularyClassDetailsView(DetailView):
     template_name = 'vocabulary/details/class.html'
     context_object_name = 'class'
 
+    def get_context_data(self, **kwargs):
+        context = super(VocabularyClassDetailsView, self).get_context_data(**kwargs)
+        # get the class object
+        class_object = context['class']
+
+        # handle domain and range pagination
+        domain_page = 1
+        range_page = 1
+
+        if self.request.GET.get('pdomain'):
+            try:
+                domain_page = int(self.request.GET.get('pdomain'))
+            except ValueError:
+                domain_page = 1
+
+        if self.request.GET.get('prange'):
+            try:
+                range_page = int(self.request.GET.get('prange'))
+            except ValueError:
+                range_page = 1
+
+        domain_paginator = Paginator(class_object.domain_of(), 10)
+        try:
+            context['domain_properties'] = domain_paginator.page(domain_page)
+        except EmptyPage:
+            context['domain_properties'] = domain_paginator.page(1)
+
+        range_paginator = Paginator(class_object.range_of(), 10)
+        try:
+            context['range_properties'] = range_paginator.page(range_page)
+        except EmptyPage:
+            context['range_properties'] = range_paginator.page(1)        
+
+        return context
+
 
 class VocabularyPropertyDetailsView(DetailView):
     model = VocabularyProperty
@@ -233,7 +268,7 @@ class VocabularyUpdateView(UpdateView):
     def get_context_data(self, **kwargs):
         context = super(VocabularyUpdateView, self).get_context_data(**kwargs)
 
-        #Load categories
+        # Load categories
         context['categories'] = CATEGORIES
 
         return context
@@ -429,13 +464,10 @@ def vocabulary_search(request):  # view for search in vocabularies - remembers s
 
     # load the query set
     if tp == "vocabularies":
-        clsname = 'Vocabulary'
         sqs = SearchQuerySet().models(Vocabulary).filter(content=q)
     elif tp == "classes":
-        clsname = 'VocabularyClass'
         sqs = SearchQuerySet().models(VocabularyClass).filter(content=q)
     elif tp == "properties":
-        clsname = 'VocabularyProperty'
         sqs = SearchQuerySet().models(VocabularyProperty).filter(content=q)
     else:
         raise Http404

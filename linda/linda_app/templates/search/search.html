@@ -33,13 +33,13 @@
 
             {% if query %}
                 <div class="search-filters">
-                    <a href="/vocabularies/?q={{q}}&type=vocabularies{% if request.GET.definedBy %}&definedBy={{request.GET.definedBy}}{% endif %}" class='button white {% if type == "vocabularies" %}active{% endif %}'>Vocabularies</a>
+                    {% if not request.GET.definedBy %}<a href="/vocabularies/?q={{q}}&type=vocabularies&definedBy=" class='button white {% if type == "vocabularies" %}active{% endif %}'>Vocabularies</a>{% endif %}
                     <a href="/vocabularies/?q={{q}}&type=classes{% if request.GET.definedBy %}&definedBy={{request.GET.definedBy}}{% endif %}" class='button white {% if type == "classes" %}active{% endif %}'>Classes</a>
                     <a href="/vocabularies/?q={{q}}&type=properties{% if request.GET.definedBy %}&definedBy={{request.GET.definedBy}}{% endif %}" class='button white {% if type == "properties" %}active{% endif %}'>Properties</a>
                 </div>
             {% else %}
                 <div class="search-filters">
-                    <a href="/vocabularies/all/{% if request.GET.definedBy %}?definedBy={{request.GET.definedBy}}{% endif %}" class="button white {% if vocabularies %}active{% endif %}">Vocabularies</a>
+                    {% if not request.GET.definedBy %}<a href="/vocabularies/all/{% if request.GET.definedBy %}?definedBy={{request.GET.definedBy}}{% endif %}" class="button white {% if vocabularies %}active{% endif %}">Vocabularies</a>{% endif %}
                     <a href="/classes/all/{% if request.GET.definedBy %}?definedBy={{request.GET.definedBy}}{% endif %}" class="button white {% if classes %}active{% endif %}">Classes</a>
                     <a href="/properties/all/{% if request.GET.definedBy %}?definedBy={{request.GET.definedBy}}{% endif %}" class="button white {% if properties %}active{% endif %}">Properties</a>
                 </div>

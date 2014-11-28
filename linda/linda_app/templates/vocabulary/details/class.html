@@ -28,20 +28,28 @@
 
         <h2>Has <strong>{{class.domain_of|length}}</strong> properties</h2>
         <div class="class-domain-properties">
-            {% for property in class.domain_of %}
+            {% for property in domain_properties.object_list %}
                 {% with property=property %}
                     {% include "vocabulary/teasers/property.html" %}
                 {% endwith %}
             {% endfor %}
+
+            {% with current_url=request.get_full_path page_param='pdomain' page_obj=domain_properties %}
+                {% include 'util/paginator.html' %}
+            {% endwith %}
         </div>
 
         <h2>Returned by <strong>{{class.range_of|length}}</strong> properties</h2>
         <div class="class-range-properties">
-            {% for property in class.range_of %}
+            {% for property in range_properties.object_list %}
                 {% with property=property %}
                     {% include "vocabulary/teasers/property.html" %}
                 {% endwith %}
             {% endfor %}
+
+            {% with current_url=request.get_full_path page_param='prange' page_obj=range_properties %}
+                {% include 'util/paginator.html' %}
+            {% endwith %}
         </div>
     </content>
 </div>
