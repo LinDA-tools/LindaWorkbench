@@ -264,55 +264,55 @@ function program15(depth0,data) {
   hashTypes = {};
   hashContexts = {};
   options = {hash:{},inverse:self.noop,fn:self.program(1, program1, data),contexts:[depth0,depth0,depth0,depth0,depth0],types:["STRING","STRING","STRING","STRING","STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
-  stack2 = ((stack1 = helpers['link-to'] || depth0['link-to']),stack1 ? stack1.call(depth0, "visualization", "TS1_LinearRegression_Result_And_Original", "http%3A%2F%2Flocalhost%3A8890%2Fsparql", "http%3A%2F%2Fwww.linda-project.org%2FTS1_LinearRegression_Result_Original", "rdf", options) : helperMissing.call(depth0, "link-to", "visualization", "TS1_LinearRegression_Result_And_Original", "http%3A%2F%2Flocalhost%3A8890%2Fsparql", "http%3A%2F%2Fwww.linda-project.org%2FTS1_LinearRegression_Result_Original", "rdf", options));
+  stack2 = ((stack1 = helpers['link-to'] || depth0['link-to']),stack1 ? stack1.call(depth0, "visualization", "TS1_LinearRegression_Result_And_Original", "http%3A%2F%2F107.170.70.175%3A8890%2Fsparql", "http%3A%2F%2Fwww.linda-project.org%2FTS1_LinearRegression_Result_Original", "rdf", options) : helperMissing.call(depth0, "link-to", "visualization", "TS1_LinearRegression_Result_And_Original", "http%3A%2F%2F107.170.70.175%3A8890%2Fsparql", "http%3A%2F%2Fwww.linda-project.org%2FTS1_LinearRegression_Result_Original", "rdf", options));
   if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
   data.buffer.push("  \n  </li>\n  <li>\n      ");
   hashTypes = {};
   hashContexts = {};
   options = {hash:{},inverse:self.noop,fn:self.program(3, program3, data),contexts:[depth0,depth0,depth0,depth0,depth0],types:["STRING","STRING","STRING","STRING","STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
-  stack2 = ((stack1 = helpers['link-to'] || depth0['link-to']),stack1 ? stack1.call(depth0, "visualization", "Sales%20Statistics", "http%3A%2F%2Flocalhost%3A3002%2Ftestsets%2FTS2_Sales_Statistics.csv", "-", "csv", options) : helperMissing.call(depth0, "link-to", "visualization", "Sales%20Statistics", "http%3A%2F%2Flocalhost%3A3002%2Ftestsets%2FTS2_Sales_Statistics.csv", "-", "csv", options));
+  stack2 = ((stack1 = helpers['link-to'] || depth0['link-to']),stack1 ? stack1.call(depth0, "visualization", "Sales%20Statistics", "http%3A%2F%2F107.170.70.175%3A3002%2Ftestsets%2FTS2_Sales_Statistics.csv", "-", "csv", options) : helperMissing.call(depth0, "link-to", "visualization", "Sales%20Statistics", "http%3A%2F%2F107.170.70.175%3A3002%2Ftestsets%2FTS2_Sales_Statistics.csv", "-", "csv", options));
   if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
   data.buffer.push("\n  </li>\n  <li>\n      ");
   hashTypes = {};
   hashContexts = {};
   options = {hash:{},inverse:self.noop,fn:self.program(3, program3, data),contexts:[depth0,depth0,depth0,depth0,depth0],types:["STRING","STRING","STRING","STRING","STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
-  stack2 = ((stack1 = helpers['link-to'] || depth0['link-to']),stack1 ? stack1.call(depth0, "visualization", "Ubitech%20Testset%202", "http%3A%2F%2Flocalhost%3A3002%2Ftestsets%2FionosphereToTrain_J48_resultdocument.csv", "-", "csv", options) : helperMissing.call(depth0, "link-to", "visualization", "Ubitech%20Testset%202", "http%3A%2F%2Flocalhost%3A3002%2Ftestsets%2FionosphereToTrain_J48_resultdocument.csv", "-", "csv", options));
+  stack2 = ((stack1 = helpers['link-to'] || depth0['link-to']),stack1 ? stack1.call(depth0, "visualization", "Ubitech%20Testset%202", "http%3A%2F%2F107.170.70.175%3A3002%2Ftestsets%2FionosphereToTrain_J48_resultdocument.csv", "-", "csv", options) : helperMissing.call(depth0, "link-to", "visualization", "Ubitech%20Testset%202", "http%3A%2F%2F107.170.70.175%3A3002%2Ftestsets%2FionosphereToTrain_J48_resultdocument.csv", "-", "csv", options));
   if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
   data.buffer.push("\n  </li>\n  <li>\n      ");
   hashTypes = {};
   hashContexts = {};
   options = {hash:{},inverse:self.noop,fn:self.program(5, program5, data),contexts:[depth0,depth0,depth0,depth0,depth0],types:["STRING","STRING","STRING","STRING","STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
-  stack2 = ((stack1 = helpers['link-to'] || depth0['link-to']),stack1 ? stack1.call(depth0, "visualization", "Ubitech%20Testset%203", "http%3A%2F%2Flocalhost%3A3002%2Ftestsets%2FairlineToForecast_5xQ3Xie_Arima_resultdocument.csv", "-", "csv", options) : helperMissing.call(depth0, "link-to", "visualization", "Ubitech%20Testset%203", "http%3A%2F%2Flocalhost%3A3002%2Ftestsets%2FairlineToForecast_5xQ3Xie_Arima_resultdocument.csv", "-", "csv", options));
+  stack2 = ((stack1 = helpers['link-to'] || depth0['link-to']),stack1 ? stack1.call(depth0, "visualization", "Ubitech%20Testset%203", "http%3A%2F%2F107.170.70.175%3A3002%2Ftestsets%2FairlineToForecast_5xQ3Xie_Arima_resultdocument.csv", "-", "csv", options) : helperMissing.call(depth0, "link-to", "visualization", "Ubitech%20Testset%203", "http%3A%2F%2F107.170.70.175%3A3002%2Ftestsets%2FairlineToForecast_5xQ3Xie_Arima_resultdocument.csv", "-", "csv", options));
   if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
   data.buffer.push("\n  </li>\n  <li>\n      ");
   hashTypes = {};
   hashContexts = {};
   options = {hash:{},inverse:self.noop,fn:self.program(7, program7, data),contexts:[depth0,depth0,depth0,depth0,depth0],types:["STRING","STRING","STRING","STRING","STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
-  stack2 = ((stack1 = helpers['link-to'] || depth0['link-to']),stack1 ? stack1.call(depth0, "visualization", "Healthcare%20Analysis", "http%3A%2F%2Flocalhost%3A8890%2Fsparql", "http%3A%2F%2Fwww.hospitals_reviewer.com%2F2014", "rdf", options) : helperMissing.call(depth0, "link-to", "visualization", "Healthcare%20Analysis", "http%3A%2F%2Flocalhost%3A8890%2Fsparql", "http%3A%2F%2Fwww.hospitals_reviewer.com%2F2014", "rdf", options));
+  stack2 = ((stack1 = helpers['link-to'] || depth0['link-to']),stack1 ? stack1.call(depth0, "visualization", "Healthcare%20Analysis", "http%3A%2F%2F107.170.70.175%3A8890%2Fsparql", "http%3A%2F%2Fwww.hospitals_reviewer.com%2F2014", "rdf", options) : helperMissing.call(depth0, "link-to", "visualization", "Healthcare%20Analysis", "http%3A%2F%2F107.170.70.175%3A8890%2Fsparql", "http%3A%2F%2Fwww.hospitals_reviewer.com%2F2014", "rdf", options));
   if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
   data.buffer.push("\n  </li>\n  <li>\n      ");
   hashTypes = {};
   hashContexts = {};
   options = {hash:{},inverse:self.noop,fn:self.program(9, program9, data),contexts:[depth0,depth0,depth0,depth0,depth0],types:["STRING","STRING","STRING","STRING","STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
-  stack2 = ((stack1 = helpers['link-to'] || depth0['link-to']),stack1 ? stack1.call(depth0, "visualization", "Water%20Quality%20Analysis", "http%3A%2F%2Flocalhost%3A8890%2Fsparql", "http%3A%2F%2Fwater_quality_check.it%2Finfo", "rdf", options) : helperMissing.call(depth0, "link-to", "visualization", "Water%20Quality%20Analysis", "http%3A%2F%2Flocalhost%3A8890%2Fsparql", "http%3A%2F%2Fwater_quality_check.it%2Finfo", "rdf", options));
+  stack2 = ((stack1 = helpers['link-to'] || depth0['link-to']),stack1 ? stack1.call(depth0, "visualization", "Water%20Quality%20Analysis", "http%3A%2F%2F107.170.70.175%3A8890%2Fsparql", "http%3A%2F%2Fwater_quality_check.it%2Finfo", "rdf", options) : helperMissing.call(depth0, "link-to", "visualization", "Water%20Quality%20Analysis", "http%3A%2F%2F107.170.70.175%3A8890%2Fsparql", "http%3A%2F%2Fwater_quality_check.it%2Finfo", "rdf", options));
   if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
   data.buffer.push("\n  </li>\n  <li>\n      ");
   hashTypes = {};
   hashContexts = {};
   options = {hash:{},inverse:self.noop,fn:self.program(11, program11, data),contexts:[depth0,depth0,depth0,depth0,depth0],types:["STRING","STRING","STRING","STRING","STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
-  stack2 = ((stack1 = helpers['link-to'] || depth0['link-to']),stack1 ? stack1.call(depth0, "visualization", "Newspaper%20Articles%20Analysis", "http%3A%2F%2Flocalhost%3A8890%2Fsparql", "http%3A%2F%2Fnewspaper.org%2Farticles_2007", "rdf", options) : helperMissing.call(depth0, "link-to", "visualization", "Newspaper%20Articles%20Analysis", "http%3A%2F%2Flocalhost%3A8890%2Fsparql", "http%3A%2F%2Fnewspaper.org%2Farticles_2007", "rdf", options));
+  stack2 = ((stack1 = helpers['link-to'] || depth0['link-to']),stack1 ? stack1.call(depth0, "visualization", "Newspaper%20Articles%20Analysis", "http%3A%2F%2F107.170.70.175%3A8890%2Fsparql", "http%3A%2F%2Fnewspaper.org%2Farticles_2007", "rdf", options) : helperMissing.call(depth0, "link-to", "visualization", "Newspaper%20Articles%20Analysis", "http%3A%2F%2F107.170.70.175%3A8890%2Fsparql", "http%3A%2F%2Fnewspaper.org%2Farticles_2007", "rdf", options));
   if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
   data.buffer.push("\n  </li>\n  <li>\n      ");
   hashTypes = {};
   hashContexts = {};
   options = {hash:{},inverse:self.noop,fn:self.program(13, program13, data),contexts:[depth0,depth0,depth0,depth0,depth0],types:["STRING","STRING","STRING","STRING","STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
-  stack2 = ((stack1 = helpers['link-to'] || depth0['link-to']),stack1 ? stack1.call(depth0, "visualization", "Newspaper%20Articles%20Analysis", "http%3A%2F%2Flocalhost%3A3002%2Ftestsets%2FUC2_Newspaper-Articles-Analysis.csv", "-", "csv", options) : helperMissing.call(depth0, "link-to", "visualization", "Newspaper%20Articles%20Analysis", "http%3A%2F%2Flocalhost%3A3002%2Ftestsets%2FUC2_Newspaper-Articles-Analysis.csv", "-", "csv", options));
+  stack2 = ((stack1 = helpers['link-to'] || depth0['link-to']),stack1 ? stack1.call(depth0, "visualization", "Newspaper%20Articles%20Analysis", "http%3A%2F%2F107.170.70.175%3A3002%2Ftestsets%2FUC2_Newspaper-Articles-Analysis.csv", "-", "csv", options) : helperMissing.call(depth0, "link-to", "visualization", "Newspaper%20Articles%20Analysis", "http%3A%2F%2F107.170.70.175%3A3002%2Ftestsets%2FUC2_Newspaper-Articles-Analysis.csv", "-", "csv", options));
   if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
   data.buffer.push("\n  </li>\n  <li>\n      ");
   hashTypes = {};
   hashContexts = {};
   options = {hash:{},inverse:self.noop,fn:self.program(15, program15, data),contexts:[depth0,depth0,depth0,depth0,depth0],types:["STRING","STRING","STRING","STRING","STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
-  stack2 = ((stack1 = helpers['link-to'] || depth0['link-to']),stack1 ? stack1.call(depth0, "visualization", "Drug%20Price%20Analysis", "http%3A%2F%2Flocalhost%3A3002%2Ftestsets%2FUC1_Drug_Price_Analysis.csv", "-", "csv", options) : helperMissing.call(depth0, "link-to", "visualization", "Drug%20Price%20Analysis", "http%3A%2F%2Flocalhost%3A3002%2Ftestsets%2FUC1_Drug_Price_Analysis.csv", "-", "csv", options));
+  stack2 = ((stack1 = helpers['link-to'] || depth0['link-to']),stack1 ? stack1.call(depth0, "visualization", "Drug%20Price%20Analysis", "http%3A%2F%2F107.170.70.175%3A3002%2Ftestsets%2FUC1_Drug_Price_Analysis.csv", "-", "csv", options) : helperMissing.call(depth0, "link-to", "visualization", "Drug%20Price%20Analysis", "http%3A%2F%2F107.170.70.175%3A3002%2Ftestsets%2FUC1_Drug_Price_Analysis.csv", "-", "csv", options));
   if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
   data.buffer.push("\n  </li>\n</ul>\n");
   return buffer;
