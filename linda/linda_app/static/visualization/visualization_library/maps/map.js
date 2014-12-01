@@ -1,54 +1,47 @@
 var map = function() { // map/openstreetmap module (js module pattern)
 
-    var structureOptions = {
-        axis: {label: "Map options", template: 'treeView', suboptions: {
-                label: {label: 'Set label', template: 'area'},
-                lat: {label: 'Set latitude', template: 'area'},
-                long: {label: 'Set longitude', template: 'area'},
-                indicator: {label: 'Set indicator', template: 'area'}
-            }
-        }
-    };
-    var tuningOptions = {}
-
-
     var map = null;
-    function draw(config, visualisationContainer) {
-        // Remove if 'draw' was called before
+
+    function draw(configuration, visualisationContainer) {
+        console.log("### INITIALIZE VISUALISATION - MAP");
+
         if (map) {
-            $(visualisationContainer).empty();
             map.remove();
         }
-        map = L.map(visualisationContainer)
-        // create a map in the "visualization" div
-        L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
-            attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
-            maxZoom: 18
+
+        $('#' + visualisationContainer).empty();
+
+        if (!(configuration.dataModule && configuration.datasourceLocation
+                && configuration.label && configuration.lat
+                && configuration.long && configuration.indicator)) {
+            return $.Deferred().resolve().promise();
+        }
+
+        if ((configuration.lat.length === 0) || (configuration.long.length === 0)) {
+            return $.Deferred().resolve().promise();
+        }
+
+        map = new L.Map(visualisationContainer);
+
+        L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>',
+            zoom: 8
         }).addTo(map);
-        console.log("### INITIALIZE VISUALISATION");
-        var dataModule = config.dataModule;
 
-        var labelPropertyInfo = config.axis.label[0];
-        var latPropertyInfo = config.axis.lat[0];
-        var longPropertyInfo = config.axis.long[0];
-        var indicatorPropertyInfos = config.axis.indicator;
-
+        var dataModule = configuration.dataModule;
+        var labelPropertyInfo = configuration.label[0];
+        var latPropertyInfo = configuration.lat[0];
+        var longPropertyInfo = configuration.long[0];
+        var indicatorPropertyInfos = configuration.indicator;
         var currColumn = 0;
         var latColumn = currColumn++;
         var longColumn = currColumn++;
         var labelColumn = -1;
+
         if (labelPropertyInfo) {
             labelColumn = currColumn++;
         }
-        var indicatorColumns = _.range(3, 3 + indicatorPropertyInfos.length)
-
-        console.log("lat, long, label, indicators:");
-        console.dir(latPropertyInfo);
-        console.dir(longPropertyInfo);
-        console.dir(labelPropertyInfo);
-        console.dir(indicatorPropertyInfos);
-        console.log("VISUALISATION CONFIGURATION");
-        console.dir(config);
+        var indicatorColumns = _.range(3, 3 + indicatorPropertyInfos.length);
         var selection = {};
         var dimensions = [];
         var indicators = [];
@@ -70,11 +63,11 @@ var map = function() { // map/openstreetmap module (js module pattern)
         selection.dimension = dimensions;
         selection.multidimension = indicators;
         selection.group = group;
-        console.log("SELECTION");
-        console.dir(selection);
-        var location = config.datasourceInfo.location;
-        dataModule.parse(location, selection).then(function(data) {
-            console.log("CONVERTED INPUT DATA");
+
+        var location = configuration.datasourceLocation;
+
+        return dataModule.parse(location, selection).then(function(data) {
+            console.log("CONVERTED INPUT DATA FOR MAP VISUALIZATION");
             console.dir(data);
             var minLat = 90;
             var maxLat = -90;
@@ -96,7 +89,6 @@ var map = function() { // map/openstreetmap module (js module pattern)
                 maxIndicatorValues.push(maxIndicatorValue || 100);
             }
 
-
             for (var i = 1; i < data.length; ++i) {
                 var row = data[i];
                 var lat = parseFloat(row[latColumn]);
@@ -113,16 +105,12 @@ var map = function() { // map/openstreetmap module (js module pattern)
                 var label = labelColumn >= 0 ? row[labelColumn] : '';
                 console.log("LatLong: " + lat + ", " + long);
                 var markeroptions = {
-                    data: {
-                    },
-                    chartOptions: {
-                    },
-                    displayOptions: {
-                    },
+                    data: {},
+                    chartOptions: {},
+                    displayOptions: {},
                     weight: 1,
                     color: '#000000'
-                }
-
+                };
 
                 for (var j = 0; j < indicatorColumns.length; j++) {
                     var indicatorColumn = indicatorColumns[j]; // spaltenindex
@@ -150,9 +138,9 @@ var map = function() { // map/openstreetmap module (js module pattern)
                 var marker = new L.BarChartMarker(new L.LatLng(lat, long), markeroptions);
                 //var marker = L.marker({lat: lat, lng: long}, {title: label});
                 marker.addTo(map);
-                console.log("Point: [" + lat + ", " + long + ", " + label + "]")
+                console.log("Point: [" + lat + ", " + long + ", " + label + "]");
             }
-            console.log("Bounds: [" + minLat + ", " + maxLat + "], [" + minLong + ", " + maxLong + "]")
+            console.log("Bounds: [" + minLat + ", " + maxLat + "], [" + minLong + ", " + maxLong + "]");
             if (minLat !== null && minLong !== null && maxLat !== null && maxLong !== null) {
                 map.fitBounds([
                     [minLat, minLong],
@@ -162,15 +150,29 @@ var map = function() { // map/openstreetmap module (js module pattern)
         });
     }
 
-
-
     function tune(config) {
+    }
+
+    function get_SVG() {
+        return '';
+    }
+
+    function export_as_PNG() {
+        var dfd = new jQuery.Deferred();
+        
+        leafletImage(map, function(err, canvas) {
+            var pngURL = canvas.toDataURL();
+            var downloadURL = pngURL.replace(/^data:image\/png/, 'data:application/octet-stream');
+            dfd.resolve(downloadURL);
+        });
+
+        return dfd.promise();
     }
 
 
     return {
-        structureOptions: structureOptions,
-        tuningOptions: tuningOptions,
+        export_as_PNG: export_as_PNG,
+        get_SVG: get_SVG,
         draw: draw,
         tune: tune
     };

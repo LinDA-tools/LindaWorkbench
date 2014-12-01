@@ -10,3 +10,47 @@ function transpose(table) {
     }
     return columns;
 }
+
+function rows(table) {
+    var rows = [];
+    var columnHeaders = table[0];
+
+    for (var i = 1; i < table.length; i++) {
+        var columns = {};
+        var row = table[i];
+        for (var j = 0; j < row.length; j++) {
+            var name = columnHeaders[j];
+            columns[name] = row[j];
+        }
+        rows.push(columns);
+    }
+    return rows;
+}
+
+
+var floatPattern = /^-?[0-9]+\.[0-9]+$/;
+var intPattern = /^-?[0-9]+$/;
+function toScalar(value, state) {
+    if (floatPattern.test(value)) {
+        var float = parseFloat(value);
+        if (isNaN(float)) {
+            return value;
+        } else {
+            return float;
+        }
+    } else if (intPattern.test(value)) {
+        var integer = parseInt(value);
+        if (isNaN(integer)) {
+            return value;
+        } else {
+            return integer;
+        }
+    } else {
+        var date = Date.parse(value);
+        if (isNaN(date)) {
+            return value;
+        } else {
+            return new Date(date);
+        }
+    }
+}

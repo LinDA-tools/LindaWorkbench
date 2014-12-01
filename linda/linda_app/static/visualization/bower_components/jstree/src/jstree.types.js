@@ -100,6 +100,9 @@
 						if(tmp[i].li_attr && tmp[i].li_attr.id) {
 							delete tmp[i].li_attr.id;
 						}
+						if(tmp[i].a_attr && tmp[i].a_attr.id) {
+							delete tmp[i].a_attr.id;
+						}
 					}
 				}
 			}
@@ -121,6 +124,9 @@
 			delete tmp.id;
 			if(tmp.li_attr && tmp.li_attr.id) {
 				delete tmp.li_attr.id;
+			}
+			if(tmp.a_attr && tmp.a_attr.id) {
+				delete tmp.a_attr.id;
 			}
 			if(tmp.children && $.isArray(tmp.children)) {
 				tmp.children = this._delete_ids(tmp.children);
@@ -219,7 +225,7 @@
 			old_type = obj.type;
 			old_icon = this.get_icon(obj);
 			obj.type = type;
-			if(old_icon === true || (t[old_type] && t[old_type].icon && old_icon === t[old_type].icon)) {
+			if(old_icon === true || (t[old_type] && t[old_type].icon !== undefined && old_icon === t[old_type].icon)) {
 				this.set_icon(obj, t[type].icon !== undefined ? t[type].icon : true);
 			}
 			return true;

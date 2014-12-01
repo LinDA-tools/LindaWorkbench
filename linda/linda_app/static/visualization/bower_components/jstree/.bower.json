@@ -1,6 +1,6 @@
 {
   "name": "jstree",
-  "version": "3.0.6",
+  "version": "3.0.8",
   "main": [
     "./dist/jstree.js",
     "./dist/themes/default/style.css"
@@ -30,11 +30,11 @@
     "jstree"
   ],
   "homepage": "https://github.com/vakata/jstree",
-  "_release": "3.0.6",
+  "_release": "3.0.8",
   "_resolution": {
     "type": "version",
-    "tag": "3.0.6",
-    "commit": "507aee118d178817809087897fcc7dffba9b6726"
+    "tag": "3.0.8",
+    "commit": "841eee8d48bfd19249720538f8140b86c83dd41c"
   },
   "_source": "git://github.com/vakata/jstree.git",
   "_target": "~3.0.2",

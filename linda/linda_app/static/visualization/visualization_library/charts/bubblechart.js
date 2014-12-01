@@ -1,101 +1,135 @@
-google.load('visualization', '1', {packages: ['corechart']});
+/*
+ * DIMPLE CHART LIBRARY
+ * DATA FORMAT: [{"column1":"value1", "column2":"value2", ...}, {"column1":"value3", "column2":"value4", ...}, ...]
+ * 
+ */
 
-var bubblechart = function() { // bubble chart module (js module pattern)
-
-    var structureOptions = {
-        axis: {label: "Axes", template: 'treeView', suboptions: {
-                label: {label: "Label", template: 'area'},
-                xAxis: {label: "X Axis", template: 'area'},
-                yAxis: {label: "Y Axis", template: 'area'},
-                color: {label: "Gradient/category", template: 'area'},
-                radius: {label: "Radius", template: 'area'}
-            }
-        }
-    };
-
-    var tuningOptions = {
-        title: {label: "Chart title", template: 'textField'},
-        axes: {label: "Axes", template: 'box',
-            suboptions: {
-                vLabel: {label: "Title (V)", template: 'textField'},
-                hLabel: {label: "Title (H)", template: 'textField'},
-                vGrid: {label: "Grid (V)", template: 'textField'},
-                hGrid: {label: "Grid (H)", template: 'textField'}
-                /*, color: {label: "Color", template: 'textField'}*/
-            }
-        }
-    };
-
+var bubblechart = function() {
     var chart = null;
-    var data = null;
+    var seriesHeaders = [];
+    var series = [];
 
+    function draw(configuration, visualisationContainerID) {
+        console.log("### INITIALIZE VISUALISATION - COLUMN CHART");
 
-    function draw(config, visualisationContainer) {
-        console.log("### INITIALIZE VISUALISATION");
-        var dataModule = config.dataModule;
-        var columns = [config.axis.label[0], config.axis.xAxis[0], config.axis.yAxis[0]]
-        if (config.axis.color.length > 0) {
-            columns.push(config.axis.color[0]);
+        var container = $('#' + visualisationContainerID);
+        container.empty();
+
+        if (!(configuration.dataModule && configuration.datasourceLocation
+                && configuration.xAxis && configuration.yAxis
+                && configuration.label)) {
+            return $.Deferred().resolve().promise();
         }
-        if (config.axis.radius.length > 0) {
-            columns.push(config.axis.radius[0]);
+
+        if ((configuration.label.length === 0) || (configuration.xAxis.length === 0) || (configuration.yAxis.length === 0)) {
+            return $.Deferred().resolve().promise();
         }
+
+        var dataModule = configuration.dataModule;
+        var location = configuration.datasourceLocation;
 
         var selection = {
             dimension: [],
-            multidimension: columns,
-            group: []
+            multidimension: configuration.label.concat(configuration.xAxis).concat(configuration.yAxis).concat(configuration.radius).concat(configuration.color),
+            group: [],
+            gridlines: configuration.gridlines,
+            hLabel: configuration.hLabel,
+            vLabel: configuration.vLabel,
+            ticks : configuration.ticks,
+            tooltip: configuration.tooltip
         };
-        var location = config.datasourceInfo.location;
-        dataModule.parse(location, selection).then(function(input) {
 
-            // Create and populate the data table.
-            data = google.visualization.arrayToDataTable(input);
-            chart = new google.visualization.BubbleChart(document.getElementById(visualisationContainer));
+        console.log("VISUALIZATION SELECTION FOR COLUMN CHART:");
+        console.dir(selection);
 
-            // Create and draw the skeleton of the visualization.
-//        var view = new google.visualization.DataView(data);
-//        var columns = [config.axis.label.id, config.axis.xAxis.id, config.axis.yAxis.id]
-//        if (config.axis.color) {
-//            columns.push(config.axis.color.id);
-//        }
-//        if (config.axis.radius) {
-//            columns.push(config.axis.radius.id);
-//        }
-//        ;
-//        view.setColumns(columns);
+        var svg = dimple.newSvg('#' + visualisationContainerID, container.width(), container.height());
 
-            chart.draw(data,
-                    {title: config.title,
-                        width: 600, height: 400}
-            );
+        return dataModule.parse(location, selection).then(function(inputData) {
+            console.log("GENERATE INPUT DATA FORMAT FOR COLUMN CHART - INPUT DATA");
+            console.dir(inputData);
+            seriesHeaders = inputData[0];
+            series = rows(inputData);
+            console.log("GENERATE INPUT DATA FORMAT FOR COLUMN CHART - OUTPUT DATA");
+            console.dir(series);
+
+            var chart = new dimple.chart(svg, series);
+
+            var labelAxisName = seriesHeaders[0];
+            var xAxisName = seriesHeaders[1];
+            var yAxisName = seriesHeaders[2];
+            
+            var radiusAxisName;
+            if (configuration.radius.length > 0) {
+                radiusAxisName = seriesHeaders[3];
+            }
+
+            var colorAxisName;
+            if (configuration.color.length > 0) {
+                colorAxisName = seriesHeaders[3 + configuration.radius.length];
+            }
+
+            var x = chart.addMeasureAxis("x", xAxisName);
+            var y = chart.addMeasureAxis("y", yAxisName);
+
+            if (radiusAxisName) {
+                chart.addMeasureAxis("z", radiusAxisName);
+            }
+
+            var series = [labelAxisName];
+
+            if (colorAxisName) {
+                series.push(colorAxisName);
+            }
+            
+            console.log("SERIES:");
+            console.dir(series);
+
+            chart.addSeries(series, dimple.plot.bubble);
+            chart.addLegend("50%", "10%", 500, 20, "right");
+            
+            //gridlines tuning
+            x.showGridlines = selection.gridlines;
+            y.showGridlines = selection.gridlines;
+            //titles
+            if (selection.hLabel ===""){
+                selection.hLabel = seriesHeaders[1]; 
+            }
+            if (selection.vLabel ===""){
+                selection.vLabel = seriesHeaders[2];
+            }
+            x.title = selection.hLabel;
+            y.title = selection.vLabel;
+            //ticks
+            x.ticks = selection.ticks;
+            y.ticks = selection.ticks;
+            //tooltip
+            if (selection.tooltip === false){
+                chart.addSeries(series, dimple.plot.bubble).addEventHandler("mouseover",function(){});
+            }
+            
+            chart.draw();
         });
     }
 
     function tune(config) {
-        // Tune the visualization.
-        chart.draw(data,
-                {title: config["title"],
-                    width: 600, height: 400,
-                    vAxis: {title: config.axes.vLabel,
-                        gridlines: {
-                            count: config.axes.vGrid
-                        }
-                    },
-                    hAxis: {title: config.axes.hLabel,
-                        gridlines: {
-                            count: config.axes.hGrid
-                        }
-                    },
-                    bubble: {textStyle: {fontSize: 11}}
-                }
+    }
 
-        );
+    function export_as_PNG() {
+        return exportC3.export_PNG();
+    }
+
+    function export_as_SVG() {
+        return exportC3.export_SVG();
+    }
+
+    function get_SVG() {
+        return exportC3.get_SVG();
     }
 
     return {
-        structureOptions: structureOptions,
-        tuningOptions: tuningOptions,
+        export_as_PNG: export_as_PNG,
+        export_as_SVG: export_as_SVG,
+        get_SVG: get_SVG,
         draw: draw,
         tune: tune
     };
