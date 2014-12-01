@@ -1,4 +1,4 @@
-//create a route
+/*Main route.*/
 App.ApplicationRoute = Ember.Route.extend({
 });
 

@@ -1,0 +1,12 @@
+<div class="col-xs-6 area-box">
+    {{#droppable-area inArea=view.content metadata=view.metadata label=view.label}}
+        <div class="dim-metadata">
+           {{view.label}} ({{#each type in view.metadata}}{{type}}{{else}}any{{/each}})
+        </div>
+        <div class="dim-area-item">
+            {{#each areaItem in view.inArea}}
+                {{property-item item=areaItem collection=view.inArea}}	               
+            {{/each}}
+        </div>
+    {{/droppable-area}}
+</div>

@@ -3,9 +3,10 @@ var csv_data_module = function() {
 
 // order: order of columns specified by the user
 // subset: dummy; needed in case of RDF for the selected class(es)
-// location: location of the input dataset
+// location: location of the input dataset  
 
     function parse(location, selection) {
+        console.log('CSV DATA MODULE - ');
         var dimension = selection.dimension;
         var multidimension = selection.multidimension;
         var group = selection.group;
@@ -51,7 +52,6 @@ var csv_data_module = function() {
         }
 
         var columns = [];
-
         columns.push(dimension_[0]);
 
         for (var i = 1; i < group_.length; i++) {
@@ -59,7 +59,6 @@ var csv_data_module = function() {
         }
 
         var result = [];
-
         result.push(columns);
 
         var multidimension__ = multidimension_.reverse();
@@ -68,7 +67,6 @@ var csv_data_module = function() {
 
         while (multidimension__.length > 0) {
             var row = [];
-
             row.push(dimension_[dim_counter]);
 
             if (dim_counter === dimension_) {
@@ -86,40 +84,45 @@ var csv_data_module = function() {
 
         return result;
     }
+    
 
     function query(location, dimensions) {
         return  $.get(location).then(function(data) {
-            return $.csv.toArrays(data, {onParseValue: $.csv.hooks.castToScalar});
+            return $.csv.toArrays(data, {onParseValue: toScalar});
         }).then(function(dataArray) {
             return convert(dataArray, dimensions);
         });
     }
 
-    function read(location) {
-        var dataInfo = {}
+    function queryData(location, _class, _properties) {
+        var dfd = new jQuery.Deferred();
 
-        return  $.get(location).then(function(data) {
-            return $.csv.toArrays(data, {onParseValue: $.csv.hooks.castToScalar});
-        }).then(function(dataArray) {
-            var dataset = {
-                label: "Columns",
-                id: "Columns",
-                properties: [] 
-            };
+        if (!_class) {
+            dfd.resolve([{
+                    label: "Columns",
+                    id: "Columns"
+                }]);
+            return dfd.promise();
+        } else if (_properties.length > 0) {
+            dfd.resolve([]);
+            return dfd.promise();
+        } else {
+            return  $.get(location).then(function(data) {
+                return $.csv.toArrays(data, {onParseValue: toScalar});
+            }).then(function(dataArray) {
+                var names = dataArray[0];
+                var columns = [];
 
-            var names = dataArray[0];
+                for (var i = 0; i < names.length; i++) {
+                    columns.push({
+                        id: i,
+                        label: names[i]
+                    });
+                }
 
-            for (var i = 0; i < names.length; i++) {
-                var column = {};
-                column.id = i;
-                column.label = names[i];
-                dataset.properties.push(column);
-            }
-
-            dataInfo.dataset = dataset;
-
-            return {dataInfo: dataInfo, location: location};
-        });
+                return columns;
+            });
+        }
     }
 
     function convert(arrayData, columnsOrder) {
@@ -130,7 +133,7 @@ var csv_data_module = function() {
             var record = [];
             row = arrayData[i];
             for (var j = 0; j < columnsOrder.length; j++) {
-                var order = columnsOrder[j].id; 
+                var order = columnsOrder[j].id;
                 record.push(row[order]);
             }
             result.push(record);
@@ -139,7 +142,7 @@ var csv_data_module = function() {
     }
 
     return {
-        read: read,
+        queryData: queryData,
         parse: parse
     };
 }();

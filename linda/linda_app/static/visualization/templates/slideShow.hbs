@@ -1,0 +1,3 @@
+{{#each visualization in view.slides}}
+<div><a {{action 'chooseVisualization' visualization}}> <img {{bind-attr src="visualization.thumbnail"}} /></a></div>
+{{/each}}

@@ -1,142 +1,121 @@
+/*
+ * DIMPLE CHART LIBRARY
+ * DATA FORMAT: [{"column1":"value1", "column2":"value2", ...}, {"column1":"value3", "column2":"value4", ...}, ...]
+ * 
+ */
+
 var columnchart = function() {
-    var structureOptions = {
-        axis: {label: "Axes", template: 'treeView', suboptions: {
-                xAxis: {label: "Horizontal axis", template: 'area'},
-                yAxis: {label: "Vertical axis", template: 'area'}
-            }
-        }
-    };
-
-    var tuningOptions = {
-        title: {label: "Title", template: 'textField'},
-        style: {label: "Style", template: 'selectField',
-            values: [{label: "Normal", id: "normal"}, {label: "Stacked", id: "stacked"}]
-        },
-        axis: {label: "Axes", template: 'box', suboptions: {
-                vLabel: {label: "Label (V)", template: 'textField'},
-                hLabel: {label: "Label (H)", template: 'textField'},
-                grid: {label: "Grid", template: 'textField'},
-                scale: {label: "Scale", template: 'selectField',
-                    values: [{label: "Linear", id: "linear"}, {label: "Logarithmic", id: "logarithmic"}],
-                    defaults: {id: "linear"}
-                }
-            }
-        },
-        color: {label: "Horizontal axes colors", template: 'box', suboptions: {
-                yAxisColors: {template: 'multiAxisColors', axis: 'yAxis'} // TODO
-            }
-        }
-    };
-
     var chart = null;
     var seriesHeaders = [];
     var series = [];
 
-    function draw(visualisationConfiguration, visualisationContainer) {
-        console.log("### INITIALIZE VISUALISATION");
+    function draw(configuration, visualisationContainerID) {
+        console.log("### INITIALIZE VISUALISATION - COLUMN CHART");
 
-        var dataModule = visualisationConfiguration.dataModule;
+        var container = $('#' + visualisationContainerID);
+        container.empty();
 
-        console.log("VISUALISATION CONFIGURATION");
-        console.dir(visualisationConfiguration);
-
-        var xAxis = visualisationConfiguration.axis.xAxis;
-        console.log('xAxis');
-        console.dir(xAxis);
-
-        var yAxes = visualisationConfiguration.axis.yAxis;
-        console.log('yAxes');
-        console.dir(yAxes);
-
-        var selection = {};
-        var dimension = [];
-        var multidimension = [];
-        var group = [];
-
-        dimension.push(xAxis[0]);
-
-        for (var i = 0; i < yAxes.length; i++) {
-            console.dir(yAxes[i]);
-            if (yAxes[i].groupBy) {
-                group.push(yAxes[i]);
-            } else {
-                multidimension.push(yAxes[i]);
-            }
+        if (!(configuration.dataModule && configuration.datasourceLocation
+                && configuration.xAxis && configuration.yAxis
+                && configuration.group)) {
+            return $.Deferred().resolve().promise();
         }
 
-        selection.dimension = dimension;
-        selection.multidimension = multidimension;
-        selection.group = group;
+        if ((configuration.xAxis.length === 0) || (configuration.yAxis.length === 0)) {
+            return $.Deferred().resolve().promise();
+        }
 
-        console.log("SELECTION");
+        var dataModule = configuration.dataModule;
+        var location = configuration.datasourceLocation;
+
+        var selection = {
+            dimension: configuration.yAxis, // measure
+            multidimension: configuration.xAxis.concat(configuration.group).concat(configuration.stackedGroup), // categories
+            group: [],
+            gridlines: configuration.gridlines,
+            hLabel: configuration.hLabel,
+            vLabel: configuration.vLabel,
+            
+            tooltip: configuration.tooltip
+        };
+
+        console.log("VISUALIZATION SELECTION FOR COLUMN CHART:");
         console.dir(selection);
 
-        var location = visualisationConfiguration.datasourceInfo.location;
+        var svg = dimple.newSvg('#' + visualisationContainerID, container.width(), container.height());
 
-        dataModule.parse(location, selection).then(function(inputData) {
-            console.log("CONVERTED INPUT DATA");
-            console.dir(inputData);
-            
+        return dataModule.parse(location, selection).then(function(inputData) {            
             seriesHeaders = inputData[0];
-            series = transpose(inputData);
-            chart = c3.generate({
-                bindto: '#' + visualisationContainer,
-                data: {
-                    columns: series,
-                    x: seriesHeaders[0],
-                    type: 'bar'
-                },
-                axis: {
-                    y: {
-                        tick: {
-                            format: function(val) {
-                                if(!val && val !== 0) {
-                                    return '';
-                                }
-                                return val.toLocaleString([], {
-                                    useGrouping: false,
-                                    maximumFractionDigits: 6
-                                });
-                            }
-                        }
-                    }
-                },
-                grid: {
-                    y: {
-                        lines: [{value: 0}]
-                    }
-                }
-            });
-        });
+            series = rows(inputData);
+            console.log("GENERATE INPUT DATA FORMAT FOR COLUMN CHART");
+            console.dir(series);
 
-        console.log("###########");
+            var chart = new dimple.chart(svg, series);
+            
+            var categoryAxis;
+            var measureAxis;
+            if(configuration.horizontal) {
+                categoryAxis = "y";
+                measureAxis = "x";
+            } else {
+                categoryAxis = "x";
+                measureAxis = "y";
+            }
+            
+            var dim1 = chart.addCategoryAxis(categoryAxis, seriesHeaders.slice(1, 1 + configuration.xAxis.length + configuration.group.length));  // x axis: more categories        
+            var dim2 = chart.addMeasureAxis(measureAxis, seriesHeaders[0]);  // y axis: one measure (scale)                       
+
+            if (configuration.group.length > 0) { // simple column groups 
+                chart.addSeries(seriesHeaders[seriesHeaders.length - 1], dimple.plot.bar);
+            } else if (configuration.stackedGroup.length > 0) { // stacked groups
+                chart.addSeries(seriesHeaders[seriesHeaders.length - 1], dimple.plot.bar);
+            } else {
+                chart.addSeries(null, dimple.plot.bar);
+            }
+            chart.addLegend("10%", "5%", "80%", 20, "right");
+            
+            //gridlines tuning
+            dim1.showGridlines = selection.gridlines;
+            dim2.showGridlines = selection.gridlines;
+            //titles
+            if (selection.hLabel ===""){
+                selection.hLabel = seriesHeaders[1]; 
+            }
+            if (selection.vLabel ===""){
+                selection.vLabel = seriesHeaders[0];
+            }
+            dim1.title = selection.hLabel;
+            dim2.title = selection.vLabel;
+
+            //tooltip
+            if (selection.tooltip === false){
+                chart.addSeries(series, dimple.plot.bar).addEventHandler("mouseover",function(){});
+            }
+            
+            chart.draw();
+        });
     }
 
     function tune(config) {
-        console.log("### TUNE VISUALISATION");
-        console.dir(chart);
-        
-        var groups;
-        if(config.style.id === "stacked") {
-            groups = [seriesHeaders.slice(1)];
-            console.dir(groups);
-        } else {
-            groups = [];
-        }
-        
-        chart.groups(groups);
+        console.log("### TUNE COLUMN CHART");     
+    }
 
-        chart.axis.labels({
-                x: config.axis.hLabel,
-                y: config.axis.vLabel
-        });
+    function export_as_PNG() {
+        return exportC3.export_PNG();
+    }
 
-        console.log("###########");
+    function export_as_SVG() {
+        return exportC3.export_SVG();
+    }
+
+    function get_SVG() {
+        return exportC3.get_SVG();
     }
 
     return {
-        structureOptions: structureOptions,
-        tuningOptions: tuningOptions,
+        export_as_PNG: export_as_PNG,
+        export_as_SVG: export_as_SVG,
+        get_SVG: get_SVG,
         draw: draw,
         tune: tune
     };
