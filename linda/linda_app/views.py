@@ -240,7 +240,7 @@ class VocabularyClassDetailsView(DetailView):
         try:
             context['range_properties'] = range_paginator.page(range_page)
         except EmptyPage:
-            context['range_properties'] = range_paginator.page(1)        
+            context['range_properties'] = range_paginator.page(1)
 
         return context
 

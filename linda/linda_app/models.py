@@ -6,8 +6,7 @@ from django.contrib.auth.models import User
 from django.db.models.signals import post_save, post_delete
 from django.template.defaultfilters import slugify, random
 
-from rdflib import Graph
-import rdflib
+from rdflib import Graph, OWL, RDFS
 from rdflib.util import guess_format
 import re
 
@@ -142,6 +141,8 @@ class Vocabulary(models.Model):
 
         rdf_data = document.read()
         g.parse(data=rdf_data, format=guess_format(self.downloadUrl))
+        g.bind("rdfs", RDFS)
+        g.bind("owl", OWL)
 
         # Register a temporary SparQL endpoint for this rdf
         '''
@@ -152,9 +153,10 @@ class Vocabulary(models.Model):
         # Run a query to retrieve all classes
         # Use COALESCE to overcome RDFLib bug of KeyError exceptions on unbound optional fields
         q_classes = g.query(
-            """ SELECT ?class (COALESCE(?classLabel, "") AS ?cLabel) (COALESCE(?classComment, "") AS ?cComment)
+            """
+                SELECT ?class (COALESCE(?classLabel, "") AS ?cLabel) (COALESCE(?classComment, "") AS ?cComment)
                 WHERE {
-                    ?class rdf:type rdfs:Class.
+                    {?class rdf:type rdfs:Class} UNION {?class rdf:type owl:Class}.
                     OPTIONAL {
                         ?class rdfs:label ?classLabel .
                         ?class rdfs:comment ?classComment.
@@ -181,14 +183,19 @@ class Vocabulary(models.Model):
         # Run a query to retrieve all properties
         # Use COALESCE to overcome RDFLib bug of KeyError exceptions on unbound optional fields
         q_properties = g.query(
-            """ SELECT DISTINCT ?property ?domain ?range (COALESCE(?propertyLabel, "") AS ?pLabel) (COALESCE(?propertyComment, "") AS ?pComment)
+            """ SELECT DISTINCT ?property
+                                (COALESCE(?domain, "") AS ?d)
+                                (COALESCE(?range, "") AS ?r)
+                                (COALESCE(?propertyLabel, "") AS ?pLabel)
+                                (COALESCE(?propertyComment, "") AS ?pComment)
+                                (COALESCE(?parent, "") AS ?p)
                 WHERE {
-                    ?property rdfs:domain ?domain.
-                    ?property rdfs:range ?range.
+                    {?property rdfs:domain ?domain} UNION {?property rdfs:subPropertyOf ?parent}.
+                    {?property rdfs:range ?range} UNION {?property rdfs:subPropertyOf ?parent}.
                     OPTIONAL {
                         ?property rdfs:label ?propertyLabel.
                         ?property rdfs:comment ?propertyComment.
-                    }.
+                    }
                 }""")
 
         # Store the properties in the database
@@ -202,9 +209,9 @@ class Vocabulary(models.Model):
             else:
                 description = ""
             try:
-                prp = VocabularyProperty.objects.create(vocabulary=self, uri=row[0].encode("utf-8"), domain=row[1].encode("utf-8"), range=row[2].encode("utf-8"), label=label.encode("utf-8"), description=description.encode("utf-8"))
+                prp = VocabularyProperty.objects.create(vocabulary=self, uri=row[0].encode("utf-8"), domain=row[1].encode("utf-8"), range=row[2].encode("utf-8"), label=label.encode("utf-8"), description=description.encode("utf-8"), parent=row[5])
             except UnicodeEncodeError:
-                prp = VocabularyProperty.objects.create(vocabulary=self, uri=row[0], domain=row[1], range=row[2], label=get_label_by_uri(row[0]), description="")
+                prp = VocabularyProperty.objects.create(vocabulary=self, uri=row[0], domain=row[1], range=row[2], label=get_label_by_uri(row[0]), description="", parent=row[5])
             prp.save()
 
     def __unicode__(self):
@@ -241,30 +248,58 @@ class VocabularyClass(models.Model):  # A class inside an RDF vocabulary
 
 
 class VocabularyProperty(models.Model):  # A property inside an RDF vocabulary
-    vocabulary = models.ForeignKey(Vocabulary)
-    uri = models.URLField(max_length=2048, blank=False, null=True)
-    domain = models.URLField(max_length=2048, blank=False, null=True)
-    range = models.URLField(max_length=2048, blank=False, null=True)
-    label = models.CharField(max_length=256, blank=False, null=False)
-    description = models.CharField(max_length=8196, blank=True, null=True)
+    vocabulary = models.ForeignKey(Vocabulary)  # the vocabulary defining the property
+    uri = models.URLField(max_length=2048, blank=False, null=True)  # the URI of the property
+    parent = models.URLField(max_length=2048, blank=True, null=True)  # the parent property if it is a sub-property
+    domain = models.URLField(max_length=2048, blank=True, null=True)  # the domain URI
+    range = models.URLField(max_length=2048, blank=True, null=True)  # the range URI
+    label = models.CharField(max_length=256, blank=False, null=False)  # property label
+    description = models.CharField(max_length=8196, blank=True, null=True)  # long description
 
     def __unicode__(self):
         return self.label
 
+    # Gets the domain of the property
+    # For sub-properties without a domain defined, it returns the domain of its parent
+    def domain_uri(self):
+        if self.domain:
+            return self.domain
+        else:
+            parent_objects = VocabularyProperty.objects.filter(uri=self.parent)
+            if parent_objects:
+                return parent_objects[0].domain_uri()
+
+        return ""
+
+    # Gets the range of the property
+    # For sub-properties without a range defined, it returns the range of its parent
+    def range_uri(self):
+        if self.range:
+            return self.range
+        else:
+            parent_objects = VocabularyProperty.objects.filter(uri=self.parent)
+            if parent_objects:
+                return parent_objects[0].range_uri()
+
+        return ""
+
+    # Returns the domain as a VocabularyClass instance (if it exists)
     def get_domain_object(self):
-        domain_objects = VocabularyClass.objects.filter(uri=self.domain)
+        domain_objects = VocabularyClass.objects.filter(uri=self.domain_uri())
         if domain_objects:
             return domain_objects[0]
         else:
             return None
 
+    # Returns the range as a VocabularyClass instance (if it exists)
     def get_range_object(self):
-        range_objects = VocabularyClass.objects.filter(uri=self.range)
+        range_objects = VocabularyClass.objects.filter(uri=self.range_uri())
         if range_objects:
             return range_objects[0]
         else:
             return None
 
+    # Gets the redirect url when domain is clicked
     def get_domain_url(self):
         domain_object = self.get_domain_object()
         if domain_object:
@@ -272,6 +307,7 @@ class VocabularyProperty(models.Model):  # A property inside an RDF vocabulary
         else:
             return self.domain
 
+    # Gets the redirect url when range is clicked
     def get_range_url(self):
         range_object = self.get_range_object()
         if range_object:
