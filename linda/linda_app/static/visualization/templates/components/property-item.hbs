@@ -1,3 +1,6 @@
-<div class="areaItem">{{item.label}} <a {{action 'remove' item}}> x </a> {{view Ember.Checkbox checked=item.groupBy }}</div>
-
-                          
+<div class="large-10 medium-10 columns area-item-label truncate">
+    {{item.label}}
+</div>
+<div class="large-2 medium-2 columns area-item-remove"> 
+    <a {{action 'remove' item}}> x </a>
+</div>   

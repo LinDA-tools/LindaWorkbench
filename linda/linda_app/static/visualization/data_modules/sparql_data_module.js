@@ -1,11 +1,9 @@
 var sparql_data_module = function() {
 
     function sparqlProxyQuery(endpoint, query) {
-        console.log(query);
-
-        var promise = Ember.$.getJSON('http://' + window.location.host+ '/visualizations/visual/api/sparql-proxy/' + endpoint + "/" + encodeURIComponent(query));
+        var promise = Ember.$.getJSON('http://'+window.location.hostname+':3002/sparql-proxy/' + endpoint + "/" + encodeURIComponent(query));
         return promise.then(function(result) {
-            console.log("SPARQL RESULT:");
+            console.log("SPARQL DATA MODULE - SPARQL QUERY RESULT");
             console.dir(result);
             return result;
         });
@@ -38,7 +36,7 @@ var sparql_data_module = function() {
         query += ' GRAPH <' + graph + '>';
         query += ' {';
         query += '  SELECT ?class ?classLabel COUNT(?x) as ?classSize';
-        query += '  WHERE'
+        query += '  WHERE';
         query += '  {';
         query += '   ?x rdf:type ?class .';
         query += '   ?x ?property ?y .';
@@ -50,6 +48,9 @@ var sparql_data_module = function() {
         query += ' }';
         query += '}';
         query += 'ORDER BY DESC(?classSize)';
+
+        console.log("SPARQL DATA MODULE - QUERY CLASSES");
+        console.dir(query);
 
         return sparqlProxyQuery(endpoint, query).then(function(result) {
             var classes = [];
@@ -100,6 +101,9 @@ var sparql_data_module = function() {
         query += '  }';
         query += '}';
 
+        console.log("SPARQL DATA MODULE - QUERY PROPERTIES: ");
+        console.dir(query);
+
         return sparqlProxyQuery(endpoint, query).then(function(result) {
             var properties = [];
             for (var i = 0; i < result.length; i++) {
@@ -125,50 +129,6 @@ var sparql_data_module = function() {
         });
     }
 
-    function queryInstances(_location, _class, propertyPaths) {
-        var graph = _location.graph;
-        var endpoint = encodeURIComponent(_location.endpoint);
-
-        var query = "";
-
-        query += 'PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> ';
-        query += 'PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> ';
-
-        query += 'SELECT DISTINCT';
-
-        for (var i = 0; i < propertyPaths.length; i++) {
-            query += ' ?y' + i;
-        }
-
-        query += ' WHERE ';
-        query += ' { ';
-        query += '  GRAPH <' + graph + '> ';
-        query += '  { ';
-        query += '   ?x0 rdf:type <' + _class + '> . ';
-
-        for (var j = 0; j < propertyPaths.length; j++) {
-            var path = propertyPaths[j];
-            query += ' { ';
-            for (var i = 0; i < path.length; i++) {
-                if (i < (path.length - 1)) {
-                    query += '   ?x' + i + ' <' + path[i] + '> ?x' + (i + 1) + ' . ';
-                } else {
-                    query += '   ?x' + i + ' <' + path[i] + '> ?y' + j + ' . ';
-                }
-            }
-            query += ' } ';
-
-            if (j < (propertyPaths.length - 1)) {
-                query += ' UNION ';
-            }
-        }
-
-        query += '   } ';
-        query += ' } ';
-
-        return sparqlProxyQuery(endpoint, query);
-    }
-
     function parse(location, selection) {
         var dimension = selection.dimension;
         var multidimension = selection.multidimension;
@@ -184,13 +144,14 @@ var sparql_data_module = function() {
             var dimension_ = dimension.concat(multidimension);
             result = query(location, dimension_);
         }
-
+        console.log('SPARQL DATA MODULE - PARSED RESULT');
+        console.dir(result);
 
         return result;
     }
 
     function query_group(location, dimension, multidimension, group) {
-       var graph = location.graph;
+        var graph = location.graph;
         var endpoint = encodeURIComponent(location.endpoint);
         var dimension = dimension[0];
         var multidimension = multidimension[0];
@@ -212,11 +173,11 @@ var sparql_data_module = function() {
                 columnHeaders.push(groupInstance.label);
                 selectedVariablesArray.push("z" + i);
 
-                optionals += '\nOPTIONAL {\n'
+                optionals += '\nOPTIONAL {\n';
                 optionals += ' ?x' + i + ' rdf:type <' + class_ + '> .\n';
-                optionals += ' ?x' + i + ' <' + dimension.id + '> ?d.\n'
-                optionals += ' ?x' + i + ' <' + multidimension.id + '> ?z' + i + '.\n'
-                optionals += ' ?x' + i + ' <' + group.id + '> <' + groupInstance.id + '>.\n'
+                optionals += ' ?x' + i + ' <' + dimension.id + '> ?d.\n';
+                optionals += ' ?x' + i + ' <' + multidimension.id + '> ?z' + i + '.\n';
+                optionals += ' ?x' + i + ' <' + group.id + '> <' + groupInstance.id + '>.\n';
                 optionals += '}\n';
             }
 
@@ -229,48 +190,15 @@ var sparql_data_module = function() {
                     ' + optionals + '\n\
                 }\n\
             }';
+
+            console.log('SPARQL DATA MODULE - QUERY FOR GROUPES');
+            console.dir(query);
+
             return sparqlProxyQuery(endpoint, query);
         }).then(function(queryResult) {
             return convert(queryResult, columnHeaders, selectedVariablesArray);
         });
 
-    }
-
-    function query(location, dimensions) {
-        var graph = location.graph;
-        var endpoint = encodeURIComponent(location.endpoint);
-        var columnHeaders = [];
-        var optionals = "";
-        var selectVariables = "";
-        var selectedVariablesArray = [];
-        var class_ = dimensions[0].parent[0];
-
-        for (var i = 0; i < dimensions.length; i++) {
-            var dimension = dimensions[i]
-
-            selectVariables += " ?z" + i;
-            columnHeaders.push(dimension.label);
-            selectedVariablesArray.push("z" + i);
-
-
-            optionals += '\n\
-                    ?x' + ' <' + dimension.id + '> ?z' + i + '.\n';
-        }
-
-        var query = '\n\
-            PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n\
-            PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n\
-            SELECT DISTINCT ' + selectVariables + '\n\
-            WHERE {\n\
-                GRAPH <' + graph + '> {\n\
-                     ?x' + ' rdf:type <' + class_ + '>.\n\
-                     ' + optionals + '\n\
-                }\n\
-            }';
-
-        return sparqlProxyQuery(endpoint, query).then(function(queryResult) {
-            return convert(queryResult, columnHeaders, selectedVariablesArray);
-        });
     }
 
     function group_by(endpoint, graph, groupProperty) {
@@ -305,9 +233,64 @@ var sparql_data_module = function() {
                 });
             }
             return groupInstances;
-        })
+        });
     }
 
+    function query(location, dimensions) {
+        var graph = location.graph;
+        var endpoint = encodeURIComponent(location.endpoint);
+        var columnHeaders = [];
+        var optionals = "";
+        var selectVariables = "";
+        var selectedVariablesArray = [];
+        var class_ = dimensions[0].parent[0];
+
+        var nameExists = {}
+
+        for (var i = 0; i < dimensions.length; i++) {
+            var dimension = dimensions[i];
+            var path = dimension.parent;
+
+            selectVariables += " ?z" + i;
+            var header;
+            if (!nameExists[dimension.label]) {
+                header = dimension.label;
+            } else {
+                header = dimension.label + " " + i;
+            }
+            nameExists[header] = true;
+            columnHeaders.push(header);
+            selectedVariablesArray.push("z" + i);
+
+            for (var j = 1; j < path.length; j++) {
+                if (j < path.length - 1) {
+                    optionals += '\n\
+                    ?x' + (j - 1) + ' <' + path[j] + '> ?x' + j + '.\n';
+                } else {
+                    optionals += '\n\
+                    ?x' + (j - 1) + ' <' + path[j] + '> ?z' + i + '.\n';
+                }
+            }
+        }
+
+        var query = '\n\
+            PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n\
+            PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n\
+            SELECT DISTINCT ' + selectVariables + '\n\
+            WHERE {\n\
+                GRAPH <' + graph + '> {\n\
+                     ?x0' + ' rdf:type <' + class_ + '>.\n\
+                     ' + optionals + '\n\
+                }\n\
+            }';
+
+        console.log('SPARQL DATA MODULE - DATA QUERY FOR VISUALIZATION CONFIGURATION');
+        console.dir(query);
+
+        return sparqlProxyQuery(endpoint, query).then(function(queryResult) {
+            return convert(queryResult, columnHeaders, selectedVariablesArray);
+        });
+    }
 
     function convert(queryResults, columnHeaders, selectedVariablesArray) {
         var result = [];
@@ -323,20 +306,15 @@ var sparql_data_module = function() {
                     continue;
                 }
                 var value = simplifyURI(val);
-                var parsedValue = parseFloat(value.replace(',', ''));
-                if (_.isNaN(parsedValue) || _.isUndefined(parsedValue)) {
-                    parsedValue = value;
-                }
-                record.push(parsedValue);
+                record.push(toScalar(value));
             }
             result.push(record);
-       }
+        }
         return result;
     }
 
     return {
         queryData: queryData,
-        queryInstances: queryInstances,
         parse: parse
     };
 }(); 

@@ -1,43 +1,44 @@
 var tree_data = function() {
-    // first level: csv dummy or classes second ... n level: class properties or columns
-    // iterate over subsets (in case of csv is just one subset; in case of RDF the subset are the classes        
-    function create(dataInfo) {
+
+    /* first level: data source
+     *  second level: csv dummy or classes 
+     *  third ... n level: class properties or columns
+     *  Iterate over subsets (in case of csv is just one subset; in case of RDF the subset are the classes */
+    function create(datasource) {
+        console.log('Creating tree content ...');
+        console.dir(datasource);
+
         var treeContent = Ember.Object.create({
-            ID: '0000',
             label: 'ROOT',
             children: [],
             type: 'root',
-            selected: false,
             getChildren: function(node) {
                 return node.children;
             },
             data: {}
         });
 
-        for (var i = 0; i < dataInfo.length; i++) { 
-            var datasource = dataInfo[i];
-            var node = Ember.Object.create({
-                ID: datasource.get('id'),
-                label: datasource.get('title'),
-                expanded: false,
-                selected: false,
-                children: [],
-                type: "datasource",
-                getChildren: function(node) {
-                    var result = DS.PromiseArray.create({
-                        promise: getNodeChildren(node)
-                    });
-                    return result;
-                },
-                data: {
-                    parent: [],
-                    label: datasource.get('title'),
-                    location: datasource.get('location'),
-                    format: datasource.get('format')
-                }
-            });
-            treeContent.children.push(node);
-        }
+        var node = Ember.Object.create({
+            label: datasource.name,
+            expanded: true,
+            draggable: "false",
+            children: [],
+            type: "datasource",
+            getChildren: function(node) {
+                var result = DS.PromiseArray.create({
+                    promise: getNodeChildren(node)
+                });
+                return result;
+            },
+            data: {
+                parent: [],
+                label: datasource.name,
+                location: datasource.location,
+                format: datasource.format
+            }
+        });
+        treeContent.children.push(node);
+
         return treeContent;
     }
 
@@ -47,10 +48,9 @@ var tree_data = function() {
         for (var i = 0; i < subsets.length; i++) {
             var subset = subsets[i];
             children.push(Ember.Object.create({
-                ID: subset.id,
                 label: subset.label,
-                draggable: false,
-                selected: false,
+                expanded: (subsets.length === 1),
+                draggable: (parent.length > 0) ? "true" : "false", // only properties are draggable, classes are not
                 children: [],
                 type: "item",
                 parentNode: node,

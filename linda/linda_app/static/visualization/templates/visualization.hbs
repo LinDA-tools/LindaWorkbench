@@ -1,0 +1,59 @@
+<div class="row box">
+    <div class="large-5 medium-3 columns">
+        <!-- Visualization Selection -->        
+        <div class="row inner_box">
+            <div class="inner_title_box">
+                <h7>SELECT VISUALIZATION</h7>
+            </div> 
+            <div class="sliderWrapper">
+                {{view App.SlideShowView slides=controller.recommendations}}
+            </div>    
+        </div>                    
+        <!-- Visualization Configuration - Left: Tree with data source; Right: dimension mapping -->        
+        <div class="row inner_box">
+            <div class="inner_title_box">
+                <h7>CONFIGURE VISUALIZATION</h7>
+            </div>                    
+            {{view App.ConfigureVisualizationView 
+                    strOptionsConfVis=controller.structureOptions 
+                    confVis=controller.visualizationConfiguration
+                    dsConfVis=controller.datasource
+                    treeContent=controller.treeContent}}
+        </div>                        
+        <!-- Visualization Customization -->   
+        <div class="row inner_box">    
+            <div class="inner_title_box">
+                <h7>CUSTOMIZE VISUALIZATION</h7>
+            </div> 
+            <div class="row">                        
+                {{view App.VisualizationOptionsView 
+                        options=controller.layoutOptions 
+                        config=controller.visualizationConfiguration
+                        tagName="ul"
+                        class="small-block-grid-2 medium-block-grid-3 large-block-grid-5" }}                  
+            </div>      
+        </div>  
+    </div>                                          
+          
+    <div class="large-7 medium-9 columns">       
+        <div class="inner_box">
+            <!-- Visualization -->
+            <div class="row inner_box">
+                <div id="visualization"></div>               
+            </div 
+            <!-- Visualization Consumption -->                       
+            <div class="row">
+                <div class="large-4 medium-4 columns">      
+                    {{partial 'export'}}
+                </div> 
+                <div class="large-4 medium-4 columns">      
+                    {{partial 'save'}}
+                </div> 
+                <div class="large-4 medium-4 columns">      
+                    {{partial 'publish'}}
+                </div> 
+            </div>  
+        </div>
+    </div>   
+
+</div>

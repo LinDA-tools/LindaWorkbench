@@ -1,4 +1,4 @@
-<div {{bind-attr draggable="node.draggable:true"}}>
+<div>
     <span {{bind-attr class=":toggle-icon node.isLeaf:leaf:"}} {{action toggle}}>
         {{#if isExpanded}}
             &#x25BC;
@@ -6,14 +6,15 @@
             &#x25B6;
         {{/if}}
     </span>
-
-    {{input type="checkbox" checked=node.selected}}
-
-    <span {{action toggle}}>
+    
+<!--How drag and drop works: a node of a tree-node has a property 'draggable'.
+If this property is set 'true' (see tree_data_module) then the node.label, 
+or more specific the span becomes draggable: -->
+    <span {{action toggle}} {{bind-attr draggable=node.draggable}}>
         {{node.label}}
     </span>
 </div>
 
 {{#if isExpanded}}
-    {{tree-branch node=node selection=selection expansion=expansion}}
+    {{tree-branch node=node}}
 {{/if}}

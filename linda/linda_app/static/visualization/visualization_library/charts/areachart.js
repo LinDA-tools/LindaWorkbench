@@ -1,109 +1,115 @@
-google.load('visualization', '1', {packages: ['corechart']});
+/*
+ * DIMPLE CHART LIBRARY
+ * DATA FORMAT: [{"column1":"value1", "column2":"value2", ...}, {"column1":"value3", "column2":"value4", ...}, ...]
+ * 
+ */
 
 var areachart = function() {
 
-    var structureOptionsCSV = {
-        axis: {label: "Axes", template: 'box', suboptions: {
-                xAxis: {label: "Horizontal axis", template: 'dimension'},
-                yAxis: {label: "Vertical axis", template: 'multidimension'}
-            }
-        }
-    };
-    
-    var structureOptionsRDF= {
-        axis: {label: "Axes", template: 'tabgroup', suboptions: {
-                xAxis: {label: "Horizontal axis", template: 'dimension'},
-                yAxis: {label: "Vertical axis", template: 'multidimensionGrouped'}
-            }
-        }
-    };
+    function draw(configuration, visualisationContainerID) {
+        console.log("### INITIALIZE VISUALISATION - AREA CHART");
 
-    var tuningOptions = {
-        title: {label: "Title", template: 'textField'},
+        var container = $('#' + visualisationContainerID);
+        container.empty();
+
+        if (!(configuration.dataModule && configuration.datasourceLocation
+                && configuration.xAxis && configuration.yAxis
+                && configuration.orderBy)) {
+            return $.Deferred().resolve().promise();
+        }
+
+        if ((configuration.xAxis.length === 0) || (configuration.yAxis.length === 0)) {
+            return $.Deferred().resolve().promise();
+        }
+
+        var dataModule = configuration.dataModule;
+        var location = configuration.datasourceLocation;
+
+        var selection = {
+            dimension: configuration.yAxis, // measure
+            multidimension: configuration.xAxis.concat(configuration.addedSeries).concat(configuration.orderBy),
+            group: [],
+            gridlines: configuration.gridlines,
+            hLabel: configuration.hLabel,
+            vLabel: configuration.vLabel,
+            ticks: configuration.ticks,
+            tooltip: configuration.tooltip
+        };
+
+        console.log("VISUALISATION SELECTION FOR AREA CHART:");
+        console.dir(selection);
         
-        style: {label: "Style", template: 'selectField', 
-            values: [{label: "Normal", id: "normal"}, {label: "Stacked", id: "stacked"}]
-        },
+        var svg = dimple.newSvg('#' + visualisationContainerID, container.width(), container.height());
 
-        axis: {label: "Axes", template: 'box', suboptions: {
-                vLabel: {label: "Label (V)", template: 'textField'},
-                hLabel: {label: "Label (H)", template: 'textField'},
-                grid: {label: "Grid", template: 'textField'},
-                scale: {label: "Scale", template: 'selectField', 
-                    values: [{label: "Linear", id: "linear"}, {label: "Logarithmic", id: "logarithmic"}],
-                    defaults:{id:"linear"}
-                }
+        return dataModule.parse(location, selection).then(function(inputData) {
+            var columnsHeaders = inputData[0];
+            var data = rows(inputData);
+            console.log("GENERATE INPUT DATA FORMAT FOR AREA CHART");
+            console.dir(data);
+
+            var chart = new dimple.chart(svg, data);
+
+            var x = chart.addCategoryAxis("x", columnsHeaders[1]); // x axis: ordinal values
+            var y = chart.addMeasureAxis("y", columnsHeaders[0]); // y axis: one measure (scale)  
+
+            var series = null;
+
+            if (configuration.orderBy.length > 0) {
+                x.addOrderRule(columnsHeaders[columnsHeaders.length - 1]); // ordered values on x axis 
+            } else if (configuration.addedSeries.length > 0) {
+                series = columnsHeaders.slice(2);
             }
-        }, 
-        color: {label: "Area colors", template: 'box', suboptions: {
-                yAxisColors: {template: 'multiAxisColors', axis: 'yAxis'} // TODO
+
+            chart.addSeries(series, dimple.plot.area);
+            chart.addLegend("10%", "5%", "80%", 20, "right");
+            
+            //gridlines tuning
+            x.showGridlines = selection.gridlines;
+            y.showGridlines = selection.gridlines;
+            //titles
+            if (selection.hLabel ===""){
+                selection.hLabel = columnsHeaders[1]; 
             }
-        }
-    };
-
-    var chart = null;
-    var data = null;
-
-    function initialize(input, divId) {
-        // Create and populate the data table.
-        data = google.visualization.arrayToDataTable(input);
-        console.log('INITIALIZE');
-        console.dir(input);
-        chart = new google.visualization.AreaChart(document.getElementById(divId));
-    }
-
-    function draw(config) {
-        // Create and draw the skeleton of the visualization.
-        var view = new google.visualization.DataView(data);
-        var columns = [config.axis.xAxis.id];
-        console.log('DRAW - config.axis.xAxis.id'+ config.axis.xAxis.id);
-        var yAxes = config.axis.yAxis.multiAxis;
-                console.dir(yAxes);
-
-        for (var i = 0; i < yAxes.length; i++) {
-            console.log('yAxis: '+yAxes[i].id);
-            columns.push(yAxes[i].id);
-        }
-        
-        view.setColumns(columns);
-
-        chart.draw(view,
-                {title: config.title,
-                    width: 600, height: 400}
-        );
-    }
-
-  function drawRDF() {
-        chart.draw(data,
-                { width: 600, height: 400 }
-        );
+            if (selection.vLabel ===""){
+                selection.vLabel = columnsHeaders[0];
+            }
+            x.title = selection.hLabel;
+            y.title = selection.vLabel;
+            //ticks
+            x.ticks = selection.ticks;
+            y.ticks = selection.ticks;
+            //tooltip
+            if (selection.tooltip === false){
+                chart.addSeries(series, dimple.plot.area).addEventHandler("mouseover",function(){});
+            }
+            
+            chart.draw();
+        });
     }
 
     function tune(config) {
-        // Tune the visualization.
-        chart.draw(data,
-                {title: config.title,
-                    width: 600, height: 400,
-                    vAxis: {title: config.axis.vLabel,
-                        logScale: (config.axis.scale.id === 'logarithmic') ? true : false,
-                        gridlines: {
-                            count: config.axis.grid
-                        }
-                    },
-                    hAxis: {title: config.axis.hLabel},
-                    isStacked: (config.style.id === 'stacked') ? true : false,
-                }
-        );
+        console.log("### TUNE AREA CHART");
+    }
+
+    function export_as_PNG() {
+        return exportC3.export_PNG();
+    }
+
+    function export_as_SVG() {
+        return exportC3.export_SVG();
+    }
+
+    function get_SVG() {
+        setTimeout(function() {
+            return exportC3.get_SVG();
+        }, 2000);
     }
 
     return {
-        structureOptionsCSV: structureOptionsCSV,
-        structureOptionsRDF: structureOptionsRDF,
-
-        tuningOptions: tuningOptions,
-        initialize: initialize,
+        export_as_PNG: export_as_PNG,
+        export_as_SVG: export_as_SVG,
+        get_SVG: get_SVG,
         draw: draw,
-        drawRDF: drawRDF,
         tune: tune
     };
 }();
