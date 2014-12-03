@@ -6,9 +6,9 @@
 
     <span class="description">{{property.description|striptags|default:"No description available"}}</span><br/>
 
-    {% if property.parent %}
+    {% if property.parent_uri %}
         <span class="subproperty">{% trans "Sub-property of"%}: <a href="{{property.get_parent_url}}" target="_blank">
-        &lt;{{property.parent}}&gt;</a></span><br/>
+        &lt;{{property.parent_uri}}&gt;</a></span><br/>
     {% endif %}
 
     {% if property.get_domain_url %}
@@ -22,7 +22,7 @@
                 {% endif %}
             </a></span><br/>
         {% else %}
-            <a href="{{property.get_domain_url}}" target="_blank">&lt;{{property.domain_uri}}&gt;</a></span><br/>
+            <a href="{{property.get_domain_url}}" target="_blank">&lt;{{property.get_domain_url}}&gt;</a></span><br/>
         {% endif %}
     {% endif %}
 
@@ -37,7 +37,7 @@
                 {% endif %}
             </a></span><br/>
         {% else %}
-            <a href="{{property.get_range_url}}" target="_blank">&lt;{{property.range_uri}}&gt;</a></span><br/>
+            <a href="{{property.get_range_url}}" target="_blank">&lt;{{property.get_range_url}}&gt;</a></span><br/>
         {% endif %}
     {% endif %}
 

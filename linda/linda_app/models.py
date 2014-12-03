@@ -261,7 +261,7 @@ class VocabularyClass(models.Model):  # A class inside an RDF vocabulary
 class VocabularyProperty(models.Model):  # A property inside an RDF vocabulary
     vocabulary = models.ForeignKey(Vocabulary)  # the vocabulary defining the property
     uri = models.URLField(max_length=2048, blank=False, null=True)  # the URI of the property
-    parent = models.URLField(max_length=2048, blank=True, null=True)  # the parent property if it is a sub-property
+    parent_uri = models.URLField(max_length=2048, blank=True, null=True)  # the parent property if it is a sub-property
     domain = models.URLField(max_length=2048, blank=True, null=True)  # the domain URI
     range = models.URLField(max_length=2048, blank=True, null=True)  # the range URI
     label = models.CharField(max_length=256, blank=False, null=False)  # property label
@@ -312,10 +312,10 @@ class VocabularyProperty(models.Model):  # A property inside an RDF vocabulary
 
     # Returns the parent as a VocabularyProperty instance (if it exists)
     def get_parent_object(self):
-        if not self.parent:
+        if not self.parent_uri:
             return None
 
-        parent_objects = VocabularyProperty.objects.filter(uri=self.parent)
+        parent_objects = VocabularyProperty.objects.filter(uri=self.parent_uri)
         if parent_objects:
             return parent_objects[0]
         else:
@@ -339,14 +339,14 @@ class VocabularyProperty(models.Model):  # A property inside an RDF vocabulary
 
     # Gets the redirect url when parent property is clicked
     def get_parent_url(self):
-        if not self.parent:
+        if not self.parent_uri:
             return ""
 
         parent_object = self.get_parent_object()
         if parent_object:
             return '/property/' + str(parent_object.id) + '/'
         else:
-            return self.parent
+            return self.parent_uri
 
 Vocabulary.property = property(lambda d: VocabularyProperty.objects.get_or_create(vocabulary=d)[0])
 

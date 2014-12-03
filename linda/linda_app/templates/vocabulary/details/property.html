@@ -26,7 +26,7 @@
 
         <p class="description">{{property.description|striptags|default:"No description available"}}</p>
 
-        {% if property.parent %}
+        {% if property.parent_uri %}
             <h2>{% trans "Sub-property of" %}</h2>
                 {% if property.get_parent_object %}
                     <div class="property-parent-class">
@@ -35,7 +35,7 @@
                         {% endwith %}
                     </div>
                 {% else %}
-                     <p class="parent-plain">&lt;{{property.parent}}&gt; <a href="{{property.parent}}" class="button blue" target="_blank">{% trans "Visit definition page"%}</a></p>
+                     <p class="parent-plain">&lt;{{property.parent_uri}}&gt; <a href="{{property.parent_uri}}" class="button blue" target="_blank">{% trans "Visit definition page"%}</a></p>
                 {% endif %}
         {% endif %}
 
