@@ -166,8 +166,10 @@ class Vocabulary(models.Model):
         # Store the classes in the database
 
         for row in q_classes.result:
-            if VocabularyClass.objects.filter(uri=row[0]):  # skip already existing classes
+            if not row[0].startswith(self.preferredNamespaceUri):
+                # don't allow vocabularies define classes outside of their scope
                 continue
+
             if row[1]:
                 label = row[1]
             else:
@@ -194,7 +196,7 @@ class Vocabulary(models.Model):
                 WHERE {
                     {?property rdfs:domain ?domain} UNION {?property rdfs:subPropertyOf ?parent}.
                     OPTIONAL {
-                        ?property rdfs:range ?range
+                        ?property rdfs:range ?range.
                         ?property rdfs:label ?propertyLabel.
                         ?property rdfs:comment ?propertyComment.
                     }
@@ -202,6 +204,10 @@ class Vocabulary(models.Model):
 
         # Store the properties in the database
         for row in q_properties.result:
+            if not row[0].startswith(self.preferredNamespaceUri):
+                # don't allow vocabularies define properties outside of their scope
+                continue
+
             if VocabularyProperty.objects.filter(uri=row[0]):  # skip already existing properties
                 continue
 
@@ -331,6 +337,7 @@ class VocabularyProperty(models.Model):  # A property inside an RDF vocabulary
         else:
             return self.range_uri()
 
+    # Gets the redirect url when parent property is clicked
     def get_parent_url(self):
         if not self.parent:
             return ""
