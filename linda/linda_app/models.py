@@ -170,6 +170,17 @@ class Vocabulary(models.Model):
                 # don't allow vocabularies define classes outside of their scope
                 continue
 
+            # update label for class that exists
+            class_objects = VocabularyClass.objects.filter(uri=row[0])
+            if class_objects:
+                label = row[1].encode("utf-8")
+                class_object = class_objects[0]
+                if (label and (not class_object.label)) or (label and row[1].language == 'en'):
+                    class_object.label = label
+                    class_object.save()
+
+                continue
+
             if row[1]:
                 label = row[1]
             else:
@@ -193,14 +204,25 @@ class Vocabulary(models.Model):
                                 (COALESCE(?propertyLabel, "") AS ?pLabel)
                                 (COALESCE(?propertyComment, "") AS ?pComment)
                                 (COALESCE(?parent, "") AS ?p)
-                WHERE {
-                    {?property rdfs:domain ?domain} UNION {?property rdfs:subPropertyOf ?parent}.
+                WHERE {{
+                    ?property rdfs:subPropertyOf ?parent.
                     OPTIONAL {
+                        ?property rdfs:domain ?domain.
                         ?property rdfs:range ?range.
                         ?property rdfs:label ?propertyLabel.
                         ?property rdfs:comment ?propertyComment.
                     }
-                }""")
+                }
+                UNION {
+                    ?property rdfs:domain ?domain.
+                    ?property rdfs:range ?range.
+                    OPTIONAL {
+                        {?property rdfs:subPropertyOf ?parent}
+                        ?property rdfs:label ?propertyLabel.
+                        ?property rdfs:comment ?propertyComment.
+                    }
+                }}
+                """)
 
         # Store the properties in the database
         for row in q_properties.result:
@@ -208,7 +230,15 @@ class Vocabulary(models.Model):
                 # don't allow vocabularies define properties outside of their scope
                 continue
 
-            if VocabularyProperty.objects.filter(uri=row[0]):  # skip already existing properties
+            # update label for properties that exist
+            property_objects = VocabularyClass.objects.filter(uri=row[0])
+            if property_objects:
+                label = row[3].encode("utf-8")
+                property_object = property_objects[0]
+                if (label and (not property_object.label)) or (label and row[3].language == 'en'):
+                    property_object.label = label
+                    property_object.save()
+
                 continue
 
             if row[3]:
@@ -220,9 +250,9 @@ class Vocabulary(models.Model):
             else:
                 description = ""
             try:
-                prp = VocabularyProperty.objects.create(vocabulary=self, uri=row[0].encode("utf-8"), domain=row[1].encode("utf-8"), range=row[2].encode("utf-8"), label=label.encode("utf-8"), description=description.encode("utf-8"), parent=row[5])
+                prp = VocabularyProperty.objects.create(vocabulary=self, uri=row[0].encode("utf-8"), domain=row[1].encode("utf-8"), range=row[2].encode("utf-8"), label=label.encode("utf-8"), description=description.encode("utf-8"), parent_uri=row[5])
             except UnicodeEncodeError:
-                prp = VocabularyProperty.objects.create(vocabulary=self, uri=row[0], domain=row[1], range=row[2], label=get_label_by_uri(row[0]), description="", parent=row[5])
+                prp = VocabularyProperty.objects.create(vocabulary=self, uri=row[0], domain=row[1], range=row[2], label=get_label_by_uri(row[0]), description="", parent_uri=row[5])
             prp.save()
 
     def __unicode__(self):

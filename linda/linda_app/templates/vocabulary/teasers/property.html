@@ -7,8 +7,11 @@
     <span class="description">{{property.description|striptags|default:"No description available"}}</span><br/>
 
     {% if property.parent_uri %}
-        <span class="subproperty">{% trans "Sub-property of"%}: <a href="{{property.get_parent_url}}" target="_blank">
-        &lt;{{property.parent_uri}}&gt;</a></span><br/>
+        {% if property.get_parent_object %}
+            <span class="subproperty">{% trans "Sub-property of"%}: <a href="{{property.get_parent_url}}">{{property.get_parent_object.vocabulary.preferredNamespacePrefix}}:{{property.get_parent_object.label}}</a><br/>
+        {% else %}
+            <span class="subproperty">{% trans "Sub-property of"%}: <a href="{{property.get_parent_url}}" target="_blank">&lt;{{property.parent_uri}}&gt;</a></span><br/>
+        {% endif %}
     {% endif %}
 
     {% if property.get_domain_url %}
