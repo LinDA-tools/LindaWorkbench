@@ -14,7 +14,13 @@
     {% if property.get_domain_url %}
         <span class="domain">{% trans "Domain" %}:
         {% if property.get_domain_object %}
-            <a href="{{property.get_domain_url}}">{{property.get_domain_object.vocabulary.preferredNamespacePrefix}}:{{property.get_domain_object.label}}</a></span><br/>
+            <a href="{{property.get_domain_url}}">
+                {% if property.get_domain_object.label %}
+                    {{property.get_domain_object.vocabulary.preferredNamespacePrefix}}:{{property.get_domain_object.label}}
+                {% else %}
+                    &lt;{{property.get_domain_object.uri}}&gt;
+                {% endif %}
+            </a></span><br/>
         {% else %}
             <a href="{{property.get_domain_url}}" target="_blank">&lt;{{property.domain_uri}}&gt;</a></span><br/>
         {% endif %}
@@ -23,9 +29,15 @@
     {% if property.get_range_url %}
         <span class="range">{% trans "Range" %}:
         {% if property.get_range_object %}
-            <a href="{{property.get_domain_url}}">{{property.get_range_object.vocabulary.preferredNamespacePrefix}}:{{property.get_range_object.label}}</a></span><br/>
+            <a href="{{property.get_range_url}}">
+                {% if property.get_range_object.label %}
+                    {{property.get_range_object.vocabulary.preferredNamespacePrefix}}:{{property.get_range_object.label}}
+                {% else %}
+                    &lt;{{property.get_range_object.uri}}&gt;
+                {% endif %}
+            </a></span><br/>
         {% else %}
-            <a href="{{property.get_domain_url}}" target="_blank">&lt;{{property.range_uri}}&gt;</a></span><br/>
+            <a href="{{property.get_range_url}}" target="_blank">&lt;{{property.range_uri}}&gt;</a></span><br/>
         {% endif %}
     {% endif %}
 
