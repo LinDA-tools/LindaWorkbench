@@ -5,8 +5,20 @@
         class="uri">&lt;{{ property.uri }}&gt;</span>)<br/>
 
     <span class="description">{{property.description|striptags|default:"No description available"}}</span><br/>
-    <span class="domain">{% trans "Domain" %}: <a href="{{property.get_domain_url}}" target="_blank">
-        &lt;{{property.domain}}&gt;</a></span><br/>
-    <span class="range">{% trans "Range" %}: <a href="{{property.get_range_url}}" target="_blank">&lt;{{property.range}}&gt;</a></span><br/>
+
+    {% if property.parent %}
+        <span class="subproperty">{% trans "Sub-property of"%}: <a href="{{property.get_parent_url}}" target="_blank">
+        &lt;{{property.parent}}&gt;</a></span><br/>
+    {% endif %}
+
+    {% if property.get_domain_url %}
+        <span class="domain">{% trans "Domain" %}: <a href="{{property.get_domain_url}}" target="_blank">
+            &lt;{{property.domain_uri}}&gt;</a></span><br/>
+    {% endif %}
+
+    {% if property.get_range_url %}
+        <span class="range">{% trans "Range" %}: <a href="{{property.get_range_url}}" target="_blank">&lt;{{property.range_uri}}&gt;</a></span><br/>
+    {% endif %}
+
     <a href="/property/{{property.id}}/" class="button blue">{% trans "Explore" %}</a>  <a href="{{ property.vocabulary.get_absolute_url }}" class="button green">{% trans "Vocabulary" %}</a>
 </div>

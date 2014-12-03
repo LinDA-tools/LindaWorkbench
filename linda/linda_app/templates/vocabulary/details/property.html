@@ -26,27 +26,44 @@
 
         <p class="description">{{property.description|striptags|default:"No description available"}}</p>
 
-        <h2>{% trans "Domain" %}</h2>
-            {% if property.get_domain_object %}
-                <div class="property-domain-class">
-                    {% with class=property.get_domain_object %}
-                        {% include "vocabulary/teasers/class.html" %}
-                    {% endwith %}
-                </div>
-            {% else %}
-                <p class="domain-plain">&lt;{{property.domain}}&gt; <a href="{{property.domain}}" class="button blue" target="_blank">{% trans "Visit definition page"%}</a></p>
-            {% endif %}
+        {% if property.parent %}
+            <h2>{% trans "Sub-property of" %}</h2>
+                {% if property.get_parent_object %}
+                    <div class="property-parent-class">
+                        {% with property=property.get_parent_object %}
+                            {% include "vocabulary/teasers/property.html" %}
+                        {% endwith %}
+                    </div>
+                {% else %}
+                     <p class="parent-plain">&lt;{{property.parent}}&gt; <a href="{{property.parent}}" class="button blue" target="_blank">{% trans "Visit definition page"%}</a></p>
+                {% endif %}
+        {% endif %}
 
-        <h2>{% trans "Range" %}</h2>
-            {% if property.get_range_object %}
-                <div class="property-range-class">
-                    {% with class=property.get_range_object %}
-                        {% include "vocabulary/teasers/class.html" %}
-                    {% endwith %}
-                </div>
-            {% else %}
-                <p class="range-plain">&lt;{{property.range}}&gt; <a href="{{property.range}}" class="button blue" target="_blank">{% trans "Visit definition page"%}</a></p>
-            {% endif %}
+        {% if property.get_domain_url %}
+            <h2>{% trans "Domain" %}</h2>
+                {% if property.get_domain_object %}
+                    <div class="property-domain-class">
+                        {% with class=property.get_domain_object %}
+                            {% include "vocabulary/teasers/class.html" %}
+                        {% endwith %}
+                    </div>
+                {% else %}
+                    <p class="domain-plain">&lt;{{property.get_domain_url}}&gt; <a href="{{property.get_domain_url}}" class="button blue" target="_blank">{% trans "Visit definition page"%}</a></p>
+                {% endif %}
+        {% endif %}
+
+        {% if property.get_range_url %}
+            <h2>{% trans "Range" %}</h2>
+                {% if property.get_range_object %}
+                    <div class="property-range-class">
+                        {% with class=property.get_range_object %}
+                            {% include "vocabulary/teasers/class.html" %}
+                        {% endwith %}
+                    </div>
+                {% else %}
+                    <p class="range-plain">&lt;{{property.get_range_url}}&gt; <a href="{{property.get_range_url}}" class="button blue" target="_blank">{% trans "Visit definition page"%}</a></p>
+                {% endif %}
+        {% endif %}
     </content>
 </div>
 {% endblock %}

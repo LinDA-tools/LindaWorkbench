@@ -166,6 +166,8 @@ class Vocabulary(models.Model):
         # Store the classes in the database
 
         for row in q_classes.result:
+            if VocabularyClass.objects.filter(uri=row[0]):  # skip already existing classes
+                continue
             if row[1]:
                 label = row[1]
             else:
@@ -191,8 +193,8 @@ class Vocabulary(models.Model):
                                 (COALESCE(?parent, "") AS ?p)
                 WHERE {
                     {?property rdfs:domain ?domain} UNION {?property rdfs:subPropertyOf ?parent}.
-                    {?property rdfs:range ?range} UNION {?property rdfs:subPropertyOf ?parent}.
                     OPTIONAL {
+                        ?property rdfs:range ?range
                         ?property rdfs:label ?propertyLabel.
                         ?property rdfs:comment ?propertyComment.
                     }
@@ -200,6 +202,9 @@ class Vocabulary(models.Model):
 
         # Store the properties in the database
         for row in q_properties.result:
+            if VocabularyProperty.objects.filter(uri=row[0]):  # skip already existing properties
+                continue
+
             if row[3]:
                 label = row[3]
             else:
@@ -265,9 +270,9 @@ class VocabularyProperty(models.Model):  # A property inside an RDF vocabulary
         if self.domain:
             return self.domain
         else:
-            parent_objects = VocabularyProperty.objects.filter(uri=self.parent)
-            if parent_objects:
-                return parent_objects[0].domain_uri()
+            parent_object = self.get_parent_object()
+            if parent_object:
+                return parent_object.domain_uri()
 
         return ""
 
@@ -277,9 +282,9 @@ class VocabularyProperty(models.Model):  # A property inside an RDF vocabulary
         if self.range:
             return self.range
         else:
-            parent_objects = VocabularyProperty.objects.filter(uri=self.parent)
-            if parent_objects:
-                return parent_objects[0].range_uri()
+            parent_object = self.get_parent_object()
+            if parent_object:
+                return parent_object.range_uri()
 
         return ""
 
@@ -299,13 +304,24 @@ class VocabularyProperty(models.Model):  # A property inside an RDF vocabulary
         else:
             return None
 
+    # Returns the parent as a VocabularyProperty instance (if it exists)
+    def get_parent_object(self):
+        if not self.parent:
+            return None
+
+        parent_objects = VocabularyProperty.objects.filter(uri=self.parent)
+        if parent_objects:
+            return parent_objects[0]
+        else:
+            return None
+
     # Gets the redirect url when domain is clicked
     def get_domain_url(self):
         domain_object = self.get_domain_object()
         if domain_object:
             return '/class/' + str(domain_object.id) + '/'
         else:
-            return self.domain
+            return self.domain_uri()
 
     # Gets the redirect url when range is clicked
     def get_range_url(self):
@@ -313,7 +329,17 @@ class VocabularyProperty(models.Model):  # A property inside an RDF vocabulary
         if range_object:
             return '/class/' + str(range_object.id) + '/'
         else:
-            return self.range
+            return self.range_uri()
+
+    def get_parent_url(self):
+        if not self.parent:
+            return ""
+
+        parent_object = self.get_parent_object()
+        if parent_object:
+            return '/property/' + str(parent_object.id) + '/'
+        else:
+            return self.parent
 
 Vocabulary.property = property(lambda d: VocabularyProperty.objects.get_or_create(vocabulary=d)[0])
 
