@@ -1,7 +1,7 @@
 {% load i18n %}
 {% load app_filters %}
 
-{%if page_obj.num_pages > 1 %}
+{%if page_obj.paginator.num_pages > 1 %}
     <div class="pagination centered">
         {%if page_obj.has_previous %}
         <span class="prev align-left"><a href="?{% url_replace request page_param|default:'page' page_obj.number|add:'-1' %}"
