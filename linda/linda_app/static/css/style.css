@@ -242,9 +242,9 @@ header .site-title:hover {
     background: url('/static/images/menu.png') no-repeat;
 }
 
-header a {
+/*header a {
     padding-left: 52px;
-}
+}*/
 
 @media only screen and (max-width: 690px){
     #menu {
