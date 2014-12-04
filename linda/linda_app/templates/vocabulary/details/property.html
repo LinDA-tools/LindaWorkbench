@@ -25,7 +25,7 @@
         </div>
 
         {% if property.description %}
-            <p class="description">{{property.description|striptags|linebreaks}}</p>
+            <div class="description">{{property.description|striptags|linebreaks}}</div>
         {% endif %}
 
         {% if property.parent_uri %}

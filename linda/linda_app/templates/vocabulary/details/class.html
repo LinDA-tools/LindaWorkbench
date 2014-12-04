@@ -25,7 +25,7 @@
         </div>
 
         {% if class.description %}
-            <p class="description">{{class.description|striptags|linebreaks}}</p>
+            <div class="description">{{class.description|striptags|linebreaks}}</div>
         {% endif %}
 
         <h2>Has <strong>{{class.domain_of|length}}</strong> properties</h2>
