@@ -47,10 +47,14 @@ def terms(request):
 def sparql(request):
     params = {}
     params['mode'] = "sparql"
-    params['datasources'] = DatasourceDescription.objects.all()
+    params['datasources'] = list(DatasourceDescription.objects.all())
+    params['datasources'].insert(0,
+                                 DatasourceDescription(title="All private data dources", name="all", is_public=False
+                                                       , uri=LINDA_HOME + "sparql/all/", createdOn=datetime.today(),
+                                                       lastUpdateOn=datetime.today()))
     params['page'] = 'Sparql'
 
-    #get query parameter
+    # get query parameter
     if request.GET.get('q_id'):
         params['query'] = Query.objects.get(pk=request.GET.get('q_id'))
         if not params['query']:
@@ -60,18 +64,18 @@ def sparql(request):
 
 
 def site_search(request):
-    if not 'search_q' in request.GET:
+    if 'search_q' not in request.GET:
         return Http404
 
     q = request.GET.get('search_q')
 
-    #for vocabularies, classes & properties use elastic search
-    vocabularies =[]
+    # for vocabularies, classes & properties use elastic search
+    vocabularies = []
     for sqs in SearchQuerySet().models(Vocabulary).filter(content=q):
         if sqs.object:
             vocabularies.append(sqs.object)
 
-    classes =[]
+    classes = []
     for sqs in SearchQuerySet().models(VocabularyClass).filter(content=q):
         if sqs.object:
             classes.append(sqs.object)
@@ -81,7 +85,7 @@ def site_search(request):
         if sqs.object:
             properties.append(sqs.object)
 
-    #also search in datasources, queries and analytics
+    # also search in datasources, queries and analytics
     params = {'search_q': q,
               'datasources': DatasourceDescription.objects.filter(name__icontains=q),
               'queries': Query.objects.filter(description__icontains=q),
@@ -281,7 +285,7 @@ class VocabularyUpdateView(UpdateView):
 
         vocabularyForm = VocabularyUpdateForm(data, instance=oldVocabulary)
 
-        #Validate form
+        # Validate form
         if vocabularyForm.is_valid():
             vocabularyForm.save()
             return redirect("/vocabulary/" + kwargs.get('pk'))
@@ -315,12 +319,12 @@ class VocabularyVisualize(DetailView):
     def get_context_data(self, **kwargs):
         context = super(VocabularyVisualize, self).get_context_data(**kwargs)
 
-        #Parse rdf
+        # Parse rdf
         g = Graph()
         n3data = urllib.urlopen(context['vocabulary'].downloadUrl).read()
         g.parse(data=n3data, format='n3')
 
-        #Load subjects
+        # Load subjects
         subjects = {}
         objects = {}
         predicates = []
@@ -333,17 +337,17 @@ class VocabularyVisualize(DetailView):
             if (predicateName == "type") and (objectName == "Class"):
                 subjects[subject] = subjectName
 
-            if predicateName == "domain":  #property
+            if predicateName == "domain":  # property
                 objects[subject] = subjectName
                 subjects[object] = objectName
                 predicates.append((subject, predicate, object))
 
-            if predicateName == "subClassOf":  #Attribute type
+            if predicateName == "subClassOf":  # Attribute type
                 subjects[subject] = subjectName
                 subjects[object] = objectName
                 predicates.append((subject, predicate, object))
 
-            if predicateName == "range":  #Attribute type
+            if predicateName == "range":  # Attribute type
                 objects[subject] = subjectName + ": " + objectName
 
         context['subjects'] = subjects
@@ -396,7 +400,8 @@ class ClassListView(ListView):
     def get_queryset(self, **kwargs):
         v_id = self.request.GET.get('definedBy')
         if v_id:
-            qs = super(ClassListView, self).get_queryset().filter(vocabulary__id=v_id).order_by('-vocabulary__lodRanking')
+            qs = super(ClassListView, self).get_queryset().filter(vocabulary__id=v_id).order_by(
+                '-vocabulary__lodRanking')
         else:
             qs = super(ClassListView, self).get_queryset().order_by('-vocabulary__lodRanking')
         return qs
@@ -420,7 +425,8 @@ class PropertyListView(ListView):
     def get_queryset(self):
         v_id = self.request.GET.get('definedBy')
         if v_id:
-            qs = super(PropertyListView, self).get_queryset().filter(vocabulary__id=v_id).order_by('-vocabulary__lodRanking')
+            qs = super(PropertyListView, self).get_queryset().filter(vocabulary__id=v_id).order_by(
+                '-vocabulary__lodRanking')
         else:
             qs = super(PropertyListView, self).get_queryset().order_by('-vocabulary__lodRanking')
         return qs
@@ -488,7 +494,7 @@ def vocabulary_search(request):  # view for search in vocabularies - remembers s
                 if res.object.vocabulary.id == defined_by:
                     obj_set.append(res)
             except AttributeError:
-                continue # only return classes or properties
+                continue  # only return classes or properties
     else:
         defined_by = None
 
@@ -550,12 +556,12 @@ def rateDataset(request, pk, vt):
                         res['result'] = "You have already ranked this vocabulary."
                         code = 403
                     else:
-                        #Create ranking object
+                        # Create ranking object
                         vocabulary = Vocabulary.objects.get(id=vocid)
                         ranking = VocabularyRanking.objects.create(voter=request.user, vocabularyRanked=vocabulary,
                                                                    vote=voteSubmitted)
                         ranking.save()
-                        #Edit vocabulary ranking
+                        # Edit vocabulary ranking
                         vocabulary.votes = vocabulary.votes + 1
                         vocabulary.score = vocabulary.score + voteSubmitted
                         vocabulary.save()
@@ -568,7 +574,7 @@ def rateDataset(request, pk, vt):
         data = 'fail'
         code = 401
 
-    #Create the response
+    # Create the response
     mimetype = 'application/json'
     response = HttpResponse(data, mimetype)
     response.status_code = code
@@ -591,7 +597,7 @@ def postComment(request, pk):
                 res['result'] = "You must be logged in to comment."
                 code = 403
             else:
-                #Create and store the comment
+                # Create and store the comment
                 comment = VocabularyComments.objects.create(commentText=commentTxt,
                                                             vocabularyCommented=Vocabulary.objects.get(id=vocid),
                                                             user=request.user, timePosted=datetime.now())
@@ -605,7 +611,7 @@ def postComment(request, pk):
         data = 'fail'
         code = 401
 
-    #Create the response
+    # Create the response
     mimetype = 'application/json'
     response = HttpResponse(data, mimetype)
     response.status_code = code
@@ -620,19 +626,19 @@ def downloadRDF(request, pk, type):
     if not type in ("xml", "n3", "nt"):
         return HttpResponseNotFound("Invalid type.")
 
-    #Convert rdf to the appropriate type
+    # Convert rdf to the appropriate type
     g = Graph()
     n3data = urllib.urlopen(voc.downloadUrl).read()
     g.parse(data=n3data, format='n3')
 
-    #Return response
+    # Return response
     mimetype = "application/octet-stream"
     response = HttpResponse(g.serialize(format=type))
     response["Content-Disposition"] = "attachment; filename=%s.%s" % (voc.title_slug(), type)
     return response
 
 
-#Datasources
+# Datasources
 def datasources(request):
     params = {}
     params['page'] = 'Datasources'
@@ -671,7 +677,7 @@ def datasourceCreate(request):
                 params["error"] = "Invalid sparql enpoint (url does not exist) - " + e
                 return render(request, 'datasource/form.html', params)
 
-            #find the slug
+            # find the slug
             sname = slugify(request.POST.get("title"))
 
             new_datasource = DatasourceDescription.objects.create(title=request.POST.get("title"), is_public=True,
@@ -686,7 +692,7 @@ def datasourceCreate(request):
 
 
 def datasourceReplace(request, name):
-    if not DatasourceDescription.objects.filter(name=name):  #datasource does not exist
+    if not DatasourceDescription.objects.filter(name=name):  # datasource does not exist
         return redirect("/datasources/")
 
     datasource = DatasourceDescription.objects.filter(name=name)[0]
@@ -737,14 +743,14 @@ def datasourceReplace(request, name):
 
 def datasourceCreateRDF(request):
     if request.POST:
-        #Get the posted rdf data
+        # Get the posted rdf data
         if "rdffile" in request.FILES:
             rdf_content = request.FILES["rdffile"].read()
         else:
             rdf_content = request.POST.get("rdfdata")
 
 
-        #Call the corresponding web service
+        # Call the corresponding web service
         headers = {'accept': 'application/json'}
         callAdd = requests.post(LINDA_HOME + "api/datasource/create/", headers=headers,
                                 data={"content": rdf_content, "title": request.POST.get("title")})
@@ -770,13 +776,13 @@ def datasourceCreateRDF(request):
 
 def datasourceReplaceRDF(request, dtname):
     if request.POST:
-        #Get the posted rdf data
+        # Get the posted rdf data
         if "rdffile" in request.FILES:
             rdf_content = request.FILES["rdffile"].read()
         else:
             rdf_content = request.POST.get("rdfdata")
 
-        #Call the corresponding web service
+        # Call the corresponding web service
         headers = {'accept': 'application/json'}
         callAdd = requests.post(LINDA_HOME + "api/datasource/" + dtname + "/replace/", headers=headers,
                                 data={"content": rdf_content, })
@@ -833,12 +839,18 @@ def datasourceDelete(request, dtname):
         return render(request, 'datasource/delete.html', params)
 
 
-#Query builder
+# Query builder
 def queryBuilder(request):
     params = {}
-    params['datasources'] = DatasourceDescription.objects.all()
+    params['datasources'] = list(DatasourceDescription.objects.all())
+    params['datasources'].insert(0,
+                                 DatasourceDescription(title="All private data dources", name="all", is_public=False
+                                                       , uri=LINDA_HOME + "sparql/all/", createdOn=datetime.today(),
+                                                       lastUpdateOn=datetime.today()))
+
     if 'dt_id' in request.GET:
         params['datasource_default'] = DatasourceDescription.objects.filter(name=request.GET.get('dt_id'))[0]
+
     params['PRIVATE_SPARQL_ENDPOINT'] = PRIVATE_SPARQL_ENDPOINT
     params['RDF2ANY_SERVER'] = RDF2ANY_SERVER
     params['mode'] = "builder"
@@ -847,7 +859,7 @@ def queryBuilder(request):
     return render(request, 'query-builder/index.html', params)
 
 
-#Proxy calls - exist as middle-mans between LinDA query builder page and the rdf2any server
+# Proxy calls - exist as middle-mans between LinDA query builder page and the rdf2any server
 def get_qbuilder_call(request, link):
     total_link = QUERY_BUILDER_SERVER + "query/" + link
     if request.GET:
@@ -873,7 +885,7 @@ def rdb2rdf(request):
 # Api view
 
 
-#Get a list with all uses - used in autocomplete
+# Get a list with all uses - used in autocomplete
 def api_users(request):
     if request.is_ajax():
         q = request.GET.get('term', '')
@@ -1082,32 +1094,33 @@ def datasource_sparql(request, dtname):  # Acts as a "fake" seperate sparql endp
         mimetype = 'application/json'
         return HttpResponse(data, mimetype)
 
-    datasources = DatasourceDescription.objects.filter(name=dtname)
+    if dtname != "all":  # search in all private datasource
+        datasources = DatasourceDescription.objects.filter(name=dtname)
 
-    if not datasources:  # datasource not found by name
-        results['status'] = '404'
-        results['message'] = "Datasource does not exist."
+        if not datasources:  # datasource not found by name
+            results['status'] = '404'
+            results['message'] = "Datasource does not exist."
 
-        data = json.dumps(results)
-        mimetype = 'application/json'
-        return HttpResponse(data, mimetype)
+            data = json.dumps(results)
+            mimetype = 'application/json'
+            return HttpResponse(data, mimetype)
 
-    datasource = datasources[0]
+        datasource = datasources[0]
 
-    if datasource.is_public:  # only for private data sources
-        results['status'] = '404'
-        results['message'] = "Invalid operation."
+        if datasource.is_public:  # public data sources
+            results['status'] = '404'
+            results['message'] = "Invalid operation."
 
-        data = json.dumps(results)
-        mimetype = 'application/json'
-        return HttpResponse(data, mimetype)
+            data = json.dumps(results)
+            mimetype = 'application/json'
+            return HttpResponse(data, mimetype)
+        else:  # private data sources
+            # Find where to add the FROM NAMED clause
+            query = request.GET.get("query")
 
-    # Find where to add the FROM NAMED clause
-    query = request.GET.get("query")
-
-    pos = re.search("WHERE", query, re.IGNORECASE).start()
-    query = query[:pos] + " FROM <" + datasource.uri + "> " + query[pos:]
-    query = query.replace('?object rdf:type ?class', '')
+            pos = re.search("WHERE", query, re.IGNORECASE).start()
+            query = query[:pos] + " FROM <" + datasource.uri + "> " + query[pos:]
+            # query = query.replace('?object rdf:type ?class', '')
 
     # encode the query
     query_enc = urlquote(query, safe='')
@@ -1195,6 +1208,7 @@ def vocabulary_repo_api_call(request, link):
 
     return HttpResponse(data, data.headers['content-type'])
 
+
 #Get current vocabulary versions
 @csrf_exempt
 def get_vocabulary_versions(request):
@@ -1234,8 +1248,10 @@ def post_vocabulary_data(request):
     data = json.loads(request.POST.get('vocab_data'))
 
     #Create object
-    vocab = Vocabulary.objects.create(title=data['title'], category=data['category'], description=data['description'], originalUrl=data['originalUrl'],
-                                      downloadUrl=data['downloadUrl'], preferredNamespaceUri=data['preferredNamespaceUri'],
+    vocab = Vocabulary.objects.create(title=data['title'], category=data['category'], description=data['description'],
+                                      originalUrl=data['originalUrl'],
+                                      downloadUrl=data['downloadUrl'],
+                                      preferredNamespaceUri=data['preferredNamespaceUri'],
                                       preferredNamespacePrefix=data['preferredNamespacePrefix'],
                                       lodRanking=data['lodRanking'], example=data['example'], uploader=request.user,
                                       datePublished=data['datePublished'], version=data['version'])

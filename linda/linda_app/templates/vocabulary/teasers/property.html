@@ -4,7 +4,9 @@
     <h3><a href="/property/{{property.id}}/">{{property.label}}</a></h3> (<span
         class="uri">&lt;{{ property.uri }}&gt;</span>)<br/>
 
-    <span class="description">{{property.description|striptags|default:"No description available"}}</span><br/>
+    {% if property.description %}
+        <span class="description">{{property.description|striptags}}</span><br/>
+    {% endif %}
 
     {% if property.parent_uri %}
         {% if property.get_parent_object %}

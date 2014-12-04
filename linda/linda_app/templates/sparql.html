@@ -27,13 +27,13 @@
         <div class="dropdown clear-dataset">
             <button class="btn btn-default dropdown-toggle clear-dataset col-md-12" type="button" id="dd_select_dataset"
                     data-toggle="dropdown">
-                Choose a Dataset&nbsp;
+                Choose a Data Source&nbsp;
                 <span class="caret"></span>
             </button>
             <ul class="dropdown-menu col-md-12" role="menu" aria-labelledby="dd_select_dataset">
                 {% for datasource in datasources %}
                     <li role="presentation"><a role="menuitem" tabindex="-1"
-                                           onclick="select_dataset('{{datasource.name}}', '{{datasource | get_endpoint}}');">{{datasource.name}}</a>
+                                           onclick="select_dataset('{{datasource.name}}', '{{datasource | get_endpoint}}');">{{datasource.title}}</a>
                     </li>
                 {% endfor %}
             </ul>

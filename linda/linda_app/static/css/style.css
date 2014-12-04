@@ -1436,9 +1436,9 @@ input, textarea {
 
 .site-search .main h2, .class-details content h2, .property-details content h2 {
     padding: 0.1em;
-    background: #eee;
+    margin-bottom: 10px;
     color: #aaa;
-    border: 1px dotted #aaa;
+    border-bottom: 1px solid #ccc;
 }
 
 /* Vocabulary teaser */

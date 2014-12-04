@@ -24,7 +24,9 @@
             </div>
         </div>
 
-        <p class="description">{{class.description|striptags|default:"No description available"}}</p>
+        {% if class.description %}
+            <p class="description">{{class.description|striptags|linebreaks}}</p>
+        {% endif %}
 
         <h2>Has <strong>{{class.domain_of|length}}</strong> properties</h2>
         <div class="class-domain-properties">

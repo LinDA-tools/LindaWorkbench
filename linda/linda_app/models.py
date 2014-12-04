@@ -157,10 +157,8 @@ class Vocabulary(models.Model):
                 SELECT ?class (COALESCE(?classLabel, "") AS ?cLabel) (COALESCE(?classComment, "") AS ?cComment)
                 WHERE {
                     {?class rdf:type rdfs:Class} UNION {?class rdf:type owl:Class}.
-                    OPTIONAL {
-                        ?class rdfs:label ?classLabel .
-                        ?class rdfs:comment ?classComment.
-                    }.
+                    OPTIONAL {?class rdfs:label ?classLabel}.
+                    OPTIONAL {?class rdfs:comment ?classComment}.
                 }""")
 
         # Store the classes in the database
@@ -204,26 +202,17 @@ class Vocabulary(models.Model):
                                 (COALESCE(?propertyLabel, "") AS ?pLabel)
                                 (COALESCE(?propertyComment, "") AS ?pComment)
                                 (COALESCE(?parent, "") AS ?p)
-                WHERE {{
-                    ?property rdfs:subPropertyOf ?parent.
-                    OPTIONAL {
-                        ?property rdfs:domain ?domain.
-                        ?property rdfs:range ?range.
-                        ?property rdfs:label ?propertyLabel.
-                        ?property rdfs:comment ?propertyComment.
-                    }
-                }
-                UNION {
-                    ?property rdfs:domain ?domain.
-                    ?property rdfs:range ?range.
-                    OPTIONAL {
-                        {?property rdfs:subPropertyOf ?parent}
-                        ?property rdfs:label ?propertyLabel.
-                        ?property rdfs:comment ?propertyComment.
-                    }
-                }}
-                """)
+                WHERE {
+                    VALUES ?propertyType { rdf:Property owl:ObjectProperty owl:DatatypeProperty }
+                    ?property rdf:type ?propertyType.
 
+                    OPTIONAL {?property rdfs:domain ?domain}.
+                    OPTIONAL {?property rdfs:range ?range}.
+                    OPTIONAL {?property rdfs:subPropertyOf ?parent}.
+                    OPTIONAL {?property rdfs:label ?propertyLabel}.
+                    OPTIONAL {?property rdfs:comment ?propertyComment}.
+                }
+                """)
         # Store the properties in the database
         for row in q_properties.result:
             if not row[0].startswith(self.preferredNamespaceUri):
@@ -231,7 +220,7 @@ class Vocabulary(models.Model):
                 continue
 
             # update label for properties that exist
-            property_objects = VocabularyClass.objects.filter(uri=row[0])
+            property_objects = VocabularyProperty.objects.filter(uri=row[0])
             if property_objects:
                 label = row[3].encode("utf-8")
                 property_object = property_objects[0]

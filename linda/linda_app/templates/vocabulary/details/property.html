@@ -24,7 +24,9 @@
             </div>
         </div>
 
-        <p class="description">{{property.description|striptags|default:"No description available"}}</p>
+        {% if property.description %}
+            <p class="description">{{property.description|striptags|linebreaks}}</p>
+        {% endif %}
 
         {% if property.parent_uri %}
             <h2>{% trans "Sub-property of" %}</h2>
