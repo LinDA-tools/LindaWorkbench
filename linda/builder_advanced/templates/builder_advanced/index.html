@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block bodyclass %}builder-advanced{% endblock %}
+
+{%block css %}
+    <link rel="stylesheet" src="/static/css/query-builder.css" />
+
+    <link data-turbolinks-track="true" href="/static/query-builder/stylesheets/_variables.css?body=1" media="all" rel="stylesheet" />
+    <link data-turbolinks-track="true" href="/static/query-builder/stylesheets/bootstrap.css?body=1" media="all" rel="stylesheet" />
+    <link data-turbolinks-track="true" href="/static/query-builder/stylesheets/bootstrap.min.css?body=1" media="all" rel="stylesheet" />
+    <link data-turbolinks-track="true" href="/static/query-builder/stylesheets/common.css?body=1" media="all" rel="stylesheet" />
+    <link data-turbolinks-track="true" href="/static/query-builder/stylesheets/developer.css?body=1" media="all" rel="stylesheet" />
+    <link data-turbolinks-track="true" href="/static/query-builder/stylesheets/query.css?body=1" media="all" rel="stylesheet" />
+    <link data-turbolinks-track="true" href="/static/query-builder/stylesheets/application.css?body=1" media="all" rel="stylesheet" />
+    <link data-turbolinks-track="true" href="/static/query-builder/stylesheets/gritter.css?body=1" media="all" rel="stylesheet" />
+{% endblock %}
+
+{% block content %}
+    {% with toolbar_id="toolbar" html=True %}
+        {% include "builder_advanced/toolbar.html" %}
+    {% endwith %}
+
+    <div id="builder_workspace">
+        <span>{% trans "Drag and drop classes here to create a query"%}</span>
+        <canvas id="builder-canvas"></canvas>
+    </div>
+
+     <div class="row qb-equivalent-query-main" style="display:none;">
+            <div class="col-md-12">
+                {% include 'query-builder/sparql-query-editor.html' %}
+            </div>
+        </div>
+
+    {% with in_query_builder_action=True %}
+        {% include 'query-builder/search-results.html' %}
+    {% endwith %}
+{% endblock %}
+
+{% block scripts %}
+    <script src="/static/js/jquery-ui.min.js"></script>
+
+    <script>
+        {% include "builder_advanced/arrows.js" %}
+
+        $().ready(function() {
+            $("#builder-canvas").attr({'width':$("#builder_workspace").width(), 'height':$("#builder_workspace").height()});
+            arrows.set_canvas("builder-canvas");
+
+            //show the sparql query
+            $(".qb-equivalent-query-main").show();
+        });
+    </script>
+
+    <script>
+        var ADVANCED_BUILDER_API_URI = "/builder-advanced/api/";
+
+        /*Get a humanized label from a resource URI*/
+        uri_to_label = function(uri) {
+            var spl = uri.split('/');
+            var label = spl.pop();
+
+            var start_pos = 0;
+            if (label.indexOf('#') >= 0) {
+                label = label.substr( label.indexOf('#') + 1);
+            }
+            label = label.replace(/_/g, ' ');
+
+            return decodeURI(label);
+        }
+
+        {% include "builder_advanced/builder_workbench.js" %}
+
+        /*Drag & Dropping*/
+        $("#builder_workspace").mouseup(function(e) {
+            if ((event.which == 1) && builder_workbench.selection) { //only for left click and when a class selection has been made
+                builder_workbench.add_instance(builder_workbench.selection.dt_name, builder_workbench.selection.class_uri, e.pageX - $(this).position().left, e.pageY - $(this).position().top);
+                builder_workbench.selection = undefined;
+                $(this).removeClass("accepting-instance");
+            }
+        });
+
+        $("#builder_workspace").mouseover(function(e) {
+            if (builder_workbench.selection) {
+                $(this).addClass("accepting-instance");
+            }
+        });
+
+        $("#builder_workspace").mouseleave(function(e) {
+            if (builder_workbench.selection) {
+                $(this).removeClass("accepting-instance");
+            }
+        });
+    </script>
+
+    {% with toolbar_id="toolbar" js=True %}
+        {% include "builder_advanced/toolbar.html" %}
+    {% endwith %}
+
+    <script>
+        {% include "builder_advanced/builder.js" %}
+    </script>
+
+
+{% endblock %}

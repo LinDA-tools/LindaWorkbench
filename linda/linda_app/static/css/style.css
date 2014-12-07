@@ -1889,3 +1889,166 @@ input, textarea {
     -webkit-transform: scale(1.0);
   }
 }
+
+/*Advanced Builder*/
+.toolbar {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+    background: #eee;
+}
+
+.toolbar .active-classes {
+    display: inline;
+    padding: 10px;
+}
+
+.toolbar .active-classes .button {
+    margin: 5px;
+    background: #b2b2b2;
+}
+
+.toolbar .prev-next-classes-button {
+    font-size: 20px;
+    font-weight: 600;
+    color: #00B16A;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+.toolbar .prev-next-classes-button:hover {
+    color: #1E8BC3;
+    cursor: pointer;
+}
+
+.toolbar .info {
+    margin-left: 20px;
+}
+
+.toolbar .class_button:hover {
+    background: #1E8BC3;
+}
+
+#builder_workspace {
+    width: 100%;
+    height: 800px;
+    position: relative;
+    overflow: hidden;
+}
+
+#builder_workspace.accepting-instance {
+    border: 1px dotted #FC5006;
+    background: #f3f3f3;
+}
+
+#builder_workspace .class-instance {
+    position: absolute;
+    border: 2px solid #2574A9;
+    min-width: 400px;
+    z-index: 1;
+}
+
+#builder_workspace .class-instance .title {
+    display: block;
+    color: #fff;
+    background: #5C97BF;
+    padding: 10px;
+    border-bottom: 1px solid #2574A9;
+}
+
+#builder_workspace .class-instance .title h3{
+    margin-right: 50px;
+    display: inline-block
+}
+
+#builder_workspace .class-instance .title span {
+    float: right;
+    font-size: 0.8em;
+    margin-top: 20px;
+}
+
+#builder_workspace .class-instance .title span.delete {
+    margin-top: -7px;
+}
+
+#builder_workspace .class-instance .title span.delete:hover {
+    color: #D64541;
+    cursor: pointer;
+}
+
+#builder_workspace .class-instance .property-control {
+    display: block;
+    color: #fff;
+    background: #5C97BF;
+    padding: 10px;
+    border-top: 1px solid #2574A9;
+}
+
+#builder_workspace .class-instance .properties {
+    min-height: 100px;
+    background: #fff;
+}
+
+#builder_workspace .class-instance .properties select {
+    width: 300px;
+    margin-right: 10px;
+}
+
+#builder_workspace .class-instance .property-table {
+    display: table;
+    width: 100%;
+}
+
+#builder_workspace .class-instance .property-table > .property-row, #builder_workspace .class-instance .property-table > .header-row {
+    display: table-row;
+}
+
+#builder_workspace .class-instance .property-table > .property-row > *, #builder_workspace .class-instance .property-table > .header-row > * {
+    display: table-cell;
+    padding: 5px;
+}
+
+#builder_workspace .class-instance .property-table .property-show,
+#builder_workspace .class-instance .property-table .property-optional,
+#builder_workspace .class-instance .header-row span:nth-of-type(1),
+#builder_workspace .class-instance .header-row span:nth-of-type(3) {
+    text-align: center
+}
+
+#builder_workspace .class-instance .property-table .property-order-by select {
+    width: 50px;
+}
+
+#builder_workspace .class-instance .add-property {
+    color: #eee;
+}
+
+#builder_workspace .class-instance .add-property:hover {
+    color: #fff;
+}
+
+#builder_workspace .class-instance header-row span/*:nth-of-type(5), #builder_workspace .class-instance .header-row span:nth-of-type(6)*/{
+    color: #000 !important;
+}
+
+#builder_workspace .class-instance .property-row span:nth-of-type(5), #builder_workspace .class-instance .property-row span:nth-of-type(6) {
+    color: #fff;
+}
+
+#builder_workspace .class-instance .property-row:hover span:nth-of-type(5), #builder_workspace .class-instance .property-row:hover span:nth-of-type(6) {
+    color: #FC5006;
+}
+
+#builder_workspace .class-instance .property-row span:nth-of-type(5):hover, #builder_workspace .class-instance .property-row span:nth-of-type(6):hover {
+    cursor: pointer;
+}
+
+
+#builder-canvas {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.row.qb-equivalent-query-main, .row.qb-equivalent-query-main * {
+    box-sizing: border-box;
+}

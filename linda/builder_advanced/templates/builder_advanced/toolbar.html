@@ -1,0 +1,107 @@
+{% load i18n %}
+
+{% if html %}
+<div class="toolbar" id="{{toolbar_id}}">
+    <select>
+        <option value="">{% trans "Choose a data set" %}</option>
+        {% for datasource in datasources %}
+        <option value="{{datasource.name}}">{{datasource.title}}</option>
+        {% endfor %}
+    </select>
+
+    <input type="search"/>
+
+    <div class="active-classes">
+    </div>
+</div>
+{% endif %}
+
+{% if js %}
+<script>
+        var {{toolbar_id}} = {
+            all_classes: [],
+
+            show_classes: function(filter, offset) {
+                $("#{{toolbar_id}} .active-classes").html("");
+
+                if (offset == undefined) {
+                    offset = 0;
+                }
+
+                var limit = 10;
+                var added = 0;
+                var total = 0;
+
+                if (offset > 0) {
+                    $("#{{toolbar_id}} .active-classes").append('<span class="prev-next-classes-button" data-offset="' + (Math.max(offset-limit, 0)) + '">‹</span>');
+                }
+
+                for (var i=0; i<this.all_classes.length; i++) {
+                    var label = uri_to_label(this.all_classes[i]);
+                    if (!filter || (label.indexOf(filter) >= 0)) {
+                        total++;
+                        if ((total > offset) && (total <= offset + limit)) {
+                            $("#{{toolbar_id}} .active-classes").append('<div class="class_button button" data-uri="' + this.all_classes[i] + '">' + label + '</div>');
+                            added++;
+                        }
+                    }
+                }
+
+                if (offset + added < total) {
+                    $("#{{toolbar_id}} .active-classes").append('<span class="prev-next-classes-button" data-offset="' + (offset+limit) + '">›</span>');
+                }
+
+                if (this.all_classes.length>limit) {
+                    $("#{{toolbar_id}} .active-classes").append('<span class="info">Showing ' + offset + '-' + (offset+added) + '/' + total + '</span>');
+                }
+            }
+        };
+
+        /*On select change load active classes in dataset*/
+            $( "#{{toolbar_id}} > select" ).change(function() {
+                var name = $(this).val();
+                if (name == "") return;
+
+                $("#{{toolbar_id}} .active-classes").html("");
+                {{toolbar_id}}.all_classes = [];
+
+                $.ajax({
+                    url: ADVANCED_BUILDER_API_URI + "active_classes/" +  name + "/",
+                    type: "GET",
+                    success: function(data, textStatus, jqXHR)
+                    {
+                        var bindings = data.results.bindings;
+                        for (var i=0; i<bindings.length; i++) {
+                            var class_uri = bindings[i].class.value;
+                            {{toolbar_id}}.all_classes.push(bindings[i].class.value);
+                        }
+                        {{toolbar_id}}.show_classes($( '#{{toolbar_id}} > input[type="search"]' ).val());
+                    },
+                    error: function (jqXHR, textStatus, errorThrown)
+                    {
+                        alert(textStatus + ': ' + errorThrown);
+                    }
+                });
+            });
+
+        /*On search text change*/
+        $( '#{{toolbar_id}} > input[type="search"]' ).on('input propertychange paste', function() {
+            {{toolbar_id}}.show_classes($(this).val());
+        });
+
+        /*On class start drag*/
+        $("body").on('mousedown','.class_button', function(e) {
+            if (event.which == 1) { //only for left click
+                builder_workbench.selection = {'class_uri': $(this).data("uri"), 'dt_name': $( "#{{toolbar_id}} > select" ).val()};
+                e.preventDefault();
+                e.stopPropagation();
+            }
+        });
+
+        /*On toolbar prev & next*/
+         $("body").on('click','.prev-next-classes-button', function() {
+            var offset = $(this).data('offset');
+            {{toolbar_id}}.show_classes($( '#{{toolbar_id}} > input[type="search"]' ).val(), offset);
+        });
+</script>
+{% endif %}
