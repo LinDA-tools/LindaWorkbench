@@ -3,8 +3,12 @@
   angular.module('app').factory('Rdf', function() {
     return {
       baseUri: '',
+      subjectTemplate: '',
+      propertyLiteralSelection: {},
+      propertyLiteralTypes: {},
       selectedClasses: {},
-      selectedProperties: {}
+      selectedProperties: {},
+      suggestions: {}
     };
   });
 

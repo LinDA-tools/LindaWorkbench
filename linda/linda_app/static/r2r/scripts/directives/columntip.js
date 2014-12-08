@@ -7,21 +7,28 @@
   app.directive('columntip', function() {
     return {
       restrict: 'A',
+      scope: {
+        table: '@',
+        column: '@'
+      },
       controller: function($scope, Rdb) {
         $scope.rdb = Rdb;
         return $scope.getData = function() {
-          var d;
-          d = $scope.rdb.getColumn('products', 'ProductName');
-          return console.log(d);
+          return $scope.rdb.getColumn($scope.table, $scope.column);
         };
       },
       link: function(scope, element, attrs, ctrl) {
         element.bind('mouseenter', function() {
-          var data, tmpl;
-          tmpl = "";
-          data = scope.getData();
-          console.log(data);
-          return scope.$emit('changeSidetip', tmpl);
+          return scope.getData().success(function(data) {
+            var tmpl;
+            tmpl = _.foldl(_.take(data, 20), (function(x, y) {
+              return (x + "<br />").concat(y);
+            }));
+            if ((_.size(data)) > 20) {
+              tmpl += '<br />...';
+            }
+            return scope.$emit('changeSidetip', tmpl);
+          });
         });
         return element.bind('mouseleave', function() {
           return scope.$emit('changeSidetip', '');

@@ -8,17 +8,13 @@
     return {
       restrict: 'EA',
       transclude: true,
-      templateUrl: function(element, attribute) {
-        return attribute.template || 'partials/wizard.html';
-      },
+      templateUrl: '/static/r2r/partials/wizard.html',
       controller: function($scope, $document, $timeout) {
         $scope.steps = [];
-        $scope.sidetip = {
-          tmpl: ''
-        };
         $scope.$on('changeSidetip', function(event, data) {
-          $scope.sidetip.tmpl = data;
-          return $scope.$apply();
+          return $timeout(function() {
+            return $scope.sidetip.tmpl = data;
+          });
         });
         this.addStep = function(step) {
           $scope.steps.push(step);
@@ -52,7 +48,8 @@
               $scope.currentStep.treated = true;
             }
             step.selected = true;
-            return $scope.currentStep = step;
+            $scope.currentStep = step;
+            return $scope.sidetip.tooltip = $scope.currentStep.description;
           });
         };
         this.fnStep = function(current, fn) {
@@ -83,8 +80,8 @@
         };
         this.scrollTo = function(name, offs, duration) {
           var section;
-          section = angular.element(document.getElementById(name));
-          return $document.scrollTo(section, offs || 30, duration || 750);
+          section = document.getElementById(name);
+          return $document.scrollTo(section, offs || 90, duration || 750);
         };
       }
     };
@@ -97,14 +94,16 @@
       scope: {
         name: '@',
         heading: '@',
+        description: '@',
         sidetip: '='
       },
       transclude: true,
-      templateUrl: 'partials/step.html',
+      templateUrl: '/static/r2r/partials/step.html',
       link: function(scope, element, attrs, ctrl) {
         ctrl.addStep({
           name: scope.name,
           heading: scope.heading,
+          description: scope.description,
           selected: scope.selected
         });
         scope.isSelected = function() {
