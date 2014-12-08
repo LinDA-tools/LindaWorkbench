@@ -127,7 +127,6 @@
         });
 
         $("body").on('keyup', function(e) {
-            console.log(e.keyCode);
             if (e.keyCode == 46) { //DELETE key pressed
                 arrows.delete_selected();
                 builder.reset();
@@ -153,7 +152,7 @@
 	</script>
 
 
-    <!--<script data-turbolinks-track="true" src="/static/query-builder/javascripts/jquery_ujs.js?body=1"></script>
+    <script data-turbolinks-track="true" src="/static/query-builder/javascripts/jquery_ujs.js?body=1"></script>
     <script data-turbolinks-track="true" src="/static/query-builder/javascripts/turbolinks.js?body=1"></script>
     <script data-turbolinks-track="true" src="/static/query-builder/javascripts/bootstrap.js?body=1"></script>
     <script data-turbolinks-track="true" src="/static/query-builder/javascripts/bootstrap.min.js?body=1"></script>
@@ -166,6 +165,6 @@
     <script data-turbolinks-track="true" src="/static/query-builder/javascripts/resources/utilities.js?body=1"></script>
     <script data-turbolinks-track="true" src="/static/query-builder/javascripts/codemirror.js?body=1"></script>
     <script data-turbolinks-track="true" src="/static/query-builder/javascripts/gritter.js?body=1"></script>
-    <script data-turbolinks-track="true" src="/static/query-builder/javascripts/application.js?body=1"></script>-->
+    <script data-turbolinks-track="true" src="/static/query-builder/javascripts/application.js?body=1"></script>
 
 {% endblock %}

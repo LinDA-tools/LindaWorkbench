@@ -15,20 +15,21 @@
             </select>
         </div>
 
-        <div class="string-filters-str">
+        <div class="filter-type filter-type-str">
             <span>Value </span>
             <select>
+                <option value="contains">contains</option>
                 <option value="eq">is equal to</option>
                 <option value="neq">not equal to</option>
                 <option value="starts">starts with</option>
                 <option value="ends">ends with</option>
-                <option value="regex"> follows the regular expression:</option>
+                <option value="regex">follows the regular expression:</option>
             </select>
 
             <input type="text" placeholder="value"/>
         </div>
 
-        <div class="string-filters-num">
+        <div class="filter-type filter-type-num">
             <span>Value </span>
             <select>
                 <option value="eq">=</option>
@@ -42,7 +43,7 @@
             <input type="number" placeholder="value"/>
         </div>
 
-        <div class="string-filters-date">
+        <div class="filter-type filter-type-date">
             <span>Value </span>
             <select>
                 <option value="eq">=</option>
@@ -50,14 +51,14 @@
                 <option value="lt">&lt;</option>
                 <option value="lte">&lt;=</option>
                 <option value="gt">&gt;</option>
-                <option value="gte">=&gt;</option>
+                <option value="gte">&gt;=</option>
             </select>
 
             <input type="date" placeholder="value"/>
         </div>
 
         <div>
-            <span class="button green right">Add filter</span>
+            <span class="add-filter button green right">Add filter</span>
         </div>
     </div>
 {% endif %}
@@ -65,15 +66,13 @@
 {% if js %}
     <script>
         $(function() {
-            $( "#property-filters").dialog({
+            $("#property-filters").dialog({
                 autoOpen: false,
                 width: 600
             });
 
             //initially hide all categories
-            $(".string-filters-str").hide();
-            $(".string-filters-num").hide();
-            $(".string-filters-date").hide();
+            $(".filter-type").hide();
         });
 
         /*On data type change*/
@@ -81,23 +80,60 @@
             var val = $(this).val();
 
             if (val == "str")
-                $("#property-filters .string-filters-str").show();
+                $("#property-filters .filter-type-str").show();
             else
-                $("#property-filters .string-filters-str").hide();
+                $("#property-filters .filter-type-str").hide();
 
             if (val == "num")
-                $("#property-filters .string-filters-num").show();
+                $("#property-filters .filter-type-num").show();
             else
-                $("#property-filters .string-filters-num").hide();
+                $("#property-filters .filter-type-num").hide();
 
             if (val == "date")
-                $("#property-filters .string-filters-date").show();
+                $("#property-filters .filter-type-date").show();
             else
-                $("#property-filters .string-filters-date").hide();
+                $("#property-filters .filter-type-date").hide();
         });
 
         function show_filters() {
-            $( "#property-filters").dialog("open");
+            $("#property-filters").dialog("open");
+            $("#all-filters").html('');
+
+            if (builder_workbench.property_selection) {
+                var p = builder_workbench.property_selection;
+                var cnt = 0;
+                $("#all-filters").html('');
+
+                for (var i=0; i<p.filters.length; i++) {
+                    if (p.filters[i] == undefined) continue;
+
+                    cnt++;
+                    $("#all-filters").html('<div class="filter-row"><span class="filter-remove" data-about="' + i + '">x</span> ' + p.filters[i].operator_label + ' ' +p.filters[i].value + '</div>');
+                }
+
+                if (cnt == 0) {
+                    $("#all-filters").html('No filters applied yet.');
+                }
+            }
         }
+
+        $(".add-filter").click(function() {
+            //create the new filter object
+            var nf = {};
+            nf.type = $("#property-filters .select-filter-type select").val();
+            nf.operator = $(".filter-type-" + nf.type + " select").val();
+            nf.operator_label = $(".filter-type-" + nf.type + " select option:selected").text();
+            nf.value = $(".filter-type-" + nf.type + " input").val();
+
+            //save the new filter and refresh
+            builder_workbench.property_selection.filters.push(nf);
+            show_filters();
+        });
+
+        $("body").on('click', '.filter-remove', function() {
+            var f = $(this).data('about');
+            builder_workbench.property_selection.filters[f] = undefined;
+            show_filters();
+        });
     </script>
 {% endif %}

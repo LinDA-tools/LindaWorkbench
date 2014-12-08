@@ -1,6 +1,7 @@
         var builder_workbench = {
             instances: [],
             selection: undefined,
+            property_selection: undefined,
 
             /*Adds an instance of a class*/
             add_instance: function(dt_name, uri, x,y) {
@@ -56,7 +57,7 @@
 
             add_property: function(i_num, p_num) {
                 var instance = this.instances[i_num];
-                var p_object = {uri: instance.properties[p_num], n: instance.selected_properties.length, optional:false, show:true};
+                var p_object = {uri: instance.properties[p_num], n: instance.selected_properties.length, optional:false, show:true, order_by: undefined, filters: []};
 
                 instance.selected_properties.push(p_object);
 
@@ -159,6 +160,12 @@
             builder.reset();
         });
 
+        /*Adding filter*/
+        $("body").on('click', '.property-row span:nth-of-type(5)', function(e) {
+            builder_workbench.property_selection = builder_workbench.instances[ $(this).parent().data('i') ].selected_properties[ $(this).parent().data('n') ];
+            show_filters();
+        });
+
         /*Adding foreign keys*/
         $("body").on('click', '.property-row span:nth-of-type(6)', function(e) {
             var style = "";
@@ -229,8 +236,4 @@
             builder.reset();
         });
 
-        /*Show filters dialog*/
-        $("body").on('click', '.property-row span:nth-of-type(5)', function(e) {
-            show_filters();
-        });
 
