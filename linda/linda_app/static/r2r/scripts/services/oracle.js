@@ -1,9 +1,8 @@
 (function() {
   'use strict';
-  angular.module('app').factory('Oracle', function($http, _) {
-    var host, oracleApi, zipColumnTags;
-    host = 'http://localhost:3000';
-    oracleApi = host + '/api/v1/oracle';
+  angular.module('app').factory('Oracle', function($http, _, Config) {
+    var oracleApi, zipColumnTags;
+    oracleApi = Config.backend + '/api/v1/oracle';
     zipColumnTags = function(columns, tags) {
       return _.map(columns, function(i) {
         return {
@@ -22,6 +21,7 @@
             },
             columns: zipColumnTags(columns, columnTags)
           }).then(function(res) {
+            console.log(res);
             return res.data;
           });
         }

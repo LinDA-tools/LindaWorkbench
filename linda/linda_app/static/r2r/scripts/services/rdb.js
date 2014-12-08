@@ -1,21 +1,14 @@
 (function() {
   'use strict';
-  angular.module('app').factory('Rdb', function($http, _) {
-    var dbAdapter, host, selectedColumns, selectedTables, tableColumns, tables;
-    host = R2R_PROXY; //points to the proxy /transformations inside django, not the actual server to avoid cors exception
-    dbAdapter = host + '/api/v1/db';
+  angular.module('app').factory('Rdb', function($http, _, Config) {
+    var dbAdapter, selectedColumns, selectedTables, tableColumns, tables;
+    dbAdapter = Config.backend + '/api/v1/db';
     tables = [];
     tableColumns = {};
     selectedTables = [];
     selectedColumns = {};
     return {
-      datasource: {
-        'host': 'localhost',
-        'driver': 'org.postgresql.ds.PGSimpleDataSource',
-        'name': 'mydb',
-        'username': 'postgres',
-        'password': ''
-      },
+      datasource: {},
       tables: function() {
         return tables;
       },
@@ -87,7 +80,7 @@
         });
       },
       getColumn: function(table, column) {
-        return $http.get(dbAdapter + '/column', {}, {
+        return $http.get(dbAdapter + '/column', {
           params: {
             table: table,
             name: column

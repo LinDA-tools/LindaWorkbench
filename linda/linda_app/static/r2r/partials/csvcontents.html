@@ -1,0 +1,26 @@
+<div ng-controller="CsvContentsCtrl">
+
+  Content of: <b>{{csv.csvFile.name}}</b>
+
+  <table class="table table-scrollable">
+    <tr>
+      <th ng-repeat="column in csv.getColumns()">
+        <button type="button" 
+                class="btn btn-primary btn-sm table-btn"
+                ng-class="{active: csv.isSelectedColumn(table, column)}"
+                ng-click="csv.toggleSelectedColumn(table, column)">
+            {{column}}
+        </button>
+      </th>
+    </tr>
+
+    <tr ng-repeat="data in csv.data()">
+      <td ng-repeat="i in data">
+        <div ng-class="{treated: !csv.isSelectedColumn(table, csv.getColumns()[$index])}">
+          {{i}}
+        </div>
+      </td>
+    </tr>
+  </table>
+  <hr />
+</div>

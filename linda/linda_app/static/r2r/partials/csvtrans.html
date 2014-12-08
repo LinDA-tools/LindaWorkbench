@@ -1,0 +1,87 @@
+<div class="main container" style="min-height:128em">
+
+  <div class="header">
+    <ul class="nav nav-pills pull-right">
+      <li class="active"><a ng-href="#">Home</a></li>
+      <li><a ng-href="#">About</a></li>
+      <li><a ng-href="#">Contact</a></li>
+    </ul>
+    <h3 class="text-muted">R2R Mapping Designer</h3>
+  </div>
+ 
+  <wizard>
+    <step name="1. welcome"
+      heading="Welcome"
+      description="" 
+      sidetip="sidetip">
+
+      <br />
+    </step>
+
+    <step name="2. datasource config"
+      heading="Data Source Configuration"
+      description=""
+      sidetip="sidetip">
+
+      <br />
+      <div ng-include src="'/static/r2r/partials/csvconfig.html'"></div>
+    </step>
+
+    <step name="3. contents of CSV file"
+      heading="Select Columns"
+      description=""
+      sidetip="sidetip">
+
+      <br />
+      <div ng-include src="'/static/r2r/partials/csvcontents.html'"></div>
+    </step>
+
+    <step name="4. transforming"
+      heading="Translate CSV file content"
+      description=""
+      sidetip="sidetip">
+
+      <br />
+      <div ng-include src="'/static/r2r/partials/csvreconcile.html'"></div>
+    </step>
+
+    <step name="5. revising"
+      heading="Revise Output RDF"
+      description="<p>These URIs need to be globally unique, so
+<ul><li>the web address the URIs point to should be a site that you control</li>
+<li>the URIs should comprise (at least) the content of those column(s) that constitute the Primary Key of the table</li></p><p>Beyond global uniqueness, you should strive for long term stability of the generated URIs, since they may be referred to by others.</p>
+"
+      sidetip="sidetip">
+
+      <p>In this step, you specify the URIs that will be generated for each row of every selected table. Typically, they are made up of your web address and the content of the column(s) that constitute the Primary Key, intervened by fixed separators.</p>
+
+      <br />
+      <div ng-include src="'/static/r2r/partials/refine.html'"></div>
+    </step>
+
+    <step name="6. publishing"
+      heading="Publish"
+      description="<p>A SPARQL endpoint is a service that processes queries against a RDF triple store. Here, the triple store is hypothetical, the queries are translated to SQL, your database is queried, and the results are translated according to your mapping specification.</p>"
+      sidetip="sidetip">
+
+      <p>In this step, you choose whether you dump the current state of the database to an RDF triple store, or establish a SPARQL endpoint that performs the specified transformations dynamically on request.</p>
+      <p>In either case, you will have to provide the respective technical information, such as file paths and the like.</p>
+
+      <br />
+      <div ng-include src="'/static/r2r/partials/publish.html'"></div>
+    </step>
+
+    <step name="7. finished"
+      heading="Finished"
+      description=""
+      sidetip="sidetip">
+
+      <p>You are finished with this process!</p>
+      <p>Now you can go back to the LinDA Workbench and proceed to <a href="/visualizations">visualize</a> or to <a href="/analytics">analyze</a> the output RDF dataset.</p>
+
+      <br />
+    </step>
+  </wizard>
+
+  <p align="center" style="font-size: 20px;margin-top: 10em">❦</p>
+</div>

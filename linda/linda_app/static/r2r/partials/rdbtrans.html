@@ -1,0 +1,111 @@
+<div class="main container" style="margin-bottom:32em">
+
+  <div class="header">
+    <ul class="nav nav-pills pull-right">
+      <li class="active"><a ng-href="#">Home</a></li>
+      <li><a ng-href="#">About</a></li>
+      <li><a ng-href="#">Contact</a></li>
+    </ul>
+    <h3 class="text-muted">R2R Mapping Designer</h3>
+  </div>
+ 
+  <wizard>
+    <step name="1. welcome"
+      heading="Welcome"
+      description="<p>The alternative to Direct Mapping would be semantic mappings, which re-express the information to be transformed in appropriate ontology frameworks.</p><p>The information you will need to proceed through this wizard is essentially:
+    <ul>
+    <li>your database address and credentials</li>
+    <li>server address and access credentials where the SPARQL endpoint is to be launched</li>
+    <li>patterns for the URIs you want to generate, and certain metadata you want to add</li>
+    </ul></p>" 
+      sidetip="sidetip">
+
+      <p>This wizard will guide you through the transformation of your relational database to RDF, and then either through the dump of the result into an RDF triple store, 
+        or through the publication of the result as a SPARQL endpoint.</p>
+      <p>The transformation of your relational data is essentially limited to what is called "Direct Mapping", i.e., the structure of the database will be preserved in the result. 
+        However, the generated URIs will be configurable, and certain metadata can be added.</p>
+      <p>Please have your database address and credentials handy, and possibly also the access to the server where the SPARQL endpoint is to be launched.</p>
+
+      <br />
+    </step>
+
+    <step name="2. datasource config"
+      heading="Data Source Configuration"
+      description="<p><em>Data Source Name</em> is the name of the database</p>
+    <p><em>Protocol</em> is usually named after the type/brand name of the database</p>
+    <p><em>Username/Password</em> are your access credentials</p>"
+      sidetip="sidetip">
+
+      <p>In this step, you configure the access data and credentials for your database.</p>
+      <p>If a SPARQL endpoint is to be set up, your access data credentials will be stored in its configuration and be used throughout its lifetime.</p>
+
+      <br />
+      <div ng-include src="'/static/r2r/partials/rdbconfig.html'"></div>
+    </step>
+
+    <step name="3. database contents"
+      heading="Select Database Content"
+      description="
+      <p>Deselecting a table also deselects all its columns, although they remain visually highlighted in case of a subsequent reactivation.</p>"
+      sidetip="sidetip">
+
+      <p>In this step, you select which tables and which columns are to be taken into account in the transformation. 
+        Whenever a selected column is a Foreign Key, the referenced table and its Primary Key column(s) should also be selected.</p>
+
+      <br />
+      <div ng-include src="'/static/r2r/partials/rdbcontents.html'"></div>
+    </step>
+
+    <step name="4. transforming"
+      heading="Translate Database Content"
+      description="<p>These specifications constitute the central part of the transformation. Types and properties should be selected with care, so as to get best possible precision of the transformation.</p><p>The <em>oracle<em> is a web service that gets the table names and column headers in question, matches them against its database of vocabularies, and returns ranked results.</p>
+"
+      sidetip="sidetip">
+
+      <p>In this step, you specify the translations of table names to types, and of column headers to properties. You first select a table, ask the oracle, and then select from its ranked answers.</p>
+      <p>You will have to go through all those tables and columns that were selected for transformation in the previous step (“Database Contents”).</p>
+
+      <br />
+      <div ng-include src="'/static/r2r/partials/rdbreconcile.html'"></div>
+    </step>
+
+    <step name="5. revising"
+      heading="Revise Output RDF"
+      description="<p>These URIs need to be globally unique, so
+<ul><li>the web address the URIs point to should be a site that you control</li>
+<li>the URIs should comprise (at least) the content of those column(s) that constitute the Primary Key of the table</li></p><p>Beyond global uniqueness, you should strive for long term stability of the generated URIs, since they may be referred to by others.</p>
+"
+      sidetip="sidetip">
+
+      <p>In this step, you specify the URIs that will be generated for each row of every selected table. Typically, they are made up of your web address and the content of the column(s) that constitute the Primary Key, intervened by fixed separators.</p>
+
+      <br />
+      <div ng-include src="'/static/r2r/partials/refine.html'"></div>
+    </step>
+
+    <step name="6. publishing"
+      heading="Publish"
+      description="<p>A SPARQL endpoint is a service that processes queries against a RDF triple store. Here, the triple store is hypothetical, the queries are translated to SQL, your database is queried, and the results are translated according to your mapping specification.</p>"
+      sidetip="sidetip">
+
+      <p>In this step, you choose whether you dump the current state of the database to an RDF triple store, or establish a SPARQL endpoint that performs the specified transformations dynamically on request.</p>
+      <p>In either case, you will have to provide the respective technical information, such as file paths and the like.</p>
+
+      <br />
+      <div ng-include src="'/static/r2r/partials/publish.html'"></div>
+    </step>
+
+    <step name="7. finished"
+      heading="Finished"
+      description=""
+      sidetip="sidetip">
+
+      <p>You are finished with this process!</p>
+      <p>Now you can go back to the LinDA Workbench and proceed to <a href="/visualizations">visualize</a> or to <a href="/analytics">analyze</a> the output RDF dataset.</p>
+
+      <br />
+    </step>
+  </wizard>
+
+  <p align="center" style="font-size: 20px;margin-top: 10em">❦</p>
+</div>
