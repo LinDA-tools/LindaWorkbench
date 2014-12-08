@@ -5,7 +5,7 @@
             /*Adds an instance of a class*/
             add_instance: function(dt_name, uri, x,y) {
                 var new_id = this.instances.length;
-                var new_instance = $.parseHTML('<div id="class_instance_' + this.instances.length + '" class="class-instance" style="left: ' + x + 'px; top: ' + y + 'px;" class="class-instance"><div class="title"><h3>' + uri_to_label(uri) + '</h3><span class="delete" data-about="' + new_id + '">x</span><span>' + dt_name + '</span></div><div class="properties">Loading properties...</div></div>');
+                var new_instance = $.parseHTML('<div id="class_instance_' + this.instances.length + '" class="class-instance" style="left: ' + x + 'px; top: ' + y + 'px;" class="class-instance"><div class="title"><h3>' + uri_to_label(uri) + '</h3><span class="delete" data-about="' + new_id + '">x</span><span>' + dt_name + '</span></div><div class="properties"><span class="loading">Loading properties...</span></div></div>');
                 $("#builder_workspace").append(new_instance);
                 $(new_instance).draggable({drag: function() {arrows.draw()}});
                 this.bring_to_front(new_instance);
@@ -32,7 +32,7 @@
                         var prop_control = $(new_instance).find(".properties .property-control");
                         prop_control.append('Found ' + instance_object.properties.length + ' different properties in data.<br />');
                         prop_control.append(select);
-                        prop_control.append('<a class="add-property" href="#" data-about="' + new_id + '">Add property</a></div>');
+                        prop_control.append('<span class="add-property" data-about="' + new_id + '">Add property</span></div>');
                         self.add_property(new_id, 0); //add URI by default
                     },
                     error: function (jqXHR, textStatus, errorThrown)
@@ -72,6 +72,7 @@
 
                 var id = "#class_instance_" + i_num;
                 $(id + " .property-table").append(property_object);
+                builder.reset();
 
                 if (p_object.uri != "URI") {
                     $.ajax({  //make an ajax request to get property return type
@@ -105,6 +106,7 @@
             $(id).remove();
             arrows.remove_instance(id); //remove arrows from and to this instance
             builder_workbench.instances[n] = undefined; //also delete from instance array
+            builder.reset();
         });
 
         /*Adding properties*/
@@ -121,6 +123,7 @@
             }
 
             builder_workbench.add_property(n, p);
+            builder.reset();
         });
 
         /*Adding foreign keys*/
@@ -165,6 +168,7 @@
         $("body").on('click', '.property-row', function() {
             if ((event.which == 1) && (builder_workbench.connection_from)) {
                 builder_workbench.connection_from = undefined;
+                builder.reset();
             }
         });
 
@@ -180,6 +184,7 @@
             }
 
             arrows.set_style('#class_instance_' + i, n, style);
+            builder.reset();
         });
 
         /*Show or not a property in the results*/
@@ -187,8 +192,8 @@
             var i = $(this).parent().parent().data('i');
             var n = $(this).parent().parent().data('n');
 
-            console.log(i+ ' ' + n);
             builder_workbench.instances[i].selected_properties[n].show = $(this).is(':checked');
+            builder.reset();
         });
 
 

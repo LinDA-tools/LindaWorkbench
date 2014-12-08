@@ -3,7 +3,7 @@
 {% if html %}
 <div class="toolbar" id="{{toolbar_id}}">
     <select>
-        <option value="">{% trans "Choose a data set" %}</option>
+        <option value="">{% trans "Choose a data source" %}</option>
         {% for datasource in datasources %}
         <option value="{{datasource.name}}">{{datasource.title}}</option>
         {% endfor %}
@@ -12,6 +12,7 @@
     <input type="search"/>
 
     <div class="active-classes">
+        <span>Choose a data source to explore</span>
     </div>
 </div>
 {% endif %}
@@ -22,7 +23,7 @@
             all_classes: [],
 
             show_classes: function(filter, offset) {
-                $("#{{toolbar_id}} .active-classes").html("");
+                $("#{{toolbar_id}} .active-classes").html('');
 
                 if (offset == undefined) {
                     offset = 0;
@@ -62,7 +63,7 @@
                 var name = $(this).val();
                 if (name == "") return;
 
-                $("#{{toolbar_id}} .active-classes").html("");
+                $("#{{toolbar_id}} .active-classes").html('<span class="loading">Loading classes...</span>');
                 {{toolbar_id}}.all_classes = [];
 
                 $.ajax({

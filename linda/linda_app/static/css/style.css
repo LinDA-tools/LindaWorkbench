@@ -2024,6 +2024,7 @@ input, textarea {
 
 #builder_workspace .class-instance .add-property:hover {
     color: #fff;
+    cursor: pointer;
 }
 
 #builder_workspace .class-instance header-row span/*:nth-of-type(5), #builder_workspace .class-instance .header-row span:nth-of-type(6)*/{
@@ -2049,6 +2050,17 @@ input, textarea {
     height: 100%;
 }
 
-.row.qb-equivalent-query-main, .row.qb-equivalent-query-main * {
+.builder-advanced .row.qb-equivalent-query-main, .builder-advanced .row.qb-equivalent-query-main * {
     box-sizing: border-box;
+}
+
+.builder-advanced #sparql_results_container, .builder-advanced #sparql_results_container * {
+    box-sizing: border-box;
+}
+
+.builder-advanced .loading {
+    padding: 10px;
+    padding-right: 16px;
+    background: url('/static/images/loading.gif') no-repeat right center;
+    background-size: 16px;
 }

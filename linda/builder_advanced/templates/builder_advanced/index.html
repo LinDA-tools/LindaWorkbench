@@ -1,5 +1,7 @@
 {% extends "base.html" %}
 {% load i18n %}
+{% load app_filters %}
+{% block title %}{% trans "Advanced Query Builder | LinDA" %}{% endblock %}
 {% block bodyclass %}builder-advanced{% endblock %}
 
 {%block css %}
@@ -34,6 +36,11 @@
     {% with in_query_builder_action=True %}
         {% include 'query-builder/search-results.html' %}
     {% endwith %}
+
+    {% include 'query-builder/search-results.html' %}
+
+    <input type="hidden" id="hdn_qb_dataset" value="">
+
 {% endblock %}
 
 {% block scripts %}
@@ -53,6 +60,12 @@
 
     <script>
         var ADVANCED_BUILDER_API_URI = "/builder-advanced/api/";
+
+        //set data source endpoints
+        var total_endpoints = {};
+        {% for datasource in datasources %}
+            total_endpoints['{{datasource.name}}'] = '{{datasource|get_endpoint}}';
+        {% endfor %}
 
         /*Get a humanized label from a resource URI*/
         uri_to_label = function(uri) {
@@ -100,5 +113,24 @@
         {% include "builder_advanced/builder.js" %}
     </script>
 
+
+    <script>
+        rdf2any_server = "{{RDF2ANY_SERVER}}";
+	</script>
+
+    <script data-turbolinks-track="true" src="/static/query-builder/javascripts/jquery_ujs.js?body=1"></script>
+    <script data-turbolinks-track="true" src="/static/query-builder/javascripts/turbolinks.js?body=1"></script>
+    <script data-turbolinks-track="true" src="/static/query-builder/javascripts/bootstrap.js?body=1"></script>
+    <script data-turbolinks-track="true" src="/static/query-builder/javascripts/bootstrap.min.js?body=1"></script>
+    <script data-turbolinks-track="true" src="/static/query-builder/javascripts/developer.js?body=1"></script>
+    <script data-turbolinks-track="true" src="/static/query-builder/javascripts/query.js?body=1"></script>
+    <script data-turbolinks-track="true" src="/static/query-builder/javascripts/resources/common.js?body=1"></script>
+
+    <script data-turbolinks-track="true" src="/static/query-builder/javascripts/resources/querybuilder.js?body=1"></script>
+    <script data-turbolinks-track="true" src="/static/query-builder/javascripts/resources/sparql.js?body=1"></script>
+    <script data-turbolinks-track="true" src="/static/query-builder/javascripts/resources/utilities.js?body=1"></script>
+    <script data-turbolinks-track="true" src="/static/query-builder/javascripts/codemirror.js?body=1"></script>
+    <script data-turbolinks-track="true" src="/static/query-builder/javascripts/gritter.js?body=1"></script>
+    <script data-turbolinks-track="true" src="/static/query-builder/javascripts/application.js?body=1"></script>
 
 {% endblock %}

@@ -8,12 +8,12 @@ from linda_app.models import DatasourceDescription, VocabularyProperty
 
 
 # Home page
-from linda_app.settings import PRIVATE_SPARQL_ENDPOINT
+from linda_app.settings import PRIVATE_SPARQL_ENDPOINT, RDF2ANY_SERVER
 
 
 def index(request):
     params = {
-        'datasources': DatasourceDescription.objects.all()
+        'datasources': DatasourceDescription.objects.all(),
     }
 
     return render_to_response("builder_advanced/index.html", params)
