@@ -92,7 +92,7 @@
 
         /*On class start drag*/
         $("body").on('mousedown','.class_button', function(e) {
-            if (event.which == 1) { //only for left click
+            if (e.which == 1) { //only for left click
                 builder_workbench.selection = {'class_uri': $(this).data("uri"), 'dt_name': $( "#{{toolbar_id}} > select" ).val()};
                 e.preventDefault();
                 e.stopPropagation();

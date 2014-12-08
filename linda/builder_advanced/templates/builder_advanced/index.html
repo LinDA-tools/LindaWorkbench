@@ -75,6 +75,8 @@
         /*Get a humanized label from a resource URI*/
         uri_to_label = function(uri) {
             if (uri == "URI") return "URI";
+
+            uri = decodeURIComponent(uri);
             var spl = uri.split('/');
             var label = spl.pop();
 
@@ -98,7 +100,7 @@
 
         /*Drag & Dropping*/
         $("#builder_workspace").mouseup(function(e) {
-            if ((event.which == 1) && builder_workbench.selection) { //only for left click and when a class selection has been made
+            if ((e.which == 1) && builder_workbench.selection) { //only for left click and when a class selection has been made
                 builder_workbench.add_instance(builder_workbench.selection.dt_name, builder_workbench.selection.class_uri, e.pageX - $(this).position().left, e.pageY - $(this).position().top);
                 builder_workbench.selection = undefined;
                 $(this).removeClass("accepting-instance");

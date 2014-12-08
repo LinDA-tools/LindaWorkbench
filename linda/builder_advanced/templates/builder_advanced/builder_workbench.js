@@ -199,7 +199,7 @@
 
         /*Make arrow permanent*/
         $("body").on('click', '.property-row', function(e) {
-            if ((event.which == 1) && (builder_workbench.connection_from)) {
+            if ((e.which == 1) && (builder_workbench.connection_from)) {
                 builder_workbench.connection_from = undefined;
                 builder.reset();
             }
