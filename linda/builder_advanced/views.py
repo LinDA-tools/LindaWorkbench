@@ -54,7 +54,7 @@ def active_classes(request, dt_name):
     endpoint = get_endpoint_from_dt_name(dt_name)
 
     # query to get all classes with at least one instance
-    query = "SELECT DISTINCT ?class WHERE {?x a ?class}"
+    query = "SELECT DISTINCT ?class WHERE { ?s a ?class }"
 
     return sparql_query_json(endpoint, query)
 

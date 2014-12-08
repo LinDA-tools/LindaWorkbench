@@ -27,7 +27,7 @@
                             $(select).append('<option value="' +bindings[i].property.value+ '">' + uri_to_label(bindings[i].property.value)  + '</option>');
                         }
 
-                        $(new_instance).find(".properties").html('<div class="property-table"><div class="header-row"><span>Show</span><span>Property</span><span>Optional</span><span>Order by</span><span>Filters</span><span>Foreign</span></div></div>');
+                        $(new_instance).find(".properties").html('<div class="property-table"><div class="header-row"><div></div><span>Show</span><span>Property</span><span>Optional</span><span>Order by</span><span>Filters</span><span>Foreign</span></div></div>');
                         $(new_instance).find(".properties").append('<div class="property-control"></div>');
                         var prop_control = $(new_instance).find(".properties .property-control");
                         prop_control.append('Found ' + instance_object.properties.length + ' different properties in data.<br />');
@@ -66,8 +66,14 @@
                 }
 
                 var data_i_n = 'data-i="' + i_num + '" data-n="' + p_object.n + '"';
-                var property_object_str = '<div class="property-row" ' + data_i_n + '><span class="property-show"><input type="checkbox" checked="checked"/></span><span>';
-                property_object_str += uri_to_label(p_object.uri) + '</span><span class="property-optional"><input  type="checkbox" ' + optional_disabled + ' /></span><span class="property-order-by"><select><option value=""></option><option value="ASC">ASC</option><option value="DESC">DESC</option></select></span><span>+Add filter</span><span ' + data_i_n + '>+Add connection</span></div>';
+                if (p_object.uri == "URI") {
+                    var delete_property = '<div></div>';
+                } else {
+                    var delete_property = '<div class="delete-property" ' + data_i_n + '>x</div>';
+                }
+
+                var property_object_str = '<div class="property-row" ' + data_i_n + '>' + delete_property + '<span class="property-show"><input type="checkbox" checked="checked"/></span><span>';
+                property_object_str += uri_to_label(p_object.uri) + '</span><span class="property-optional"><input  type="checkbox" ' + optional_disabled + ' /></span><span class="property-order-by"><select><option value=""></option><option value="ASC">ASC</option><option value="DESC">DESC</option></select></span><span>Filters</span><span ' + data_i_n + '>+Add connection</span></div>';
                 var property_object = $.parseHTML(property_object_str);
 
                 var id = "#class_instance_" + i_num;
@@ -103,9 +109,36 @@
         $("body").on('click', '.class-instance .delete', function() {
             var n = $(this).data("about");
             var id = "#class_instance_" + n;
+
             $(id).remove();
+
             arrows.remove_instance(id); //remove arrows from and to this instance
             builder_workbench.instances[n] = undefined; //also delete from instance array
+
+            builder.reset();
+        });
+
+        /*Delete properties*/
+        $("body").on('click', '.class-instance .delete-property', function() {
+            var i = $(this).parent().data("i");
+            var n = $(this).parent().data("n");
+
+            for (var j=0; j<$(this).parent().siblings().length; j++) { //update next properties' <n> data
+                var nx = $(this).parent().siblings()[j]
+                if ($(nx).data('n') > n) {
+                    var new_n = $(nx).data('n') - 1;
+                    $(nx).data('n', new_n);
+                    $(nx).attr('data-n', new_n);
+                    $(nx).find(".delete-property, span:nth-of-type(6)").data('n', new_n);
+                    $(nx).find(".delete-property, span:nth-of-type(6)").attr('data-n', new_n);
+                }
+            }
+
+            $(this).parent().remove(); //remove the row
+
+            arrows.remove_property('#class_instance_' + i, n); //remove arrows from and to this property
+            builder_workbench.instances[i].selected_properties.splice(n, 1); //also delete from selected properties array
+
             builder.reset();
         });
 
@@ -134,10 +167,10 @@
             }
 
             builder_workbench.connection_from = {i: $(this).data('i'), n: $(this).data('n'), style: style};
+
             e.preventDefault();
             e.stopPropagation();
         });
-
 
         $("#builder_workbench").on('click', function(e) {
             if (e.which != 1) { //not left click
@@ -165,7 +198,7 @@
         });
 
         /*Make arrow permanent*/
-        $("body").on('click', '.property-row', function() {
+        $("body").on('click', '.property-row', function(e) {
             if ((event.which == 1) && (builder_workbench.connection_from)) {
                 builder_workbench.connection_from = undefined;
                 builder.reset();
@@ -173,7 +206,7 @@
         });
 
         /*Make and unmake property optional*/
-        $("body").on('change', '.property-row .property-optional input', function() {
+        $("body").on('change', '.property-row .property-optional input', function(e) {
             var i = $(this).parent().parent().data('i');
             var n = $(this).parent().parent().data('n');
 
@@ -188,7 +221,7 @@
         });
 
         /*Show or not a property in the results*/
-        $("body").on('change', '.property-row .property-show input', function() {
+        $("body").on('change', '.property-row .property-show input', function(e) {
             var i = $(this).parent().parent().data('i');
             var n = $(this).parent().parent().data('n');
 
@@ -196,4 +229,8 @@
             builder.reset();
         });
 
+        /*Show filters dialog*/
+        $("body").on('click', '.property-row span:nth-of-type(5)', function(e) {
+            show_filters();
+        });
 

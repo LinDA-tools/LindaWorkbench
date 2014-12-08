@@ -2031,15 +2031,21 @@ input, textarea {
     color: #000 !important;
 }
 
-#builder_workspace .class-instance .property-row span:nth-of-type(5), #builder_workspace .class-instance .property-row span:nth-of-type(6) {
+#builder_workspace .class-instance .property-row .delete-property, #builder_workspace .class-instance .property-row span:nth-of-type(5), #builder_workspace .class-instance .property-row span:nth-of-type(6) {
     color: #fff;
 }
 
-#builder_workspace .class-instance .property-row:hover span:nth-of-type(5), #builder_workspace .class-instance .property-row:hover span:nth-of-type(6) {
-    color: #FC5006;
+#builder_workspace .class-instance .property-row:hover .delete-property, #builder_workspace .class-instance .property-row:hover span:nth-of-type(5), #builder_workspace .class-instance .property-row:hover span:nth-of-type(6) {
+    color: #333;
+    vertical-align: top;
 }
 
-#builder_workspace .class-instance .property-row span:nth-of-type(5):hover, #builder_workspace .class-instance .property-row span:nth-of-type(6):hover {
+#builder_workspace .class-instance .property-row .delete-property {
+    font-size: 12px;
+}
+
+#builder_workspace .class-instance .property-row .delete-property:hover, #builder_workspace .class-instance .property-row span:nth-of-type(5):hover, #builder_workspace .class-instance .property-row span:nth-of-type(6):hover {
+    color: #FC5006;
     cursor: pointer;
 }
 
@@ -2063,4 +2069,13 @@ input, textarea {
     padding-right: 16px;
     background: url('/static/images/loading.gif') no-repeat right center;
     background-size: 16px;
+}
+
+.ui-widget div {
+    padding-top: 10px;
+}
+
+.ui-widget select {
+    padding-top: 5px;
+    padding-bottom: 5px;
 }

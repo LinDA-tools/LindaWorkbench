@@ -1,5 +1,6 @@
 var arrows = {
     connections: [],
+    paths: [],
     canvas: undefined,
     ctx: undefined,
 
@@ -38,12 +39,80 @@ var arrows = {
         this.draw();
     },
 
+    remove_property: function(instance, p) {
+        for (var i=0; i<this.connections.length; ) {
+            var c = this.connections[i];
+
+            if ((c.f == instance)) { //case instance is from
+                if (c.fp == p) {
+                    this.connections.splice(i, 1); //remove the connection as the property does not exist
+                } else {
+                    if (c.fp > p) {
+                        c.fp--; //change the property counter
+                    }
+                    i++;
+                }
+            }
+
+            if ((c.t == instance)) { //case instance is from
+                if (c.tp == p) {
+                    this.connections.splice(i, 1); //remove the connection as the property does not exist
+                } else {
+                    if (c.tp > p) {
+                        c.tp--; //change the property counter
+                    }
+                    i++;
+                }
+            }
+        }
+
+        this.draw();
+    },
+
     set_style: function(instance_from, n_of_property_from, style) {
         console.log(instance_from + ' ' + n_of_property_from + ' ' + style);
         for (var i=0; i<this.connections.length; i++) {
             var c = this.connections[i];
             if ((c.f == instance_from) && (c.fp == n_of_property_from)) {
                 c.s = style;
+            }
+        }
+
+        this.draw();
+    },
+
+    in_segment: function(x1, y1, x2, y2, x, y, tolerate) {
+        return (((x>x1-tolerate) && (x2+tolerate>x))||((x>x2-tolerate) && (x1+tolerate>x))) && (((y>y1-tolerate) && (y2+tolerate>y))||((y>y2-tolerate) && (y1+tolerate>y)));
+    },
+
+    in_path: function(x, y, p) {
+        for (var i=0; i<p.length-1; i++) {
+            if (this.in_segment(p[i].x, p[i].y, p[i+1].x, p[i+1].y, x, y, 20)) {
+                return true;
+            }
+        }
+
+        return false;
+    },
+
+    in_arrows: function(x, y) {
+        for (var i=0; i<this.connections.length; i++) {
+            if (this.in_path(x, y, this.paths[i])) {
+                this.connections[i].clicked = true;
+            } else {
+                this.connections[i].clicked = false;
+            }
+        }
+
+        this.draw();
+    },
+
+    delete_selected: function() {
+        for (var i=0; i<this.connections.length; ) {
+            if (this.connections[i].clicked) {
+                this.connections.splice(i, 1);
+            } else {
+                i++;
             }
         }
 
@@ -93,6 +162,7 @@ var arrows = {
 
         for (var i=0; i<this.connections.length; i++) {
             var c = this.connections[i];
+            this.paths[i] = [];
 
             if (c == undefined) { //skip deleted connections
                 continue;
@@ -103,6 +173,12 @@ var arrows = {
                 this.ctx.setLineDash([5,5]);
             } else {
                 this.ctx.setLineDash([0,0]);
+            }
+
+            if (c.clicked) {
+                this.ctx.strokeStyle = '#ff0000';
+            } else {
+                this.ctx.strokeStyle = '#000000';
             }
 
             var p1 = {x: $(c.f).position().left, y: $(c.f).position().top + 90 + c.fp*35, w: $(c.f).width()};
@@ -116,40 +192,40 @@ var arrows = {
             //four cases
             if (p1.x + p1.w + sm_x< p2.x) { //f is completely left of t
                 this.ctx.beginPath();
-                this.ctx.moveTo(p1.x + p1.w, p1.y);
-                this.ctx.lineTo(p2.x - sm_x, p1.y);
-                this.ctx.lineTo(p2.x - sm_x, p2.y);
-                this.ctx.lineTo(p2.x, p2.y);
+                this.ctx.moveTo(p1.x + p1.w, p1.y); this.paths[i].push({x: p1.x + p1.w, y: p1.y});
+                this.ctx.lineTo(p2.x - sm_x, p1.y); this.paths[i].push({x: p2.x - sm_x,y: p1.y});
+                this.ctx.lineTo(p2.x - sm_x, p2.y); this.paths[i].push({x: p2.x - sm_x,y: p2.y});
+                this.ctx.lineTo(p2.x, p2.y);        this.paths[i].push({x: p2.x, y: p2.y});
                 this.ctx.stroke();
                 this.ctx.closePath();
                 drawFilledPolygon(this.ctx, translateShape(rotateShape(arrow,Math.atan2(0,1)), p2.x, p2.y));
             }
             else if (p2.x + p2.w + sm_x< p1.x) { //f is completely right of t
                 this.ctx.beginPath();
-                this.ctx.moveTo(p1.x, p1.y);
-                this.ctx.lineTo(p2.x + p2.w + sm_x, p1.y);
-                this.ctx.lineTo(p2.x + p2.w + sm_x, p2.y);
-                this.ctx.lineTo(p2.x + p2.w + 5, p2.y);
+                this.ctx.moveTo(p1.x, p1.y);               this.paths[i].push({x: p1.x, y: p1.y});
+                this.ctx.lineTo(p2.x + p2.w + sm_x, p1.y); this.paths[i].push({x: p2.x + p2.w + sm_x, y: p1.y});
+                this.ctx.lineTo(p2.x + p2.w + sm_x, p2.y); this.paths[i].push({x: p2.x + p2.w + sm_x, y: p2.y});
+                this.ctx.lineTo(p2.x + p2.w + 5, p2.y);    this.paths[i].push({x: p2.x + p2.w + 5, y: p2.y});
                 this.ctx.stroke();
                 this.ctx.closePath();
                 drawFilledPolygon(this.ctx, translateShape(rotateShape(arrow,Math.atan2(0,-1)), p2.x + p2.w + 5, p2.y));
             }
             else if (p1.x + p1.w/2 > p2.x) {
                 this.ctx.beginPath();
-                this.ctx.moveTo(p1.x, p1.y);
-                this.ctx.lineTo(Math.min(p1.x, p2.x) - sm_x, p1.y);
-                this.ctx.lineTo(Math.min(p1.x, p2.x) - sm_x, p2.y);
-                this.ctx.lineTo(p2.x, p2.y);
+                this.ctx.moveTo(p1.x, p1.y);                        this.paths[i].push({x: p1.x, y: p1.y});
+                this.ctx.lineTo(Math.min(p1.x, p2.x) - sm_x, p1.y); this.paths[i].push({x: Math.min(p1.x, p2.x) - sm_x, y: p1.y});
+                this.ctx.lineTo(Math.min(p1.x, p2.x) - sm_x, p2.y); this.paths[i].push({x: Math.min(p1.x, p2.x) - sm_x, y: p2.y});
+                this.ctx.lineTo(p2.x, p2.y);                        this.paths[i].push({x: p2.x, y: p2.y});
                 this.ctx.stroke();
                 this.ctx.closePath();
                 drawFilledPolygon(this.ctx, translateShape(rotateShape(arrow,Math.atan2(0,1)), p2.x, p2.y));
             }
             else if (p1.x + p1.w/2 < p2.x) {
                 this.ctx.beginPath();
-                this.ctx.moveTo(p1.x + p1.w, p1.y);
-                this.ctx.lineTo(p2.x + p2.w + sm_x, p1.y);
-                this.ctx.lineTo(p2.x + p2.w + sm_x, p2.y);
-                this.ctx.lineTo(p2.x + p2.w + 5, p2.y);
+                this.ctx.moveTo(p1.x + p1.w, p1.y);        this.paths[i].push({x: p1.x + p1.w, y: p1.y});
+                this.ctx.lineTo(p2.x + p2.w + sm_x, p1.y); this.paths[i].push({x: p2.x + p2.w + sm_x, y: p1.y});
+                this.ctx.lineTo(p2.x + p2.w + sm_x, p2.y); this.paths[i].push({x: p2.x + p2.w + sm_x, y: p2.y});
+                this.ctx.lineTo(p2.x + p2.w + 5, p2.y);    this.paths[i].push({x: p2.x + p2.w + 5, y: p2.y});
                 this.ctx.stroke();
                 this.ctx.closePath();
                 drawFilledPolygon(this.ctx, translateShape(rotateShape(arrow,Math.atan2(0,-1)), p2.x + p2.w + 5, p2.y));

@@ -1,0 +1,103 @@
+{% if html %}
+    <div id="property-filters">
+        <div id="all-filters">
+
+        </div>
+
+        <div class="select-filter-type">
+            <span>Select filter type:</span>
+            <select>
+                <option value=""></option>
+                <option value="str">String</option>
+                <option value="num">Number</option>
+                <option value="date">Date</option>
+                <option value="list">Specify values</option>
+            </select>
+        </div>
+
+        <div class="string-filters-str">
+            <span>Value </span>
+            <select>
+                <option value="eq">is equal to</option>
+                <option value="neq">not equal to</option>
+                <option value="starts">starts with</option>
+                <option value="ends">ends with</option>
+                <option value="regex"> follows the regular expression:</option>
+            </select>
+
+            <input type="text" placeholder="value"/>
+        </div>
+
+        <div class="string-filters-num">
+            <span>Value </span>
+            <select>
+                <option value="eq">=</option>
+                <option value="neq">!=</option>
+                <option value="lt">&lt;</option>
+                <option value="lte">&lt;=</option>
+                <option value="gt">&gt;</option>
+                <option value="gte">=&gt;</option>
+            </select>
+
+            <input type="number" placeholder="value"/>
+        </div>
+
+        <div class="string-filters-date">
+            <span>Value </span>
+            <select>
+                <option value="eq">=</option>
+                <option value="neq">!=</option>
+                <option value="lt">&lt;</option>
+                <option value="lte">&lt;=</option>
+                <option value="gt">&gt;</option>
+                <option value="gte">=&gt;</option>
+            </select>
+
+            <input type="date" placeholder="value"/>
+        </div>
+
+        <div>
+            <span class="button green right">Add filter</span>
+        </div>
+    </div>
+{% endif %}
+
+{% if js %}
+    <script>
+        $(function() {
+            $( "#property-filters").dialog({
+                autoOpen: false,
+                width: 600
+            });
+
+            //initially hide all categories
+            $(".string-filters-str").hide();
+            $(".string-filters-num").hide();
+            $(".string-filters-date").hide();
+        });
+
+        /*On data type change*/
+        $("#property-filters .select-filter-type select").change(function() {
+            var val = $(this).val();
+
+            if (val == "str")
+                $("#property-filters .string-filters-str").show();
+            else
+                $("#property-filters .string-filters-str").hide();
+
+            if (val == "num")
+                $("#property-filters .string-filters-num").show();
+            else
+                $("#property-filters .string-filters-num").hide();
+
+            if (val == "date")
+                $("#property-filters .string-filters-date").show();
+            else
+                $("#property-filters .string-filters-date").hide();
+        });
+
+        function show_filters() {
+            $( "#property-filters").dialog("open");
+        }
+    </script>
+{% endif %}

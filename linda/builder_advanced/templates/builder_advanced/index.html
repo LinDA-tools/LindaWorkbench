@@ -5,7 +5,7 @@
 {% block bodyclass %}builder-advanced{% endblock %}
 
 {%block css %}
-    <link rel="stylesheet" src="/static/css/query-builder.css" />
+    <link rel="stylesheet" href="/static/css/jquery-ui.min.css" />
 
     <link data-turbolinks-track="true" href="/static/query-builder/stylesheets/_variables.css?body=1" media="all" rel="stylesheet" />
     <link data-turbolinks-track="true" href="/static/query-builder/stylesheets/bootstrap.css?body=1" media="all" rel="stylesheet" />
@@ -15,6 +15,7 @@
     <link data-turbolinks-track="true" href="/static/query-builder/stylesheets/query.css?body=1" media="all" rel="stylesheet" />
     <link data-turbolinks-track="true" href="/static/query-builder/stylesheets/application.css?body=1" media="all" rel="stylesheet" />
     <link data-turbolinks-track="true" href="/static/query-builder/stylesheets/gritter.css?body=1" media="all" rel="stylesheet" />
+
 {% endblock %}
 
 {% block content %}
@@ -40,6 +41,10 @@
     {% include 'query-builder/search-results.html' %}
 
     <input type="hidden" id="hdn_qb_dataset" value="">
+
+    {% with html=True %}
+        {% include "builder_advanced/filters.html" %}
+    {% endwith %}
 
 {% endblock %}
 
@@ -69,6 +74,7 @@
 
         /*Get a humanized label from a resource URI*/
         uri_to_label = function(uri) {
+            if (uri == "URI") return "URI";
             var spl = uri.split('/');
             var label = spl.pop();
 
@@ -77,8 +83,15 @@
                 label = label.substr( label.indexOf('#') + 1);
             }
             label = label.replace(/_/g, ' ');
+            label = label.replace(/-/g, ' ');
 
-            return decodeURI(label);
+            label = label
+                // insert a space before all caps
+                .replace(/([A-Z])/g, ' $1')
+                // uppercase the first character
+                .replace(/^./, function(str){ return str.toUpperCase(); });
+
+            return label;
         }
 
         {% include "builder_advanced/builder_workbench.js" %}
@@ -103,10 +116,29 @@
                 $(this).removeClass("accepting-instance");
             }
         });
+
+        /*Handle clicks on arrows*/
+        $("#builder-canvas").click(function(e) {
+            if (!builder_workbench.connection_from) {
+                arrows.in_arrows(e.screenX - $(this).offset().left, e.screenY - $(this).offset().top - 60);
+            }
+        });
+
+        $("body").on('keyup', function(e) {
+            console.log(e.keyCode);
+            if (e.keyCode == 46) { //DELETE key pressed
+                arrows.delete_selected();
+                builder.reset();
+            }
+        });
     </script>
 
     {% with toolbar_id="toolbar" js=True %}
         {% include "builder_advanced/toolbar.html" %}
+    {% endwith %}
+
+    {% with js=True %}
+        {% include "builder_advanced/filters.html" %}
     {% endwith %}
 
     <script>
@@ -118,7 +150,8 @@
         rdf2any_server = "{{RDF2ANY_SERVER}}";
 	</script>
 
-    <script data-turbolinks-track="true" src="/static/query-builder/javascripts/jquery_ujs.js?body=1"></script>
+
+    <!--<script data-turbolinks-track="true" src="/static/query-builder/javascripts/jquery_ujs.js?body=1"></script>
     <script data-turbolinks-track="true" src="/static/query-builder/javascripts/turbolinks.js?body=1"></script>
     <script data-turbolinks-track="true" src="/static/query-builder/javascripts/bootstrap.js?body=1"></script>
     <script data-turbolinks-track="true" src="/static/query-builder/javascripts/bootstrap.min.js?body=1"></script>
@@ -131,6 +164,6 @@
     <script data-turbolinks-track="true" src="/static/query-builder/javascripts/resources/utilities.js?body=1"></script>
     <script data-turbolinks-track="true" src="/static/query-builder/javascripts/codemirror.js?body=1"></script>
     <script data-turbolinks-track="true" src="/static/query-builder/javascripts/gritter.js?body=1"></script>
-    <script data-turbolinks-track="true" src="/static/query-builder/javascripts/application.js?body=1"></script>
+    <script data-turbolinks-track="true" src="/static/query-builder/javascripts/application.js?body=1"></script>-->
 
 {% endblock %}

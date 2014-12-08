@@ -56,17 +56,16 @@ var builder = {
 
             //check if resource comes from a remote endpoint
             var endpoint = total_endpoints[ w.instances[i].dt_name ];
-            console.log(endpoint);
+
             if (endpoint != this.endpoint) { //use SERVICE keyword
                 wh_c += 'SERVICE <' + endpoint + '> {';
-                console.log(wh_c);
             }
 
             //add class constraint -- local copy of total where clause
             wh_c += i_name + ' a <' + inst.uri + '>.';
 
             //connect class instance to properties
-            for (j=0; j<inst.selected_properties.length; j++) {
+            for (var j=0; j<inst.selected_properties.length; j++) {
                 var p = inst.selected_properties[j];
                 var p_name = instance_name + '_' + this.uri_to_constraint(p.uri); //e.g ?city_leaderName
 
@@ -86,10 +85,10 @@ var builder = {
                     var constraint = i_name + ' <' + p.uri + '> ?' + p_name + '. ';
 
                     //handle foreign keys
-                    constraint += this.get_foreign(w, i, p_name, j);
+                    constraint += this.get_foreign(w, i, p_name, j) + '\n';
 
                     if (p.optional) { //mark optional properties
-                        constraint = 'OPTIONAL {' + constraint + '} ';
+                        constraint = 'OPTIONAL {' + constraint + '}';
                     }
 
                     wh_c += constraint;
@@ -106,8 +105,6 @@ var builder = {
     create: function() {
         var w = builder_workbench;
         var i_names = this.instance_names;
-
-        console.log('-------------');
 
         this.error = "";
         this.select_clause = "SELECT ";
@@ -145,24 +142,31 @@ var builder = {
             }
         }
 
+        var cnt_objects = 0;
 
         //create the query string
-        this.where_clause += "{";
+        this.where_clause += "{\n";
         for (var i=0; i<w.instances.length; i++) {
             if (w.instances[i] == undefined) continue;
 
             if (this.is_initial(w, i)) {
+                cnt_objects++;
                 if (this.endpoint == "") {
                     this.endpoint = total_endpoints[ w.instances[i].dt_name ];
                 }
 
-                this.where_clause += this.add_instance(w, i_names[i], i);
+                this.where_clause += this.add_instance(w, i_names[i], i) + '\n';
             }
         }
         this.where_clause += "}";
 
         //the result is the SELECT ... WHERE ...
-        this.query = this.select_clause + ' ' + this.where_clause;
+        this.query = this.select_clause + '\n' + this.where_clause;
+
+        if (cnt_objects == 0) { //empty query
+            this.query == '';
+        }
+
         return this.query;
     },
 

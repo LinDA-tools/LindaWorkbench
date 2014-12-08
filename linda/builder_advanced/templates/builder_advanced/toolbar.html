@@ -39,7 +39,7 @@
 
                 for (var i=0; i<this.all_classes.length; i++) {
                     var label = uri_to_label(this.all_classes[i]);
-                    if (!filter || (label.indexOf(filter) >= 0)) {
+                    if (!filter || (label.toLowerCase().indexOf(filter.toLowerCase()) >= 0)) {
                         total++;
                         if ((total > offset) && (total <= offset + limit)) {
                             $("#{{toolbar_id}} .active-classes").append('<div class="class_button button" data-uri="' + this.all_classes[i] + '">' + label + '</div>');
