@@ -1,6 +1,6 @@
 (function() {
   'use strict';
-  angular.module('app').controller('dbContentsCtrl', function($scope, Rdb) {
+  angular.module('app').controller('DbContentsCtrl', function($scope, Rdb) {
     return $scope.rdb = Rdb;
   });
 

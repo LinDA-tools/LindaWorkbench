@@ -1,6 +1,11 @@
 (function() {
   'use strict';
-  angular.module('app').controller('MainCtrl', function($scope, _) {});
+  angular.module('app').controller('MainCtrl', function($scope, _) {
+    return $scope.sidetip = {
+      tooltip: '',
+      tmpl: ''
+    };
+  });
 
 }).call(this);
 

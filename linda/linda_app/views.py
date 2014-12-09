@@ -649,7 +649,7 @@ def datasources(request):
 
 def datasourceCreate(request):
     params = {'types': {('public', 'Public'), ('private', 'Private')},
-              'datatypes': {('csv', 'CSV file'), ('db', 'Database (relational)'), ('xls', 'Excel file'),
+              'datatypes': {('csv', 'CSV file'), ('rdb', 'Database (relational)'), ('xls', 'Excel file'),
                             ('rdf', 'RDF file')},
               'action': "create"}
     params['typeSelect'] = forms.Select(choices=params['types']).render('type', '', attrs={"id": 'id_type', })
@@ -658,8 +658,10 @@ def datasourceCreate(request):
 
     if request.POST:  # request to create a public datasource or move to appropriate tool for a private one
 
-        if request.POST.get("type") == "private":
-            return redirect("/datasource/create/" + request.POST.get("datatype"))
+        if request.POST.get("type") == "private" and (request.POST.get("datatype") == "csv" or request.POST.get("datatype")== "rdb"):
+           return redirect("/transformations/#/" + request.POST.get("datatype"))
+        elif request.POST.get("type") == "private":
+           return redirect("/datasource/create/" + request.POST.get("datatype"))
         else:
             if not request.POST.get("title"):  # title is obligatory
                 params["error"] = "A datasource title must be specified"

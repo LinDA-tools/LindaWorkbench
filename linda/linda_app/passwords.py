@@ -1,6 +1,6 @@
 #MySQL database credentials
-DB_USER = '{{MySQL database user}}'
-DB_PASSWORD = '{{MySQL database password}}'
+DB_USER = 'root'
+DB_PASSWORD = 'as67hj98'
 
 #Microsoft Translate credentials
 MS_TRANSLATOR_UID = '{{Microsoft translator user id}}'
