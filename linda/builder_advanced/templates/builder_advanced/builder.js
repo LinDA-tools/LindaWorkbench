@@ -33,6 +33,40 @@ var builder = {
         return true;
     },
 
+    get_filter: function(p_name, f) { //get a specific filter
+        var result = "";
+
+        if (f.type == "str") {
+
+        }
+        else if (f.type == "num") {
+            var ops = {'eq': '==', 'neq': '!=', 'gt': '>', 'lt': '<', 'gte': '>=', 'lte': '<='};
+            result = p_name + ops[f.operator] + f.value
+        }
+        else if (f.type == "date") {
+
+        }
+
+        return result;
+    },
+
+    get_filters: function(p_name, p) { //returns the total filter
+        var n = 0;
+
+        var result = p.filter_prototype; //e.g [1] && ([2] || [3])
+        for (var f=0; f<p.filters.length; f++) { //foreach filter
+            if (p.filters[f] == undefined) continue;
+
+            n++;
+            var f_str = this.get_filter(p_name, p.filters[f])
+            result = result.replace('[' + f + ']', '(' + f_str + ')');
+        }
+
+        if (n == 0) return '';
+
+        return 'FILTER (' + result + ')\n';
+    },
+
     get_foreign: function(w, i, p_name, p) {
         var wh_c = '';
 
@@ -52,7 +86,7 @@ var builder = {
             var wh_c = ' ';
 
             var inst = w.instances[i];
-            var i_name = '?' + instance_name;
+            var i_name = instance_name;
 
             //check if resource comes from a remote endpoint
             var endpoint = total_endpoints[ w.instances[i].dt_name ];
@@ -62,7 +96,7 @@ var builder = {
             }
 
             //add class constraint -- local copy of total where clause
-            wh_c += i_name + ' a <' + inst.uri + '>.';
+            wh_c += '?' + i_name + ' a <' + inst.uri + '>.';
 
             //connect class instance to properties
             for (var j=0; j<inst.selected_properties.length; j++) {
@@ -72,7 +106,7 @@ var builder = {
                 //add chosen properties to select
                 if (p.show) {
                     if (p.uri == 'URI') {
-                        this.select_clause += i_name;
+                        this.select_clause += '?' + i_name;
                     } else {
                         this.select_clause += '?' + p_name;
                     }
@@ -81,18 +115,29 @@ var builder = {
                 }
 
                 //connect property to class instances
+                var constraint = '';
                 if (p.uri != 'URI') {
-                    var constraint = i_name + ' <' + p.uri + '> ?' + p_name + '. ';
-
-                    //handle foreign keys
-                    constraint += this.get_foreign(w, i, p_name, j) + '\n';
-
-                    if (p.optional) { //mark optional properties
-                        constraint = 'OPTIONAL {' + constraint + '}';
-                    }
-
-                    wh_c += constraint;
+                    constraint = '?' + i_name + ' <' + p.uri + '> ?' + p_name + '. ';
+                    constraint += this.get_foreign(w, i, p_name, j) + '\n'; //handle foreign keys
+                } else {
+                    constraint = this.get_foreign(w, i, i_name, j) + '\n'; //handle foreign keys
                 }
+
+                //add filters
+                if (p.filters) {
+                    if (p.uri != 'URI') {
+                        constraint += this.get_filters('?' + p_name, p);
+                    } else {
+                        constraint += this.get_filters('?' + i_name, p);
+                    }
+                }
+
+                //mark optional properties
+                if (p.optional) {
+                    constraint = 'OPTIONAL {' + constraint + '}\n';
+                }
+
+                wh_c += constraint;
             }
 
             if (endpoint != this.endpoint) { //close SERVICE keyword

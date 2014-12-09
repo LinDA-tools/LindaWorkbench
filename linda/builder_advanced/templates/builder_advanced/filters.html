@@ -1,5 +1,15 @@
 {% if html %}
     <div id="property-filters">
+        <div class="filter-prototype">
+            <select>
+                <option value="and" selected="selected">All filters must apply</option>
+                <option value="or">At least one filter needs to apply</option>
+                <option value="custom">Specify a custom boolean expression</option>
+            </select>
+
+            <input type="text" id="filter-prototype-str" placeholder="e.g [1] && ([2] || [3])" />
+        </div>
+
         <div id="all-filters">
 
         </div>
@@ -27,6 +37,9 @@
             </select>
 
             <input type="text" placeholder="value"/>
+
+            <input type="checkbox" id="case-sensitive" default="false" />
+            <label for="case-sensitive">Case sensitive</label>
         </div>
 
         <div class="filter-type filter-type-num">
@@ -58,7 +71,8 @@
         </div>
 
         <div>
-            <span class="add-filter button green right">Add filter</span>
+            <span class="done button orange right">Done</span>
+            <span class="add-filter button blue right">+Add filter</span>
         </div>
     </div>
 {% endif %}
@@ -73,6 +87,19 @@
 
             //initially hide all categories
             $(".filter-type").hide();
+            //hide custom prototype text
+            $("#filter-prototype-str").hide();
+        });
+
+        /*On filter prototype change*/
+        $(".filter-prototype select").change(function() {
+            var val = $(this).val();
+
+            if (val == "custom" ) {
+                $("#filter-prototype-str").show();
+            } else {
+                $("#filter-prototype-str").hide();
+            }
         });
 
         /*On data type change*/
@@ -108,7 +135,7 @@
                     if (p.filters[i] == undefined) continue;
 
                     cnt++;
-                    $("#all-filters").html('<div class="filter-row"><span class="filter-remove" data-about="' + i + '">x</span> ' + p.filters[i].operator_label + ' ' +p.filters[i].value + '</div>');
+                    $("#all-filters").append('<div class="filter-object">' + p.filters[i].operator_label + ' ' +p.filters[i].value + '<span class="filter-id">[' + i + ']</span><span class="filter-remove" data-about="' + i + '">x</span></div>');
                 }
 
                 if (cnt == 0) {
@@ -116,6 +143,7 @@
                 }
             }
         }
+
 
         $(".add-filter").click(function() {
             //create the new filter object
@@ -128,6 +156,44 @@
             //save the new filter and refresh
             builder_workbench.property_selection.filters.push(nf);
             show_filters();
+        });
+
+        $(".done").click(function() {
+            var n = 0;
+            var p = builder_workbench.property_selection;
+            var f_proto_val = $(".filter-prototype select").val();
+            var proto = "";
+
+            if ((f_proto_val == "and") || (f_proto_val == "or")) { //automatically create the prototype
+                for (var f=0; f<p.filters.length; f++) {
+                    if (p.filters[f] == undefined) continue;
+
+                    n++;
+                    proto += '[' + f + ']';
+                    if (f < p.filters.length - 1) {
+                        if (f_proto_val == "and") {
+                            proto += ' && ';
+                        } else {
+                            proto += ' || ';
+                        }
+                    }
+                }
+            } else { //get prototype from user
+                proto = $("#filter-prototype-str").val();
+            }
+
+            p.filter_prototype = proto;
+            $("#property-filters").dialog("close");
+
+            //add icon to show which properties have filters
+            if (n>0) {
+                $('#class_instance_' + builder_workbench.property_selection_of_instance + ' .property-row:nth-of-type(' + (builder_workbench.property_selection.n+2) + ') span:nth-of-type(5)').html('<span class="ui-icon ui-icon-check"></span>Edit');
+            } else {
+                $('#class_instance_' + builder_workbench.property_selection_of_instance + ' .property-row:nth-of-type(' + (builder_workbench.property_selection.n+2) + ') span:nth-of-type(5)').html('Edit');
+            }
+
+            //reset the query
+            builder.reset();
         });
 
         $("body").on('click', '.filter-remove', function() {

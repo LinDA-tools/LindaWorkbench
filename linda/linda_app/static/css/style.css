@@ -2048,6 +2048,14 @@ input, textarea {
     font-size: 12px;
 }
 
+#builder_workspace .property-row .ui-icon-check {
+    position: absolute;
+}
+
+#builder_workspace .property-row:hover .ui-icon-check {
+    display: none;
+}
+
 #builder_workspace .class-instance .property-row .delete-property:hover, #builder_workspace .class-instance .property-row span:nth-of-type(5):hover, #builder_workspace .class-instance .property-row span:nth-of-type(6):hover {
     color: #FC5006;
     cursor: pointer;
@@ -2107,4 +2115,43 @@ input, textarea {
 .filter-row:hover .filter-remove:hover {
     cursor: pointer;
     color: #FC5006;
+}
+
+.filter-object {
+    display: inline-block;
+    padding: 5px;
+    color: #fff;
+    margin: 5px;
+    background: #00B16A;
+    border-radius: 5px;
+    position: relative;
+    padding-right: 20px;
+}
+
+.filter-object .filter-id {
+    font-size: 80%;
+    color: #eee;
+    margin-left: 10px;
+}
+
+.filter-object .filter-remove {
+    position: absolute;
+    top: 0px;
+    margin-left: 10px;
+    margin-right: 5px;
+    font-size: 80%;
+    color: #00B16A;
+    cursor: pointer;
+}
+
+.filter-object:hover .filter-remove {
+    color: #eee;
+}
+
+.add-filter {
+    margin-right: 10px;
+}
+
+.ui-dialog-titlebar-close {
+    display: none;
 }

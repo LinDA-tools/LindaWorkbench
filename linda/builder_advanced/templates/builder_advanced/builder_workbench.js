@@ -74,7 +74,7 @@
                 }
 
                 var property_object_str = '<div class="property-row" ' + data_i_n + '>' + delete_property + '<span class="property-show"><input type="checkbox" checked="checked"/></span><span>';
-                property_object_str += uri_to_label(p_object.uri) + '</span><span class="property-optional"><input  type="checkbox" ' + optional_disabled + ' /></span><span class="property-order-by"><select><option value=""></option><option value="ASC">ASC</option><option value="DESC">DESC</option></select></span><span>Filters</span><span ' + data_i_n + '>+Add connection</span></div>';
+                property_object_str += uri_to_label(p_object.uri) + '</span><span class="property-optional"><input  type="checkbox" ' + optional_disabled + ' /></span><span class="property-order-by"><select><option value=""></option><option value="ASC">ASC</option><option value="DESC">DESC</option></select></span><span>Edit</span><span ' + data_i_n + '>+Add connection</span></div>';
                 var property_object = $.parseHTML(property_object_str);
 
                 var id = "#class_instance_" + i_num;
@@ -163,6 +163,7 @@
         /*Adding filter*/
         $("body").on('click', '.property-row span:nth-of-type(5)', function(e) {
             builder_workbench.property_selection = builder_workbench.instances[ $(this).parent().data('i') ].selected_properties[ $(this).parent().data('n') ];
+            builder_workbench.property_selection_of_instance = $(this).parent().data('i');
             show_filters();
         });
 
