@@ -1,3 +1,4 @@
+from datetime import datetime
 import json
 import urllib
 from django.http import Http404, HttpResponse
@@ -8,13 +9,18 @@ from linda_app.models import DatasourceDescription, VocabularyProperty
 
 
 # Home page
-from linda_app.settings import PRIVATE_SPARQL_ENDPOINT, RDF2ANY_SERVER
+from linda_app.settings import PRIVATE_SPARQL_ENDPOINT, RDF2ANY_SERVER, LINDA_HOME
 
 
 def index(request):
     params = {
-        'datasources': DatasourceDescription.objects.all(),
+            'datasources': list(DatasourceDescription.objects.all())
     }
+
+    params['datasources'].insert(0,
+                                 DatasourceDescription(title="All private data dources", name="all", is_public=False
+                                                       , uri=LINDA_HOME + "sparql/all/", createdOn=datetime.today(),
+                                                       lastUpdateOn=datetime.today()))
 
     return render_to_response("builder_advanced/index.html", params)
 

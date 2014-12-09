@@ -6,9 +6,9 @@
             /*Adds an instance of a class*/
             add_instance: function(dt_name, uri, x,y) {
                 var new_id = this.instances.length;
-                var new_instance = $.parseHTML('<div id="class_instance_' + this.instances.length + '" class="class-instance" style="left: ' + x + 'px; top: ' + y + 'px;" class="class-instance"><div class="title"><h3>' + uri_to_label(uri) + '</h3><span class="delete" data-about="' + new_id + '">x</span><span>' + dt_name + '</span></div><div class="properties"><span class="loading">Loading properties...</span></div></div>');
+                var new_instance = $.parseHTML('<div id="class_instance_' + this.instances.length + '" class="class-instance" style="left: ' + x + 'px; top: ' + y + 'px;" class="class-instance"><div class="title"><h3>' + uri_to_label(uri) + '</h3><span class="uri">&lt;' + uri + '&gt;</span><span class="delete" data-about="' + new_id + '">x</span><span class="dataset">' + dt_name + '</span></div><div class="properties"><span class="loading">Loading properties...</span></div></div>');
                 $("#builder_workspace").append(new_instance);
-                $(new_instance).draggable({drag: function() {arrows.draw()}});
+                $(new_instance).draggable({handle: '.title', cursor: 'move', drag: function() {arrows.draw()}});
                 this.bring_to_front(new_instance);
 
                 var instance_object = {id: new_id, uri: uri, dt_name: dt_name, properties: ['URI'], selected_properties: []}
@@ -169,6 +169,10 @@
 
         /*Adding foreign keys*/
         $("body").on('click', '.property-row span:nth-of-type(6)', function(e) {
+            if (builder_workbench.connection_from) { //already set
+                return;
+            }
+
             var style = "";
             if ($(this).prev().prev().prev().find('input').is(':checked')) {
                 var style = "dashed";
@@ -210,6 +214,9 @@
             if ((e.which == 1) && (builder_workbench.connection_from)) {
                 builder_workbench.connection_from = undefined;
                 builder.reset();
+
+                e.preventDefault();
+                e.stopPropagation();
             }
         });
 

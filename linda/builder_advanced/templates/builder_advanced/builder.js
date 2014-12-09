@@ -190,7 +190,6 @@ var builder = {
         }
 
         var cnt_objects = 0;
-
         //create the query string
         this.where_clause += "{\n";
         for (var i=0; i<w.instances.length; i++) {
@@ -207,11 +206,10 @@ var builder = {
         }
         this.where_clause += "}";
 
-        //the result is the SELECT ... WHERE ...
-        this.query = this.select_clause + '\n' + this.where_clause;
-
         if (cnt_objects == 0) { //empty query
-            this.query == '';
+            this.query = '';
+        } else { //the result is the SELECT ... WHERE ...
+            this.query = this.select_clause + '\n' + this.where_clause;
         }
 
         return this.query;

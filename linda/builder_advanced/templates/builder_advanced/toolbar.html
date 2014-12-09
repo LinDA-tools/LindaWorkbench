@@ -9,7 +9,7 @@
         {% endfor %}
     </select>
 
-    <input type="search"/>
+    <input type="search" placeholder="Search for classes"/>
 
     <div class="active-classes">
         <span>Choose a data source to explore</span>
@@ -53,7 +53,7 @@
                 }
 
                 if (this.all_classes.length>limit) {
-                    $("#{{toolbar_id}} .active-classes").append('<span class="info">Showing ' + offset + '-' + (offset+added) + '/' + total + '</span>');
+                    $("#{{toolbar_id}} .active-classes").append('<span class="info">Showing ' + offset + '-' + (offset+added) + '/' + total + ' classes</span>');
                 }
             }
         };

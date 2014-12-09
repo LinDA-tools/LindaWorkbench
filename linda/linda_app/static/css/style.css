@@ -1964,10 +1964,22 @@ input, textarea {
     display: inline-block
 }
 
-#builder_workspace .class-instance .title span {
+#builder_workspace .class-instance .title span.delete, #builder_workspace .class-instance .title span.dataset {
     float: right;
     font-size: 0.8em;
     margin-top: 20px;
+}
+
+#builder_workspace .class-instance .title h3 {
+    top: -10px;
+    position: relative;
+}
+
+#builder_workspace .class-instance .title span.uri {
+    font-size: 10px;
+    position: absolute;
+    left: 10px;
+    top: 35px;
 }
 
 #builder_workspace .class-instance .title span.delete {
