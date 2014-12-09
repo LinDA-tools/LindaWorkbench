@@ -15,6 +15,8 @@ var builder = {
             label = label.substr(label.indexOf('#') + 1);
         }
 
+        label = label.replace(/-/, '_');
+
         return decodeURI(label);
     },
 
@@ -41,7 +43,7 @@ var builder = {
         }
         else if (f.type == "num") {
             var ops = {'eq': '==', 'neq': '!=', 'gt': '>', 'lt': '<', 'gte': '>=', 'lte': '<='};
-            result = p_name + ops[f.operator] + f.value
+            result = 'xsd:decimal(' + p_name + ')' + ops[f.operator] + f.value
         }
         else if (f.type == "date") {
 
