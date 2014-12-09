@@ -1967,7 +1967,7 @@ input, textarea {
 #builder_workspace .class-instance .title span.delete, #builder_workspace .class-instance .title span.dataset {
     float: right;
     font-size: 0.8em;
-    margin-top: 20px;
+    margin-top: 15px;
 }
 
 #builder_workspace .class-instance .title h3 {
@@ -1980,6 +1980,7 @@ input, textarea {
     position: absolute;
     left: 10px;
     top: 35px;
+    color: #ddd;
 }
 
 #builder_workspace .class-instance .title span.delete {
