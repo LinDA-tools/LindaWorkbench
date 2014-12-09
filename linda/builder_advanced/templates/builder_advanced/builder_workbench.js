@@ -4,7 +4,7 @@
             property_selection: undefined,
 
             /*Adds an instance of a class*/
-            add_instance: function(dt_name, uri, x,y) {
+            add_instance: function(dt_name, uri, x,y, default_property) {
                 var new_id = this.instances.length;
                 var new_instance = $.parseHTML('<div id="class_instance_' + this.instances.length + '" class="class-instance" style="left: ' + x + 'px; top: ' + y + 'px;" class="class-instance"><div class="title"><h3>' + uri_to_label(uri) + '</h3><span class="uri">&lt;' + uri + '&gt;</span><span class="delete" data-about="' + new_id + '">x</span><span class="dataset">' + dt_name + '</span></div><div class="properties"><span class="loading">Loading properties...</span></div></div>');
                 $("#builder_workspace").append(new_instance);
@@ -31,10 +31,13 @@
                         $(new_instance).find(".properties").html('<div class="property-table"><div class="header-row"><div></div><span>Show</span><span>Property</span><span>Optional</span><span>Order by</span><span>Filters</span><span>Foreign</span></div></div>');
                         $(new_instance).find(".properties").append('<div class="property-control"></div>');
                         var prop_control = $(new_instance).find(".properties .property-control");
-                        prop_control.append('Found ' + instance_object.properties.length + ' different properties in data.<br />');
+                        prop_control.append('Found ' + (instance_object.properties.length-1) + ' different properties in data.<br />');
                         prop_control.append(select);
                         prop_control.append('<span class="add-property" data-about="' + new_id + '">Add property</span></div>');
                         self.add_property(new_id, 0); //add URI by default
+                        if (default_property) {
+                            self.add_property(new_id, -1, default_property);
+                        }
                     },
                     error: function (jqXHR, textStatus, errorThrown)
                     {
@@ -55,9 +58,14 @@
                 $(obj).css("z-index", mx+1);
             },
 
-            add_property: function(i_num, p_num) {
+            add_property: function(i_num, p_num, p_uri) {
                 var instance = this.instances[i_num];
-                var p_object = {uri: instance.properties[p_num], n: instance.selected_properties.length, optional:false, show:true, order_by: undefined, filters: []};
+
+                if (!p_uri) { //both interfaces available
+                    p_uri = instance.properties[p_num];
+                }
+
+                var p_object = {uri: p_uri, n: instance.selected_properties.length, optional:false, show:true, order_by: undefined, filters: []};
 
                 instance.selected_properties.push(p_object);
 

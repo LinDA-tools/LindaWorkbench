@@ -9,7 +9,7 @@
         {% endfor %}
     </select>
 
-    <input type="search" placeholder="Search for classes"/>
+    <input type="search" placeholder="Search terms"/>
 
     <div class="active-classes">
         <span>Choose a data source to explore</span>
@@ -20,7 +20,7 @@
 {% if js %}
 <script>
         var {{toolbar_id}} = {
-            all_classes: [],
+            all_classes_properties: [],
 
             show_classes: function(filter, offset) {
                 $("#{{toolbar_id}} .active-classes").html('');
@@ -37,12 +37,19 @@
                     $("#{{toolbar_id}} .active-classes").append('<span class="prev-next-classes-button" data-offset="' + (Math.max(offset-limit, 0)) + '">‹</span>');
                 }
 
-                for (var i=0; i<this.all_classes.length; i++) {
-                    var label = uri_to_label(this.all_classes[i]);
+                for (var i=0; i<this.all_classes_properties.length; i++) {
+                    var label = uri_to_label(this.all_classes_properties[i].uri);
                     if (!filter || (label.toLowerCase().indexOf(filter.toLowerCase()) >= 0)) {
                         total++;
                         if ((total > offset) && (total <= offset + limit)) {
-                            $("#{{toolbar_id}} .active-classes").append('<div class="class_button button" data-uri="' + this.all_classes[i] + '">' + label + '</div>');
+                            var data_str = 'data-uri="' + this.all_classes_properties[i].uri + '" data-type="' + this.all_classes_properties[i].type + '"';
+                            var type_class = "class";
+                            if (this.all_classes_properties[i].type == "property") {
+                                data_str += 'data-domain="' + this.all_classes_properties[i].domain + '" data-range="' + this.all_classes_properties[i].range + '"';
+                                type_class = "property";
+                            }
+
+                            $("#{{toolbar_id}} .active-classes").append('<div class="class_button button ' + type_class + '" ' + data_str + '>' + label + '</div>');
                             added++;
                         }
                     }
@@ -52,8 +59,10 @@
                     $("#{{toolbar_id}} .active-classes").append('<span class="prev-next-classes-button" data-offset="' + (offset+limit) + '">›</span>');
                 }
 
-                if (this.all_classes.length>limit) {
-                    $("#{{toolbar_id}} .active-classes").append('<span class="info">Showing ' + offset + '-' + (offset+added) + '/' + total + ' classes</span>');
+                if (added == 0) {
+                    $("#{{toolbar_id}} .active-classes").append('<span class="info">No terms found</span>');
+                } else if (this.all_classes_properties.length>limit) {
+                    $("#{{toolbar_id}} .active-classes").append('<span class="info">Showing ' + (offset+1) + '-' + (offset+added) + '/' + total + ' terms</span>');
                 }
             }
         };
@@ -63,24 +72,41 @@
                 var name = $(this).val();
                 if (name == "") return;
 
-                $("#{{toolbar_id}} .active-classes").html('<span class="loading">Loading classes...</span>');
-                {{toolbar_id}}.all_classes = [];
+                $("#{{toolbar_id}} .active-classes").html('<span class="loading">Loading classes and properties...</span>');
+                {{toolbar_id}}.all_classes_properties = [];
 
-                $.ajax({
-                    url: ADVANCED_BUILDER_API_URI + "active_classes/" +  name + "/",
+                $.ajax({ //make request for properties
+                    url: ADVANCED_BUILDER_API_URI + "object_properties/" +  name + "/",
                     type: "GET",
-                    success: function(data, textStatus, jqXHR)
-                    {
+                    success: function(data, textStatus, jqXHR) {
                         var bindings = data.results.bindings;
-                        for (var i=0; i<bindings.length; i++) {
-                            var class_uri = bindings[i].class.value;
-                            {{toolbar_id}}.all_classes.push(bindings[i].class.value);
+                        for (var i=0; i<bindings.length; i++) { //add all object properties
+                            var property_uri = bindings[i].property.value;
+                            var domain_uri = bindings[i].domain.value;
+                            var range_uri = bindings[i].range.value;
+                            {{toolbar_id}}.all_classes_properties.push({
+                                type: "property", uri: property_uri, domain: domain_uri, range: range_uri
+                            });
                         }
-                        {{toolbar_id}}.show_classes($( '#{{toolbar_id}} > input[type="search"]' ).val());
+
+                        $.ajax({ //make request for classes
+                            url: ADVANCED_BUILDER_API_URI + "active_classes/" +  name + "/",
+                            type: "GET",
+                            success: function(data, textStatus, jqXHR) {
+                                var bindings = data.results.bindings;
+                                for (var i=0; i<bindings.length; i++) { //add all classes
+                                    var class_uri = bindings[i].class.value;
+                                    {{toolbar_id}}.all_classes_properties.push({type: "class", uri: class_uri});
+                                }
+                                {{toolbar_id}}.show_classes($( '#{{toolbar_id}} > input[type="search"]' ).val());
+                            },
+                            error: function (jqXHR, textStatus, errorThrown) {
+                                console.log(textStatus + ': ' + errorThrown);
+                            }
+                        });
                     },
-                    error: function (jqXHR, textStatus, errorThrown)
-                    {
-                        alert(textStatus + ': ' + errorThrown);
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        console.log(textStatus + ': ' + errorThrown);
                     }
                 });
             });
@@ -93,7 +119,12 @@
         /*On class start drag*/
         $("body").on('mousedown','.class_button', function(e) {
             if (e.which == 1) { //only for left click
-                builder_workbench.selection = {'class_uri': $(this).data("uri"), 'dt_name': $( "#{{toolbar_id}} > select" ).val()};
+                builder_workbench.selection = {'type': $(this).data("type"), 'uri': $(this).data("uri"), 'dt_name': $( "#{{toolbar_id}} > select" ).val()};
+                if ($(this).data("type") == "property") {
+                    builder_workbench.selection.domain = $(this).data("domain");
+                    builder_workbench.selection.range = $(this).data("range");
+                }
+
                 e.preventDefault();
                 e.stopPropagation();
             }

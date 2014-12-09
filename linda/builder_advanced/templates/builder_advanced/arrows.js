@@ -70,7 +70,6 @@ var arrows = {
     },
 
     set_style: function(instance_from, n_of_property_from, style) {
-        console.log(instance_from + ' ' + n_of_property_from + ' ' + style);
         for (var i=0; i<this.connections.length; i++) {
             var c = this.connections[i];
             if ((c.f == instance_from) && (c.fp == n_of_property_from)) {

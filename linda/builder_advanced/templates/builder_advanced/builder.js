@@ -12,7 +12,11 @@ var builder = {
 
         var start_pos = 0;
         if (label.indexOf('#') >= 0) {
-            label = label.substr(label.indexOf('#') + 1);
+            if (label.substr( label.indexOf('#') + 1).length > 0) {
+                label = label.substr( label.indexOf('#') + 1);
+            } else {
+                label = label.substr(0, label.indexOf('#'));
+            }
         }
 
         label = label.replace(/-/, '_');
@@ -39,14 +43,39 @@ var builder = {
         var result = "";
 
         if (f.type == "str") {
+            if (f.operator == "eq") {
+                result = "regex(str(" + p_name + "), '^" + f.value + "$$'"; //double $ to avoid getting replaced later by javascript regex
+            }
+            else if (f.operator == "neq") {
+                result = "!regex(str(" + p_name + "), '^" + f.value + "$$'";
+            }
+            else if (f.operator == "starts") {
+                result = "!regex(str(" + p_name + "), '^" + f.value + "'";
+            }
+            else if (f.operator == "ends") {
+                result = "!regex(str(" + p_name + "), '" + f.value + "$$'";
+            }
+            else if (f.operator == "contains") {
+                result = "!regex(str(" + p_name + "), '" + f.value + "'";
+            }
+            else {
+                result = "!regex(str(" + p_name + "), '" + f.value + "'";
+            }
 
+            //case sensitivity
+            if (f.case_sensitive) {
+                result += ")";
+            } else {
+                result += ", 'i')";
+            }
         }
         else if (f.type == "num") {
             var ops = {'eq': '==', 'neq': '!=', 'gt': '>', 'lt': '<', 'gte': '>=', 'lte': '<='};
             result = 'xsd:decimal(' + p_name + ')' + ops[f.operator] + f.value
         }
         else if (f.type == "date") {
-
+            var ops = {'eq': '=', 'neq': '!=', 'gt': '>', 'lt': '<', 'gte': '>=', 'lte': '<='};
+            result = "xsd:date(" + p_name + ")" + ops[f.operator] + "xsd:date('" + f.value + "')";
         }
 
         return result;
@@ -60,7 +89,7 @@ var builder = {
             if (p.filters[f] == undefined) continue;
 
             n++;
-            var f_str = this.get_filter(p_name, p.filters[f])
+            var f_str = this.get_filter(p_name, p.filters[f]);
             result = result.replace('[' + f + ']', '(' + f_str + ')');
         }
 

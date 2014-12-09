@@ -1924,8 +1924,12 @@ input, textarea {
     margin-left: 20px;
 }
 
-.toolbar .class_button:hover {
+.toolbar .class_button.property:hover {
     background: #1E8BC3;
+}
+
+.toolbar .class_button.class:hover {
+    background: #26C281;
 }
 
 .toolbar > select {
@@ -1937,6 +1941,10 @@ input, textarea {
     height: 800px;
     position: relative;
     overflow: hidden;
+}
+
+#builder_workspace > span {
+    padding: 5px;
 }
 
 #builder_workspace.accepting-instance {
@@ -1957,6 +1965,7 @@ input, textarea {
     background: #5C97BF;
     padding: 10px;
     border-bottom: 1px solid #2574A9;
+    min-height: 40px;
 }
 
 #builder_workspace .class-instance .title h3{

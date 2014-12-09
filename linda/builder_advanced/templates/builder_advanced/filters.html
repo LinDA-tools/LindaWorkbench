@@ -38,8 +38,10 @@
 
             <input type="text" placeholder="value"/>
 
-            <input type="checkbox" id="case-sensitive" default="false" />
-            <label for="case-sensitive">Case sensitive</label>
+            <div class="right">
+                <input type="checkbox" id="case-sensitive" default="false" />
+                <label for="case-sensitive">Case sensitive</label>
+            </div>
         </div>
 
         <div class="filter-type filter-type-num">
@@ -70,7 +72,7 @@
             <input type="date" placeholder="value"/>
         </div>
 
-        <div>
+        <div class="clearfix">
             <span class="done button orange right">Done</span>
             <span class="add-filter button blue right">+Add filter</span>
         </div>
@@ -152,6 +154,9 @@
             nf.operator = $(".filter-type-" + nf.type + " select").val();
             nf.operator_label = $(".filter-type-" + nf.type + " select option:selected").text();
             nf.value = $(".filter-type-" + nf.type + " input").val();
+            if (nf.type == "str") {
+                nf.case_sensitive = $("#case-sensitive").is(':checked');
+            }
 
             //save the new filter and refresh
             builder_workbench.property_selection.filters.push(nf);

@@ -82,7 +82,11 @@
 
             var start_pos = 0;
             if (label.indexOf('#') >= 0) {
-                label = label.substr( label.indexOf('#') + 1);
+                if (label.substr( label.indexOf('#') + 1).length > 0) {
+                    label = label.substr( label.indexOf('#') + 1);
+                } else {
+                    label = label.substr(0, label.indexOf('#'));
+                }
             }
             label = label.replace(/_/g, ' ');
             label = label.replace(/-/g, ' ');
@@ -101,7 +105,17 @@
         /*Drag & Dropping*/
         $("#builder_workspace").mouseup(function(e) {
             if ((e.which == 1) && builder_workbench.selection) { //only for left click and when a class selection has been made
-                builder_workbench.add_instance(builder_workbench.selection.dt_name, builder_workbench.selection.class_uri, e.pageX - $(this).position().left, e.pageY - $(this).position().top);
+                if (builder_workbench.selection.type == "class") {
+                    builder_workbench.add_instance(builder_workbench.selection.dt_name, builder_workbench.selection.uri, e.pageX - $(this).position().left, e.pageY - $(this).position().top);
+                } else {
+                    var i_num = builder_workbench.instances.length;
+
+                    builder_workbench.add_instance(builder_workbench.selection.dt_name, builder_workbench.selection.domain, e.pageX - $(this).position().left - 250, e.pageY - $(this).position().top, builder_workbench.selection.uri);
+                    builder_workbench.add_instance(builder_workbench.selection.dt_name, builder_workbench.selection.range, e.pageX - $(this).position().left + 250, e.pageY - $(this).position().top);
+
+                    arrows.add_arrow('#class_instance_' + i_num, 1, '#class_instance_' + (i_num+1), 0);
+                }
+
                 builder_workbench.selection = undefined;
                 $(this).removeClass("accepting-instance");
             }

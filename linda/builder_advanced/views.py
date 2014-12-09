@@ -14,7 +14,7 @@ from linda_app.settings import PRIVATE_SPARQL_ENDPOINT, RDF2ANY_SERVER, LINDA_HO
 
 def index(request):
     params = {
-            'datasources': list(DatasourceDescription.objects.all())
+        'datasources': list(DatasourceDescription.objects.all())
     }
 
     params['datasources'].insert(0,
@@ -61,6 +61,17 @@ def active_classes(request, dt_name):
 
     # query to get all classes with at least one instance
     query = "SELECT DISTINCT ?class WHERE { ?s a ?class }"
+
+    return sparql_query_json(endpoint, query)
+
+
+# Get active classes in a data source
+def object_properties(request, dt_name):
+    # get the endpoint of the query
+    endpoint = get_endpoint_from_dt_name(dt_name)
+
+    # query to get all classes with at least one instance
+    query = "SELECT DISTINCT ?property ?domain ?range WHERE {?property a owl:ObjectProperty. ?property rdfs:domain ?domain. ?property rdfs:range ?range.}"
 
     return sparql_query_json(endpoint, query)
 
