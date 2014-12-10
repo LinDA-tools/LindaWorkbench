@@ -39,6 +39,17 @@ var arrows = {
         this.draw();
     },
 
+    rename_instance: function(old_name, new_name) {
+        for (var i=0; i<this.connections.length; i++) {
+            if (this.connections[i].f == old_name) {
+                this.connections[i].f = new_name;
+            }
+            if (this.connections[i].t == old_name) {
+                this.connections[i].t = new_name;
+            }
+        }
+    },
+
     remove_property: function(instance, p) {
         for (var i=0; i<this.connections.length; ) {
             var c = this.connections[i];
@@ -81,17 +92,71 @@ var arrows = {
     },
 
     in_segment: function(x1, y1, x2, y2, x, y, tolerate) {
-        return (((x>x1-tolerate) && (x2+tolerate>x))||((x>x2-tolerate) && (x1+tolerate>x))) && (((y>y1-tolerate) && (y2+tolerate>y))||((y>y2-tolerate) && (y1+tolerate>y)));
+        //return (((x>x1-tolerate) && (x2+tolerate>x))||((x>x2-tolerate) && (x1+tolerate>x))) && (((y>y1-tolerate) && (y2+tolerate>y))||((y>y2-tolerate) && (y1+tolerate>y)));
+        var a = {x: x1, y: y1};
+        var b = {x: x2, y: y2};
+        var p = {x: x, y: y};
+
+        var dy = a.y - b.y;
+        var dx = a.x - b.x;
+        if(dy == 0) { //horizontal line
+            if(Math.abs(p.y -a.y) <= tolerate) {
+                if(a.x > b.x) {
+                    if((p.x - tolerate <= a.x) && (p.x + tolerate >= b.x))
+                        return true;
+                }
+                else {
+                    if((p.x + tolerate >= a.x) && (p.x - tolerate <= b.x))
+                        return true;
+                }
+            }
+        }
+        else if(dx == 0) { //vertical line
+            if(Math.abs(p.x -a.x) <= tolerate) {
+                if(a.y > b.y) {
+                    if((p.y - tolerate <= a.y) && (p.y + tolerate >= b.y))
+                        return true;
+                }
+                else {
+                    if((p.y + tolerate >= a.y) && (p.y - tolerate <= b.y))
+                        return true;
+                }
+            }
+        }
+
+        return false;
     },
 
     in_path: function(x, y, p) {
         for (var i=0; i<p.length-1; i++) {
-            if (this.in_segment(p[i].x, p[i].y, p[i+1].x, p[i+1].y, x, y, 20)) {
+            if (this.in_segment(p[i].x, p[i].y, p[i+1].x, p[i+1].y, x, y, 10)) {
                 return true;
             }
         }
 
         return false;
+    },
+
+    over_arrows: function(x, y) {
+        var changed = false;
+
+        for (var i=0; i<this.connections.length; i++) {
+            if (this.in_path(x, y, this.paths[i])) {
+                if (!this.connections[i].hovered) {
+                    changed = true;
+                }
+                this.connections[i].hovered = true;
+            } else {
+                if (this.connections[i].hovered) {
+                    changed = true;
+                }
+                this.connections[i].hovered = false;
+            }
+        }
+
+        if (changed) { //only redraw if an on hover changed
+            this.draw();
+        }
     },
 
     in_arrows: function(x, y) {
@@ -176,6 +241,9 @@ var arrows = {
 
             if (c.clicked) {
                 this.ctx.strokeStyle = '#ff0000';
+            }
+            else if (c.hovered) {
+                this.ctx.strokeStyle = '#aa0000';
             } else {
                 this.ctx.strokeStyle = '#000000';
             }

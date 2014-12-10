@@ -97,7 +97,11 @@
                 // uppercase the first character
                 .replace(/^./, function(str){ return str.toUpperCase(); });
 
-            return label;
+            if (label[0] == ' ') {
+                return label.substr(1);  //remove the initial space
+            } else {
+                return label;
+            }
         }
 
         {% include "builder_advanced/builder_workbench.js" %}
@@ -110,8 +114,8 @@
                 } else {
                     var i_num = builder_workbench.instances.length;
 
-                    builder_workbench.add_instance(builder_workbench.selection.dt_name, builder_workbench.selection.domain, e.pageX - $(this).position().left - 250, e.pageY - $(this).position().top, builder_workbench.selection.uri);
-                    builder_workbench.add_instance(builder_workbench.selection.dt_name, builder_workbench.selection.range, e.pageX - $(this).position().left + 250, e.pageY - $(this).position().top);
+                    builder_workbench.add_instance(builder_workbench.selection.dt_name, builder_workbench.selection.domain, e.pageX - $(this).position().left - 300, e.pageY - $(this).position().top, builder_workbench.selection.uri);
+                    builder_workbench.add_instance(builder_workbench.selection.dt_name, builder_workbench.selection.range, e.pageX - $(this).position().left + 300, e.pageY - $(this).position().top);
 
                     arrows.add_arrow('#class_instance_' + i_num, 1, '#class_instance_' + (i_num+1), 0);
                 }
@@ -130,6 +134,13 @@
         $("#builder_workspace").mouseleave(function(e) {
             if (builder_workbench.selection) {
                 $(this).removeClass("accepting-instance");
+            }
+        });
+
+        /*Handle hover on arrows*/
+        $("#builder-canvas").on('mousemove', function(e) {
+            if (!builder_workbench.connection_from) {
+                arrows.over_arrows(e.screenX - $(this).offset().left, e.screenY - $(this).offset().top - 60);
             }
         });
 

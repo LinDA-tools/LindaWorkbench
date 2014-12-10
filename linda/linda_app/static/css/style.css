@@ -1990,6 +1990,7 @@ input, textarea {
     left: 10px;
     top: 35px;
     color: #ddd;
+    line-height: 10px;
 }
 
 #builder_workspace .class-instance .title span.delete {

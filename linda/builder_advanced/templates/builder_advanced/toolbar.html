@@ -39,6 +39,7 @@
 
                 for (var i=0; i<this.all_classes_properties.length; i++) {
                     var label = uri_to_label(this.all_classes_properties[i].uri);
+
                     if (!filter || (label.toLowerCase().indexOf(filter.toLowerCase()) >= 0)) {
                         total++;
                         if ((total > offset) && (total <= offset + limit)) {
@@ -47,6 +48,7 @@
                             if (this.all_classes_properties[i].type == "property") {
                                 data_str += 'data-domain="' + this.all_classes_properties[i].domain + '" data-range="' + this.all_classes_properties[i].range + '"';
                                 type_class = "property";
+                                label += '&rArr;';
                             }
 
                             $("#{{toolbar_id}} .active-classes").append('<div class="class_button button ' + type_class + '" ' + data_str + '>' + label + '</div>');
@@ -94,10 +96,15 @@
                             type: "GET",
                             success: function(data, textStatus, jqXHR) {
                                 var bindings = data.results.bindings;
+
                                 for (var i=0; i<bindings.length; i++) { //add all classes
                                     var class_uri = bindings[i].class.value;
                                     {{toolbar_id}}.all_classes_properties.push({type: "class", uri: class_uri});
                                 }
+
+                                {{toolbar_id}}.all_classes_properties.sort(function(a, b) {
+                                    return uri_to_label(a.uri).length - uri_to_label(b.uri).length;
+                                });
                                 {{toolbar_id}}.show_classes($( '#{{toolbar_id}} > input[type="search"]' ).val());
                             },
                             error: function (jqXHR, textStatus, errorThrown) {

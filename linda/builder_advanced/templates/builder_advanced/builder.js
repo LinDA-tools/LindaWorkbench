@@ -24,9 +24,13 @@ var builder = {
         return decodeURI(label);
     },
 
-    get_constraint_name: function(uri) {
+    get_constraint_name: function(uri, is_class) {
         var label = this.uri_to_constraint(uri);
-        return label.charAt(0).toLowerCase() + label.slice(1); //make first letter lower case
+        if (is_class == true) {
+            return label.charAt(0).toUpperCase() + label.slice(1);
+        } else {
+            return label.charAt(0).toLowerCase() + label.slice(1); //make first letter lower case
+        }
     },
 
     is_initial: function(w, i) {
@@ -148,7 +152,7 @@ var builder = {
                 //connect property to class instances
                 var constraint = '';
                 if (p.uri != 'URI') {
-                    constraint = '?' + i_name + ' <' + p.uri + '> ?' + p_name + '. ';
+                    constraint = '?' + i_name + ' <' + p.uri + '> ?' + p_name + '. \n';
                     constraint += this.get_foreign(w, i, p_name, j) + '\n'; //handle foreign keys
                 } else {
                     constraint = this.get_foreign(w, i, i_name, j) + '\n'; //handle foreign keys
@@ -197,13 +201,13 @@ var builder = {
             if (w.instances[i] == undefined) continue;
             if (i_names[i] != "") continue;
 
-            var label = this.get_constraint_name(w.instances[i].uri); //get the constraint name
+            var label = this.get_constraint_name(w.instances[i].uri, true); //get the constraint name
 
             var cnt = 1; //label is found once
             for (var j=i+1; j<w.instances.length; j++) {  //search if there are class instances with the same label
                 if (w.instances[j] == undefined) continue;
 
-                if (this.get_constraint_name(w.instances[j].uri) == label) {
+                if (this.get_constraint_name(w.instances[j].uri, true) == label) {
                     if (i_names[i] == "") {
                         i_names[i] = label + '1';
                     }

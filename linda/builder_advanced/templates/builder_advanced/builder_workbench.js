@@ -21,18 +21,31 @@
                     success: function(data, textStatus, jqXHR)
                     {
                         var bindings = data.results.bindings;
+                        //sort properties by label
+                        bindings.sort(function(a,b) {
+                            return uri_to_label(a.property.value).toLowerCase().localeCompare(uri_to_label(b.property.value).toLowerCase());
+                        });
 
                         var select = $.parseHTML('<select class="property-select"></select>');
                         for (var i=0; i<bindings.length; i++) {
-                            instance_object.properties.push(bindings[i].property.value);
-                            $(select).append('<option value="' +bindings[i].property.value+ '">' + uri_to_label(bindings[i].property.value)  + '</option>');
+                            if (uri_to_label(bindings[i].property.value).length > 0){
+                                instance_object.properties.push(bindings[i].property.value);
+                                $(select).append('<option value="' +bindings[i].property.value+ '">' + uri_to_label(bindings[i].property.value)  + '</option>');
+                            }
                         }
 
                         $(new_instance).find(".properties").html('<div class="property-table"><div class="header-row"><div></div><span>Show</span><span>Property</span><span>Optional</span><span>Order by</span><span>Filters</span><span>Foreign</span></div></div>');
                         $(new_instance).find(".properties").append('<div class="property-control"></div>');
                         var prop_control = $(new_instance).find(".properties .property-control");
                         prop_control.append('Found ' + (instance_object.properties.length-1) + ' different properties in data.<br />');
-                        prop_control.append(select);
+
+                        try {
+                            prop_control.append(select);
+                        }
+                        catch(err) {
+                            console.log(err);
+                        }
+
                         prop_control.append('<span class="add-property" data-about="' + new_id + '">Add property</span></div>');
                         self.add_property(new_id, 0); //add URI by default
                         if (default_property) {
@@ -78,11 +91,11 @@
                 if (p_object.uri == "URI") {
                     var delete_property = '<div></div>';
                 } else {
-                    var delete_property = '<div class="delete-property" ' + data_i_n + '>x</div>';
+                    var delete_property = '<div class="delete-property">x</div>';
                 }
 
                 var property_object_str = '<div class="property-row" ' + data_i_n + '>' + delete_property + '<span class="property-show"><input type="checkbox" checked="checked"/></span><span>';
-                property_object_str += uri_to_label(p_object.uri) + '</span><span class="property-optional"><input  type="checkbox" ' + optional_disabled + ' /></span><span class="property-order-by"><select><option value=""></option><option value="ASC">ASC</option><option value="DESC">DESC</option></select></span><span>Edit</span><span ' + data_i_n + '>+Add connection</span></div>';
+                property_object_str += uri_to_label(p_object.uri) + '</span><span class="property-optional"><input  type="checkbox" ' + optional_disabled + ' /></span><span class="property-order-by"><select><option value=""></option><option value="ASC">ASC</option><option value="DESC">DESC</option></select></span><span>Edit</span><span>+Add connection</span></div>';
                 var property_object = $.parseHTML(property_object_str);
 
                 var id = "#class_instance_" + i_num;
@@ -119,10 +132,32 @@
             var n = $(this).data("about");
             var id = "#class_instance_" + n;
 
-            $(id).remove();
+            $(id).remove(); //delete the instance container
 
             arrows.remove_instance(id); //remove arrows from and to this instance
-            builder_workbench.instances[n] = undefined; //also delete from instance array
+
+            //rearrange remaining instances after the deleted
+            for (var i=n+1; i<builder_workbench.instances.length; i++) {
+                //update the x button
+                $("#class_instance_" + i + " .delete").data('about', (i-1));
+                $("#class_instance_" + i + " .delete").attr('data-about', (i-1));
+
+                //update the add property button
+                $("#class_instance_" + i + " .add-property").data('about', (i-1));
+                $("#class_instance_" + i + " .add-property").attr('data-about', (i-1));
+
+                //update each property row
+                $("#class_instance_" + i + " .property-row").data('i', (i-1));
+                $("#class_instance_" + i + " .property-row").attr('data-i', (i-1));
+
+                //change id
+                $("#class_instance_" + i).attr('id', "class_instance_" + (i-1));
+
+                //update connections
+                arrows.rename_instance("#class_instance_" + i, "#class_instance_" + (i-1));
+            }
+
+            builder_workbench.instances.splice(n, 1); //also delete from instance array
 
             builder.reset();
         });
@@ -133,13 +168,11 @@
             var n = $(this).parent().data("n");
 
             for (var j=0; j<$(this).parent().siblings().length; j++) { //update next properties' <n> data
-                var nx = $(this).parent().siblings()[j]
+                var nx = $(this).parent().siblings()[j];
                 if ($(nx).data('n') > n) {
                     var new_n = $(nx).data('n') - 1;
                     $(nx).data('n', new_n);
                     $(nx).attr('data-n', new_n);
-                    $(nx).find(".delete-property, span:nth-of-type(6)").data('n', new_n);
-                    $(nx).find(".delete-property, span:nth-of-type(6)").attr('data-n', new_n);
                 }
             }
 
@@ -186,7 +219,8 @@
                 var style = "dashed";
             }
 
-            builder_workbench.connection_from = {i: $(this).data('i'), n: $(this).data('n'), style: style};
+            console.log($(this).parent().data('i'));
+            builder_workbench.connection_from = {i: $(this).parent().data('i'), n: $(this).parent().data('n'), style: style};
 
             e.preventDefault();
             e.stopPropagation();
@@ -203,7 +237,7 @@
             var c = builder_workbench.connection_from;
             if (c !=  undefined) {
                 if ($(this).data('i') == c.i) return;
-
+                console.log($(this).data('i'));
                 arrows.add_arrow('#class_instance_' + c.i, c.n, '#class_instance_' + $(this).data('i'), $(this).data('n'), c.style);
             }
         });
