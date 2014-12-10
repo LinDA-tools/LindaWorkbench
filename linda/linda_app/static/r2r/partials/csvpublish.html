@@ -1,0 +1,22 @@
+<div ng-controller="PublishCtrl">
+  <button class="btn btn-default" ng-click="dumpcsv()">Download RDF dump</button>
+  <button class="btn btn-default" ng-click="mappingcsv()">Download mapping file</button>
+
+  <br />
+
+  <div class="btn-group">
+    <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+      Publish <span class="caret"></span>
+    </button>
+    <ul class="dropdown-menu" role="menu">
+      <li><a href="#" ng-click="publish('sparqlify')">as SPARQL Endpoint</a></li>
+      <li><a href="#" ng-click="publish('openrdf')">to OpenRDF</a></li>
+    </ul>
+  </div>
+
+  &nbsp;
+  <i class="fa fa-spinner fa-spin fa-lg" ng-show="publishing"></i>
+  <i class="fa fa-check fa-lg" ng-show="success && published && !publishing" style="color: #449d44"></i>
+  <i class="fa fa-times fa-lg" ng-show="!success && published && !publishing" style="color: #c9302c"></i>
+
+</div>

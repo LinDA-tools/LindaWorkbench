@@ -5,12 +5,18 @@
     csvAdapter = Config.backend + '/api/v1/csv';
     csvData = [];
     uploads = 0;
-    tables = [];
-    tableColumns = {};
-    selectedTables = [];
-    selectedColumns = {};
+    tables = ['data.csv'];
+    tableColumns = {
+      'data.csv': []
+    };
+    selectedTables = ['data.csv'];
+    selectedColumns = {
+      'data.csv': ['TIME', 'UNIT', 'Value']
+    };
     return {
-      csvFile: null,
+      csvFile: {
+        name: 'data.csv'
+      },
       uploads: function() {
         return uploads;
       },

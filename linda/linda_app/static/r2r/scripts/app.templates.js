@@ -65,6 +65,32 @@ angular.module('dist').run(['$templateCache', function($templateCache) {
   );
 
 
+  $templateCache.put('partials/csvpublish.html',
+    "<div ng-controller=\"PublishCtrl\">\n" +
+    "  <button class=\"btn btn-default\" ng-click=\"dumpcsv()\">Download RDF dump</button>\n" +
+    "  <button class=\"btn btn-default\" ng-click=\"mappingcsv()\">Download mapping file</button>\n" +
+    "\n" +
+    "  <br />\n" +
+    "\n" +
+    "  <div class=\"btn-group\">\n" +
+    "    <button class=\"btn btn-primary dropdown-toggle\" data-toggle=\"dropdown\" aria-expanded=\"false\">\n" +
+    "      Publish <span class=\"caret\"></span>\n" +
+    "    </button>\n" +
+    "    <ul class=\"dropdown-menu\" role=\"menu\">\n" +
+    "      <li><a href=\"#\" ng-click=\"publish('sparqlify')\">as SPARQL Endpoint</a></li>\n" +
+    "      <li><a href=\"#\" ng-click=\"publish('openrdf')\">to OpenRDF</a></li>\n" +
+    "    </ul>\n" +
+    "  </div>\n" +
+    "\n" +
+    "  &nbsp;\n" +
+    "  <i class=\"fa fa-spinner fa-spin fa-lg\" ng-show=\"publishing\"></i>\n" +
+    "  <i class=\"fa fa-check fa-lg\" ng-show=\"success && published && !publishing\" style=\"color: #449d44\"></i>\n" +
+    "  <i class=\"fa fa-times fa-lg\" ng-show=\"!success && published && !publishing\" style=\"color: #c9302c\"></i>\n" +
+    "\n" +
+    "</div>\n"
+  );
+
+
   $templateCache.put('partials/csvreconcile.html',
     "<div ng-controller=\"CsvReconcileCtrl\">\n" +
     "\n" +
@@ -145,6 +171,75 @@ angular.module('dist').run(['$templateCache', function($templateCache) {
   );
 
 
+  $templateCache.put('partials/csvrefine.html',
+    "<div ng-controller=\"CsvRefineCtrl\">\n" +
+    "\n" +
+    "  <div class=\"row\">\n" +
+    "    <label for=\"baseUriInput\" class=\"col-md-2 control-label\">Base URI</label>\n" +
+    "    <div id=\"baseUriInput\" class=\"col-md-8\">\n" +
+    "      <input type=\"text\" ng-model=\"rdf.baseUri\" spellcheck=\"false\" size=\"60\" placeholder=\"http://my.company.com/dataset/\" />\n" +
+    "    </div>\n" +
+    "  </div>\n" +
+    "\n" +
+    "  <hr />\n" +
+    " \n" +
+    "  <div class=\"row\">\n" +
+    "    <div class=\"col-md-6\">\n" +
+    "      <p align=\"left\">\n" +
+    "        For file: <b>{{csv.csvFile.name}}</b>\n" +
+    "      </p>\n" +
+    "    </div>\n" +
+    "  </div>\n" +
+    "\n" +
+    "  <div ng-show=\"table && table != ''\">\n" +
+    "    <div class=\"row\">\n" +
+    "      <div class=\"col-md-2\">\n" +
+    "        Columns:\n" +
+    "      </div>\n" +
+    "      <div class=\"col-md-10\">\n" +
+    "        <button ng-repeat=\"column in columns\" type=\"button\" class=\"btn btn-default btn-sm\" ng-class=\"{active: isSelected(column)}\" ng-click=\"insert(column)\">{{column}}</button>\n" +
+    "      </div>\n" +
+    "\n" +
+    "      <div class=\"col-md-2\">\n" +
+    "        Subject URI:\n" +
+    "      </div>\n" +
+    "      <div class=\"col-md-10\">\n" +
+    "        <textarea rows=\"1\" cols=\"60\" content=\"rdf.subjectTemplate\" cursor cursorpos=\"cursorpos\" ng-model=\"rdf.subjectTemplate\"></textarea>\n" +
+    "      </div>\n" +
+    "    </div>\n" +
+    "\n" +
+    "    <div class=\"row\" ng-repeat=\"class in rdf.selectedClasses[table]\">\n" +
+    "      <div class=\"col-md-1\">\n" +
+    "        <div align=\"right\"><i class=\"fa fa-arrow-right\"></i></div>\n" +
+    "      </div>\n" +
+    "      <div class=\"col-md-3\" align=\"right\">\n" +
+    "        <b><em>a</em></b>\n" +
+    "      </div>\n" +
+    "      <div class=\"col-md-4\">\n" +
+    "        <b>{{class.prefixedName[0]}}</b>\n" +
+    "      </div>\n" +
+    "    </div>\n" +
+    "\n" +
+    "    <div class=\"row\" ng-repeat=\"prop in rdf.selectedProperties[table]\">\n" +
+    "      <div class=\"col-md-1\">\n" +
+    "        <div align=\"right\"><i class=\"fa fa-arrow-right\"></i></div>\n" +
+    "      </div>\n" +
+    "      <div class=\"col-md-3\" align=\"right\">\n" +
+    "        <b><em>{{prop.prefixedName[0]}}</em></b>\n" +
+    "      </div>\n" +
+    "      <div class=\"col-md-4\">\n" +
+    "        <select class=\"form-control\" ng-model=\"rdf.propertyLiteralSelection[prop.prefixedName[0]]\" ng-options=\"selection for selection in propertyLiteralTypeOptions\" />\n" +
+    "      </div>\n" +
+    "      <div class=\"col-md-4\">\n" +
+    "        <select class=\"form-control\" ng-model=\"rdf.propertyLiteralTypes[prop.prefixedName[0]]\" ng-options=\"type for type in propertyLiteralTypes\" ng-show=\"rdf.propertyLiteralSelection[prop.prefixedName[0]] == 'Typed Literal'\"></input>\n" +
+    "      </div>\n" +
+    "    </div>\n" +
+    "  </div>\n" +
+    "\n" +
+    "</div>\n"
+  );
+
+
   $templateCache.put('partials/csvtrans.html',
     "<div class=\"main container\" style=\"min-height:128em\">\n" +
     "\n" +
@@ -204,7 +299,7 @@ angular.module('dist').run(['$templateCache', function($templateCache) {
     "      <p>In this step, you specify the URIs that will be generated for each row of every selected table. Typically, they are made up of your web address and the content of the column(s) that constitute the Primary Key, intervened by fixed separators.</p>\n" +
     "\n" +
     "      <br />\n" +
-    "      <div ng-include src=\"'/static/r2r/partials/refine.html'\"></div>\n" +
+    "      <div ng-include src=\"'/static/r2r/partials/csvrefine.html'\"></div>\n" +
     "    </step>\n" +
     "\n" +
     "    <step name=\"6. publishing\"\n" +
@@ -216,7 +311,7 @@ angular.module('dist').run(['$templateCache', function($templateCache) {
     "      <p>In either case, you will have to provide the respective technical information, such as file paths and the like.</p>\n" +
     "\n" +
     "      <br />\n" +
-    "      <div ng-include src=\"'/static/r2r/partials/publish.html'\"></div>\n" +
+    "      <div ng-include src=\"'/static/r2r/partials/csvpublish.html'\"></div>\n" +
     "    </step>\n" +
     "\n" +
     "    <step name=\"7. finished\"\n" +
@@ -232,32 +327,6 @@ angular.module('dist').run(['$templateCache', function($templateCache) {
     "  </wizard>\n" +
     "\n" +
     "  <p align=\"center\" style=\"font-size: 20px;margin-top: 10em\">❦</p>\n" +
-    "</div>\n"
-  );
-
-
-  $templateCache.put('partials/publish.html',
-    "<div ng-controller=\"PublishCtrl\">\n" +
-    "  <button class=\"btn btn-default\" ng-click=\"dump()\">Download RDF dump</button>\n" +
-    "  <button class=\"btn btn-default\" ng-click=\"mapping()\">Download mapping file</button>\n" +
-    "\n" +
-    "  <br />\n" +
-    "\n" +
-    "  <div class=\"btn-group\">\n" +
-    "    <button class=\"btn btn-primary dropdown-toggle\" data-toggle=\"dropdown\" aria-expanded=\"false\">\n" +
-    "      Publish <span class=\"caret\"></span>\n" +
-    "    </button>\n" +
-    "    <ul class=\"dropdown-menu\" role=\"menu\">\n" +
-    "      <li><a href=\"#\" ng-click=\"publish('sparqlify')\">as SPARQL Endpoint</a></li>\n" +
-    "      <li><a href=\"#\" ng-click=\"publish('openrdf')\">to OpenRDF</a></li>\n" +
-    "    </ul>\n" +
-    "  </div>\n" +
-    "\n" +
-    "  &nbsp;\n" +
-    "  <i class=\"fa fa-spinner fa-spin fa-lg\" ng-show=\"publishing\"></i>\n" +
-    "  <i class=\"fa fa-check fa-lg\" ng-show=\"success && published && !publishing\" style=\"color: #449d44\"></i>\n" +
-    "  <i class=\"fa fa-times fa-lg\" ng-show=\"!success && published && !publishing\" style=\"color: #c9302c\"></i>\n" +
-    "\n" +
     "</div>\n"
   );
 
@@ -331,6 +400,32 @@ angular.module('dist').run(['$templateCache', function($templateCache) {
     "      </td>\n" +
     "    </tr>\n" +
     "  </table>\n" +
+    "</div>\n"
+  );
+
+
+  $templateCache.put('partials/rdbpublish.html',
+    "<div ng-controller=\"PublishCtrl\">\n" +
+    "  <button class=\"btn btn-default\" ng-click=\"dumpdb()\">Download RDF dump</button>\n" +
+    "  <button class=\"btn btn-default\" ng-click=\"mappingdb()\">Download mapping file</button>\n" +
+    "\n" +
+    "  <br />\n" +
+    "\n" +
+    "  <div class=\"btn-group\">\n" +
+    "    <button class=\"btn btn-primary dropdown-toggle\" data-toggle=\"dropdown\" aria-expanded=\"false\">\n" +
+    "      Publish <span class=\"caret\"></span>\n" +
+    "    </button>\n" +
+    "    <ul class=\"dropdown-menu\" role=\"menu\">\n" +
+    "      <li><a href=\"#\" ng-click=\"publish('sparqlify')\">as SPARQL Endpoint</a></li>\n" +
+    "      <li><a href=\"#\" ng-click=\"publish('openrdf')\">to OpenRDF</a></li>\n" +
+    "    </ul>\n" +
+    "  </div>\n" +
+    "\n" +
+    "  &nbsp;\n" +
+    "  <i class=\"fa fa-spinner fa-spin fa-lg\" ng-show=\"publishing\"></i>\n" +
+    "  <i class=\"fa fa-check fa-lg\" ng-show=\"success && published && !publishing\" style=\"color: #449d44\"></i>\n" +
+    "  <i class=\"fa fa-times fa-lg\" ng-show=\"!success && published && !publishing\" style=\"color: #c9302c\"></i>\n" +
+    "\n" +
     "</div>\n"
   );
 
@@ -411,6 +506,77 @@ angular.module('dist').run(['$templateCache', function($templateCache) {
     "      </td>\n" +
     "    </tr>\n" +
     "  </table>\n" +
+    "\n" +
+    "</div>\n"
+  );
+
+
+  $templateCache.put('partials/rdbrefine.html',
+    "<div ng-controller=\"RdbRefineCtrl\">\n" +
+    "\n" +
+    "  <div class=\"row\">\n" +
+    "    <label for=\"baseUriInput\" class=\"col-md-2 control-label\">Base URI</label>\n" +
+    "    <div id=\"baseUriInput\" class=\"col-md-8\">\n" +
+    "      <input type=\"text\" ng-model=\"rdf.baseUri\" spellcheck=\"false\" size=\"60\" placeholder=\"http://my.company.com/dataset/\" />\n" +
+    "    </div>\n" +
+    "  </div>\n" +
+    "\n" +
+    "  <hr />\n" +
+    " \n" +
+    "  <div class=\"row\">\n" +
+    "    <div class=\"col-md-4\">\n" +
+    "      <p align=\"left\">\n" +
+    "        <select class=\"form-control\" ng-model=\"table\" ng-options=\"table for table in rdb.selectedTables()\">\n" +
+    "          <option>--</option>\n" +
+    "        </select>\n" +
+    "      </p>\n" +
+    "    </div>\n" +
+    "  </div>\n" +
+    "\n" +
+    "  <div ng-show=\"table && table != ''\">\n" +
+    "    <div class=\"row\">\n" +
+    "      <div class=\"col-md-2\">\n" +
+    "        Columns:\n" +
+    "      </div>\n" +
+    "      <div class=\"col-md-10\">\n" +
+    "        <button ng-repeat=\"column in columns\" type=\"button\" class=\"btn btn-default btn-sm\" ng-class=\"{active: isSelected(column)}\" ng-click=\"insert(column)\">{{column}}</button>\n" +
+    "      </div>\n" +
+    "\n" +
+    "      <div class=\"col-md-2\">\n" +
+    "        Subject URI:\n" +
+    "      </div>\n" +
+    "      <div class=\"col-md-10\">\n" +
+    "        <textarea rows=\"1\" cols=\"60\" content=\"rdf.subjectTemplate\" cursor cursorpos=\"cursorpos\" ng-model=\"rdf.subjectTemplate\"></textarea>\n" +
+    "      </div>\n" +
+    "    </div>\n" +
+    "\n" +
+    "    <div class=\"row\" ng-repeat=\"class in rdf.selectedClasses[table]\">\n" +
+    "      <div class=\"col-md-1\">\n" +
+    "        <div align=\"right\"><i class=\"fa fa-arrow-right\"></i></div>\n" +
+    "      </div>\n" +
+    "      <div class=\"col-md-3\" align=\"right\">\n" +
+    "        <b><em>a</em></b>\n" +
+    "      </div>\n" +
+    "      <div class=\"col-md-4\">\n" +
+    "        <b>{{class.prefixedName[0]}}</b>\n" +
+    "      </div>\n" +
+    "    </div>\n" +
+    "\n" +
+    "    <div class=\"row\" ng-repeat=\"prop in rdf.selectedProperties[table]\">\n" +
+    "      <div class=\"col-md-1\">\n" +
+    "        <div align=\"right\"><i class=\"fa fa-arrow-right\"></i></div>\n" +
+    "      </div>\n" +
+    "      <div class=\"col-md-3\" align=\"right\">\n" +
+    "        <b><em>{{prop.prefixedName[0]}}</em></b>\n" +
+    "      </div>\n" +
+    "      <div class=\"col-md-4\">\n" +
+    "        <select class=\"form-control\" ng-model=\"rdf.propertyLiteralSelection[prop.prefixedName[0]]\" ng-options=\"selection for selection in propertyLiteralTypeOptions\" />\n" +
+    "      </div>\n" +
+    "      <div class=\"col-md-4\">\n" +
+    "        <select class=\"form-control\" ng-model=\"rdf.propertyLiteralTypes[prop.prefixedName[0]]\" ng-options=\"type for type in propertyLiteralTypes\" ng-show=\"rdf.propertyLiteralSelection[prop.prefixedName[0]] == 'Typed Literal'\"></input>\n" +
+    "      </div>\n" +
+    "    </div>\n" +
+    "  </div>\n" +
     "\n" +
     "</div>\n"
   );
@@ -499,7 +665,7 @@ angular.module('dist').run(['$templateCache', function($templateCache) {
     "      <p>In this step, you specify the URIs that will be generated for each row of every selected table. Typically, they are made up of your web address and the content of the column(s) that constitute the Primary Key, intervened by fixed separators.</p>\n" +
     "\n" +
     "      <br />\n" +
-    "      <div ng-include src=\"'/static/r2r/partials/refine.html'\"></div>\n" +
+    "      <div ng-include src=\"'/static/r2r/partials/rdbrefine.html'\"></div>\n" +
     "    </step>\n" +
     "\n" +
     "    <step name=\"6. publishing\"\n" +
@@ -511,7 +677,7 @@ angular.module('dist').run(['$templateCache', function($templateCache) {
     "      <p>In either case, you will have to provide the respective technical information, such as file paths and the like.</p>\n" +
     "\n" +
     "      <br />\n" +
-    "      <div ng-include src=\"'/static/r2r/partials/publish.html'\"></div>\n" +
+    "      <div ng-include src=\"'static/r2r/partials/rdbpublish.html'\"></div>\n" +
     "    </step>\n" +
     "\n" +
     "    <step name=\"7. finished\"\n" +
@@ -535,77 +701,6 @@ angular.module('dist').run(['$templateCache', function($templateCache) {
     "<div>\n" +
     "  {{prefixed}}\n" +
     "  <span class=\"score\">(score:&nbsp;{{score}})</span>\n" +
-    "</div>\n"
-  );
-
-
-  $templateCache.put('partials/refine.html',
-    "<div ng-controller=\"RefineCtrl\">\n" +
-    "\n" +
-    "  <div class=\"row\">\n" +
-    "    <label for=\"baseUriInput\" class=\"col-md-2 control-label\">Base URI</label>\n" +
-    "    <div id=\"baseUriInput\" class=\"col-md-8\">\n" +
-    "      <input type=\"text\" ng-model=\"rdf.baseUri\" spellcheck=\"false\" size=\"60\" placeholder=\"http://my.company.com/dataset/\" />\n" +
-    "    </div>\n" +
-    "  </div>\n" +
-    "\n" +
-    "  <hr />\n" +
-    " \n" +
-    "  <div class=\"row\">\n" +
-    "    <div class=\"col-md-4\">\n" +
-    "      <p align=\"left\">\n" +
-    "        <select class=\"form-control\" ng-model=\"table\" ng-options=\"table for table in rdb.selectedTables()\">\n" +
-    "          <option>--</option>\n" +
-    "        </select>\n" +
-    "      </p>\n" +
-    "    </div>\n" +
-    "  </div>\n" +
-    "\n" +
-    "  <div ng-show=\"table && table != ''\">\n" +
-    "    <div class=\"row\">\n" +
-    "      <div class=\"col-md-2\">\n" +
-    "        Columns:\n" +
-    "      </div>\n" +
-    "      <div class=\"col-md-10\">\n" +
-    "        <button ng-repeat=\"column in columns\" type=\"button\" class=\"btn btn-default btn-sm\" ng-class=\"{active: isSelected(column)}\" ng-click=\"insert(column)\">{{column}}</button>\n" +
-    "      </div>\n" +
-    "\n" +
-    "      <div class=\"col-md-2\">\n" +
-    "        Subject URI:\n" +
-    "      </div>\n" +
-    "      <div class=\"col-md-10\">\n" +
-    "        <textarea rows=\"1\" cols=\"60\" content=\"rdf.subjectTemplate\" cursor cursorpos=\"cursorpos\" ng-model=\"rdf.subjectTemplate\"></textarea>\n" +
-    "      </div>\n" +
-    "    </div>\n" +
-    "\n" +
-    "    <div class=\"row\" ng-repeat=\"class in rdf.selectedClasses[table]\">\n" +
-    "      <div class=\"col-md-1\">\n" +
-    "        <div align=\"right\"><i class=\"fa fa-arrow-right\"></i></div>\n" +
-    "      </div>\n" +
-    "      <div class=\"col-md-3\" align=\"right\">\n" +
-    "        <b><em>a</em></b>\n" +
-    "      </div>\n" +
-    "      <div class=\"col-md-4\">\n" +
-    "        <b>{{class.prefixedName[0]}}</b>\n" +
-    "      </div>\n" +
-    "    </div>\n" +
-    "\n" +
-    "    <div class=\"row\" ng-repeat=\"prop in rdf.selectedProperties[table]\">\n" +
-    "      <div class=\"col-md-1\">\n" +
-    "        <div align=\"right\"><i class=\"fa fa-arrow-right\"></i></div>\n" +
-    "      </div>\n" +
-    "      <div class=\"col-md-3\" align=\"right\">\n" +
-    "        <b><em>{{prop.prefixedName[0]}}</em></b>\n" +
-    "      </div>\n" +
-    "      <div class=\"col-md-4\">\n" +
-    "        <select class=\"form-control\" ng-model=\"rdf.propertyLiteralSelection[prop.prefixedName[0]]\" ng-options=\"selection for selection in propertyLiteralTypeOptions\" />\n" +
-    "      </div>\n" +
-    "      <div class=\"col-md-4\">\n" +
-    "        <select class=\"form-control\" ng-model=\"rdf.propertyLiteralTypes[prop.prefixedName[0]]\" ng-options=\"type for type in propertyLiteralTypes\" ng-show=\"rdf.propertyLiteralSelection[prop.prefixedName[0]] == 'Typed Literal'\"></input>\n" +
-    "      </div>\n" +
-    "    </div>\n" +
-    "  </div>\n" +
-    "\n" +
     "</div>\n"
   );
 
