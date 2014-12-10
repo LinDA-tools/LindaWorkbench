@@ -1,6 +1,6 @@
 (function() {
   'use strict';
-  angular.module('app').controller('reconcileCtrl', function($scope, _, Oracle, Rdb, Rdf) {
+  angular.module('app').controller('ReconcileCtrl', function($scope, _, Oracle, Rdb, Rdf) {
     $scope.rdb = Rdb;
     $scope.rdf = Rdf;
     $scope.loading = false;
@@ -8,7 +8,6 @@
     $scope.tableTag = {};
     $scope.columns = [];
     $scope.columnTags = {};
-    $scope.suggestions = {};
     $scope.$watch('rdb.selectedTables()', function(val) {
       if (val != null) {
         return $scope.table = _.first($scope.rdb.selectedTables());
@@ -23,12 +22,12 @@
       $scope.loading = true;
       return Oracle.ask(table, $scope.tableTag[table], columns, $scope.columnTags).then(function(promise) {
         $scope.loading = false;
-        return $scope.suggestions[table] = promise;
+        return $scope.rdf.suggestions[table] = promise;
       });
     };
     $scope.getColumnSuggestions = function(table, column) {
-      if (($scope.suggestions != null) && $scope.suggestions[table] && ($scope.suggestions[table].columns != null)) {
-        return (_.first(_.filter($scope.suggestions[table].columns, function(i) {
+      if (($scope.rdf.suggestions != null) && $scope.rdf.suggestions[table] && ($scope.rdf.suggestions[table].columns != null)) {
+        return (_.first(_.filter($scope.rdf.suggestions[table].columns, function(i) {
           return i.name === column;
         }))).recommend;
       }

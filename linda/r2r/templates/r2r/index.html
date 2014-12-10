@@ -3,19 +3,38 @@
 {% block bodyclass %}transformations{% endblock %}
 {% block bodytype %}ng-app="app"{% endblock %}
 {% block css %}
-    <link rel="stylesheet" href="/static/r2r/styles/main.css">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+<link rel="stylesheet" href="/static/r2r/styles/main.css">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
 {% endblock %}
 
 {% block content %}
+<!--<!doctype html>-->
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+  <!--<head>
+    <meta charset="utf-8">
+    <title></title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width">-->
+    <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+    <!-- build:css({.tmp,app}) styles/main.css -->
+    <!--<link rel="stylesheet" href="bower_components/bootstrap-css-only/css/bootstrap.min.css">
+    <link rel="stylesheet" href="styles/main.css">
+    <!-- endbuild -->
+  <!--</head>
+  <body ng-app="app">-->
     <!--[if lt IE 7]>
       <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
     <![endif]-->
-    
+
     <!-- Add your site or application content here -->
-    <div ng-include="'partials/main.html'">
-    </div>
+    <!--<div ng-include="'/static/r2r/partials/main.html'">
+    </div>-->
+    <!-- might need to remove ng-include and and ng-view-->
+    <div ng-view></div>
 
     <!-- Google Analytics: change UA-XXXXX-X to be your site's ID -->
     <!--  <script> -->
@@ -27,10 +46,11 @@
     <!--    ga('create', 'UA&#45;XXXXX&#45;X'); -->
     <!--    ga('send', 'pageview'); -->
     <!-- </script> -->
-
+    
     <script>
-        R2R_PROXY = '{{R2R_PROXY}}'
+      R2R_PROXY = '{{R2R_PROXY}}'
     </script>
+
     <!--[if lt IE 9]>
     <script src="/static/r2r/bower_components/es5-shim/es5-shim.js"></script>
     <script src="/static/r2r/bower_components/json3/lib/json3.min.js"></script>
@@ -39,9 +59,19 @@
     <!-- build:js scripts/vendor.js -->
     <!-- bower:js -->
     <!--<script src="/static/r2r/bower_components/jquery/src/jquery.js"></script>-->
-    <!--<script src="/static/r2r/bower_components/jquery/dist/jquery.js"></script>-->
     <script src="/static/r2r/bower_components/angular/angular.js"></script>
-    <script src="/static/r2r/bower_components/bootstrap-sass-official/vendor/assets/javascripts/bootstrap.js"></script>
+    <script src="/static/r2r/bower_components/bootstrap-sass-official/vendor/assets/javascripts/bootstrap/affix.js"></script>
+    <script src="/static/r2r/bower_components/bootstrap-sass-official/vendor/assets/javascripts/bootstrap/alert.js"></script>
+    <script src="/static/r2r/bower_components/bootstrap-sass-official/vendor/assets/javascripts/bootstrap/button.js"></script>
+    <script src="/static/r2r/bower_components/bootstrap-sass-official/vendor/assets/javascripts/bootstrap/carousel.js"></script>
+    <script src="/static/r2r/bower_components/bootstrap-sass-official/vendor/assets/javascripts/bootstrap/collapse.js"></script>
+    <script src="/static/r2r/bower_components/bootstrap-sass-official/vendor/assets/javascripts/bootstrap/dropdown.js"></script>
+    <script src="/static/r2r/bower_components/bootstrap-sass-official/vendor/assets/javascripts/bootstrap/tab.js"></script>
+    <script src="/static/r2r/bower_components/bootstrap-sass-official/vendor/assets/javascripts/bootstrap/transition.js"></script>
+    <script src="/static/r2r/bower_components/bootstrap-sass-official/vendor/assets/javascripts/bootstrap/scrollspy.js"></script>
+    <script src="/static/r2r/bower_components/bootstrap-sass-official/vendor/assets/javascripts/bootstrap/modal.js"></script>
+    <script src="/static/r2r/bower_components/bootstrap-sass-official/vendor/assets/javascripts/bootstrap/tooltip.js"></script>
+    <script src="/static/r2r/bower_components/bootstrap-sass-official/vendor/assets/javascripts/bootstrap/popover.js"></script>
     <script src="/static/r2r/bower_components/angular-resource/angular-resource.js"></script>
     <script src="/static/r2r/bower_components/angular-cookies/angular-cookies.js"></script>
     <script src="/static/r2r/bower_components/angular-sanitize/angular-sanitize.js"></script>
@@ -50,66 +80,41 @@
     <script src="/static/r2r/bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
     <script src="/static/r2r/bower_components/jsedn/jsedn.js"></script>
     <script src="/static/r2r/bower_components/angular-scroll/angular-scroll.min.js"></script>
-    <script src="/static/r2r/bower_components/underscore/underscore.js"></script>
-    
-    <!--<script src="/static/js/jquery.min.js"></script>
-    <script src="/static/r2r/bower_components/angular/angular.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
-    <script src="/static/r2r/bower_components/angular-resource/angular-resource.js"></script>
-    <script src="/static/r2r/bower_components/angular-cookies/angular-cookies.js"></script>
-    <script src="/static/r2r/bower_components/angular-sanitize/angular-sanitize.js"></script>
-    <script src="/static/r2r/bower_components/angular-route/angular-route.js"></script>
-    <script src="/static/r2r/bower_components/angular-animate/angular-animate.js"></script>
-    <script src="/static/r2r/bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
-    <script src="/static/r2r/bower_components/jsedn/jsedn.js"></script>
-    <script src="/static/r2r/bower_components/angular-scroll/angular-scroll.min.js"></script>
-    <script src="/static/r2r/bower_components/underscore/underscore.js"></script>-->
+    <script src="/static/r2r/bower_components/underscore/underscore.js"></script>  
+    <script src="/static/r2r/bower_components/ng-file-upload/angular-file-upload.js"></script>
+    <script src="/static/r2r/bower_components/ng-file-upload-shim/angular-file-upload-shim.js"></script>
     <!-- endbower -->
     <!-- endbuild -->
 
         <!-- build:js({.tmp,app}) scripts/scripts.js -->
-        <script src="/static/r2r/scripts/app.js"></script>
-        <script src="/static/r2r/scripts/app.templates.js"></script>
-        <script src="/static/r2r/scripts/services/jsedn.js"></script>
-        <script src="/static/r2r/scripts/services/rdb.js"></script>
-        <script src="/static/r2r/scripts/services/rdf.js"></script>
-        <script src="/static/r2r/scripts/services/underscore.js"></script>
-        <script src="/static/r2r/scripts/services/oracle.js"></script>
-        <script src="/static/r2r/scripts/services/sidetip.js"></script>
-        <script src="/static/r2r/scripts/directives/wizard.js"></script>
-        <script src="/static/r2r/scripts/directives/popover.js"></script>
-        <script src="/static/r2r/scripts/directives/badge.js"></script>
-        <script src="/static/r2r/scripts/directives/columntip.js"></script>
-        <script src="/static/r2r/scripts/directives/cursor.js"></script>
-        <script src="/static/r2r/scripts/controllers/main.js"></script>
-        <script src="/static/r2r/scripts/controllers/rdf.js"></script>
-        <script src="/static/r2r/scripts/controllers/config.js"></script>
-        <script src="/static/r2r/scripts/controllers/dbcontents.js"></script>
-        <script src="/static/r2r/scripts/controllers/reconcile.js"></script>
-        <script src="/static/r2r/scripts/controllers/refine.js"></script>
-        <script src="/static/r2r/scripts/filters/score.js"></script>
-
-        <!--<script src="/static/r2r/scripts/app.js"></script>
-        <script src="/static/r2r/scripts/services/jsedn.js"></script>
-        <script src="/static/r2r/scripts/services/config.js"></script>
-        <script src="/static/r2r/scripts/services/rdb.js"></script>
-        <script src="/static/r2r/scripts/services/rdf.js"></script>
-        <script src="/static/r2r/scripts/services/vocab.js"></script>
-        <script src="/static/r2r/scripts/services/r2rs.js"></script>
-        <script src="/static/r2r/scripts/services/underscore.js"></script>
-        <script src="/static/r2r/scripts/services/oracle.js"></script>
-        <script src="/static/r2r/scripts/directives/config.js"></script>
-        <script src="/static/r2r/scripts/directives/rdb.js"></script>
-        <script src="/static/r2r/scripts/directives/rdf.js"></script>
-        <script src="/static/r2r/scripts/directives/mappings.js"></script>
-        <script src="/static/r2r/scripts/directives/vocab.js"></script>
-        <script src="/static/r2r/scripts/directives/wizard.js"></script>
-        <script src="/static/r2r/scripts/directives/playground.js"></script>
-        <script src="/static/r2r/scripts/controllers/main.js"></script>
-        <script src="/static/r2r/scripts/controllers/rdb.js"></script>
-        <script src="/static/r2r/scripts/controllers/rdf.js"></script>
-        <script src="/static/r2r/scripts/controllers/vocab.js"></script>
-        <script src="/static/r2r/scripts/controllers/config.js"></script>
-        <script src="/static/r2r/scripts/controllers/oracle.js"></script>-->
+        - <script src="/static/r2r/scripts/app.js"></script>
+ <script src="/static/r2r/scripts/app.templates.js"></script>
+ <script src="/static/r2r/scripts/services/config.js"></script>
+ <!-- why the second jsedn?-->
+ <script src="/static/r2r/scripts/services/jsedn.js"></script>
+ <script src="/static/r2r/scripts/services/rdb.js"></script>
+ <script src="/static/r2r/scripts/services/rdf.js"></script>
+ <script src="/static/r2r/scripts/services/underscore.js"></script>
+ <script src="/static/r2r/scripts/services/oracle.js"></script>
+ <script src="/static/r2r/scripts/services/sml.js"></script>
+ <script src="/static/r2r/scripts/services/transform.js"></script>
+ <script src="/static/r2r/scripts/directives/wizard.js"></script>
+ <!-- why a second popover-->
+ <script src="/static/r2r/scripts/directives/popover.js"></script>
+ <script src="/static/r2r/scripts/directives/columntip.js"></script>
+ <script src="/static/r2r/scripts/directives/cursor.js"></script>
+ <script src="/static/r2r/scripts/directives/rdfbadge.js"></script>
+ <script src="/static/r2r/scripts/controllers/main.js"></script>
+ <script src="/static/r2r/scripts/controllers/config.js"></script>
+ <script src="/static/r2r/scripts/controllers/dbcontents.js"></script>
+ <script src="/static/r2r/scripts/controllers/reconcile.js"></script>
+ <script src="/static/r2r/scripts/controllers/refine.js"></script>
+ <script src="/static/r2r/scripts/controllers/publish.js"></script>
+ <script src="/static/r2r/scripts/filters/score.js"></script>
+        <script src="/static/r2r/scripts/services/csv.js"></script>
+        <script src="/static/r2r/scripts/controllers/csvconfig.js"></script>
+        <script src="/static/r2r/scripts/controllers/csvcontents.js"></script>
+        <script src="/static/r2r/scripts/controllers/csvreconcile.js"></script>
         <!-- endbuild -->
+
 {% endblock %}

@@ -23,12 +23,10 @@
     $scope.test = function() {
       $scope.checking = true;
       return $scope.rdb.checkDatabase($scope.rdb.datasource).success(function(data) {
-        console.log('success: ' + data);
         $scope.checking = false;
         $scope.checked = true;
         return $scope.success = data === "true";
       }).error(function(data) {
-        console.log('error: ' + data);
         $scope.checking = false;
         $scope.checked = true;
         return $scope.success = data === "false";

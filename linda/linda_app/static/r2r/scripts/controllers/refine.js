@@ -1,16 +1,14 @@
 (function() {
   'use strict';
-  angular.module('app').controller('refineCtrl', function($scope, _, Rdb, Rdf) {
+  angular.module('app').controller('RefineCtrl', function($scope, _, Rdb, Rdf) {
     $scope.rdb = Rdb;
     $scope.rdf = Rdf;
     $scope.table = '';
     $scope.columns = [];
     $scope.selectedColumns = [];
-    $scope.subjectTemplate = '';
     $scope.cursorpos = 0;
-    $scope.propertyLiteralSelection = {};
-    $scope.propertyLiteralType = {};
-    $scope.propertyLiteralTypeSelections = ['Plain Literal', 'Typed Literal', 'Blank Node'];
+    $scope.propertyLiteralTypeOptions = ['Plain Literal', 'Typed Literal', 'Blank Node'];
+    $scope.propertyLiteralTypes = ['xsd:anyURI', 'xsd:base64Binary', 'xsd:boolean', 'xsd:date', 'xsd:dateTime', 'xsd:decimal', 'xsd:double', 'xsd:duration', 'xsd:float', 'xsd:hexBinary', 'xsd:gDay', 'xsd:gMonth', 'xsd:gMonthDay', 'xsd:gYear', 'xsd:gYearMonth', 'xsd:NOTATION', 'xsd:QName', 'xsd:string', 'xsd:time'];
     $scope.$watch('rdb.selectedTables()', function(val) {
       if (val != null) {
         return $scope.table = _.first($scope.rdb.selectedTables());
@@ -27,12 +25,12 @@
     return $scope.insert = function(column) {
       var oldVal;
       if ($scope.isSelected(column)) {
-        oldVal = $scope.subjectTemplate;
-        $scope.subjectTemplate = oldVal.replace('{' + column + '}', '');
+        oldVal = $scope.rdf.subjectTemplate;
+        $scope.rdf.subjectTemplate = oldVal.replace('{' + column + '}', '');
         return $scope.selectedColumns = _.without($scope.selectedColumns, column);
       } else {
-        oldVal = $scope.subjectTemplate;
-        $scope.subjectTemplate = (oldVal.slice(0, $scope.cursorpos)) + '{' + column + '}' + (oldVal.slice($scope.cursorpos, oldVal.length));
+        oldVal = $scope.rdf.subjectTemplate;
+        $scope.rdf.subjectTemplate = (oldVal.slice(0, $scope.cursorpos)) + '{' + column + '}' + (oldVal.slice($scope.cursorpos, oldVal.length));
         return $scope.selectedColumns.push(column);
       }
     };
