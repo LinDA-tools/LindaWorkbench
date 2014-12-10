@@ -4,9 +4,19 @@
     var transformApi;
     transformApi = Config.backend + '/api/v1/transform';
     return {
-      dump: function(mapping) {
+      dumpdb: function(mapping) {
         if (mapping != null) {
-          return $http.post(transformApi + '/dump', {
+          return $http.post(transformApi + '/dump-db', {
+            mapping: mapping
+          }).then(function(res) {
+            console.log(res);
+            return transformApi + res.data;
+          });
+        }
+      },
+      dumpcsv: function(mapping) {
+        if (mapping != null) {
+          return $http.post(transformApi + '/dump-csv', {
             mapping: mapping
           }).then(function(res) {
             console.log(res);

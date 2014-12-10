@@ -1,7 +1,7 @@
 (function() {
   'use strict';
   angular.module('app').factory('Sml', function(_) {
-    var columnToVar, getVar, namespacePrefixes, newLookup, propertyLiterals, subjectTemplate, toClasses, toProperties;
+    var columnToVar, createClause, fromClause, getVar, namespacePrefixes, newLookup, propertyLiterals, subjectTemplate, toClasses, toProperties;
     newLookup = function() {
       return {
         index: 0,
@@ -141,12 +141,26 @@
         return (x + '\n').concat(y);
       }));
     };
+    createClause = function(mapping, table) {
+      if (mapping.source === 'csv') {
+        return "Create View Template " + table + " As";
+      } else {
+        return "Create View " + table + " As";
+      }
+    };
+    fromClause = function(mapping, table) {
+      if (mapping.source === 'rdb') {
+        return "From " + table;
+      } else {
+        return "";
+      }
+    };
     return {
       toSml: function(mapping) {
         var lookup, table;
-        table = 'products';
+        table = mapping.tables[0];
         lookup = newLookup();
-        return "" + (namespacePrefixes(mapping)) + "\nPrefix tns: <" + mapping.baseUri + ">\n\nCreate View " + table + " As\n    Construct {\n        ?s \n" + (toClasses(mapping, table)) + ";\n" + (toProperties(mapping, table, lookup)) + ".\n    }\n    With\n" + (subjectTemplate(mapping, table)) + "\n" + (propertyLiterals(mapping, table, lookup)) + "\n    From " + table;
+        return "" + (namespacePrefixes(mapping)) + "\nPrefix tns: <" + mapping.baseUri + ">\n\n" + (createClause(mapping, table)) + "\n    Construct {\n        ?s \n" + (toClasses(mapping, table)) + ";\n" + (toProperties(mapping, table, lookup)) + ".\n    }\n    With\n" + (subjectTemplate(mapping, table)) + "\n" + (propertyLiterals(mapping, table, lookup)) + "\n" + (fromClause(mapping, table));
       }
     };
   });
