@@ -2,7 +2,7 @@
   'use strict';
   angular.module('app').factory('Config', function() {
     return {
-      backend: 'http://193.175.133.148:3000'
+      backend: 'http://' + window.location.hostname + ':3000'
     };
   });
 
