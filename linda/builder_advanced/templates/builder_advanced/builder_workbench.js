@@ -8,7 +8,14 @@
                 var new_id = this.instances.length;
                 var new_instance = $.parseHTML('<div id="class_instance_' + this.instances.length + '" class="class-instance" style="left: ' + x + 'px; top: ' + y + 'px;" class="class-instance"><div class="title"><h3>' + uri_to_label(uri) + '</h3><span class="uri">&lt;' + uri + '&gt;</span><span class="delete" data-about="' + new_id + '">x</span><span class="dataset">' + dt_name + '</span></div><div class="properties"><span class="loading">Loading properties...</span></div></div>');
                 $("#builder_workspace").append(new_instance);
-                $(new_instance).draggable({handle: '.title', cursor: 'move', drag: function() {arrows.draw()}});
+                $(new_instance).draggable({handle: '.title', cursor: 'move', drag: function() {
+                    var i = $(this);
+                    var o = $("#builder_workspace");
+                    if (i.position().top > o.height() - i.height()) { //when reaching bottom, make sure to enlarge the workspace height
+                        o.height(o.height() + 50);
+                    }
+                    arrows.draw();
+                }});
                 this.bring_to_front(new_instance);
 
                 var instance_object = {id: new_id, uri: uri, dt_name: dt_name, properties: ['URI'], selected_properties: []}
@@ -20,6 +27,10 @@
                     type: "GET",
                     success: function(data, textStatus, jqXHR)
                     {
+                        if ((!builder_workbench.instances[new_id]) || (builder_workbench.instances[new_id].uri != uri)) { //the instance was deleted in the mean time
+                            return;
+                        }
+
                         var bindings = data.results.bindings;
                         //sort properties by label
                         bindings.sort(function(a,b) {

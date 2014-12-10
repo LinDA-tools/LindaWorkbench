@@ -54,16 +54,16 @@ var builder = {
                 result = "!regex(str(" + p_name + "), '^" + f.value + "$$'";
             }
             else if (f.operator == "starts") {
-                result = "!regex(str(" + p_name + "), '^" + f.value + "'";
+                result = "regex(str(" + p_name + "), '^" + f.value + "'";
             }
             else if (f.operator == "ends") {
-                result = "!regex(str(" + p_name + "), '" + f.value + "$$'";
+                result = "regex(str(" + p_name + "), '" + f.value + "$$'";
             }
             else if (f.operator == "contains") {
-                result = "!regex(str(" + p_name + "), '" + f.value + "'";
+                result = "regex(str(" + p_name + "), '" + f.value + "'";
             }
             else {
-                result = "!regex(str(" + p_name + "), '" + f.value + "'";
+                result = "regex(str(" + p_name + "), '" + f.value + "'";
             }
 
             //case sensitivity

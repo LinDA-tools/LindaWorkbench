@@ -117,7 +117,7 @@ urlpatterns = patterns('',
                            name='datasource-delete'),
 
                        # Query Builder
-
+                       url(r'^query/execute_sparql$', views.execute_sparql),
                        url(r'^query/(?P<link>.*)', views.get_qbuilder_call, name='query-builder-proxy'),
                        url(r'^query-builder/save/(?P<pk>\d+)/$', views.query_update, name='query-builder-update'),
                        url(r'^query-builder/delete/(?P<pk>\d+)/$', views.query_delete, name='query-builder-delete'),

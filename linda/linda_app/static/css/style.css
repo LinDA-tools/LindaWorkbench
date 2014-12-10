@@ -1938,7 +1938,7 @@ input, textarea {
 
 #builder_workspace {
     width: 100%;
-    height: 800px;
+    height: 600px;
     position: relative;
     overflow: hidden;
 }

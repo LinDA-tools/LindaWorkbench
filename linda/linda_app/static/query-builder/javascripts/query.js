@@ -55,7 +55,7 @@ this.execute_sparql_query = function() {
       } else {
         result_columns = SPARQL.result.columns(data);
         result_rows = SPARQL.result.rows(data);
-        $("#sparql_results_time_taken").html(SPARQL.result.time_taken(data).toString() + " s");
+        //$("#sparql_results_time_taken").html(SPARQL.result.time_taken(data).toString() + " s");
         result_table = $("#sparql_results_table");
         result_table_header = "<tr><th>#</th>";
         $.each(result_columns, function(key, val) {

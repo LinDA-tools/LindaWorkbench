@@ -168,6 +168,30 @@
     {% endwith %}
 
     <script>
+        function save_query() {
+            //TODO: Improve the save_query function to store designer info along with the SparQL query
+            $.ajax({
+                url: "/query-builder/save/",
+                type: "POST",
+                data: {
+                    endpoint: endpoint_uri,
+                    endpointName: dt_name,
+                    query: $("#txt_sparql_query").val(),
+                    csrfmiddlewaretoken: '{{ csrf_token }}'
+                },
+                success: function(data, textStatus, jqXHR)
+                {
+                    document.location.href = '/queries/';
+                },
+                error: function (jqXHR, textStatus, errorThrown)
+                {
+                    alert(textStatus + ': ' + errorThrown);
+                }
+            });
+        }
+    </script>
+
+    <script>
         {% include "builder_advanced/builder.js" %}
     </script>
 

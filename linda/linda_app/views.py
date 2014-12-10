@@ -14,6 +14,7 @@ import json
 import requests
 from microsofttranslator import Translator
 from analytics.models import Analytics
+from builder_advanced.views import sparql_query_json
 
 from forms import *
 from rdflib import Graph
@@ -860,6 +861,11 @@ def queryBuilder(request):
 
     return render(request, 'query-builder/index.html', params)
 
+
+# Temporary call to execute a SparQL query
+@csrf_exempt
+def execute_sparql(request):
+    return sparql_query_json(request.POST.get('dataset'), request.POST.get('query'))
 
 # Proxy calls - exist as middle-mans between LinDA query builder page and the rdf2any server
 @csrf_exempt
