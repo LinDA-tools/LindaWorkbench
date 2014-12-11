@@ -43,9 +43,9 @@
             <button type="button" class="btn btn-default btn-success" onclick="SPARQL.download.csv()"><span class="glyphicon glyphicon-align-justify"></span>&nbsp;CSV</button>
             <button type="button" class="btn btn-default btn-info" onclick="SPARQL.download.json()"><span class="glyphicon glyphicon-road"></span>&nbsp;JSON</button>
             <button type="button" class="btn btn-default btn-warning" onclick="SPARQL.download.pdf()"><span class="glyphicon glyphicon-file"></span>&nbsp;PDF</button>
-            {% if in_query_builder_action %>
+            {% if in_query_builder_action %}
               <button class="btn btn-default btn-danger" onclick="QueryBuilder.convert.configured.initiate_download()"><span class="glyphicon glyphicon-glass"></span>&nbsp;Generic</button>
-            {% endif %>
+            {% endif %}
         </div>
         {% if in_query_builder_action %}
           <div class="div-configured-download row"  style="display:none;">
