@@ -882,6 +882,7 @@ def execute_sparql(request):
 
     # Make the query, add info about the offset and return the results
     response = sparql_query_json(request.POST.get('dataset'), query)
+    print response
     data = json.loads(response.content)
     data['offset'] = offset
 
@@ -1127,6 +1128,8 @@ def datasource_sparql(request, dtname):  # Acts as a "fake" seperate sparql endp
         mimetype = 'application/json'
         return HttpResponse(data, mimetype)
 
+    query = request.GET.get("query")
+    
     if dtname != "all":  # search in all private datasource
         datasources = DatasourceDescription.objects.filter(name=dtname)
 
@@ -1149,7 +1152,6 @@ def datasource_sparql(request, dtname):  # Acts as a "fake" seperate sparql endp
             return HttpResponse(data, mimetype)
         else:  # private data sources
             # Find where to add the FROM clause
-            query = request.GET.get("query")
 
             pos = re.search("WHERE", query, re.IGNORECASE).start()
             query = query[:pos] + " FROM <" + datasource.uri + "> " + query[pos:]
