@@ -67,14 +67,17 @@ this.execute_sparql_query = function(offset) {
           var prv = offset - 100;
           var nx = offset - 100 + 1;
           $("#sparql_result_paginator .results-prev-container").html('<span onclick="execute_sparql_query(' + prv + ')">Fetch results ' + nx + ' to ' + offset + '</span>');
+        } else {
+          $("#sparql_result_paginator .results-prev-container").html('');
         }
 
-        console.log(result_rows.length);
         if (result_rows.length == 100) { //most probably there is a next page
           var nx = offset + 100;
           var nx_start = offset + 100 + 1;
           var nx_end = offset + 200;
           $("#sparql_result_paginator .results-next-container").html('<span onclick="execute_sparql_query(' + nx + ')">Fetch results ' + nx_start + ' to ' + nx_end + '</span>');
+        } else {
+          $("#sparql_result_paginator .results-next-container").html('');
         }
 
         var cur_start = offset+1;

@@ -1115,7 +1115,7 @@ def api_datasource_delete(request, dtname):
     return HttpResponse(data, mimetype)
 
 
-#Get a query for a specific private datasource and execute it
+# Get a query for a specific private datasource and execute it
 @csrf_exempt
 def datasource_sparql(request, dtname):  # Acts as a "fake" seperate sparql endpoint for each datasource
     results = {}
@@ -1129,7 +1129,7 @@ def datasource_sparql(request, dtname):  # Acts as a "fake" seperate sparql endp
         return HttpResponse(data, mimetype)
 
     query = request.GET.get("query")
-    
+
     if dtname != "all":  # search in all private datasource
         datasources = DatasourceDescription.objects.filter(name=dtname)
 
