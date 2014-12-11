@@ -14,6 +14,7 @@
                     if (i.position().top > o.height() - i.height()) { //when reaching bottom, make sure to enlarge the workspace height
                         o.height(o.height() + 50);
                     }
+                    arrows.ctx.height = o.height();
                     arrows.draw();
                 }});
                 this.bring_to_front(new_instance);

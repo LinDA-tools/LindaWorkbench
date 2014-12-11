@@ -2088,7 +2088,6 @@ input, textarea {
 #builder-canvas {
     position: relative;
     width: 100%;
-    height: 100%;
 }
 
 .builder-advanced .row.qb-equivalent-query-main, .builder-advanced .row.qb-equivalent-query-main *,
