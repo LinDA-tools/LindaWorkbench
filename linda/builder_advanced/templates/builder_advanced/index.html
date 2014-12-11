@@ -174,8 +174,8 @@
                 url: "/query-builder/save/",
                 type: "POST",
                 data: {
-                    endpoint: endpoint_uri,
-                    endpointName: dt_name,
+                    endpoint: builder.endpoint,
+                    endpointName: builder.endpoint,
                     query: $("#txt_sparql_query").val(),
                     csrfmiddlewaretoken: '{{ csrf_token }}'
                 },

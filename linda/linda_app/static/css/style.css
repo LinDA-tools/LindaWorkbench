@@ -2091,7 +2091,8 @@ input, textarea {
     height: 100%;
 }
 
-.builder-advanced .row.qb-equivalent-query-main, .builder-advanced .row.qb-equivalent-query-main * {
+.builder-advanced .row.qb-equivalent-query-main, .builder-advanced .row.qb-equivalent-query-main *,
+#sparql_results_container, #sparql_results_container *{
     box-sizing: border-box;
 }
 
@@ -2177,4 +2178,35 @@ input, textarea {
 
 .ui-dialog-titlebar-close {
     display: none;
+}
+
+#sparql_results_table th {
+    word-break: break-word;
+}
+
+#sparql_result_paginator > div {
+    display: inline-block;
+}
+
+#sparql_result_paginator .results-prev-container {
+    width: 25%;
+    text-align: left;
+    padding-left: 40px;
+}
+
+#sparql_result_paginator .results-cur-container {
+    width: 50%;
+    text-align: center;
+    padding-left: 40px;
+}
+
+#sparql_result_paginator .results-next-container {
+    width: 25%;
+    text-align: right;
+    padding-right: 40px;
+}
+
+#sparql_result_paginator .results-prev-container span, #sparql_result_paginator .results-next-container span {
+    color: #FC5006;
+    cursor: pointer;
 }

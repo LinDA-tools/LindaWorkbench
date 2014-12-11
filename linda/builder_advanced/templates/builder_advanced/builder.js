@@ -252,5 +252,6 @@ var builder = {
         this.create();
         $("#txt_sparql_query").val(this.query);
         $("#hdn_qb_dataset").val(this.endpoint);
+        $("#sparql_results_container").hide();
     }
 };

@@ -40,13 +40,14 @@ this.display_sparql_row_entry = function(data) {
   }
 };
 
-this.execute_sparql_query = function() {
+this.execute_sparql_query = function(offset) {
   if (SPARQL.textbox.is_valid()) {
     show_loading();
     $("#sparql_results_container").hide();
     $.post(get_server_address() + "/query/execute_sparql", {
       query: $("#txt_sparql_query").val(),
       dataset: QueryBuilder.datasets.get_selected(),
+      offset: offset
     }, function(data) {
       var result_columns, result_rable_rows, result_rows, result_table, result_table_header, row_counter;
       if (data.error !== void 0) {
@@ -55,6 +56,31 @@ this.execute_sparql_query = function() {
       } else {
         result_columns = SPARQL.result.columns(data);
         result_rows = SPARQL.result.rows(data);
+
+        /*Handle result pagination*/
+        var offset = Number(data.offset);
+        if (!offset) {
+          offset = 0;
+        }
+
+        if (data.offset > 0) { //there is definitely a previous page
+          var prv = offset - 100;
+          var nx = offset - 100 + 1;
+          $("#sparql_result_paginator .results-prev-container").html('<span onclick="execute_sparql_query(' + prv + ')">Fetch results ' + nx + ' to ' + offset + '</span>');
+        }
+
+        console.log(result_rows.length);
+        if (result_rows.length == 100) { //most probably there is a next page
+          var nx = offset + 100;
+          var nx_start = offset + 100 + 1;
+          var nx_end = offset + 200;
+          $("#sparql_result_paginator .results-next-container").html('<span onclick="execute_sparql_query(' + nx + ')">Fetch results ' + nx_start + ' to ' + nx_end + '</span>');
+        }
+
+        var cur_start = offset+1;
+        var cur_end = offset+result_rows.length;
+        $("#sparql_result_paginator .results-cur-container").html('<span>Showing results ' + cur_start + ' to ' + cur_end + '</span>');
+
         //$("#sparql_results_time_taken").html(SPARQL.result.time_taken(data).toString() + " s");
         result_table = $("#sparql_results_table");
         result_table_header = "<tr><th>#</th>";
@@ -69,7 +95,7 @@ this.execute_sparql_query = function() {
         row_counter = 0;
         while (row_counter < result_rows.length) {
           row_counter++;
-          result_rable_rows = "<tr><td>" + row_counter.toString() + "</td>";
+          result_rable_rows = "<tr><td>" + (row_counter + offset).toString() + "</td>";
           $.each(result_columns, function(key, col) {
             return result_rable_rows += display_sparql_row_entry(result_rows[row_counter - 1][col]);
           });

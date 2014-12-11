@@ -865,7 +865,28 @@ def queryBuilder(request):
 # Temporary call to execute a SparQL query
 @csrf_exempt
 def execute_sparql(request):
-    return sparql_query_json(request.POST.get('dataset'), request.POST.get('query'))
+    query = request.POST.get('query')
+
+    # Set a limit on the results if not set by the query itself
+    lim_pos = re.search('LIMIT', query, re.IGNORECASE)
+    if not lim_pos:
+        query += ' LIMIT 100'
+
+    # Add an offset to facilitate pagination
+    if request.POST.get('offset'):
+        offset = request.POST.get('offset')
+        print offset
+        query += ' OFFSET ' + str(offset)
+    else:
+        offset = 0
+
+    # Make the query, add info about the offset and return the results
+    response = sparql_query_json(request.POST.get('dataset'), query)
+    data = json.loads(response.content)
+    data['offset'] = offset
+
+    return HttpResponse(json.dumps(data), content_type="application/json")
+
 
 # Proxy calls - exist as middle-mans between LinDA query builder page and the rdf2any server
 @csrf_exempt
