@@ -131,6 +131,7 @@ LINDA_HOME = 'http://localhost:8000/'
 # Vocabulary Repository
 # In local business installations it will be different than the LINDA_SERVER_IP
 VOCABULARY_REPOSITORY = 'http://107.170.70.175:8000/'
+
 # Maximum days between updates are run
 UPDATE_FREEQUENCY_DAYS = 7
 

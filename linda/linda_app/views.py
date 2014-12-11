@@ -24,8 +24,6 @@ from settings import SESAME_LINDA_URL, LINDA_HOME, RDF2ANY_SERVER, PRIVATE_SPARQ
     VOCABULARY_REPOSITORY, UPDATE_FREEQUENCY_DAYS
 from passwords import MS_TRANSLATOR_UID, MS_TRANSLATOR_SECRET
 
-last_vocabulary_update = datetime.strptime('Jan 1 2014  1:00PM', '%b %d %Y %I:%M%p')  # set initial date on server start
-
 
 def index(request):
     params = {}
@@ -370,11 +368,9 @@ class VocabularyListView(ListView):
         context['type'] = 'vocabularies'
 
         # Should updates be run?
-        global last_vocabulary_update
-        diff = datetime.now() - last_vocabulary_update
-        if diff.days >= UPDATE_FREEQUENCY_DAYS:
-            last_vocabulary_update = datetime.now()
+        if self.request.GET.get('update'):
             context['check_for_updates'] = True
+            context['VOCABULARY_REPOSITORY'] = VOCABULARY_REPOSITORY
 
         return context
 
@@ -1228,14 +1224,14 @@ def query_delete(request, pk):
     if not obj_list:
         return Http404
 
-    #get query object and delete it
+    # get query object and delete it
     q_obj = obj_list[0]
     q_obj.delete()
 
     return HttpResponse('')
 
 
-#Proxy call - exists as middle-man between local LinDA server and the Vocabulary Repository
+# Proxy call - exists as middle-man between local LinDA server and the Vocabulary Repository
 @csrf_exempt
 def vocabulary_repo_api_call(request, link):
     total_link = VOCABULARY_REPOSITORY + "api/" + link
@@ -1249,7 +1245,7 @@ def vocabulary_repo_api_call(request, link):
     return HttpResponse(data, data.headers['content-type'])
 
 
-#Get current vocabulary versions
+# Get current vocabulary versions
 @csrf_exempt
 def get_vocabulary_versions(request):
     resp_data = []
@@ -1261,10 +1257,10 @@ def get_vocabulary_versions(request):
     return HttpResponse(data, mimetype)
 
 
-#Get vocabulary data
+# Get vocabulary data
 @csrf_exempt
 def get_vocabulary_data(request, pk):
-    #return the specified vocabulary options
+    # return the specified vocabulary options
     vocab = Vocabulary.objects.get(pk=pk)
 
     if not vocab:  # vocabulary not found
@@ -1277,7 +1273,7 @@ def get_vocabulary_data(request, pk):
     return HttpResponse(data, mimetype)
 
 
-#Add a new vocabulary
+# Add a new vocabulary
 def post_vocabulary_data(request):
     if not request.user.is_superuser:  # forbidden for non-administrative users
         return HttpResponseForbidden()
@@ -1287,7 +1283,7 @@ def post_vocabulary_data(request):
 
     data = json.loads(request.POST.get('vocab_data'))
 
-    #Create object
+    # Create object
     vocab = Vocabulary.objects.create(title=data['title'], category=data['category'], description=data['description'],
                                       originalUrl=data['originalUrl'],
                                       downloadUrl=data['downloadUrl'],
@@ -1296,13 +1292,13 @@ def post_vocabulary_data(request):
                                       lodRanking=data['lodRanking'], example=data['example'], uploader=request.user,
                                       datePublished=data['datePublished'], version=data['version'])
 
-    #Save the new vocabulary (also creates classes and properties)
+    # Save the new vocabulary (also creates classes and properties)
     vocab.save()
 
     return HttpResponse('')  # return OK response
 
 
-#Update a vocabulary's data
+# Update a vocabulary's data
 def update_vocabulary_data(request, pk):
     if not request.user.is_superuser:  # forbidden for non-administrative users
         return HttpResponseForbidden()
@@ -1316,7 +1312,7 @@ def update_vocabulary_data(request, pk):
     if not vocab:  # vocabulary not found
         return Http404
 
-    #Updating vocabulary data
+    # Updating vocabulary data
     vocab.title = data['title']
     vocab.category = data['category']
     vocab.originalUrl = data['originalUrl']
@@ -1333,7 +1329,7 @@ def update_vocabulary_data(request, pk):
     return HttpResponse('')  # return OK response
 
 
-#Delete an existing vocabulary
+# Delete an existing vocabulary
 def delete_vocabulary_data(request, pk):
     if not request.user.is_superuser:  # forbidden for non-administrative users
         return HttpResponseForbidden()

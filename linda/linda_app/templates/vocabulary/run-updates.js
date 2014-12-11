@@ -61,7 +61,7 @@ function increaseUpdateStep(text, status) {
 
 function createVocabulary(new_vocab) {
     $.ajax({
-        url: '/api/vocabulary-repo/vocabularies/' + new_vocab.id + '/',
+        url: VOCABULARY_REPOSITORY + 'api/vocabulary-repo/vocabularies/' + new_vocab.id + '/',
         type: "GET",
         success: function(server_response, textStatus, jqXHR) {
             $.ajax({
@@ -87,7 +87,7 @@ function createVocabulary(new_vocab) {
 
 function updateVocabulary(old_vocab, new_vocab) {
     $.ajax({
-        url: '/api/vocabulary-repo/vocabularies/' + new_vocab.id + '/',
+        url: VOCABULARY_REPOSITORY + 'api/vocabulary-repo/vocabularies/' + new_vocab.id + '/',
         type: "GET",
         success: function(server_response, textStatus, jqXHR) {
             $.ajax({
@@ -139,7 +139,7 @@ $(function(){
         success: function(vs_local, textStatus, jqXHR) {
             //retrieve repositiory vocabularies
             $.ajax({
-                url: '/api/vocabulary-repo/vocabularies/versions/',
+                url: VOCABULARY_REPOSITORY + 'api/vocabulary-repo/vocabularies/versions/',
                 type: "GET",
 
                 success: function(vs_repo, textStatus, jqXHR) {

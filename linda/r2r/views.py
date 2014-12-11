@@ -20,7 +20,7 @@ def transform(request):
     return render_to_response("r2r/index.html", params)
 
 
-# Proxy calls - exist as middle-mans between LinDA tranformations page and the r2r server
+# Proxy calls - exist as middle-mans between LinDA transformation page and the r2r server
 @csrf_exempt
 def get_api_call(request, link):
     total_link = R2R_SERVER + "api/" + link
