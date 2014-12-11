@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load i18n %}
 {% load app_filters %}
-{% block title %}{% trans "Advanced Query Builder | LinDA" %}{% endblock %}
+{% block title %}{% trans "Query Designer | LinDA" %}{% endblock %}
 {% block bodyclass %}builder-advanced{% endblock %}
 
 {%block css %}
@@ -24,7 +24,7 @@
     {% endwith %}
 
     <div id="builder_workspace">
-        <span>{% trans "Drag and drop classes here to create a query"%}</span>
+        <span>{% trans "Drag and drop items here to create a query"%}</span>
         <canvas id="builder-canvas"></canvas>
     </div>
 
@@ -64,7 +64,7 @@
     </script>
 
     <script>
-        var ADVANCED_BUILDER_API_URI = "/builder-advanced/api/";
+        var ADVANCED_BUILDER_API_URI = "/query-designer/api/";
 
         //set data source endpoints
         var total_endpoints = {};

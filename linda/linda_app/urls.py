@@ -30,8 +30,8 @@ urlpatterns = patterns('',
                        # Transformations
                        url(r'^transformations/', include('r2r.urls')),
 
-                       # Advanced builder
-                       url(r'^builder-advanced/', include('builder_advanced.urls')),
+                       # Query Designer
+                       url(r'^query-designer/', include('builder_advanced.urls')),
 
                        # Authentication
                        url(r'^admin/', include(admin.site.urls)),

@@ -22,7 +22,7 @@ def index(request):
                                                        , uri=LINDA_HOME + "sparql/all/", createdOn=datetime.today(),
                                                        lastUpdateOn=datetime.today()))
 
-    return render_to_response("builder_advanced/index.html", params)
+    return render(request, "builder_advanced/index.html", params)
 
 
 # API calls

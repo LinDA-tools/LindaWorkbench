@@ -132,8 +132,6 @@
     });
 
     {% if user.is_superuser and check_for_updates %}
-        VOCABULARY_REPOSITORY = '{{VOCABULARY_REPOSITORY}}';
-
         {% include "vocabulary/run-updates.js" %}
     {% endif %}
 </script>

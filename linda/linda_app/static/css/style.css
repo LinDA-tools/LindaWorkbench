@@ -1084,6 +1084,16 @@ form input[type="submit"] {
     font-family: "Consolas";
 }
 
+.queries .q-builder-button, .queries .q-designer-button {
+    padding: 20px;
+    font-size: 22px;
+}
+
+.queries .q-builder-button span, .queries .q-designer-button span {
+    font-size: 14px;
+    color: #eee;
+}
+
 .query-id {
     color: #E87E04;
     padding-right: 10px;

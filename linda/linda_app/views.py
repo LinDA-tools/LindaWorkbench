@@ -370,7 +370,6 @@ class VocabularyListView(ListView):
         # Should updates be run?
         if self.request.GET.get('update'):
             context['check_for_updates'] = True
-            context['VOCABULARY_REPOSITORY'] = VOCABULARY_REPOSITORY
 
         return context
 
