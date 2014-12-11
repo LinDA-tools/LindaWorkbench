@@ -213,6 +213,12 @@
             builder.reset();
         });
 
+        /*Order by*/
+        $("body").on('change', '.property-row span:nth-of-type(4) select', function(e) {
+            builder_workbench.instances[ $(this).parent().parent().data('i') ].selected_properties[ $(this).parent().parent().data('n') ].order_by = $(this).val();
+            builder.reset();
+        });
+
         /*Adding filter*/
         $("body").on('click', '.property-row span:nth-of-type(5)', function(e) {
             builder_workbench.property_selection = builder_workbench.instances[ $(this).parent().data('i') ].selected_properties[ $(this).parent().data('n') ];

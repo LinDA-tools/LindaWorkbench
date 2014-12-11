@@ -407,9 +407,11 @@ def create_query_description(dtname, query):
     # add constraints
     where_start = re.search('WHERE', query, re.IGNORECASE).end()
     if where_start:
-        where_end = re.search('LIMIT', query, re.IGNORECASE).start()
-        if not where_end:
+        where_end_f = re.search('LIMIT', query, re.IGNORECASE)
+        if not where_end_f:
             where_end = len(query)
+        else:
+            where_end = where_end_f.start()
 
         # split where part to constraints
         where_str = re.sub('({|}|\n)', '', query[where_start:where_end])  # ignore {, } and \n
@@ -425,7 +427,7 @@ def create_query_description(dtname, query):
             if len(terms) < 3:
                 continue
 
-            if terms[1].lower() == 'rdf:type':  # class constraints
+            if terms[1].lower() == 'rdf:type' or terms[1].lower() == 'a' :  # class constraints
                 tp_pos = 2
                 class_constraint = ''
                 old_class_name = ''
@@ -497,8 +499,9 @@ def create_query_description(dtname, query):
     description = random(find_verbs) + " " + classes + " in " + dtname + constraints_out
 
     # add limit
-    lim_pos = re.search('LIMIT', query, re.IGNORECASE).start()
-    if lim_pos:
+    lim_pos_f = re.search('LIMIT', query, re.IGNORECASE)
+    if lim_pos_f:
+        lim_pos = lim_pos_f.start()
         after_lim = query[lim_pos:]
         lim = [int(s) for s in after_lim.split() if s.isdigit()][0]  # first number after limit
         description += ' (first ' + str(lim) + ')'

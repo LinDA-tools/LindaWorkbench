@@ -2,6 +2,7 @@ var builder = {
     query: "",
     select_clause: "SELECT",
     where_clause: "WHERE ",
+    order_clause: "",
     error: "",
     instance_names: [],
     endpoint: "",
@@ -62,15 +63,20 @@ var builder = {
             else if (f.operator == "contains") {
                 result = "regex(str(" + p_name + "), '" + f.value + "'";
             }
+            else if (f.operator == "language") {
+                result = 'lang(' + p_name + ') = "" || langMatches(lang(' + p_name + '), "' + f.value + '")';
+            }
             else {
                 result = "regex(str(" + p_name + "), '" + f.value + "'";
             }
 
             //case sensitivity
-            if (f.case_sensitive) {
-                result += ")";
-            } else {
-                result += ", 'i')";
+            if (f.operator != "language") {
+                if (f.case_sensitive) {
+                    result += ")";
+                } else {
+                    result += ", 'i')";
+                }
             }
         }
         else if (f.type == "num") {
@@ -167,6 +173,20 @@ var builder = {
                     }
                 }
 
+                //check if order
+                if ((p.order_by == "ASC") || (p.order_by == "DESC")) {
+
+                    if (this.order_clause == "") {
+                        this.order_clause = "ORDER BY";
+                    }
+
+                    if (p.uri != 'URI') {
+                        this.order_clause += ' ' + p.order_by + "(?" + p_name + ')';
+                    } else {
+                        this.order_clause += ' ' + p.order_by + "(?" + i_name + ')';
+                    }
+                }
+
                 //mark optional properties
                 if (p.optional) {
                     constraint = 'OPTIONAL {' + constraint + '}\n';
@@ -189,6 +209,7 @@ var builder = {
         this.error = "";
         this.select_clause = "SELECT ";
         this.where_clause = "WHERE ";
+        this.order_clause = "";
         this.endpoint = "";
 
         //initialize base unique names to empty
@@ -234,7 +255,7 @@ var builder = {
                     this.endpoint = total_endpoints[ w.instances[i].dt_name ];
                 }
 
-                this.where_clause += this.add_instance(w, i_names[i], i) + '\n';
+                this.where_clause += this.add_instance(w, i_names[i], i);
             }
         }
         this.where_clause += "}";
@@ -242,7 +263,7 @@ var builder = {
         if (cnt_objects == 0) { //empty query
             this.query = '';
         } else { //the result is the SELECT ... WHERE ...
-            this.query = this.select_clause + '\n' + this.where_clause;
+            this.query = this.select_clause + '\n' + this.where_clause + this.order_clause;
         }
 
         return this.query;

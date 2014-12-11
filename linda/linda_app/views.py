@@ -870,14 +870,12 @@ def execute_sparql(request):
     # Add an offset to facilitate pagination
     if request.POST.get('offset'):
         offset = request.POST.get('offset')
-        print offset
         query += ' OFFSET ' + str(offset)
     else:
         offset = 0
 
     # Make the query, add info about the offset and return the results
     response = sparql_query_json(request.POST.get('dataset'), query)
-    print response
     data = json.loads(response.content)
     data['offset'] = offset
 

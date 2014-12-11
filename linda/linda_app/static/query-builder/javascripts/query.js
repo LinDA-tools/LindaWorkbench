@@ -29,7 +29,9 @@ this.display_sparql_uri = function(data) {
 };
 
 this.display_sparql_row_entry = function(data) {
-  if (data.type === "uri") {
+  if (!data) {
+    return "<td></td>"
+  } else if (data.type === "uri") {
     return display_sparql_uri(data);
   } else if (data.type === "literal") {
     return display_sparql_literal(data);
