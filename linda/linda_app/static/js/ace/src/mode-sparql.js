@@ -73,13 +73,13 @@ var SparqlHighlightRules = function() {
         token : function(value) {
           if (value == "self")
             return "variable.language";
-          else if (keywords.hasOwnProperty(value))
+          else if (keywords.hasOwnProperty(value.toUpperCase()))
             return "keyword";
-          else if (buildinConstants.hasOwnProperty(value))
+          else if (buildinConstants.hasOwnProperty(value.toUpperCase()))
             return "constant.language";
           else if (builtinVariables.hasOwnProperty(value))
             return "variable.language";
-          else if (builtinFunctions.hasOwnProperty(value))
+          else if (builtinFunctions.hasOwnProperty(value.toLowerCase()))
             return "support.function";
           else if (value == "debugger")
             return "invalid.deprecated";
