@@ -29,9 +29,16 @@ SPARQL = {
            Utils.alert("The PRINT feature has not been implemented yet."); 
         }
     },
+    get_query: function() {
+        if (editor) {
+            return editor.getSession().getValue();
+        } else {
+            return $("#txt_sparql_query").val();
+        }
+    },
     textbox : {
         is_valid : function(){
-            var query = $("#txt_sparql_query").val();
+            var query = SPARQL.get_query();
             if(query == undefined || query.trim() == ''){
                 Utils.alert("No SPARQL query inputted in the text box.")
                 return false;
@@ -41,20 +48,20 @@ SPARQL = {
     },
     download : {
         rdb : function(){
-            var download_url = Utils.rdf2any.server+Utils.rdf2any.actions.convert+"rdb-converter.sql?dataset="+QueryBuilder.datasets.get_selected()+"&query="+encodeURIComponent($("#txt_sparql_query").val());
+            var download_url = Utils.rdf2any.server+Utils.rdf2any.actions.convert+"rdb-converter.sql?dataset="+QueryBuilder.datasets.get_selected(SPARQL.get_query())+"&query="+encodeURIComponent();
             var selected_class = QueryBuilder.classes.get_selected_class();
             if(selected_class != undefined && selected_class != ''){
                download_url += "&for_class="+selected_class;
-               download_url += "&properties="+encodeURIComponent(QueryBuilder.properties.get_checked_properties()); 
-            }      
+               download_url += "&properties="+encodeURIComponent(QueryBuilder.properties.get_checked_properties());
+            }
             window.open(download_url);
         },
         csv : function(){
-            var download_url = Utils.rdf2any.server+Utils.rdf2any.actions.convert+"csv-converter.csv?dataset="+QueryBuilder.datasets.get_selected()+"&query="+encodeURIComponent($("#txt_sparql_query").val());
+            var download_url = Utils.rdf2any.server+Utils.rdf2any.actions.convert+"csv-converter.csv?dataset="+QueryBuilder.datasets.get_selected()+"&query="+encodeURIComponent(SPARQL.get_query());
             var selected_class = QueryBuilder.classes.get_selected_class();
             if(selected_class != undefined && selected_class != ''){
                download_url += "&for_class="+selected_class;
-               download_url += "&properties="+encodeURIComponent(QueryBuilder.properties.get_checked_properties()); 
+               download_url += "&properties="+encodeURIComponent(QueryBuilder.properties.get_checked_properties());
             }
             window.open(download_url);
         },
@@ -62,32 +69,14 @@ SPARQL = {
             Utils.alert("The PDF download feature has not been implemented yet.");
         },
         json : function(){
-            var download_url = Utils.rdf2any.server+Utils.rdf2any.actions.convert+"json?dataset="+QueryBuilder.datasets.get_selected()+"&query="+encodeURIComponent($("#txt_sparql_query").val());
+            var download_url = Utils.rdf2any.server+Utils.rdf2any.actions.convert+"json?dataset="+QueryBuilder.datasets.get_selected()+"&query="+encodeURIComponent(SPARQL.get_query());
             var selected_class = QueryBuilder.classes.get_selected_class();
             if(selected_class != undefined && selected_class != ''){
                download_url += "&for_class="+selected_class;
-               download_url += "&properties="+encodeURIComponent(QueryBuilder.properties.get_checked_properties()); 
+               download_url += "&properties="+encodeURIComponent(QueryBuilder.properties.get_checked_properties());
             }
-            window.open(download_url);
-        },
-        configured : function(){
-            var download_url = Utils.rdf2any.server+Utils.rdf2any.actions.convert+"configured-converter?dataset="+QueryBuilder.datasets.get_selected()+"&query="+encodeURIComponent($("#txt_sparql_query").val());
-            download_url += "&for_class="+QueryBuilder.classes.get_selected_class();
-            download_url += "&properties="+encodeURIComponent(QueryBuilder.properties.get_checked_properties()); 
-            var str_variable_dictionary = "";
-            for(i=0;i<configured_convert.variable_dictionary.length;i++){
-                if (i>0)
-                    str_variable_dictionary += ",";
-                str_variable_dictionary += configured_convert.variable_dictionary[i].variable + "::" + configured_convert.variable_dictionary[i].value;
-
-            }
-            download_url += "&variable_dictionary="+encodeURIComponent(str_variable_dictionary);
-            download_url += "&header="+encodeURIComponent(configured_convert.header);
-            download_url += "&body="+encodeURIComponent(configured_convert.body);
-            download_url += "&footer="+encodeURIComponent(configured_convert.footer);
             window.open(download_url);
         }
-
     }
 
 

@@ -1099,6 +1099,12 @@ form input[type="submit"] {
     padding-right: 10px;
 }
 
+#txt_sparql_query {
+        position: relative;
+        width: 100%;
+        height: 400px;
+    }
+
 .query-row {
     cursor: pointer;
 }
@@ -2218,4 +2224,8 @@ input, textarea {
 #sparql_result_paginator .results-prev-container span, #sparql_result_paginator .results-next-container span {
     color: #FC5006;
     cursor: pointer;
+}
+
+.sparql .panel-body {
+    padding: 0;
 }

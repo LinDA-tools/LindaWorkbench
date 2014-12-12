@@ -1,3 +1,5 @@
+from django.db.models import Q
+
 __author__ = 'mpetyx'
 
 import json
@@ -57,16 +59,19 @@ def api_datasources_list(request):
 
 @csrf_exempt
 def recommend_dataset(request):
-
+    vocabulary = request.GET.get("vocabulary", "")
     property = request.GET.get("property", "")
     class_ = request.GET.get("class", "")
     q = request.GET.get("q", "")
+    prefix = request.GET.get("prefix", "")
 
     page = request.GET.get('page')
 
     flag = False
 
-    if property:
+    if vocabulary:
+        flag = "Vocabulary"
+    elif property:
         flag = "Property"
     elif class_:
         flag = "Class"
@@ -91,31 +96,58 @@ def recommend_dataset(request):
     if flag == "Property" or flag == "General":
         if flag == "General":
             property = q
-        vocabs = VocabularyProperty.objects.filter(label__iregex=property)
+
+        if prefix:
+            vocabs = VocabularyProperty.objects.filter(label__iregex=property, vocabulary__preferredNamespacePrefix=prefix)
+        else:
+            vocabs = VocabularyProperty.objects.filter(label__iregex=property)
+
         for source in vocabs:
             source_info = {}
             source_info['vocabulary'] = source.vocabulary.title
-            source_info['uri'] = source.uri
+            if prefix:
+                source_info["uri"] = re.compile('^' + source.vocabulary.preferredNamespaceUri).sub('', source.uri)
+            else:
+                source_info["uri"] = source.uri
             source_info['label'] = source.label
-            # if source.vocabulary.lodRanking > 0:
             source_info['ranking'] = source.vocabulary.lodRanking
-            # else:
-            #     continue
+
             results.append(source_info)
 
     if flag == "Class" or flag == "General":
         if flag == "General":
             class_ = q
-        vocabs = VocabularyClass.objects.filter(label__iregex=class_)
+
+        if prefix:
+            vocabs = VocabularyClass.objects.filter(label__iregex=class_, vocabulary__preferredNamespacePrefix=prefix)
+        else:
+            vocabs = VocabularyClass.objects.filter(label__iregex=class_)
+
         for source in vocabs:
             source_info = {}
-            source_info["vocabulary"] = str(source.vocabulary.title.encode('ascii', 'ignore'))
-            source_info["uri"] = str(source.uri)
-            source_info["label"] = str(source.label.encode('ascii', 'ignore'))
-            # if source.vocabulary.lodRanking > 0:
+            source_info["vocabulary"] = source.vocabulary.title
+            if prefix:
+                source_info["uri"] = re.compile('^' + source.vocabulary.preferredNamespaceUri).sub('', source.uri)
+            else:
+                source_info["uri"] = source.uri
+            source_info["label"] = source.label
             source_info["ranking"] = int(source.vocabulary.lodRanking)
-            # else:
-            #     continue
+
+            results.append(source_info)
+
+    if flag == "Vocabulary" or flag == "General":
+        if flag == "General":
+            vocabulary = q
+
+        vocabs = Vocabulary.objects.filter(Q(title__iregex=vocabulary) | Q(preferredNamespacePrefix__iregex=vocabulary))
+        for source in vocabs:
+            source_info = {}
+            source_info["vocabulary"] = source.title
+            source_info["uri"] = source.preferredNamespaceUri
+            source_info["prefix"] = source.preferredNamespacePrefix
+            source_info["description"] = source.description
+            source_info["ranking"] = int(source.lodRanking)
+
             results.append(source_info)
 
     results = sorted(results, key=itemgetter('ranking'), reverse=True)

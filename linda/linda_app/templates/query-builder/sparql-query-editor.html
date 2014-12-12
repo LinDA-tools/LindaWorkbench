@@ -5,7 +5,8 @@
 	<div class="panel-body">
 	    <div class="row " > 
 	        <div class="col-md-12">
-	            <textarea rows="12" id="txt_sparql_query" style="width:100%;" placeholder="Type your SPARQL query here ..." class="form-control">{% if query %}{{query.sparql}}{% endif %}</textarea>
+	            <!--<textarea rows="12" id="txt_sparql_query" style="width:100%;" placeholder="Type your SPARQL query here ..." class="form-control">{% if query %}{{query.sparql}}{% endif %}</textarea>-->
+				<div id="txt_sparql_query">{% if query %}{{query.sparql}}{% endif %}</div>
 	        </div>
 	    </div>
 	</div>
