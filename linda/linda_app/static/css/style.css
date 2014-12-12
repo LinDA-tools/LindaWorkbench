@@ -161,6 +161,7 @@ header a:hover {
     width: 60px;
     height: auto;
     padding: 5px;
+    margin-left: 50px;
 }
 
 header .site-title {
@@ -231,7 +232,7 @@ header .site-title:hover {
     position: absolute;
     left: 0;
     top: 0px;
-    width: 40px;
+    width: 46px;
     height: 46px;
     outline: none;
 }
