@@ -271,7 +271,7 @@ var builder = {
 
     reset: function() {
         this.create();
-        $("#txt_sparql_query").val(this.query);
+        editor.setValue(this.query);
         $("#hdn_qb_dataset").val(this.endpoint);
         $("#sparql_results_container").hide();
     }

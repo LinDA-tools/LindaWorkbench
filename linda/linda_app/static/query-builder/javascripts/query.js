@@ -1,5 +1,9 @@
 this.generate_sample_query = function(template_id) {
-  return $("#txt_sparql_query").val($("#txt_sample_query_" + template_id).html());
+  if (editor) {
+    return editor.getSession().setValue($("#txt_sample_query_" + template_id).html());
+  } else {
+    $("#txt_sparql_query").val($("#txt_sample_query_" + template_id).html());
+  }
 };
 
 this.display_sparql_literal = function(data) {

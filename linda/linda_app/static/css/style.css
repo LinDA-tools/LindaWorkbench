@@ -2226,6 +2226,6 @@ input, textarea {
     cursor: pointer;
 }
 
-.sparql .panel-body {
+.sparql .panel-body, .builder-advanced .qb-equivalent-query-main .panel-body {
     padding: 0;
 }

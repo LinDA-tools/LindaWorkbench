@@ -59,6 +59,9 @@ QueryBuilder = {
         query += QueryBuilder.properties.get_subclasses_triples();
         query += QueryBuilder.properties.get_properties_triples();
         query += "FILTER(langMatches(lang(?label), \"EN\"))}\n LIMIT 200";
+        if (editor) {
+            editor.getSession().setValue(query);
+        }
         $("#txt_sparql_query").val(query);
     }
     ,
