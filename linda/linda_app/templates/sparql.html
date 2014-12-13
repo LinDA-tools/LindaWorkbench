@@ -108,7 +108,7 @@
                     data: {
                         endpoint: endpoint_uri,
                         endpointName: dt_name,
-                        query: $("#txt_sparql_query").val(),
+                        query: editor.getSession().getValue(),
                         csrfmiddlewaretoken: '{{ csrf_token }}'
                     },
                     success: function(data, textStatus, jqXHR)

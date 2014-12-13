@@ -14,7 +14,7 @@
         </thead>
         <tbody>
         {% for query in queries %}
-        <tr id="query_{{query.id}}" class="query-row">
+        <tr id="query_{{query.id}}" class="query-row" {% if query.design %}data-design="true"{% endif %}>
             <td class="query-id">#{{query.id}}
                 <div class="operations">
                     <p>{{query.csv_link}}</p>
@@ -73,8 +73,13 @@
                     if (key == "Analyze")
                         url = "/analytics?q_id=" + q_id;
                     else
-                    if (key == "Edit")
-                        url = "/sparql/?q_id=" + q_id;
+                    if (key == "Edit") {
+                        if (options.$trigger.data('design') == true) {
+                            url = "/query-designer/" + q_id + "/";
+                        } else {
+                            url = "/sparql/?q_id=" + q_id;
+                        }
+                    }
                     else
                     if (key == "Delete") {
                         $.confirm({

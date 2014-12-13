@@ -4,7 +4,7 @@
             property_selection: undefined,
 
             /*Adds an instance of a class*/
-            add_instance: function(dt_name, uri, x,y, default_property) {
+            add_instance: function(dt_name, uri, x,y, default_properties) {
                 var new_id = this.instances.length;
                 var new_instance = $.parseHTML('<div id="class_instance_' + this.instances.length + '" class="class-instance" style="left: ' + x + 'px; top: ' + y + 'px;" class="class-instance"><div class="title"><h3>' + uri_to_label(uri) + '</h3><span class="uri">&lt;' + uri + '&gt;</span><span class="delete" data-about="' + new_id + '">x</span><span class="dataset">' + dt_name + '</span></div><div class="properties"><span class="loading">Loading properties...</span></div></div>');
                 $("#builder_workspace").append(new_instance);
@@ -60,8 +60,19 @@
 
                         prop_control.append('<span class="add-property" data-about="' + new_id + '">Add property</span></div>');
                         self.add_property(new_id, 0); //add URI by default
-                        if (default_property) {
-                            self.add_property(new_id, -1, default_property);
+
+                        if (default_properties) {
+                            for (var k=0; k<default_properties.length; k++) {
+                                if (typeof default_properties[k] == 'string') { //property uri as input
+                                    self.add_property(new_id, -1, default_properties[k]);
+                                } else { //property object as input
+                                    if (k == 0) {
+                                        continue; // uri has already been added by default
+                                    }
+                                    self.add_property(new_id, -1, default_properties[k].uri);
+                                    //TODO: Update all actions along
+                                }
+                            }
                         }
                     },
                     error: function (jqXHR, textStatus, errorThrown)
@@ -131,6 +142,38 @@
                         }
                     });
                 }
+            },
+
+            from_json: function(data) { //re-construct a query design from a json object
+                for(var i=0; i<data.instances.length; i++) { //foreach instance
+                    var inst = data.instances[i];
+
+                    this.add_instance(inst.dt_name, inst.uri, inst.position.x, inst.position.y, inst.selected_properties);
+                }
+
+                arrows.connections = data.connections; //restore the connections
+            },
+
+            to_json: function() { //export the design to a json object
+                data = {
+                    instances: [],
+                    connections: arrows.connections
+                };
+
+                for(var i=0; i<this.instances.length; i++) { //foreach instance
+                    data.instances[i] = {
+                        uri: this.instances[i].uri,
+                        dt_name: this.instances[i].dt_name,
+                        position: {
+                            x: $("#class_instance_" + i).offset().left,
+                            y: $("#class_instance_" + i).offset().top,
+                        },
+
+                        selected_properties: this.instances[i].selected_properties
+                    };
+                }
+
+                return data;
             }
         };
 
@@ -237,7 +280,6 @@
                 var style = "dashed";
             }
 
-            console.log($(this).parent().data('i'));
             builder_workbench.connection_from = {i: $(this).parent().data('i'), n: $(this).parent().data('n'), style: style};
 
             e.preventDefault();
@@ -255,7 +297,6 @@
             var c = builder_workbench.connection_from;
             if (c !=  undefined) {
                 if ($(this).data('i') == c.i) return;
-                console.log($(this).data('i'));
                 arrows.add_arrow('#class_instance_' + c.i, c.n, '#class_instance_' + $(this).data('i'), $(this).data('n'), c.style);
             }
         });

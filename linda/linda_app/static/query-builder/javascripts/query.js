@@ -47,7 +47,6 @@ this.display_sparql_row_entry = function(data) {
 };
 
 this.execute_sparql_query = function(offset) {
-  console.log(SPARQL.get_query());
   if (SPARQL.textbox.is_valid()) {
     show_loading();
     $("#sparql_results_container").hide();

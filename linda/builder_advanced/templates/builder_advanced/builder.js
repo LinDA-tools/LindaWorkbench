@@ -133,13 +133,13 @@ var builder = {
             var endpoint = total_endpoints[ w.instances[i].dt_name ];
 
             if (endpoint != this.endpoint) { //use SERVICE keyword
-                wh_c += 'SERVICE <' + endpoint + '> {';
+                wh_c += '\nSERVICE <' + endpoint + '> {\n';
             }
 
             //add class constraint -- local copy of total where clause
             wh_c += '?' + i_name + ' a <' + inst.uri + '>.';
 
-            //connect class instance to properties
+            //add properties to select clause
             for (var j=0; j<inst.selected_properties.length; j++) {
                 var p = inst.selected_properties[j];
                 var p_name = instance_name + '_' + this.uri_to_constraint(p.uri); //e.g ?city_leaderName
@@ -154,6 +154,12 @@ var builder = {
 
                     this.select_clause += ' ';
                 }
+            }
+
+            //connect class instance to properties
+            for (var j=0; j<inst.selected_properties.length; j++) {
+                var p = inst.selected_properties[j];
+                var p_name = instance_name + '_' + this.uri_to_constraint(p.uri); //e.g ?city_leaderName
 
                 //connect property to class instances
                 var constraint = '';
@@ -196,7 +202,7 @@ var builder = {
             }
 
             if (endpoint != this.endpoint) { //close SERVICE keyword
-                wh_c += '}. '
+                wh_c += '}. \n'
             }
 
             return wh_c;

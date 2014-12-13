@@ -11,6 +11,7 @@ from builder_advanced import views
 urlpatterns = patterns('',
                        # Basic pages
                        url(r'^$', views.index, name='advanced-builder-index'),
+                       url(r'^(?P<pk>\d+)/$', views.load_design),
 
                        # API calls
                        url(r'^api/active_classes/(?P<dt_name>[\w-]+)/$', views.active_classes),

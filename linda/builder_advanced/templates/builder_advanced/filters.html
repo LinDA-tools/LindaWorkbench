@@ -39,7 +39,7 @@
 
             <input type="text" placeholder="value"/>
 
-            <div class="right">
+            <div class="right control-case-sensitive">
                 <input type="checkbox" id="case-sensitive" default="false" />
                 <label for="case-sensitive">Case sensitive</label>
             </div>
@@ -123,6 +123,15 @@
                 $("#property-filters .filter-type-date").show();
             else
                 $("#property-filters .filter-type-date").hide();
+        });
+
+        /*String filter change*/
+        $("#property-filters .filter-type-str select").change(function() {
+            if ($(this).val() == "language") {
+                $("#property-filters .filter-type-str .control-case-sensitive").hide();
+            } else {
+                $("#property-filters .filter-type-str .control-case-sensitive").show();
+            }
         });
 
         function show_filters() {

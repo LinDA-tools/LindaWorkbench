@@ -9,6 +9,7 @@ from django.template.defaultfilters import slugify, random
 from rdflib import Graph, OWL, RDFS
 from rdflib.util import guess_format
 import re
+from builder_advanced.models import Design
 
 from lists import *
 from athumb.fields import ImageWithThumbsField
@@ -514,6 +515,7 @@ class Query(models.Model):
     sparql = models.CharField(max_length=4096, blank=False, null=False)  # the query string (select ?s ?p ?o...)
     description = models.CharField(max_length=512, blank=True, null=True)  # query description (auto-created)
     createdOn = models.DateField(blank=False, null=False)  # query creation date
+    design = models.ForeignKey(Design, blank=True, null=True)  # the json object produced in the Query Designer
 
     def csv_link(self):
         return RDF2ANY_SERVER + '/rdf2any/v1.0/convert/csv-converter.csv?dataset=' + self.endpoint + '&query=' \

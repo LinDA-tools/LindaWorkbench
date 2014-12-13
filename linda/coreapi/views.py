@@ -107,6 +107,8 @@ def recommend_dataset(request):
             source_info['vocabulary'] = source.vocabulary.title
             if prefix:
                 source_info["uri"] = re.compile('^' + source.vocabulary.preferredNamespaceUri).sub('', source.uri)
+                if source_info["uri"][0] == '#':
+                    source_info["uri"] = source_info["uri"][1:]
             else:
                 source_info["uri"] = source.uri
             source_info['label'] = source.label
@@ -128,6 +130,8 @@ def recommend_dataset(request):
             source_info["vocabulary"] = source.vocabulary.title
             if prefix:
                 source_info["uri"] = re.compile('^' + source.vocabulary.preferredNamespaceUri).sub('', source.uri)
+                if source_info["uri"][0] == '#':
+                    source_info["uri"] = source_info["uri"][1:]
             else:
                 source_info["uri"] = source.uri
             source_info["label"] = source.label

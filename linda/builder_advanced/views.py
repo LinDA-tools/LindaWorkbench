@@ -5,14 +5,12 @@ from django.http import Http404, HttpResponse
 from django.shortcuts import render, render_to_response
 from django.utils.http import urlquote
 import requests
-from linda_app.models import DatasourceDescription, VocabularyProperty
+from linda_app.models import DatasourceDescription, VocabularyProperty, Query
 
-
-# Home page
 from linda_app.settings import PRIVATE_SPARQL_ENDPOINT, RDF2ANY_SERVER, LINDA_HOME
 
 
-def index(request):
+def designer_defaults():
     params = {
         'datasources': list(DatasourceDescription.objects.all())
     }
@@ -21,11 +19,28 @@ def index(request):
                                  DatasourceDescription(title="All private data dources", name="all", is_public=False
                                                        , uri=LINDA_HOME + "sparql/all/", createdOn=datetime.today(),
                                                        lastUpdateOn=datetime.today()))
+    return params
+
+
+# Home page
+def index(request):
+    params = designer_defaults()
 
     return render(request, "builder_advanced/index.html", params)
 
 
+# Load an existing design
+def load_design(request, pk):
+    params = designer_defaults()
+    params['design'] = Query.objects.get(pk=pk).design
+
+    if not params['design']:
+        raise Http404
+
+    return render(request, "builder_advanced/index.html", params)
+
 # API calls
+
 
 # get endpoint by data source name
 def get_endpoint_from_dt_name(dt_name):
@@ -71,7 +86,7 @@ def object_properties(request, dt_name):
     endpoint = get_endpoint_from_dt_name(dt_name)
 
     # query to get all classes with at least one instance
-    query = "SELECT DISTINCT ?property ?domain ?range WHERE {?property a owl:ObjectProperty. ?property rdfs:domain ?domain. ?property rdfs:range ?range.}"
+    query = "SELECT DISTINCT ?property ?domain ?range WHERE {?property a owl:ObjectProperty. ?property rdfs:domain ?domain. ?property rdfs:range ?range}"
 
     return sparql_query_json(endpoint, query)
 
@@ -87,7 +102,7 @@ def active_class_properties(request, dt_name):
     # get the endpoint of the query
     endpoint = get_endpoint_from_dt_name(dt_name)
 
-    # query to get all classes with at least one instance
+    # query to get all properties of a class with at least one instance
     query = "SELECT DISTINCT ?property WHERE {?x a <" + class_uri + ">. ?x ?property ?o }"
 
     return sparql_query_json(endpoint, query)
@@ -105,10 +120,6 @@ def get_property_type(request, dt_name):
     props = VocabularyProperty.objects.filter(uri=property_uri)
 
     if not props:  # could not detect the property in the vocabulary repository
-        # TODO check if it is of added value to ask the endpoint for range
-        query = "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> SELECT ?range WHERE {<" + property_uri + "> rdfs:range ?range} LIMIT 1"
-        response = sparql_query_json(get_endpoint_from_dt_name(dt_name), query)
-        print response
         tp = ""
     else:  # get the return type (range)
         tp = props[0].range_uri()

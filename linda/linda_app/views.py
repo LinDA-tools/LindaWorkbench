@@ -1177,45 +1177,51 @@ class QueryListView(ListView):
         return context
 
 
-#Save a query
+# Save a query
 def query_save(request):
-    #get POST variables
+    # get POST variables
     endpoint = request.POST.get("endpoint")
     endpoint_name = request.POST.get("endpointName")
     query = request.POST.get("query")
+    design_json = request.POST.get("design")
 
-    #load constraints as json object
+    # load constraints as json object
     description = create_query_description(endpoint_name, query)
 
     print description
 
-    #create the query object
+    if design_json:
+        design = Design.objects.create(data=design_json)
+    else:
+        design = None
+
+    # create the query object
     Query.objects.create(endpoint=endpoint, sparql=query,
-                         description=description, createdOn=datetime.now())
+                         description=description, createdOn=datetime.now(), design=design)
 
     return HttpResponse('')  # return empty response
 
 
-#Update an existing query
+# Update an existing query
 def query_update(request, pk):
     obj_list = Query.objects.filter(pk=pk)
     if not obj_list:
         return Http404
 
-    #get query object and update its properties
+    # get query object and update its properties
     q_obj = obj_list[0]
     q_obj.sparql = request.POST.get("query")
     q_obj.endpoint = request.POST.get("endpoint")
     q_obj.endpoint_name = request.POST.get("endpointName")
     q_obj.description = create_query_description(q_obj.endpoint_name, q_obj.sparql)
 
-    #Save changes
+    # Save changes
     q_obj.save()
 
     return HttpResponse('')
 
 
-#Delete an existing query
+# Delete an existing query
 def query_delete(request, pk):
     obj_list = Query.objects.filter(pk=pk)
     if not obj_list:
