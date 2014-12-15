@@ -32,9 +32,9 @@ def index(request):
 # Load an existing design
 def load_design(request, pk):
     params = designer_defaults()
-    params['design'] = Query.objects.get(pk=pk).design
+    params['query'] = Query.objects.get(pk=pk)
 
-    if not params['design']:
+    if not params['query']:
         raise Http404
 
     return render(request, "builder_advanced/index.html", params)

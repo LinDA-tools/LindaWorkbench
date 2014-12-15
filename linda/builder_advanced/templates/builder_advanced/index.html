@@ -40,6 +40,8 @@
 
     {% include 'query-builder/search-results.html' %}
 
+    {% include "query-builder/alert.html" %}
+
     <input type="hidden" id="hdn_qb_dataset" value="">
 
     {% with html=True %}
@@ -63,8 +65,8 @@
             //show the sparql query
             $(".qb-equivalent-query-main").show();
 
-            {% if design %}
-                builder_workbench.from_json($.parseJSON( '{{design.data|safe}}' ));
+            {% if query.design %}
+                builder_workbench.from_json($.parseJSON( '{{query.design.data|safe}}' ));
             {% endif %}
         });
     </script>
@@ -176,7 +178,11 @@
     <script>
         function save_query() {
             $.ajax({
-                url: "/query-builder/save/",
+                {% if query %}
+                    url: "/query-builder/save/{{query.id}}/",
+                {% else %}
+                    url: "/query-builder/save/",
+                {% endif %}
                 type: "POST",
                 data: {
                     endpoint: builder.endpoint,
@@ -187,7 +193,9 @@
                 },
                 success: function(data, textStatus, jqXHR)
                 {
-                    document.location.href = '/queries/';
+                    $("#alert_modal .modal-title").html('LinDA Queries');
+                    $("#alert_modal .modal-body").html('Query saved');
+                    $("#alert_modal").show();
                 },
                 error: function (jqXHR, textStatus, errorThrown)
                 {

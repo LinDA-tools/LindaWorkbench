@@ -2231,6 +2231,6 @@ input, textarea {
     padding: 0;
 }
 
-#modal_dialog_message pre {
+#alert_modal pre {
     background: #fff;
 }

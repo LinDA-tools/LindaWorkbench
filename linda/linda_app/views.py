@@ -1195,8 +1195,6 @@ def query_save(request):
     # load constraints as json object
     description = create_query_description(endpoint_name, query)
 
-    print description
-
     if design_json:
         design = Design.objects.create(data=design_json)
     else:
@@ -1221,6 +1219,18 @@ def query_update(request, pk):
     q_obj.endpoint = request.POST.get("endpoint")
     q_obj.endpoint_name = request.POST.get("endpointName")
     q_obj.description = create_query_description(q_obj.endpoint_name, q_obj.sparql)
+
+    # update (or create if it did not exist) the query design json
+    design_json = request.POST.get("design")
+    if design_json:
+        if q_obj.design:
+            q_obj.design.data = design_json
+            q_obj.design.save()
+        else:
+            q_obj.design = Design.objects.create(data=design_json)
+    else:
+        if q_obj.design:
+            q_obj.design.delete()
 
     # Save changes
     q_obj.save()

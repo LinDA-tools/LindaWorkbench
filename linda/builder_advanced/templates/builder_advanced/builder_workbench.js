@@ -59,21 +59,40 @@
                         }
 
                         prop_control.append('<span class="add-property" data-about="' + new_id + '">Add property</span></div>');
+                        var inst = self.instances[new_id];
                         self.add_property(new_id, 0); //add URI by default
 
-                        if (default_properties) {
+                        if (default_properties) { //for each saved property
                             for (var k=0; k<default_properties.length; k++) {
                                 if (typeof default_properties[k] == 'string') { //property uri as input
                                     self.add_property(new_id, -1, default_properties[k]);
                                 } else { //property object as input
-                                    if (k == 0) {
-                                        continue; // uri has already been added by default
+                                    if (k > 0) { // uri has already been added by default
+                                        self.add_property(new_id, -1, default_properties[k].uri);;
                                     }
-                                    self.add_property(new_id, -1, default_properties[k].uri);
-                                    //TODO: Update all actions along
+
+                                    inst.selected_properties[k] = jQuery.extend(true, {}, default_properties[k]); //clone the property object
+                                    var sel = "#class_instance_" + new_id + " .property-row:nth-of-type(" + (k+2) + ") ";
+                                    if (!inst.selected_properties[k].show) { //show
+                                        $(sel + "span:nth-of-type(1) input").prop('checked', false)
+                                    }
+                                    if (inst.selected_properties[k].optional) { //optional
+                                        $(sel + "span:nth-of-type(3) input").prop('checked', true)
+                                    }
+                                    if (inst.selected_properties[k].order_by) { //order by
+                                        $(sel + "span:nth-of-type(4) select").val(inst.selected_properties[k].order_by);
+                                    }
+
+                                    if (inst.selected_properties[k].filters.length > 0) { //add the filters tick
+                                        $(sel + "span:nth-of-type(5)").html('<span class="ui-icon ui-icon-check"></span>Edit')
+                                    }
+
+
                                 }
                             }
                         }
+
+                        builder.reset();
                     },
                     error: function (jqXHR, textStatus, errorThrown)
                     {
@@ -152,12 +171,16 @@
                 }
 
                 arrows.connections = data.connections; //restore the connections
+                arrows.paths = data.paths; //restore connection paths
+
+                arrows.draw();
             },
 
             to_json: function() { //export the design to a json object
                 data = {
                     instances: [],
-                    connections: arrows.connections
+                    connections: arrows.connections,
+                    paths: arrows.paths
                 };
 
                 for(var i=0; i<this.instances.length; i++) { //foreach instance
@@ -165,8 +188,8 @@
                         uri: this.instances[i].uri,
                         dt_name: this.instances[i].dt_name,
                         position: {
-                            x: $("#class_instance_" + i).offset().left,
-                            y: $("#class_instance_" + i).offset().top,
+                            x: $("#class_instance_" + i).offset().left - $("#builder_workspace").offset().left,
+                            y: $("#class_instance_" + i).offset().top - $("#builder_workspace").offset().top,
                         },
 
                         selected_properties: this.instances[i].selected_properties
