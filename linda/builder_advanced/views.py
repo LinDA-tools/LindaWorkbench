@@ -61,12 +61,15 @@ def sparql_query_json(endpoint, query):
     query_enc = urlquote(query, safe='')
 
     # get query results and turn them into json
-    data = requests.get(
+    response = requests.get(
         endpoint + "?Accept=" + urlquote(
-            "application/sparql-results+json") + "&query=" + query_enc + "&format=json").text
+            "application/sparql-results+json") + "&query=" + query_enc + "&format=json")
 
-    # return the response
-    return HttpResponse(data, "application/json")
+    if response.status_code == 200:
+        # return the response
+        return HttpResponse(response.text, "application/json")
+    else:
+        return HttpResponse(response.text, status=response.status_code)
 
 
 # Get active classes in a data source

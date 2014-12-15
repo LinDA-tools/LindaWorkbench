@@ -2230,3 +2230,7 @@ input, textarea {
 .sparql .panel-body, .builder-advanced .qb-equivalent-query-main .panel-body {
     padding: 0;
 }
+
+#modal_dialog_message pre {
+    background: #fff;
+}

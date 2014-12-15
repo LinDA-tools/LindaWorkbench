@@ -122,6 +122,10 @@ this.execute_sparql_query = function(offset) {
         }
         Utils.scroll_to('#sparql_results_container');
       }
+    }).fail(function(error) {
+      $("#modal_dialog_message .modal-title").html('SPARQL error');
+      $("#modal_dialog_message .modal-body").html('<pre>' + error.responseText + '</pre>');
+      $("#modal_dialog_message").show();
     });
   }
 };

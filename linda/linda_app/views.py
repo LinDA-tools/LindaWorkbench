@@ -747,7 +747,6 @@ def datasourceCreateRDF(request):
         else:
             rdf_content = request.POST.get("rdfdata")
 
-
         # Call the corresponding web service
         headers = {'accept': 'application/json'}
         callAdd = requests.post(LINDA_HOME + "api/datasource/create/", headers=headers,
@@ -860,6 +859,10 @@ def queryBuilder(request):
 # Temporary call to execute a SparQL query
 @csrf_exempt
 def execute_sparql(request):
+    # Make sure a datasource name is specified
+    if not request.POST.get('dataset'):
+        return HttpResponse('Unspecified datasource.', status=400)
+
     query = request.POST.get('query')
 
     # Set a limit on the results if not set by the query itself
@@ -876,10 +879,13 @@ def execute_sparql(request):
 
     # Make the query, add info about the offset and return the results
     response = sparql_query_json(request.POST.get('dataset'), query)
-    data = json.loads(response.content)
-    data['offset'] = offset
+    if response.status_code == 200:
+        data = json.loads(response.content)
+        data['offset'] = offset
 
-    return HttpResponse(json.dumps(data), content_type="application/json")
+        return HttpResponse(json.dumps(data), content_type="application/json")
+    else:
+        return HttpResponse(response.content, status=response.status_code)
 
 
 # Proxy calls - exist as middle-mans between LinDA query builder page and the rdf2any server
@@ -959,28 +965,29 @@ def api_datasources_list(request):
 @csrf_exempt
 def api_datasource_create(request):
     results = {}
-    if request.POST:  #request must be POST
-        #check if datasource already exists
+    if request.POST:  # request must be POST
+        # check if datasource already exists
         if DatasourceDescription.objects.filter(title=request.POST.get("title")).exists():
             results['status'] = '403'
             results['message'] = "Datasource already exists."
         else:
-            #find the slug
+            # find the slug
             sname = slugify(request.POST.get("title"))
 
-            #get rdf type
+            # get rdf type
             if request.POST.get("format"):
                 rdf_format = request.POST.get("format")
             else:
-                rdf_format = 'application/rdf+xml'  #rdf+xml by default
+                rdf_format = 'application/rdf+xml'  # rdf+xml by default
 
-            #make REST api call to add rdf data
-            headers = {'accept': 'application/rdf+xml', 'content-type': rdf_format}
+            # make REST api call to add rdf data
+            headers = {'accept': 'application/rdf+xml', 'content-type': rdf_format, 'charset': 'utf-8'}
             callAdd = requests.post(SESAME_LINDA_URL + 'rdf-graphs/' + sname, headers=headers,
-                                    data=request.POST.get("content"))
+                                    data=request.POST.get("content").encode('utf-8'))
+            print callAdd
 
             if callAdd.text == "":
-                #create datasource description
+                # create datasource description
                 source = DatasourceDescription.objects.create(title=request.POST.get("title"),
                                                               name=sname,
                                                               uri=SESAME_LINDA_URL + "rdf-graphs/" + sname,
@@ -1002,20 +1009,20 @@ def api_datasource_create(request):
     return HttpResponse(data, mimetype)
 
 
-#Retrieve all data from datasource in specified format
+# Retrieve all data from datasource in specified format
 @csrf_exempt
 def api_datasource_get(request, dtname):
     results = {}
 
-    #check if datasource exists
+    # check if datasource exists
     if DatasourceDescription.objects.filter(name=dtname).exists():
-        #get rdf type
+        # get rdf type
         if request.GET.get("format"):
             rdf_format = request.GET.get("format")
         else:
-            rdf_format = 'application/rdf+xml'  #rdf+xml by default
+            rdf_format = 'application/rdf+xml'  # rdf+xml by default
 
-        #make REST api call to update graph
+        # make REST api call to update graph
         headers = {'accept': rdf_format, 'content-type': 'application/rdf+xml'}
         callReplace = requests.get(SESAME_LINDA_URL + 'rdf-graphs/' + dtname, headers=headers)
 
@@ -1031,26 +1038,26 @@ def api_datasource_get(request, dtname):
     return HttpResponse(data, mimetype)
 
 
-#Replace all data from datasource with new rdf data
+# Replace all data from datasource with new rdf data
 @csrf_exempt
 def api_datasource_replace(request, dtname):
     results = {}
-    if request.POST:  #request must be POST
-        #check if datasource exists
+    if request.POST:  # request must be POST
+        # check if datasource exists
         if DatasourceDescription.objects.filter(name=dtname).exists():
-            #get rdf type
+            # get rdf type
             if request.POST.get("format"):
                 rdf_format = request.POST.get("format")
             else:
-                rdf_format = 'application/rdf+xml'  #rdf+xml by default
+                rdf_format = 'application/rdf+xml'  # rdf+xml by default
 
-            #make REST api call to update graph
+            # make REST api call to update graph
             headers = {'accept': 'application/rdf+xml', 'content-type': rdf_format}
             callReplace = requests.put(SESAME_LINDA_URL + 'rdf-graphs/' + dtname, headers=headers,
-                                       data=request.POST.get("content"))
+                                       data=request.POST.get("content").encode('utf-8'))
 
             if callReplace.text == "":
-                #update datasource database object
+                # update datasource database object
                 source = DatasourceDescription.objects.filter(name=dtname)[0]
                 source.lastUpdateOn = datetime.now()
                 source.save()
@@ -1073,19 +1080,19 @@ def api_datasource_replace(request, dtname):
     return HttpResponse(data, mimetype)
 
 
-#Replace all data from datasource with new rdf data
+# Delete an RDF datasource
 @csrf_exempt
 def api_datasource_delete(request, dtname):
     results = {}
-    if request.method == 'POST':  #request must be POST
+    if request.method == 'POST':  # request must be POST
 
-        #check if datasource exists
+        # check if datasource exists
         if DatasourceDescription.objects.filter(name=dtname).exists():
-            #delete object from database
+            # delete object from database
             source = DatasourceDescription.objects.filter(name=dtname)[:1].get()
             source.delete()
 
-            #make REST api call to delete graph
+            # make REST api call to delete graph
             callDelete = requests.delete(SESAME_LINDA_URL + 'rdf-graphs/' + dtname)
 
             if callDelete.text == "":
