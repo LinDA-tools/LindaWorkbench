@@ -59,21 +59,21 @@ def api_datasources_list(request):
 
 @csrf_exempt
 def recommend_dataset(request):
-    vocabulary = request.GET.get("vocabulary", "")
-    property = request.GET.get("property", "")
-    class_ = request.GET.get("class", "")
-    q = request.GET.get("q", "")
-    prefix = request.GET.get("prefix", "")
+    vocabulary = request.GET.get("vocabulary", None)
+    property = request.GET.get("property", None)
+    class_ = request.GET.get("class", None)
+    q = request.GET.get("q", None)
+    prefix = request.GET.get("prefix", None)
 
     page = request.GET.get('page')
 
     flag = False
 
-    if vocabulary:
+    if vocabulary is not None:
         flag = "Vocabulary"
-    elif property:
+    elif property is not None:
         flag = "Property"
-    elif class_:
+    elif class_ is not None:
         flag = "Class"
     else:
         flag = "General"
@@ -98,7 +98,10 @@ def recommend_dataset(request):
             property = q
 
         if prefix:
-            vocabs = VocabularyProperty.objects.filter(label__iregex=property, vocabulary__preferredNamespacePrefix=prefix)
+            if property:
+                vocabs = VocabularyProperty.objects.filter(label__iregex=property, vocabulary__preferredNamespacePrefix=prefix)
+            else:  # fetch all properties from vocabulary
+                vocabs = VocabularyProperty.objects.filter(vocabulary__preferredNamespacePrefix=prefix)
         else:
             vocabs = VocabularyProperty.objects.filter(label__iregex=property)
 
@@ -121,7 +124,10 @@ def recommend_dataset(request):
             class_ = q
 
         if prefix:
-            vocabs = VocabularyClass.objects.filter(label__iregex=class_, vocabulary__preferredNamespacePrefix=prefix)
+            if class_:
+                vocabs = VocabularyClass.objects.filter(label__iregex=class_, vocabulary__preferredNamespacePrefix=prefix)
+            else:  # fetch all classes from vocabulary
+                vocabs = VocabularyClass.objects.filter(vocabulary__preferredNamespacePrefix=prefix)
         else:
             vocabs = VocabularyClass.objects.filter(label__iregex=class_)
 
@@ -143,7 +149,10 @@ def recommend_dataset(request):
         if flag == "General":
             vocabulary = q
 
-        vocabs = Vocabulary.objects.filter(Q(title__iregex=vocabulary) | Q(preferredNamespacePrefix__iregex=vocabulary))
+        if vocabulary:
+            vocabs = Vocabulary.objects.filter(Q(title__iregex=vocabulary) | Q(preferredNamespacePrefix__iregex=prefix))
+        else:
+            vocabs = Vocabulary.objects.all()
         for source in vocabs:
             source_info = {}
             source_info["vocabulary"] = source.title
