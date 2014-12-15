@@ -150,7 +150,7 @@ def recommend_dataset(request):
             vocabulary = q
 
         if vocabulary:
-            vocabs = Vocabulary.objects.filter(Q(title__iregex=vocabulary) | Q(preferredNamespacePrefix__iregex=prefix))
+            vocabs = Vocabulary.objects.filter(Q(title__iregex=vocabulary) | Q(preferredNamespacePrefix__iregex=vocabulary))
         else:
             vocabs = Vocabulary.objects.all()
         for source in vocabs:
