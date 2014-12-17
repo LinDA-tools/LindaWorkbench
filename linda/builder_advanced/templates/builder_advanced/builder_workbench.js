@@ -6,7 +6,7 @@
             /*Adds an instance of a class*/
             add_instance: function(dt_name, uri, x,y, default_properties) {
                 var new_id = this.instances.length;
-                var new_instance = $.parseHTML('<div id="class_instance_' + this.instances.length + '" class="class-instance" style="left: ' + x + 'px; top: ' + y + 'px;" class="class-instance"><div class="title"><h3>' + uri_to_label(uri) + '</h3><span class="uri">&lt;' + uri + '&gt;</span><span class="delete" data-about="' + new_id + '">x</span><span class="dataset">' + dt_name + '</span></div><div class="properties"><span class="loading">Loading properties...</span></div></div>');
+                var new_instance = $.parseHTML('<div id="class_instance_' + new_id + '" class="class-instance" data-n="' + new_id + '"style="left: ' + x + 'px; top: ' + y + 'px;"><div class="title"><h3>' + uri_to_label(uri) + '</h3><span class="uri">&lt;' + uri + '&gt;</span><span class="delete" data-about="' + new_id + '">x</span><span class="dataset">' + dt_name + '</span></div><div class="properties"><span class="loading">Loading properties...</span></div></div>');
                 $("#builder_workspace").append(new_instance);
                 $(new_instance).draggable({handle: '.title', cursor: 'move', drag: function() {
                     var i = $(this);
@@ -49,7 +49,7 @@
                         $(new_instance).find(".properties").html('<div class="property-table"><div class="header-row"><div></div><span>Show</span><span>Property</span><span>Optional</span><span>Order by</span><span>Filters</span><span>Foreign</span></div></div>');
                         $(new_instance).find(".properties").append('<div class="property-control"></div>');
                         var prop_control = $(new_instance).find(".properties .property-control");
-                        prop_control.append('Found ' + (instance_object.properties.length-1) + ' different properties in data.<br />');
+                        prop_control.append('Found ' + (instance_object.properties.length-1).toLocaleString() + ' different properties in data.<span class="sort-frequency">Order by frequency</span><br />');
 
                         try {
                             prop_control.append(select);
@@ -96,7 +96,7 @@
                     },
                     error: function (jqXHR, textStatus, errorThrown)
                     {
-                        console.log(textStatus + ': ' + errorThrown);
+                        $("#class_instance_" + new_id + " .properties").html('<span class="error">Error loading active properties</span>');
                     }
                 });
             },
@@ -205,6 +205,39 @@
             builder_workbench.bring_to_front(this);
         });
 
+        /*Order properties by frequency*/
+        $("body").on('click', '.class-instance .sort-frequency', function() {
+            var ord = $(this);
+            var n = $(this).parent().parent().parent().data("n");
+            var select = $(this).parent().find("select");
+            var inst = builder_workbench.instances[n];
+
+            $.ajax({  //make an ajax request to get all properties ordered by usage
+                url: ADVANCED_BUILDER_API_URI + "active_class_properties/" +  inst.dt_name + "?order=true&class_uri=" + encodeURIComponent(inst.uri),
+                type: "GET",
+                success: function(data, textStatus, jqXHR) {
+                    $(select).empty(); //empty the existing select box
+                    var bindings = data.results.bindings;
+                    bindings.sort(function(a,b) { //sort by value, then by label
+                        var res = b.cnt.value - a.cnt.value;
+                        if (res != 0) {
+                            return res;
+                        }
+                        return uri_to_label(a.property.value).toLowerCase().localeCompare(uri_to_label(b.property.value).toLowerCase());
+                    });
+
+                    for (var i=0; i<bindings.length; i++) { //add all options - already in the correct order
+                        if (uri_to_label(bindings[i].property.value).length > 0){
+                            var num_human = Number(bindings[i].cnt.value).toLocaleString();
+                            $(select).append('<option value="' +bindings[i].property.value+ '">' + uri_to_label(bindings[i].property.value) + ' (' + (num_human)  + ')</option>');
+                        }
+                    }
+
+                    ord.remove();
+                }
+            });
+        });
+
         /*Delete instances*/
         $("body").on('click', '.class-instance .delete', function() {
             var n = $(this).data("about");
@@ -216,6 +249,10 @@
 
             //rearrange remaining instances after the deleted
             for (var i=n+1; i<builder_workbench.instances.length; i++) {
+                //update the instance (meta) data
+                $("#class_instance_" + i).data('n', (i-1));
+                $("#class_instance_" + i).attr('data-n', (i-1));
+
                 //update the x button
                 $("#class_instance_" + i + " .delete").data('about', (i-1));
                 $("#class_instance_" + i + " .delete").attr('data-about', (i-1));

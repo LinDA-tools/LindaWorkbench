@@ -64,7 +64,7 @@
                 if (added == 0) {
                     $("#{{toolbar_id}} .active-classes").append('<span class="info">No terms found</span>');
                 } else if (this.all_classes_properties.length>limit) {
-                    $("#{{toolbar_id}} .active-classes").append('<span class="info">Showing ' + (offset+1) + '-' + (offset+added) + '/' + total + ' terms</span>');
+                    $("#{{toolbar_id}} .active-classes").append('<span class="info">Showing ' + (offset+1) + '-' + (offset+added) + '/' + total.toLocaleString() + ' terms</span>');
                 }
             }
         };
@@ -113,7 +113,7 @@
                         });
                     },
                     error: function (jqXHR, textStatus, errorThrown) {
-                        console.log(textStatus + ': ' + errorThrown);
+                        $("#{{toolbar_id}} .active-classes").html('<span class="error">Error while connecting to server</span>');
                     }
                 });
             });

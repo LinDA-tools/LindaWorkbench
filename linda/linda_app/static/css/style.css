@@ -2188,6 +2188,19 @@ input, textarea {
     color: #eee;
 }
 
+.class-instance .property-control .sort-frequency {
+    display: none;
+    cursor: pointer;
+    padding: 10px;
+    padding-right: 16px;
+    background: url('/static/images/sort_both.png') no-repeat right center;
+    background-size: 16px;
+}
+
+.class-instance .property-control:hover .sort-frequency {
+    display: inline;
+}
+
 .add-filter {
     margin-right: 10px;
 }

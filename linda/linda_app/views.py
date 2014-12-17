@@ -12,6 +12,7 @@ from django.views.generic import ListView, UpdateView, DetailView, DeleteView
 
 import json
 import requests
+
 from microsofttranslator import Translator
 from analytics.models import Analytics
 from builder_advanced.views import sparql_query_json
@@ -879,8 +880,11 @@ def execute_sparql(request):
 
     # Make the query, add info about the offset and return the results
     response = sparql_query_json(request.POST.get('dataset'), query)
+
     if response.status_code == 200:
-        data = json.loads(response.content)
+        # avoid erroneous \U characters -- invalid json
+        response_safe = response.content.replace('\U', '')
+        data = json.loads(response_safe)
         data['offset'] = offset
 
         return HttpResponse(json.dumps(data), content_type="application/json")

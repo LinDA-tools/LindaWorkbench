@@ -89,7 +89,7 @@ def object_properties(request, dt_name):
     endpoint = get_endpoint_from_dt_name(dt_name)
 
     # query to get all classes with at least one instance
-    query = "SELECT DISTINCT ?property ?domain ?range WHERE {?property a owl:ObjectProperty. ?property rdfs:domain ?domain. ?property rdfs:range ?range}"
+    query = "PREFIX owl: <http://www.w3.org/2002/07/owl>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nSELECT DISTINCT ?property ?domain ?range WHERE {?property a owl:ObjectProperty. ?property rdfs:domain ?domain. ?property rdfs:range ?range}"
 
     return sparql_query_json(endpoint, query)
 
@@ -106,7 +106,10 @@ def active_class_properties(request, dt_name):
     endpoint = get_endpoint_from_dt_name(dt_name)
 
     # query to get all properties of a class with at least one instance
-    query = "SELECT DISTINCT ?property WHERE {?x a <" + class_uri + ">. ?x ?property ?o }"
+    if request.GET.get('order'):
+        query = "SELECT DISTINCT ?property (count(?o) AS ?cnt) WHERE {?x a <" + class_uri + ">. ?x ?property ?o } GROUP BY ?property ORDER BY DESC(?cnt)"
+    else:
+        query = "SELECT DISTINCT ?property WHERE {?x a <" + class_uri + ">. ?x ?property ?o }"
 
     return sparql_query_json(endpoint, query)
 
