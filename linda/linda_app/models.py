@@ -69,7 +69,7 @@ def get_label_by_uri(uri):
         start_pos = 0
     else:
         start_pos += 1
-    end_pos = label.find('>')
+    end_pos = label.find('"')
     if end_pos < 0:
         label = label[start_pos:]
     else:
@@ -396,21 +396,36 @@ class DatasourceDescription(models.Model):
             return LINDA_HOME + "sparql/" + self.name + "/"
 
 
+# Transform [x1,x2,...,xN] to "x1, x2, ... and/or xN"
+def str_extend(array, op_join='and'):
+    result = array[0]
+
+    for x in array[1:-1]:
+        result += ', ' + x
+
+    result += ' ' + op_join + ' ' + array[-1]
+    return result
+
+
 # Given an endpoint name and a query it creates a description of the query
 def create_query_description(dtname, query):
+    # TODO : Update description constructor to cover more queries and be more descriptive
     # create base description
     find_verbs = ["Find", "Search for", "Look up for", "Get", "List"]
 
-    # get class name
-    classes = ''
-    class_cnt = 0  # no classes yet
+    # class instances
+    instances = []
 
     # add constraints
     where_start = re.search('WHERE', query, re.IGNORECASE).end()
     if where_start:
-        where_end_f = re.search('LIMIT', query, re.IGNORECASE)
+        where_end_f = re.search('LIMIT', query, re.IGNORECASE)  # where can end at a LIMIT
         if not where_end_f:
-            where_end = len(query)
+            where_end_f = re.search('ORDER BY', query, re.IGNORECASE)  # at an ORDER BY
+        if not where_end_f:
+            where_end_f = re.search('GROUP BY', query, re.IGNORECASE)  # at a GROUP BY
+        if not where_end_f:
+            where_end = len(query)  # or at the end of the query
         else:
             where_end = where_end_f.start()
 
@@ -428,43 +443,13 @@ def create_query_description(dtname, query):
             if len(terms) < 3:
                 continue
 
-            if terms[1].lower() == 'rdf:type' or terms[1].lower() == 'a' :  # class constraints
-                tp_pos = 2
-                class_constraint = ''
-                old_class_name = ''
-                while tp_pos < len(terms):
-                    class_name = get_label_by_uri(terms[tp_pos]).lower()
-
-                    # get seperator
-                    if tp_pos < len(terms) - 2:
-                        sep = ', '
-                    else:
-                        sep = ' or '
-
-                    if not old_class_name:
-                        class_constraint += pluralize(class_name)
-                    elif old_class_name.lower() == class_name.lower():
-                        class_constraint += sep + pluralize(class_name)
-                    else:
-                        class_constraint += sep + pluralize(class_name)
-
-                    old_class_name = class_name
-                    tp_pos += 4  # move to the next sub-contraint
-
-                # add these classes to total class constraint
-                if class_cnt == 0:  # first class
-                    classes = class_constraint
-                elif class_cnt == 1:  # second class
-                    classes += ' that are also ' + class_constraint
-                else:
-                    classes += ' and ' + class_constraint
-                class_cnt += 1
-
-                continue
+            if terms[1].lower() == 'rdf:type' or terms[1].lower() == 'a':  # class instances
+                instances.append(pluralize(get_label_by_uri(terms[2]).lower()))
 
             if terms[2][0] == '?':
-                continue  # ignore static constraints
+                continue  # ignore variable constraints
 
+            '''
             tp_pos = 1  # first constraint property
             old_tp_name = ''
             constraint_str = ''
@@ -493,10 +478,12 @@ def create_query_description(dtname, query):
                 first_constraint = False
             else:
                 constraints_out += ' and ' + constraint_str
+            '''
 
-    if not classes:  # no class detected
+    if not instances:  # no class detected
         classes = 'objects'
-
+    else:
+        classes = str_extend(instances)
     description = random(find_verbs) + " " + classes + " in " + dtname + constraints_out
 
     # add limit

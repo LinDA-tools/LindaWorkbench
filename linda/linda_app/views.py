@@ -945,15 +945,18 @@ def api_users(request):
     return HttpResponse(data, mimetype)
 
 
-#Return a list with all created datasources
+# Return a list with all created datasources
 @csrf_exempt
 def api_datasources_list(request):
     results = []
     for source in DatasourceDescription.objects.all():
         source_info = {}
+
         source_info['name'] = source.name
-        source_info['uri'] = source.uri
+        source_info['endpoint'] = source.get_endpoint()
         source_info['title'] = source.title
+        source_info['public'] = source.is_public
+
         results.append(source_info)
 
     data = json.dumps(results)
@@ -961,7 +964,7 @@ def api_datasources_list(request):
     return HttpResponse(data, mimetype)
 
 
-#Create a new datasource with some rdf data
+# Create a new datasource with some rdf data
 @csrf_exempt
 def api_datasource_create(request):
     results = {}
@@ -1192,6 +1195,12 @@ def query_save(request):
     query = request.POST.get("query")
     design_json = request.POST.get("design")
 
+    if not endpoint_name:  # auto-detect endpoint title
+        endpoint_name = endpoint  # fallback
+        for dt in DatasourceDescription.objects.all():
+            if dt.get_endpoint() == endpoint:
+                endpoint_name = dt.title
+
     # load constraints as json object
     description = create_query_description(endpoint_name, query)
 
@@ -1213,11 +1222,20 @@ def query_update(request, pk):
     if not obj_list:
         return Http404
 
+    endpoint = request.POST.get("endpoint")
+    endpoint_name = request.POST.get("endpointName")
+
+    if not endpoint_name:  # auto-detect endpoint title
+        endpoint_name = endpoint  # fallback
+        for dt in DatasourceDescription.objects.all():
+            if dt.get_endpoint() == endpoint:
+                endpoint_name = dt.title
+
     # get query object and update its properties
     q_obj = obj_list[0]
     q_obj.sparql = request.POST.get("query")
-    q_obj.endpoint = request.POST.get("endpoint")
-    q_obj.endpoint_name = request.POST.get("endpointName")
+    q_obj.endpoint = endpoint
+    q_obj.endpoint_name = endpoint_name
     q_obj.description = create_query_description(q_obj.endpoint_name, q_obj.sparql)
 
     # update (or create if it did not exist) the query design json

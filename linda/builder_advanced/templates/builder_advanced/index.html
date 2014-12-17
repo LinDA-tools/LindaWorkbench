@@ -186,7 +186,6 @@
                 type: "POST",
                 data: {
                     endpoint: builder.endpoint,
-                    endpointName: builder.endpoint,
                     query: editor.getSession().getValue(),
                     design: JSON.stringify( builder_workbench.to_json() ),
                     csrfmiddlewaretoken: '{{ csrf_token }}'

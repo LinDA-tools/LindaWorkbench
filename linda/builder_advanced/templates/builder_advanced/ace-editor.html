@@ -50,6 +50,19 @@
                             }));
                         })
                     }
+                    else if (val == "service") { //suggest vocabularies
+                        $.getJSON(
+                        "/api/datasources/",
+                        function(datasourceList) {
+                            callback(null, datasourceList.map(function(d) {
+                                var tp = "Public endpoint";
+                                if (!d.public) {
+                                    tp = "Private RDF";
+                                }
+                                return {caption: d.title, name: d.title, value: "<" + d.endpoint + "> { ", score: 0, meta: tp}
+                            }));
+                        })
+                    }
                     else if ((val == "a") || (val == "type")) { //suggest classes
                         $.getJSON(
                         "/coreapi/recommend/?class=" + prefix + in_vocabulary,
