@@ -1,9 +1,28 @@
 <div class="panel panel-default">
 	<div class="panel-heading">
-	    <h4 class="panel-title">{% if mode == "builder"%}Equivalent SPARQL Query{% else %}SPARQL Query editor{% endif %}</h4>
+		<div class="row">
+			<div class="col-md-6">
+				<h4 class="">{%if mode == "builder"%}Equivalent SPARQL Query{%else%}SPARQL Query editor{%endif%}</h4>
+			</div>
+			{% if mode == "builder" %}
+				<div class="col-md-6">
+					<input type="hidden" id="hdn_show_checked_properties" value="no">
+					&nbsp;&nbsp;&nbsp;
+					<span class="btn-group pull-right">
+						<button class="btn " id="btn_show_checked_properties_yes" onclick="QueryBuilder.equivalent_query.handle_checked_properties('yes')">Yes</button>
+						<button class="btn btn-success" id="btn_show_checked_properties_no" onclick="QueryBuilder.equivalent_query.handle_checked_properties('no')">No</button>
+					</span>
+					&nbsp;&nbsp;&nbsp;
+					<span class="pull-right">
+						Show checked properties in equivalen query and preview ? &nbsp;&nbsp;&nbsp;
+					</span>&nbsp;&nbsp;&nbsp;
+				</div>
+			{% endif %}
+
+		</div>
 	</div>
-	<div class="panel-body">
-	    <div class="row " > 
+	<div class="panel-body" >
+	    <div class="row " >
 	        <div class="col-md-12">
 	            <!--<textarea rows="12" id="txt_sparql_query" style="width:100%;" placeholder="Type your SPARQL query here ..." class="form-control">{% if query %}{{query.sparql}}{% endif %}</textarea>-->
 				<div id="txt_sparql_query">{% if query %}{{query.sparql}}{% endif %}</div>
@@ -12,25 +31,32 @@
 	</div>
 	<div class="panel-footer">
 	    <div class="row">
-	        <div class="col-md-9">
+	        <div class="col-md-3">
 	        	<div class="btn-group">
 		            <button  type="button" class="btn btn-lg btn-success" onclick="execute_sparql_query()">&nbsp;&nbsp;&nbsp;&nbsp;<span class="glyphicon glyphicon-play"></span>&nbsp;&nbsp;&nbsp;&nbsp;</button>
 		            <!--<button  type="button" class="btn btn-lg btn-warning" onclick="show_sparql_download_modal()">&nbsp;&nbsp;&nbsp;&nbsp;<span class="glyphicon glyphicon-floppy-save"></span>&nbsp;&nbsp;&nbsp;&nbsp;</button>-->
 	        	</div>
 	        </div>
-	        {% if mode == "sparql" %}
+	        {% if mode == "builder" %}
 		        <div class="col-md-3">
+		        	<div class="form-group">
+					    <label for="txt_sparql_query_limit" class="col-sm-2 control-label" style="margin-top:5px;">Limit</label>
+					    <div class="col-sm-10">
+					      <input type="text" class="form-control" id="txt_sparql_query_limit" placeholder="Limit" value="200">
+					    </div>
+					</div>
+		        </div>
+	        {% endif %}
+	        {% if mode == "sparql" %}
+		        <div class="col-md-3 pull-right">
 		        	<button onclick="generate_sample_query('1')" type="button" class="btn btn-lg btn-info pull-right">Sample Query</button>
 		        </div>
 	        {% endif %}
 	    </div>
 	</div>
 </div>
+
 <div class="hide">
-	<textarea rows="5" id="txt_sample_query_1" >
-        PREFIX rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#&gt;
-        SELECT ?subject ?label
-        WHERE { ?subject rdfs:label ?label.
-        FILTER(langMatches(lang(?label), "EN"))} LIMIT 200
-    </textarea>
+	<textarea rows="5" id="txt_sample_query_1" >select distinct ?Concept where {[] a ?Concept} LIMIT 100</textarea>
 </div>
+

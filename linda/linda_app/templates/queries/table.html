@@ -24,7 +24,7 @@
             </td>
             <td>{{query.get_datasource}}</td>
             <td class="description">{{query.description}}</td>
-            <td class="sparql-query">{{query.sparql|linebreaks}}</td>
+            <td class="sparql-query"><p>{{query.sparql|linebreaksbr}}</p></td>
             <td>{{query.createdOn}}</td>
         </tr>
         {% endfor %}

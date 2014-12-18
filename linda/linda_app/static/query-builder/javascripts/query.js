@@ -35,7 +35,7 @@ this.display_sparql_uri = function(data) {
 this.display_sparql_row_entry = function(data) {
   if (!data) {
     return "<td></td>"
-  } else if (data.type === "uri") {
+  }  if (data.type === "uri") {
     return display_sparql_uri(data);
   } else if (data.type === "literal") {
     return display_sparql_literal(data);
@@ -46,7 +46,7 @@ this.display_sparql_row_entry = function(data) {
   }
 };
 
-this.execute_sparql_query = function(offset) {
+this.execute_sparql_query = function() {
   if (SPARQL.textbox.is_valid()) {
     show_loading();
     $("#sparql_results_container").hide();
@@ -58,8 +58,7 @@ this.execute_sparql_query = function(offset) {
     }
     $.post(get_server_address() + "/query/execute_sparql", {
       query: q,
-      dataset: QueryBuilder.datasets.get_selected(),
-      offset: offset
+      dataset: QueryBuilder.datasets.get_selected()
     }, function(data) {
       var result_columns, result_rable_rows, result_rows, result_table, result_table_header, row_counter;
       if (data.error !== void 0) {
@@ -113,7 +112,7 @@ this.execute_sparql_query = function(offset) {
         row_counter = 0;
         while (row_counter < result_rows.length) {
           row_counter++;
-          result_rable_rows = "<tr><td>" + (row_counter + offset).toString() + "</td>";
+          result_rable_rows = "<tr><td>" + row_counter.toString() + "</td>";
           $.each(result_columns, function(key, col) {
             return result_rable_rows += display_sparql_row_entry(result_rows[row_counter - 1][col]);
           });
@@ -123,10 +122,10 @@ this.execute_sparql_query = function(offset) {
         Utils.scroll_to('#sparql_results_container');
       }
     }).fail(function(error) {
-      $("#alert_modal .modal-title").html('SPARQL error');
-      $("#alert_modal .modal-body").html('<pre>' + error.responseText + '</pre>');
-      $("#alert_modal").show();
-    });
+		$("#alert_modal .modal-title").html('SPARQL error');
+		$("#alert_modal .modal-body").html('<pre>' + error.responseText + '</pre>');
+		$("#alert_modal").show();
+	});;
   }
 };
 

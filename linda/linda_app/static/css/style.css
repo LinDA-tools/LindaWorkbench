@@ -1772,11 +1772,7 @@ input, textarea {
 }
 
 .datasource.context-menu-active, .query-row.context-menu-active {
-    background: #FC5006;
-}
-
-.datasource.context-menu-active td, .query-row.context-menu-active td {
-    color: #fff;
+    background: #b0bed9;
 }
 
 /*Vocabulary updates*/

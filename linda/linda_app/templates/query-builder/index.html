@@ -34,7 +34,7 @@
                             <div class="col-md-12">
                                 <div class="dropdown clear-dataset">
                                   <button class="btn btn-default dropdown-toggle clear-dataset col-md-12" type="button" id="dd_select_dataset" data-toggle="dropdown">
-                                    Choose a Data Source&nbsp;
+                                    Choose a Dataset&nbsp;
                                     <span class="caret"></span>
                                   </button>
                                   <ul class="dropdown-menu col-md-12" role="menu" aria-labelledby="dd_select_dataset">
@@ -68,7 +68,7 @@
                         </div>
                         <div class="row" id="qb_class_search_loading" style="display:none;">
                             <div class="col-md-12">
-                                <center><img src="/static/images/jar-loading.gif" class="builder-loading"/></center>
+                                <center><img src="/static/query-builder/images/jar-loading.gif" class="builder-loading"/></center>
                             </div>
                         </div>
                         <div class="row" id="qb_class_search_error"  style="display:none;">
@@ -104,7 +104,13 @@
                     <div class="panel-body">
                         <div class="row">
                             <div class="col-md-12">
-                                <small>You can filter properties from various options here</small>
+                                <p>
+                                    <small>You can filter properties from various options here</small>
+                                </p>
+                                <p>
+                                    <small>Please note that these properties won't be displayed in the preview mode, but will be displayed in the final serialization download option you choose. If you want to have the exact view of these properties in the preview also, then please check the option from below.</small>
+                                </p>
+
                             </div>
                         </div>
                         <div class="row">
@@ -146,7 +152,7 @@
                                     </div>
                                     <div class="row" id="qb_properties_properties_object_loading">
                                         <div class="col-md-12">
-                                            <center><img src="/static/images/jar-loading.gif" class="builder-loading"/></center>
+                                            <center><img src="/static/query-builder/images/jar-loading.gif" class="builder-loading"/></center>
                                         </div>
                                     </div>
                                     <div class="panel-heading alert">
@@ -164,7 +170,7 @@
                                     </div>
                                     <div class="row" id="qb_properties_properties_datatype_loading">
                                         <div class="col-md-12">
-                                            <center><img src="/static/images/jar-loading.gif" class="builder-loading"/></center>
+                                            <center><img src="/static/query-builder/images/jar-loading.gif" class="builder-loading"/></center>
                                         </div>
                                     </div>
 
@@ -187,7 +193,7 @@
                                     </div>
                                     <div class="row" id="qb_properties_sub_classes_loading" style="display:none;">
                                         <div class="col-md-12">
-                                            <center><img src="/static/images/jar-loading.gif" class="builder-loading"/></center>
+                                            <center><img src="/static/query-builder/images/jar-loading.gif" class="builder-loading"/></center>
                                         </div>
                                     </div>
                                 </div>
@@ -245,6 +251,7 @@
     <script data-turbolinks-track="true" src="/static/query-builder/javascripts/bootstrap.min.js?body=1"></script>
     <script data-turbolinks-track="true" src="/static/query-builder/javascripts/developer.js?body=1"></script>
     <script data-turbolinks-track="true" src="/static/query-builder/javascripts/query.js?body=1"></script>
+    <script data-turbolinks-track="true" src="/static/query-builder/javascripts/resources/variables.js?body=1"></script>
     <script data-turbolinks-track="true" src="/static/query-builder/javascripts/resources/common.js?body=1"></script>
     <script data-turbolinks-track="true" src="/static/query-builder/javascripts/resources/querybuilder.js?body=1"></script>
     <script data-turbolinks-track="true" src="/static/query-builder/javascripts/resources/sparql.js?body=1"></script>
@@ -252,6 +259,13 @@
     <script data-turbolinks-track="true" src="/static/query-builder/javascripts/codemirror.js?body=1"></script>
     <script data-turbolinks-track="true" src="/static/query-builder/javascripts/gritter.js?body=1"></script>
     <script data-turbolinks-track="true" src="/static/query-builder/javascripts/application.js?body=1"></script>
+
+    <script>
+        $(function () {
+            $('.dropdown-toggle').dropdown();
+        });
+        $("#txt_search_classes").bind('input',function(){QueryBuilder.search_classes_change();});
+    </script>
 
     <script>
         function select_dataset(dtn, endp) {
@@ -267,7 +281,7 @@
                 data: {
                     endpoint: endpoint_uri,
                     endpointName: dt_name,
-                    query: $("#txt_sparql_query").val(),
+                    query: SPARQL.get_query(),
                     csrfmiddlewaretoken: '{{ csrf_token }}'
                 },
                 success: function(data, textStatus, jqXHR)
@@ -300,5 +314,9 @@
             document.getElementById('configured_template_files').addEventListener('change', QueryBuilder.convert.configured.handle_file_upload, false);
         });
         $("#txt_search_classes").bind('input',function(){QueryBuilder.search_classes_change();});
+
+        $("#txt_sparql_query_limit").change(function(){
+			QueryBuilder.show_equivalent_sparql_query();
+		});
     </script>
 {% endblock %}

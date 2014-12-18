@@ -901,7 +901,6 @@ def get_qbuilder_call(request, link):
     for param in request.GET:
         total_link += param + "=" + urlquote(request.GET[param]) + "&"
 
-    print link
     if link == 'execute_sparql':
         data = requests.post(total_link, data=request.POST)
     else:
@@ -991,7 +990,6 @@ def api_datasource_create(request):
             headers = {'accept': 'application/rdf+xml', 'content-type': rdf_format, 'charset': 'utf-8'}
             callAdd = requests.post(SESAME_LINDA_URL + 'rdf-graphs/' + sname, headers=headers,
                                     data=request.POST.get("content").encode('utf-8'))
-            print callAdd
 
             if callAdd.text == "":
                 # create datasource description
