@@ -50,6 +50,13 @@
                 link.parentNode.removeChild(link);
             }
 
+            var datasource_visualize_URIs = [];
+            {% for datasource in datasources %}
+                {% if not datasource.is_public %}
+                    datasource_visualize_URIs["{{datasource.name}}"] = "{{datasource|datasource_visualize}}";
+                {% endif %}
+            {% endfor %}
+
             $(function(){ //private datasource context menu
 
                 $.contextMenu({
@@ -57,9 +64,9 @@
                     callback: function(key, options) {
                         var id = options.$trigger.attr('id');
                         var url;
-
-                        if (key == "Visualize")
-                            url = "/visualize/datasource/" + id;
+                        console.log(key + ' ' + id);
+                        if (key == "Visualize") {
+                            url = datasource_visualize_URIs[id]; console.log(url)}
                         else
                         if (key == "Explore")
                             url = "/query-builder?dt_id=" + id;

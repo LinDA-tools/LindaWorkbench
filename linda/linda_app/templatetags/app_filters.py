@@ -1,5 +1,7 @@
 from django import template
+from django.utils.http import urlquote
 from linda_app.models import Vocabulary, VocabularyClass, VocabularyProperty
+from linda_app.settings import PRIVATE_SPARQL_ENDPOINT
 
 register = template.Library()
 
@@ -29,3 +31,9 @@ def url_replace(request, field, value):
     dict_ = request.GET.copy()
     dict_[field] = value
     return dict_.urlencode()
+
+@register.filter(name="datasource_visualize")
+def datasource_visualize(datasource):
+    endpoint = PRIVATE_SPARQL_ENDPOINT
+    graph_uri = datasource.uri
+    return '/visualizations/#/visualization/' + datasource.name + '/' + urlquote(endpoint, safe='') + '/' + urlquote(graph_uri, safe='') + '/rdf'

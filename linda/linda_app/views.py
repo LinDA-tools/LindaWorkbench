@@ -29,6 +29,7 @@ from passwords import MS_TRANSLATOR_UID, MS_TRANSLATOR_SECRET
 def index(request):
     params = {}
     params['recent_datasources'] = DatasourceDescription.objects.all().order_by('createdOn')[:3]
+    params['recent_queries'] = Query.objects.all().order_by('updatedOn')[:3]
     params['page'] = 'Home'
 
     return render(request, 'index.html', params)
@@ -89,7 +90,7 @@ def site_search(request):
     params = {'search_q': q,
               'datasources': DatasourceDescription.objects.filter(name__icontains=q),
               'queries': Query.objects.filter(description__icontains=q),
-              'analytics': Analytics.objects.filter(description__icontains=q, user_id=request.user.id),
+              'analytics': Analytics.objects.filter(description__icontains=q),
               'vocabularies_list': vocabularies, 'classes_list': classes, 'properties_list': properties}
 
     return render(request, 'search/site-search.html', params)
@@ -1213,7 +1214,7 @@ def query_save(request):
 
     # create the query object
     Query.objects.create(endpoint=endpoint, sparql=query,
-                         description=description, createdOn=datetime.now(), design=design)
+                         description=description, createdOn=datetime.now(), updatedOn=datetime.now(), design=design)
 
     return HttpResponse('')  # return empty response
 
@@ -1238,6 +1239,7 @@ def query_update(request, pk):
     q_obj.sparql = request.POST.get("query")
     q_obj.endpoint = endpoint
     q_obj.endpoint_name = endpoint_name
+    q_obj.updatedOn = datetime.now()
     q_obj.description = create_query_description(q_obj.endpoint_name, q_obj.sparql)
 
     # update (or create if it did not exist) the query design json

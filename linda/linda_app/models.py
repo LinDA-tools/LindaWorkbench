@@ -502,6 +502,7 @@ class Query(models.Model):
     sparql = models.CharField(max_length=4096, blank=False, null=False)  # the query string (select ?s ?p ?o...)
     description = models.CharField(max_length=512, blank=True, null=True)  # query description (auto-created)
     createdOn = models.DateField(blank=False, null=False)  # query creation date
+    updatedOn = models.DateField(blank=False, null=True)  # query last update date
     design = models.ForeignKey(Design, blank=True, null=True)  # the json object produced in the Query Designer
 
     def csv_link(self):
