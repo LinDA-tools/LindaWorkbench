@@ -656,9 +656,9 @@ def datasourceCreate(request):
     if request.POST:  # request to create a public datasource or move to appropriate tool for a private one
 
         if request.POST.get("type") == "private" and (request.POST.get("datatype") == "csv" or request.POST.get("datatype")== "rdb"):
-           return redirect("/transformations/#/" + request.POST.get("datatype"))
+            return redirect("/transformations/#/" + request.POST.get("datatype"))
         elif request.POST.get("type") == "private":
-           return redirect("/datasource/create/" + request.POST.get("datatype"))
+            return redirect("/datasource/create/" + request.POST.get("datatype"))
         else:
             if not request.POST.get("title"):  # title is obligatory
                 params["error"] = "A datasource title must be specified"
@@ -755,7 +755,7 @@ def datasourceCreateRDF(request):
 
         j_obj = json.loads(callAdd.text)
         if j_obj['status'] == '200':
-            return redirect("/")
+            return redirect("/datasources")
         else:
             params = {}
 
@@ -1093,16 +1093,16 @@ def api_datasource_delete(request, dtname):
 
         # check if datasource exists
         if DatasourceDescription.objects.filter(name=dtname).exists():
-            # delete object from database
-            source = DatasourceDescription.objects.filter(name=dtname)[:1].get()
-            source.delete()
-
             # make REST api call to delete graph
             callDelete = requests.delete(SESAME_LINDA_URL + 'rdf-graphs/' + dtname)
 
             if callDelete.text == "":
                 results['status'] = '200'
                 results['message'] = 'Datasource deleted succesfully.'
+
+                # delete object from database
+                source = DatasourceDescription.objects.filter(name=dtname)[:1].get()
+                source.delete()
             else:
                 results['status'] = '500'
                 results['message'] = 'Error deleting datasource: ' + callDelete.text
