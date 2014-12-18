@@ -35,7 +35,7 @@ var sparql_data_module = function() {
         query += '{';
         query += ' GRAPH <' + graph + '>';
         query += ' {';
-        query += '  SELECT ?class ?classLabel COUNT(?x) as ?classSize';
+        query += '  SELECT ?class ?classLabel (COUNT(?x) as ?classSize)';
         query += '  WHERE';
         query += '  {';
         query += '   ?x rdf:type ?class .';
@@ -45,9 +45,11 @@ var sparql_data_module = function() {
         query += '    ?class rdfs:label ?classLabel .';
         query += '   }';
         query += '  }';
+		query += '  GROUP BY ?class ?classLabel ';
+		query += '  ORDER BY DESC(?classSize)';
         query += ' }';
         query += '}';
-        query += 'ORDER BY DESC(?classSize)';
+        
 
         console.log("SPARQL DATA MODULE - QUERY CLASSES");
         console.dir(query);
