@@ -47,6 +47,18 @@
         return w.location = url;
       });
     };
+    $scope.safe_tags_replace = function(str) {
+      var replaceTag, tagsToReplace;
+      tagsToReplace = {
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;'
+      };
+      replaceTag = function(tag) {
+        return tagsToReplace[tag] || tag;
+      };
+      return str.replace(/[&<>]/g, replaceTag);
+    };
     $scope.mappingdb = function(table) {
       var mapping, w;
       mapping = {
@@ -63,7 +75,7 @@
       $scope.currentMapping = $scope.sml.toSml(mapping, table);
       w = $window.open('');
       w.document.open();
-      w.document.write('<pre>' + $scope.currentMapping + '</pre>');
+      w.document.write('<pre>' + $scope.safe_tags_replace($scope.currentMapping) + '</pre>');
       return w.document.close();
     };
     $scope.mappingcsv = function() {
@@ -80,24 +92,40 @@
         literalTypes: $scope.rdf.propertyLiteralTypes
       };
       $scope.currentMapping = $scope.sml.toSml(mapping);
+      console.log($scope.currentMapping);
       w = $window.open('');
       w.document.open();
-      w.document.write('<pre>' + $scope.currentMapping + '</pre>');
+      w.document.write('<pre>' + $scope.safe_tags_replace($scope.currentMapping) + '</pre>');
       return w.document.close();
     };
     return $scope.publish = function(to) {
       var mapping;
       $scope.publishing = true;
-      mapping = {
-        tables: $scope.rdb.selectedTables(),
-        columns: $scope.rdb.selectedColumns(),
-        baseUri: $scope.rdf.baseUri,
-        subjectTemplate: $scope.rdf.subjectTemplate,
-        classes: $scope.rdf.selectedClasses,
-        properties: $scope.rdf.selectedProperties,
-        literals: $scope.rdf.propertyLiteralSelection,
-        literalTypes: $scope.rdf.propertyLiteralTypes
-      };
+      if (to === 'openrdf') {
+        mapping = {
+          source: 'csv',
+          tables: $scope.csv.selectedTables(),
+          columns: $scope.csv.selectedColumns(),
+          baseUri: $scope.rdf.baseUri,
+          subjectTemplate: $scope.rdf.subjectTemplate,
+          classes: $scope.rdf.selectedClasses,
+          properties: $scope.rdf.selectedProperties,
+          literals: $scope.rdf.propertyLiteralSelection,
+          literalTypes: $scope.rdf.propertyLiteralTypes
+        };
+      } else {
+        mapping = {
+          source: 'rdb',
+          tables: $scope.rdb.selectedTables(),
+          columns: $scope.rdb.selectedColumns(),
+          baseUri: $scope.rdf.baseUri,
+          subjectTemplate: $scope.rdf.subjectTemplate,
+          classes: $scope.rdf.selectedClasses,
+          properties: $scope.rdf.selectedProperties,
+          literals: $scope.rdf.propertyLiteralSelection,
+          literalTypes: $scope.rdf.propertyLiteralTypes
+        };
+      }
       $scope.currentMapping = $scope.sml.toSml(mapping);
       return $scope.transform.publish(to, $scope.currentMapping).success(function(data) {
         console.log('success');

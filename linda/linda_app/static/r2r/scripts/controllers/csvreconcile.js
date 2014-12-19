@@ -8,14 +8,14 @@
     $scope.tableTag = {};
     $scope.columns = [];
     $scope.columnTags = {};
-    $scope.$watch('csv.csvFile', function(val) {
+    $scope.$watch('csv.csvFile()', function(val) {
       if (val != null) {
         return $scope.table = val.name;
       }
     });
-    $scope.$watch('table', function(val) {
+    $scope.$watch('csv.selectedColumns()[table]', function(val) {
       if (val != null) {
-        return $scope.columns = $scope.csv.selectedColumns()[val];
+        return $scope.columns = $scope.csv.selectedColumns()[$scope.table];
       }
     });
     $scope.ask = function(table, columns) {

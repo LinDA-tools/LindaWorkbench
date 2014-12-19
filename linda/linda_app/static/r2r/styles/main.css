@@ -3198,7 +3198,16 @@
   content: "";
 }
 
-/* line 8, ../../app/styles/main.scss */
+/* scrollbars always visible*/
+
+/* line 9, ../../app/styles/main.scss */
+
+html {
+  overflow: -moz-scrollbars-vertical;
+  overflow: scroll;
+}
+
+/* line 14, ../../app/styles/main.scss */
 
 .browsehappy {
   margin: 0.2em 0;
@@ -3209,16 +3218,17 @@
 
 /* Space out content a bit */
 
-/* line 16, ../../app/styles/main.scss */
+/* line 22, ../../app/styles/main.scss */
 
 body {
   padding-top: 20px;
   padding-bottom: 20px;
+  margin: 2em;
 }
 
 /* Everything but the jumbotron gets side spacing for mobile first views */
 
-/* line 22, ../../app/styles/main.scss */
+/* line 29, ../../app/styles/main.scss */
 
 .header,
 .marketing,
@@ -3229,7 +3239,7 @@ body {
 
 /* Custom page header */
 
-/* line 30, ../../app/styles/main.scss */
+/* line 37, ../../app/styles/main.scss */
 
 .header {
   border-bottom: 1px solid #e5e5e5;
@@ -3237,7 +3247,7 @@ body {
 
 /* Make the masthead heading the same height as the navigation */
 
-/* line 35, ../../app/styles/main.scss */
+/* line 42, ../../app/styles/main.scss */
 
 .header h3 {
   margin-top: 0;
@@ -3248,7 +3258,7 @@ body {
 
 /* Custom page footer */
 
-/* line 43, ../../app/styles/main.scss */
+/* line 50, ../../app/styles/main.scss */
 
 .footer {
   padding-top: 19px;
@@ -3256,7 +3266,7 @@ body {
   border-top: 1px solid #e5e5e5;
 }
 
-/* line 49, ../../app/styles/main.scss */
+/* line 56, ../../app/styles/main.scss */
 
 .container-narrow > hr {
   margin: 30px 0;
@@ -3264,14 +3274,14 @@ body {
 
 /* Main marketing message and sign up button */
 
-/* line 54, ../../app/styles/main.scss */
+/* line 61, ../../app/styles/main.scss */
 
 .jumbotron {
   text-align: center;
   border-bottom: 1px solid #e5e5e5;
 }
 
-/* line 59, ../../app/styles/main.scss */
+/* line 66, ../../app/styles/main.scss */
 
 .jumbotron .btn {
   font-size: 21px;
@@ -3280,13 +3290,13 @@ body {
 
 /* Supporting marketing content */
 
-/* line 65, ../../app/styles/main.scss */
+/* line 72, ../../app/styles/main.scss */
 
 .marketing {
   margin: 40px 0;
 }
 
-/* line 69, ../../app/styles/main.scss */
+/* line 76, ../../app/styles/main.scss */
 
 .marketing p + h4 {
   margin-top: 28px;
@@ -3297,7 +3307,7 @@ body {
 @media screen and (min-width: 768px) {
   /* Remove the padding we set earlier */
 
-  /* line 80, ../../app/styles/main.scss */
+  /* line 87, ../../app/styles/main.scss */
 
   .header,
   .marketing,
@@ -3308,7 +3318,7 @@ body {
 
   /* Space out the masthead */
 
-  /* line 87, ../../app/styles/main.scss */
+  /* line 94, ../../app/styles/main.scss */
 
   .header {
     margin-bottom: 30px;
@@ -3316,7 +3326,7 @@ body {
 
   /* Remove the bottom border on the jumbotron for visual effect */
 
-  /* line 91, ../../app/styles/main.scss */
+  /* line 98, ../../app/styles/main.scss */
 
   .jumbotron {
     border-bottom: 0;
@@ -3325,19 +3335,19 @@ body {
 
 /* ========= */
 
-/* line 97, ../../app/styles/main.scss */
+/* line 104, ../../app/styles/main.scss */
 
 .main {
   font-family: "Lato", sans-serif;
 }
 
-/* line 101, ../../app/styles/main.scss */
+/* line 108, ../../app/styles/main.scss */
 
 .table-scrollable {
   overflow: auto;
 }
 
-/* line 105, ../../app/styles/main.scss */
+/* line 112, ../../app/styles/main.scss */
 
 .animate-enter,
 .animate-leave {
@@ -3346,7 +3356,7 @@ body {
   display: block;
 }
 
-/* line 116, ../../app/styles/main.scss */
+/* line 123, ../../app/styles/main.scss */
 
 .animate-enter.animate-enter-active,
 .animate-leave {
@@ -3355,38 +3365,38 @@ body {
   height: 30px;
 }
 
-/* line 123, ../../app/styles/main.scss */
+/* line 130, ../../app/styles/main.scss */
 
 .prefix {
   color: lightGrey;
 }
 
-/* line 127, ../../app/styles/main.scss */
+/* line 134, ../../app/styles/main.scss */
 
 .localName {
   margin-right: 2em;
 }
 
-/* line 131, ../../app/styles/main.scss */
+/* line 138, ../../app/styles/main.scss */
 
 .score {
   font-style: italic;
   color: lightBlue;
 }
 
-/* line 137, ../../app/styles/main.scss */
+/* line 144, ../../app/styles/main.scss */
 
 .link {
   color: #0088cc;
 }
 
-/* line 142, ../../app/styles/main.scss */
+/* line 149, ../../app/styles/main.scss */
 
 .treated {
   color: lightGrey;
 }
 
-/* line 146, ../../app/styles/main.scss */
+/* line 153, ../../app/styles/main.scss */
 
 .description {
   font-size: large;
@@ -3394,26 +3404,26 @@ body {
   color: darkGrey;
 }
 
-/* line 152, ../../app/styles/main.scss */
+/* line 159, ../../app/styles/main.scss */
 
 .navigation {
   position: fixed;
 }
 
-/* line 156, ../../app/styles/main.scss */
+/* line 163, ../../app/styles/main.scss */
 
 .active > a {
   color: #005580;
   box-shadow: inset 1px 0 0 rgba(0, 0, 0, 0.2), inset 0 0 0 rgba(0, 0, 0, 0.2);
 }
 
-/* line 171, ../../app/styles/main.scss */
+/* line 178, ../../app/styles/main.scss */
 
 .table-input {
   width: 100%;
 }
 
-/* line 175, ../../app/styles/main.scss */
+/* line 182, ../../app/styles/main.scss */
 
 .popover {
   max-width: 400px;

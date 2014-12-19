@@ -19,7 +19,7 @@
         vocabDescr: '@',
         score: '@'
       },
-      templateUrl: '/static/r2r/partials/rdfbadge.html',
+      templateUrl: 'partials/rdfbadge.html',
       controller: function($scope) {
         var definition, vocabDescr, vocabulary;
         definition = $scope.definition && !(_.isEmpty($scope.definition)) ? "<span style=\"margin-left:1em\">\n  " + $scope.definition + "\n</span>\n<hr />" : "<span style=\"margin-left:1em;font-style:italic;color:#dddddd\">\n  No definition available!\n</span>\n<hr />";
