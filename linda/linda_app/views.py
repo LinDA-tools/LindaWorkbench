@@ -11,6 +11,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import ListView, UpdateView, DetailView, DeleteView
 
 import json
+from rdflib.plugins.parsers.ntriples import ParseError
 import requests
 
 from microsofttranslator import Translator
@@ -987,14 +988,27 @@ def api_datasource_create(request):
             else:
                 rdf_format = 'application/rdf+xml'  # rdf+xml by default
 
+            data = request.POST.get("content").encode('utf-8')
+            if rdf_format == "text/plain":  # Fix OpenRDF bug on N-Tripples
+                g = Graph()
+                try:
+                    result = g.parse(data=data, format="nt")
+                except ParseError as e:  # could not parse
+                    results['status'] = '500'
+                    results['message'] = e.message
+                    return HttpResponse(json.dumps(results), 'application/json')
+
+                rdf_format = 'application/rdf+xml'
+                data = result.serialize(format="rdf/xml")
+
             # make REST api call to add rdf data
             headers = {'accept': 'application/rdf+xml', 'content-type': rdf_format, 'charset': 'utf-8'}
             callAdd = requests.post(SESAME_LINDA_URL + 'rdf-graphs/' + sname, headers=headers,
-                                    data=request.POST.get("content").encode('utf-8'))
+                                    data=data)
 
             if callAdd.text == "":
                 # create datasource description
-                source = DatasourceDescription.objects.create(title=request.POST.get("title"),
+                DatasourceDescription.objects.create(title=request.POST.get("title"),
                                                               name=sname,
                                                               uri=SESAME_LINDA_URL + "rdf-graphs/" + sname,
                                                               createdOn=datetime.now(), lastUpdateOn=datetime.now())
@@ -1004,7 +1018,7 @@ def api_datasource_create(request):
                 results['name'] = sname
                 results['uri'] = SESAME_LINDA_URL + "rdf-graphs/" + sname
             else:
-                results['status'] = '500'
+                results['status'] = callAdd.status_code
                 results['message'] = 'Error storing rdf data: ' + callAdd.text
     else:
         results['status'] = '403'
@@ -1057,10 +1071,23 @@ def api_datasource_replace(request, dtname):
             else:
                 rdf_format = 'application/rdf+xml'  # rdf+xml by default
 
+            data = request.POST.get("content").encode('utf-8')
+            if rdf_format == "text/plain":  # Fix OpenRDF bug on N-Tripples
+                g = Graph()
+                try:
+                    result = g.parse(data=data, format="nt")
+                except ParseError as e:  # could not parse
+                    results['status'] = '500'
+                    results['message'] = e.message
+                    return HttpResponse(json.dumps(results), 'application/json')
+
+                rdf_format = 'application/rdf+xml'
+                data = result.serialize(format="rdf/xml")
+
             # make REST api call to update graph
             headers = {'accept': 'application/rdf+xml', 'content-type': rdf_format}
             callReplace = requests.put(SESAME_LINDA_URL + 'rdf-graphs/' + dtname, headers=headers,
-                                       data=request.POST.get("content").encode('utf-8'))
+                                       data=data)
 
             if callReplace.text == "":
                 # update datasource database object
@@ -1071,7 +1098,7 @@ def api_datasource_replace(request, dtname):
                 results['status'] = '200'
                 results['message'] = 'Datasource updated succesfully.' + callReplace.text
             else:
-                results['status'] = '500'
+                results['status'] = callReplace.status_code
                 results['message'] = 'Error replacing rdf data: ' + callReplace.text
 
         else:
@@ -1105,7 +1132,7 @@ def api_datasource_delete(request, dtname):
                 source = DatasourceDescription.objects.filter(name=dtname)[:1].get()
                 source.delete()
             else:
-                results['status'] = '500'
+                results['status'] = callDelete.status_code
                 results['message'] = 'Error deleting datasource: ' + callDelete.text
         else:
             results['status'] = '404'
