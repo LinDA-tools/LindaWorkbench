@@ -9,7 +9,6 @@
           return $http.post(transformApi + '/dump-db', {
             mapping: mapping
           }).then(function(res) {
-            console.log(res);
             return transformApi + res.data;
           });
         }
@@ -19,7 +18,6 @@
           return $http.post(transformApi + '/dump-csv', {
             mapping: mapping
           }).then(function(res) {
-            console.log(res);
             return transformApi + res.data;
           });
         }
