@@ -862,6 +862,7 @@ def queryBuilder(request):
 
 
 # Proxy calls - exist as middle-mans between LinDA query builder page and the rdf2any server
+@csrf_exempt
 def get_qbuilder_call(request, link):
     total_link = QUERY_BUILDER_SERVER + "query/" + link
     if request.GET:
@@ -869,7 +870,11 @@ def get_qbuilder_call(request, link):
     for param in request.GET:
         total_link += param + "=" + urlquote(request.GET[param]) + "&"
 
-    data = requests.get(total_link)
+    print link
+    if link == 'execute_sparql':
+        data = requests.post(total_link, data=request.POST)
+    else:
+        data = requests.get(total_link)
 
     return HttpResponse(data, data.headers['content-type'])
 
@@ -1085,7 +1090,6 @@ def api_datasource_delete(request, dtname):
 #Get a query for a specific private datasource and execute it
 @csrf_exempt
 def datasource_sparql(request, dtname):  # Acts as a "fake" seperate sparql endpoint for each datasource
-    print request
     results = {}
 
     if not request.GET:  # request must be get
@@ -1117,22 +1121,27 @@ def datasource_sparql(request, dtname):  # Acts as a "fake" seperate sparql endp
             mimetype = 'application/json'
             return HttpResponse(data, mimetype)
         else:  # private data sources
-            # Find where to add the FROM NAMED clause
+            # Find where to add the FROM clause
             query = request.GET.get("query")
 
             pos = re.search("WHERE", query, re.IGNORECASE).start()
             query = query[:pos] + " FROM <" + datasource.uri + "> " + query[pos:]
             # query = query.replace('?object rdf:type ?class', '')
 
+    # choose results format
+    result_format = 'xml'  # default format
+    if request.GET.get('format'):
+        result_format = request.GET.get('format')
+
     # encode the query
     query_enc = urlquote(query, safe='')
 
-    # get query results and turn them into json
+    # get query results
     data = requests.get(
-        PRIVATE_SPARQL_ENDPOINT + "?Accept=" + urlquote("application/sparql-results+xml") + "&query=" + query_enc).text
+        PRIVATE_SPARQL_ENDPOINT + "?Accept=" + urlquote("application/sparql-results+" + result_format) + "&query=" + query_enc).text
 
     # return the response
-    return HttpResponse(data, "application/sparql-results+xml")
+    return HttpResponse(data, "application/json")
 
 
 class QueryListView(ListView):

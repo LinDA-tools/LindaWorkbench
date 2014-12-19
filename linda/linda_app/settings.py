@@ -168,7 +168,8 @@ INSTALLED_APPS = (
     'coreapi',
     'analytics',
     'r2r',
-    'visualisation'
+    'visualisation',
+    'builder_advanced',
 
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
