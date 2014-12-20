@@ -4,7 +4,7 @@
 {% if out == "html" %}
 
     {% for query in queries %}
-        <div id="query_{{query.id}}" class="query-row recent-item">
+        <div id="query_{{query.id}}" class="query-row recent-item" {% if query.design %}data-design="true"{% endif %}>
             <div class="icon" {% if query.design %}design{% endif %}></div>
             <span class="query-description">{{query.description}}</span>
         </div>

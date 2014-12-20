@@ -18,7 +18,7 @@ def designer_defaults():
     params['datasources'].insert(0,
                                  DatasourceDescription(title="All private data dources", name="all", is_public=False
                                                        , uri=LINDA_HOME + "sparql/all/", createdOn=datetime.today(),
-                                                       lastUpdateOn=datetime.today()))
+                                                       updatedOn=datetime.today()))
     return params
 
 

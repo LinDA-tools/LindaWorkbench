@@ -1226,11 +1226,8 @@ def query_save(request):
     query = request.POST.get("query")
     design_json = request.POST.get("design")
 
-    if not endpoint_name:  # auto-detect endpoint title
-        endpoint_name = endpoint  # fallback
-        for dt in DatasourceDescription.objects.all():
-            if dt.get_endpoint() == endpoint:
-                endpoint_name = dt.title
+    if not endpoint_name:
+        endpoint_name = datasource_from_endpoint(endpoint).title
 
     # load constraints as json object
     description = create_query_description(endpoint_name, query)
@@ -1256,11 +1253,8 @@ def query_update(request, pk):
     endpoint = request.POST.get("endpoint")
     endpoint_name = request.POST.get("endpointName")
 
-    if not endpoint_name:  # auto-detect endpoint title
-        endpoint_name = endpoint  # fallback
-        for dt in DatasourceDescription.objects.all():
-            if dt.get_endpoint() == endpoint:
-                endpoint_name = dt.title
+    if not endpoint_name:
+        endpoint_name = datasource_from_endpoint(endpoint).title
 
     # get query object and update its properties
     q_obj = obj_list[0]

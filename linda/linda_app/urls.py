@@ -21,6 +21,7 @@ urlpatterns = patterns('',
                        # Endpoints
                        url(r'^sparql/$', views.sparql, name='sparql'),
                        url(r'^sparql/(?P<dtname>[\w-]+)/$', views.datasource_sparql, name='datasource-sparql'),
+
                        # Visualizations
                        url(r'^visualizations/', include('visualisation.urls')),
 

@@ -403,7 +403,9 @@ def str_extend(array, op_join='and'):
     for x in array[1:-1]:
         result += ', ' + x
 
-    result += ' ' + op_join + ' ' + array[-1]
+    if len(array) > 1:
+        result += ' ' + op_join + ' ' + array[-1]
+
     return result
 
 
@@ -497,6 +499,18 @@ def create_query_description(dtname, query):
     return description
 
 
+def datasource_from_endpoint(endpoint):
+    if endpoint == LINDA_HOME + "sparql/all/":
+        return DatasourceDescription(title="All private data dources", name="all", is_public=False
+                                                       , uri=LINDA_HOME + "sparql/all/", createdOn=datetime.today(),
+                                                       updatedOn=datetime.today())
+    for datasource in DatasourceDescription.objects.all():
+        if datasource.get_endpoint() == endpoint:
+            return datasource
+
+    return None
+
+
 class Query(models.Model):
     endpoint = models.URLField(blank=False, null=False)  # the query endpoint
     sparql = models.CharField(max_length=4096, blank=False, null=False)  # the query string (select ?s ?p ?o...)
@@ -510,8 +524,4 @@ class Query(models.Model):
             + urllib.quote_plus(self.sparql)
 
     def get_datasource(self):
-        for datasource in DatasourceDescription.objects.all():
-            if datasource.get_endpoint() == self.endpoint:
-                return datasource
-
-        return None
+        return datasource_from_endpoint(self.endpoint)
