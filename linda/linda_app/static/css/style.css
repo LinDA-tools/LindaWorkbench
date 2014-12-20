@@ -411,24 +411,58 @@ form input[type="submit"] {
 
 /* Home page */
 
-.recent-datasources-title {
+.recent-box {
+    width: calc(33% - 20px);
+    min-width: 400px;
+    padding: 10px;
+    display: inline-block;
+    vertical-align: top;
+}
+
+.recent-box-title {
     border-bottom: 1px solid #ddd;
     color: #333;
     margin: 5px;
+    text-align: center;
 }
 
-.recent-datasource {
-    width: calc(30% - 40px);
-    padding: 20px;
+.recent-list .recent-item {
+    width: calc(33% - 15px);
+    padding: 5px;
+    vertical-align: top;
     display: inline-block;
 }
 
-.recent-datasource img {
-    width: 100%;
+.recent-list > p {
+    text-align: center;
 }
 
-.recent-datasource h3 a{
-    color: #aaa;
+.recent-list .recent-item .icon {
+    padding: 40px;
+}
+
+.recent-list .datasource.private .icon {
+    background: url('/static/images/rdf.png')  center center no-repeat;
+}
+
+.recent-list h4 {
+    text-align: center;
+    line-height: 1em;
+}
+
+.recent-list .query-row .icon {
+    background: url('/static/images/query-plain.png')  center center no-repeat;
+    background-size: 32px 32px;
+}
+
+.recent-list .query-row .icon.design {
+
+}
+
+
+.recent-list .analytic .icon {
+    background: url('/static/images/analytic.jpg')  center center no-repeat;
+    background-size: 32px auto;
 }
 
 /* Generic forms */
@@ -1176,7 +1210,7 @@ form input[type="submit"] {
     margin: 20px;
 }
 
-.homepage .datasources-list {
+/*.homepage .datasources-list {
     width: 70%;
     margin: 0 auto;
 }
@@ -1197,7 +1231,7 @@ form input[type="submit"] {
 
 .homepage .datasources-list li:hover .button {
     display: inline;
-}
+}*/
 
 /* Vocabulary details */
 
@@ -1467,9 +1501,9 @@ input, textarea {
     text-align: justify;
 }
 
-.class-teaser h3, .property-teaser h3 {
+/*.class-teaser h3, .property-teaser h3 {
     display: inline-block;
-}
+}*/
 
 .class-teaser, .property-teaser {
     margin-bottom: 5px;

@@ -384,7 +384,7 @@ class DatasourceDescription(models.Model):
     name = models.CharField(max_length=512, blank=False, null=False)  # datasource name - slug
     uri = models.CharField(max_length=2048, blank=False, null=False)  # sesame uri
     createdOn = models.DateField(blank=False, null=False)  # datasource creation date
-    lastUpdateOn = models.DateField(blank=False, null=False)  # datasource last edit date
+    updatedOn = models.DateField(blank=False, null=False)  # datasource last edit date
 
     def __unicode__(self):
         return self.title

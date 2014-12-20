@@ -29,8 +29,9 @@ from passwords import MS_TRANSLATOR_UID, MS_TRANSLATOR_SECRET
 
 def index(request):
     params = {}
-    params['recent_datasources'] = DatasourceDescription.objects.all().order_by('createdOn')[:3]
-    params['recent_queries'] = Query.objects.all().order_by('updatedOn')[:3]
+    params['recent_datasources'] = DatasourceDescription.objects.all().order_by('-updatedOn')[:3]
+    params['recent_queries'] = Query.objects.all().order_by('-updatedOn')[:3]
+    params['recent_analytics'] = Analytics.objects.all().order_by('-updatedOn')[:3]
     params['page'] = 'Home'
 
     return render(request, 'index.html', params)
@@ -53,7 +54,7 @@ def sparql(request):
     params['datasources'].insert(0,
                                  DatasourceDescription(title="All private data dources", name="all", is_public=False
                                                        , uri=LINDA_HOME + "sparql/all/", createdOn=datetime.today(),
-                                                       lastUpdateOn=datetime.today()))
+                                                       updatedOn=datetime.today()))
     params['page'] = 'Sparql'
 
     # get query parameter
@@ -683,7 +684,7 @@ def datasourceCreate(request):
 
             new_datasource = DatasourceDescription.objects.create(title=request.POST.get("title"), is_public=True,
                                                                   name=sname, uri=request.POST.get("endpoint"),
-                                                                  createdOn=datetime.now(), lastUpdateOn=datetime.now())
+                                                                  createdOn=datetime.now(), updatedOn=datetime.now())
             new_datasource.save()
 
             # go to view all datasources
@@ -846,7 +847,7 @@ def queryBuilder(request):
     params['datasources'].insert(0,
                                  DatasourceDescription(title="All private data dources", name="all", is_public=False
                                                        , uri=LINDA_HOME + "sparql/all/", createdOn=datetime.today(),
-                                                       lastUpdateOn=datetime.today()))
+                                                       updatedOn=datetime.today()))
 
     if 'dt_id' in request.GET:
         params['datasource_default'] = DatasourceDescription.objects.filter(name=request.GET.get('dt_id'))[0]
@@ -1011,7 +1012,7 @@ def api_datasource_create(request):
                 DatasourceDescription.objects.create(title=request.POST.get("title"),
                                                               name=sname,
                                                               uri=SESAME_LINDA_URL + "rdf-graphs/" + sname,
-                                                              createdOn=datetime.now(), lastUpdateOn=datetime.now())
+                                                              createdOn=datetime.now(), updatedOn=datetime.now())
 
                 results['status'] = '200'
                 results['message'] = 'Datasource created succesfully.'
@@ -1092,7 +1093,7 @@ def api_datasource_replace(request, dtname):
             if callReplace.text == "":
                 # update datasource database object
                 source = DatasourceDescription.objects.filter(name=dtname)[0]
-                source.lastUpdateOn = datetime.now()
+                source.updatedOn = datetime.now()
                 source.save()
 
                 results['status'] = '200'

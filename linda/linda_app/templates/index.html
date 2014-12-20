@@ -4,6 +4,10 @@
 {% block title %}LinDA{% endblock %}
 {% block bodyclass %}homepage{% endblock %}
 
+{% block css %}
+    <link rel="stylesheet" href="/static/css/jquery.contextMenu.css"/>
+{% endblock %}
+
 {% block content %}
 	<div class="main">
         <div class="welcome">
@@ -37,17 +41,48 @@
             </div>
         </div>
 
-        <h2 class="recent-datasources-title">{%trans "Recent Data Sources"%}</h2>
-            <div class="recent-datasource-list">
-                {% for datasource in recent_datasources %}
-                    <div class="recent-datasource">
-                        <img src="/static/images/recent.jpg" />
-                        <h3><a href="/datasource/{{datasource.name}}/visualize/">{{datasource.title}}</a></h3>
-                    </div>
-                {% empty %}
-                    <p>{%trans "No recent data sources."%}</p>
-                {% endfor %}
+        <div class="recent-box">
+            <h2 class="recent-box-title">{%trans "Recent Data Sources"%}</h2>
+            <div class="recent-list">
+                {% with datasources=recent_datasources out="html" %}
+                    {% include "datasource/pretty-list.html" %}
+                {% endwith %}
             </div>
+        </div>
+
+        <div class="recent-box">
+            <h2 class="recent-box-title">{%trans "Recent Queries"%}</h2>
+            <div class="recent-list">
+                {% with queries=recent_queries out="html" %}
+                    {% include "queries/pretty-list.html" %}
+                {% endwith %}
+            </div>
+        </div>
+
+        <div class="recent-box">
+            <h2 class="recent-box-title">{%trans "Recent Analytics"%}</h2>
+            <div class="recent-list">
+                {% with analytics=recent_analytics out="html" %}
+                    {% include "analytics/pretty-list.html" %}
+                {% endwith %}
+            </div>
+        </div>
 	</div>
 
+{% endblock %}
+
+{% block scripts %}
+    <script src="/static/js/jquery.contextMenu.js"></script>
+    <script src="/static/js/jquery.waitforimages.js"></script>
+    <script>
+        {% with datasources=recent_datasources out="js" %}
+            {% include "datasource/pretty-list.html" %}
+        {% endwith %}
+    </script>
+
+    <script>
+        {% with queries=recent_queries out="js" %}
+            {% include "queries/pretty-list.html" %}
+        {% endwith %}
+    </script>
 {% endblock %}
