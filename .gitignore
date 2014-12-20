@@ -53,6 +53,9 @@ coverage.xml
 docs/_build/
 
 
+#Migrations
+migrations/
+
 .idea/*
 jsonLDdump/LindaDump.json
 jsonLDdump/LindaCustom.xml
