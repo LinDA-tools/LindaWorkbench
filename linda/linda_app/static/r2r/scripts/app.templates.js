@@ -1,4 +1,4 @@
-angular.module('dist').run(['$templateCache', function($templateCache) {
+angular.module('app').run(['$templateCache', function($templateCache) {
   'use strict';
 
   $templateCache.put('partials/csvconfig.html',
@@ -38,28 +38,30 @@ angular.module('dist').run(['$templateCache', function($templateCache) {
   $templateCache.put('partials/csvcontents.html',
     "<div ng-controller=\"CsvContentsCtrl\">\n" +
     "\n" +
-    "  Content of: <b>{{csv.csvFile.name}}</b>\n" +
+    "  Content of: <b>{{csv.csvFile().name}}</b>\n" +
     "\n" +
-    "  <table class=\"table table-scrollable\">\n" +
-    "    <tr>\n" +
-    "      <th ng-repeat=\"column in csv.getColumns()\">\n" +
-    "        <button type=\"button\" \n" +
-    "                class=\"btn btn-primary btn-sm table-btn\"\n" +
-    "                ng-class=\"{active: csv.isSelectedColumn(table, column)}\"\n" +
-    "                ng-click=\"csv.toggleSelectedColumn(table, column)\">\n" +
-    "            {{column}}\n" +
-    "        </button>\n" +
-    "      </th>\n" +
-    "    </tr>\n" +
+    "  <div class=\"table-scrollable\">\n" +
+    "    <table class=\"table\">\n" +
+    "      <tr>\n" +
+    "        <th ng-repeat=\"column in csv.columns(table)\">\n" +
+    "          <button type=\"button\" \n" +
+    "                  class=\"btn btn-primary btn-sm table-btn\"\n" +
+    "                  ng-class=\"{active: csv.isSelectedColumn(table, column)}\"\n" +
+    "                  ng-click=\"csv.toggleSelectedColumn(table, column)\">\n" +
+    "              {{column}}\n" +
+    "          </button>\n" +
+    "        </th>\n" +
+    "      </tr>\n" +
     "\n" +
-    "    <tr ng-repeat=\"data in csv.data()\">\n" +
-    "      <td ng-repeat=\"i in data\">\n" +
-    "        <div ng-class=\"{treated: !csv.isSelectedColumn(table, csv.getColumns()[$index])}\">\n" +
-    "          {{i}}\n" +
-    "        </div>\n" +
-    "      </td>\n" +
-    "    </tr>\n" +
-    "  </table>\n" +
+    "      <tr ng-repeat=\"data in csv.data(table)\">\n" +
+    "        <td ng-repeat=\"i in data track by $id($index)\">\n" +
+    "          <div ng-class=\"{treated: !csv.isSelectedColumn(table, csv.columns(table)[$index])}\">\n" +
+    "            {{i}}\n" +
+    "          </div>\n" +
+    "        </td>\n" +
+    "      </tr>\n" +
+    "    </table>\n" +
+    "  </div>\n" +
     "  <hr />\n" +
     "</div>\n"
   );
@@ -77,8 +79,8 @@ angular.module('dist').run(['$templateCache', function($templateCache) {
     "      Publish <span class=\"caret\"></span>\n" +
     "    </button>\n" +
     "    <ul class=\"dropdown-menu\" role=\"menu\">\n" +
-    "      <li><a href=\"#\" ng-click=\"publish('sparqlify')\">as SPARQL Endpoint</a></li>\n" +
-    "      <li><a href=\"#\" ng-click=\"publish('openrdf')\">to OpenRDF</a></li>\n" +
+    "      <li><a ng-click=\"publish('sparqlify')\">as SPARQL Endpoint</a></li>\n" +
+    "      <li><a ng-click=\"publish('openrdf')\">to OpenRDF</a></li>\n" +
     "    </ul>\n" +
     "  </div>\n" +
     "\n" +
@@ -93,11 +95,11 @@ angular.module('dist').run(['$templateCache', function($templateCache) {
 
   $templateCache.put('partials/csvreconcile.html',
     "<div ng-controller=\"CsvReconcileCtrl\">\n" +
-    "\n" +
+    "  \n" +
     "  <div class=\"row\">\n" +
     "    <div class=\"col-md-6\">\n" +
     "      <p align=\"left\">\n" +
-    "        For file: <b>{{csv.csvFile.name}}</b>\n" +
+    "        For file: <b>{{csv.csvFile().name}}</b>\n" +
     "      </p>\n" +
     "    </div>\n" +
     "\n" +
@@ -118,7 +120,7 @@ angular.module('dist').run(['$templateCache', function($templateCache) {
     "\n" +
     "    <!-- tags -->\n" +
     "    <tr>\n" +
-    "      <td><input type=\"text\" class=\"table-input\" placeholder=\"{{table}}\" ng-model=\"tableTag[table]\" /></td>\n" +
+    "      <td><input type=\"text\" class=\"table-input\" ng-model=\"tableTag[table]\" /></td>\n" +
     "      <td ng-repeat=\"column in columns\"><input type=\"text\" class=\"table-input\" placeholder=\"{{column}}\" ng-model=\"columnTags[column]\"/></td>\n" +
     "    </tr>\n" +
     "\n" +
@@ -173,7 +175,7 @@ angular.module('dist').run(['$templateCache', function($templateCache) {
 
   $templateCache.put('partials/csvrefine.html',
     "<div ng-controller=\"CsvRefineCtrl\">\n" +
-    "\n" +
+    "  \n" +
     "  <div class=\"row\">\n" +
     "    <label for=\"baseUriInput\" class=\"col-md-2 control-label\">Base URI</label>\n" +
     "    <div id=\"baseUriInput\" class=\"col-md-8\">\n" +
@@ -186,7 +188,7 @@ angular.module('dist').run(['$templateCache', function($templateCache) {
     "  <div class=\"row\">\n" +
     "    <div class=\"col-md-6\">\n" +
     "      <p align=\"left\">\n" +
-    "        For file: <b>{{csv.csvFile.name}}</b>\n" +
+    "        For file: <b>{{csv.csvFile().name}}</b>\n" +
     "      </p>\n" +
     "    </div>\n" +
     "  </div>\n" +
@@ -228,10 +230,10 @@ angular.module('dist').run(['$templateCache', function($templateCache) {
     "        <b><em>{{prop.prefixedName[0]}}</em></b>\n" +
     "      </div>\n" +
     "      <div class=\"col-md-4\">\n" +
-    "        <select class=\"form-control\" ng-model=\"rdf.propertyLiteralSelection[prop.prefixedName[0]]\" ng-options=\"selection for selection in propertyLiteralTypeOptions\" />\n" +
+    "        <select class=\"form-control\" ng-model=\"rdf.propertyLiteralSelection[prop.prefixedName[0]]\" ng-options=\"selection for selection in propertyLiteralTypeOptions\"></select>\n" +
     "      </div>\n" +
     "      <div class=\"col-md-4\">\n" +
-    "        <select class=\"form-control\" ng-model=\"rdf.propertyLiteralTypes[prop.prefixedName[0]]\" ng-options=\"type for type in propertyLiteralTypes\" ng-show=\"rdf.propertyLiteralSelection[prop.prefixedName[0]] == 'Typed Literal'\"></input>\n" +
+    "        <select class=\"form-control\" ng-model=\"rdf.propertyLiteralTypes[prop.prefixedName[0]]\" ng-options=\"type for type in propertyLiteralTypes\" ng-show=\"rdf.propertyLiteralSelection[prop.prefixedName[0]] == 'Typed Literal'\"></select>\n" +
     "      </div>\n" +
     "    </div>\n" +
     "  </div>\n" +
@@ -253,39 +255,54 @@ angular.module('dist').run(['$templateCache', function($templateCache) {
     "  </div>\n" +
     " \n" +
     "  <wizard>\n" +
-    "    <step name=\"1. welcome\"\n" +
-    "      heading=\"Welcome\"\n" +
-    "      description=\"\" \n" +
-    "      sidetip=\"sidetip\">\n" +
-    "\n" +
-    "      <br />\n" +
+    "    <step name=\"1. welcome\" \n" +
+    "      heading=\"Welcome\" \n" +
+    "      description=\"\"  \n" +
+    "     sidetip=\"sidetip\">\n" +
+    " <p>This wizard will guide you through the transformation of your CSV file to RDF, up to the dump of the result into an RDF triple store.</p>\n" +
+    " <p>The transformation of your CSV data follows and preserves its tabular structure. However, the column properties will be configurable, and you will have to provide the pattern for the generated URIs.</p>\n" +
+    "     <br /> \n" +
     "    </step>\n" +
     "\n" +
     "    <step name=\"2. datasource config\"\n" +
     "      heading=\"Data Source Configuration\"\n" +
     "      description=\"\"\n" +
     "      sidetip=\"sidetip\">\n" +
-    "\n" +
+    "  <p>In this step, you select and upload your CSV file that is to be converted.</p>\n" +
+    "  <p>\n" +
+    "   <ul>\n" +
+    "    <li>Click the file selection button, and select the file in the pop up dialog,</li>\n" +
+    "    <li>click “submit”; this will upload the file (may take a few moments),</li>\n" +
+    "    <li>click “next” to move on to the next step.</li>\n" +
+    "   </ul>\n" +
+    "  </p>\n" +
     "      <br />\n" +
-    "      <div ng-include src=\"'/static/r2r/partials/csvconfig.html'\"></div>\n" +
+    "      <div ng-include src=\"'partials/csvconfig.html'\"></div>\n" +
     "    </step>\n" +
     "\n" +
     "    <step name=\"3. contents of CSV file\"\n" +
     "      heading=\"Select Columns\"\n" +
-    "      description=\"\"\n" +
+    "      description=\"<p>Current restriction: The column separator character has indeed to be a comma; semicolons or other characters are not processed (yet).</p>\"\n" +
     "      sidetip=\"sidetip\">\n" +
-    "\n" +
+    "    <p>It is assumed that the first line of the file contains columns headers.</p>\n" +
+    "    <p>The screen shows the column headers and the content of the first few rows. Unselected columns are greyed out. Clicking on the column header buttons toggles the selection state of the respective column.</p>\n" +
+    "    <p>When the columns selection is finished, click “next”.</p>\n" +
     "      <br />\n" +
-    "      <div ng-include src=\"'/static/r2r/partials/csvcontents.html'\"></div>\n" +
+    "      <div ng-include src=\"'partials/csvcontents.html'\"></div>\n" +
     "    </step>\n" +
     "\n" +
     "    <step name=\"4. transforming\"\n" +
     "      heading=\"Translate CSV file content\"\n" +
-    "      description=\"\"\n" +
+    "      description=\"<p>These specifications constitute the central part of the transformation. Types and properties should be selected with care, so as to get best possible precision of the transformation.</p><p>The <em>oracle</em> is a web service that gets the column headers in question, matches them against its database of vocabularies, and returns ranked results.</p>\"\n" +
     "      sidetip=\"sidetip\">\n" +
-    "\n" +
+    "      <p>In this step, you specify the RDF properties that will be used for the translation of the selected columns.\n" +
+    "       <ul>\n" +
+    "\t    <li>Click “ask the oracle”; this will submit the column headers to a remote server, and the response will consist in ranked proposals for the column properties.</li>\n" +
+    "        <li>For every (selected) column, choose one of the proposed properties, or enter another one into the textbox at the top of the column.</li>\n" +
+    "      </ul>\n" +
+    "<p>You will have to go through all columns that were selected for transformation in the previous step (“Columns”).</p>\n" +
     "      <br />\n" +
-    "      <div ng-include src=\"'/static/r2r/partials/csvreconcile.html'\"></div>\n" +
+    "      <div ng-include src=\"'partials/csvreconcile.html'\"></div>\n" +
     "    </step>\n" +
     "\n" +
     "    <step name=\"5. revising\"\n" +
@@ -299,7 +316,7 @@ angular.module('dist').run(['$templateCache', function($templateCache) {
     "      <p>In this step, you specify the URIs that will be generated for each row of every selected table. Typically, they are made up of your web address and the content of the column(s) that constitute the Primary Key, intervened by fixed separators.</p>\n" +
     "\n" +
     "      <br />\n" +
-    "      <div ng-include src=\"'/static/r2r/partials/csvrefine.html'\"></div>\n" +
+    "      <div ng-include src=\"'partials/csvrefine.html'\"></div>\n" +
     "    </step>\n" +
     "\n" +
     "    <step name=\"6. publishing\"\n" +
@@ -311,7 +328,7 @@ angular.module('dist').run(['$templateCache', function($templateCache) {
     "      <p>In either case, you will have to provide the respective technical information, such as file paths and the like.</p>\n" +
     "\n" +
     "      <br />\n" +
-    "      <div ng-include src=\"'/static/r2r/partials/csvpublish.html'\"></div>\n" +
+    "      <div ng-include src=\"'partials/csvpublish.html'\"></div>\n" +
     "    </step>\n" +
     "\n" +
     "    <step name=\"7. finished\"\n" +
@@ -570,10 +587,10 @@ angular.module('dist').run(['$templateCache', function($templateCache) {
     "        <b><em>{{prop.prefixedName[0]}}</em></b>\n" +
     "      </div>\n" +
     "      <div class=\"col-md-4\">\n" +
-    "        <select class=\"form-control\" ng-model=\"rdf.propertyLiteralSelection[prop.prefixedName[0]]\" ng-options=\"selection for selection in propertyLiteralTypeOptions\" />\n" +
+    "        <select class=\"form-control\" ng-model=\"rdf.propertyLiteralSelection[prop.prefixedName[0]]\" ng-options=\"selection for selection in propertyLiteralTypeOptions\"></select>\n" +
     "      </div>\n" +
     "      <div class=\"col-md-4\">\n" +
-    "        <select class=\"form-control\" ng-model=\"rdf.propertyLiteralTypes[prop.prefixedName[0]]\" ng-options=\"type for type in propertyLiteralTypes\" ng-show=\"rdf.propertyLiteralSelection[prop.prefixedName[0]] == 'Typed Literal'\"></input>\n" +
+    "        <select class=\"form-control\" ng-model=\"rdf.propertyLiteralTypes[prop.prefixedName[0]]\" ng-options=\"type for type in propertyLiteralTypes\" ng-show=\"rdf.propertyLiteralSelection[prop.prefixedName[0]] == 'Typed Literal'\"></select>\n" +
     "      </div>\n" +
     "    </div>\n" +
     "  </div>\n" +
@@ -625,7 +642,7 @@ angular.module('dist').run(['$templateCache', function($templateCache) {
     "      <p>If a SPARQL endpoint is to be set up, your access data credentials will be stored in its configuration and be used throughout its lifetime.</p>\n" +
     "\n" +
     "      <br />\n" +
-    "      <div ng-include src=\"'/static/r2r/partials/rdbconfig.html'\"></div>\n" +
+    "      <div ng-include src=\"'partials/rdbconfig.html'\"></div>\n" +
     "    </step>\n" +
     "\n" +
     "    <step name=\"3. database contents\"\n" +
@@ -638,7 +655,7 @@ angular.module('dist').run(['$templateCache', function($templateCache) {
     "        Whenever a selected column is a Foreign Key, the referenced table and its Primary Key column(s) should also be selected.</p>\n" +
     "\n" +
     "      <br />\n" +
-    "      <div ng-include src=\"'/static/r2r/partials/rdbcontents.html'\"></div>\n" +
+    "      <div ng-include src=\"'partials/rdbcontents.html'\"></div>\n" +
     "    </step>\n" +
     "\n" +
     "    <step name=\"4. transforming\"\n" +
@@ -651,7 +668,7 @@ angular.module('dist').run(['$templateCache', function($templateCache) {
     "      <p>You will have to go through all those tables and columns that were selected for transformation in the previous step (“Database Contents”).</p>\n" +
     "\n" +
     "      <br />\n" +
-    "      <div ng-include src=\"'/static/r2r/partials/rdbreconcile.html'\"></div>\n" +
+    "      <div ng-include src=\"'partials/rdbreconcile.html'\"></div>\n" +
     "    </step>\n" +
     "\n" +
     "    <step name=\"5. revising\"\n" +
@@ -665,7 +682,7 @@ angular.module('dist').run(['$templateCache', function($templateCache) {
     "      <p>In this step, you specify the URIs that will be generated for each row of every selected table. Typically, they are made up of your web address and the content of the column(s) that constitute the Primary Key, intervened by fixed separators.</p>\n" +
     "\n" +
     "      <br />\n" +
-    "      <div ng-include src=\"'/static/r2r/partials/rdbrefine.html'\"></div>\n" +
+    "      <div ng-include src=\"'partials/rdbrefine.html'\"></div>\n" +
     "    </step>\n" +
     "\n" +
     "    <step name=\"6. publishing\"\n" +
@@ -677,7 +694,7 @@ angular.module('dist').run(['$templateCache', function($templateCache) {
     "      <p>In either case, you will have to provide the respective technical information, such as file paths and the like.</p>\n" +
     "\n" +
     "      <br />\n" +
-    "      <div ng-include src=\"'static/r2r/partials/rdbpublish.html'\"></div>\n" +
+    "      <div ng-include src=\"'partials/rdbpublish.html'\"></div>\n" +
     "    </step>\n" +
     "\n" +
     "    <step name=\"7. finished\"\n" +

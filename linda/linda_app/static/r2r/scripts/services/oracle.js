@@ -21,7 +21,6 @@
             },
             columns: zipColumnTags(columns, columnTags)
           }).then(function(res) {
-            console.log(res);
             return res.data;
           });
         }

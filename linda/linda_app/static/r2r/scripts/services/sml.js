@@ -21,6 +21,9 @@
     };
     toClasses = function(mapping, table) {
       var c, classes;
+      if (mapping.classes[table] == null) {
+        return '\n';
+      }
       classes = (function() {
         var _i, _len, _ref, _results;
         _ref = mapping.classes[table];
@@ -34,9 +37,9 @@
       if (_.isEmpty(classes)) {
         return '\n';
       } else {
-        return _.foldl(classes, (function(x, y) {
-          return (x + ";\n").concat(y);
-        }));
+        return (_.foldl(classes, (function(x, y) {
+          return (x + ';\n').concat(y);
+        }))) + ';';
       }
     };
     toProperties = function(mapping, table, lookup) {
@@ -55,7 +58,7 @@
         return '\n';
       } else {
         return _.foldl(properties, (function(x, y) {
-          return (x + ";\n").concat(y);
+          return (x + ';\n').concat(y);
         }));
       }
     };
@@ -66,9 +69,9 @@
       var template;
       if (_.isEmpty(mapping.subjectTemplate)) {
         if (_.isEmpty(mapping.baseUri)) {
-          return "?s = uri(tns:" + table + ")\n";
-        } else {
           return "?s = bNode(concat('" + table + "', '_')\n";
+        } else {
+          return "?s = bNode(concat('" + mapping.baseUri + "', '_')\n";
         }
       } else {
         template = mapping.subjectTemplate;
@@ -127,7 +130,7 @@
       }
     };
     namespacePrefixes = function(mapping) {
-      var baseUris, suggestedUris, suggestions;
+      var baseUri, baseUris, suggestedUris, suggestions;
       baseUris = ['Prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>', 'Prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>', 'Prefix xsd: <http://www.w3.org/2001/XMLSchema#>'];
       suggestions = _.flatten((_.values(mapping.classes)).concat(_.map(_.values(mapping.properties), _.values)));
       suggestedUris = _.without(_.map(suggestions, function(i) {
@@ -137,7 +140,8 @@
           return null;
         }
       }), null);
-      return _.foldl(baseUris.concat(suggestedUris), (function(x, y) {
+      baseUri = !_.isEmpty(mapping.baseUri) ? ["Prefix tns: <" + mapping.baseUri + ">"] : [];
+      return _.foldl(baseUris.concat(suggestedUris, baseUri), (function(x, y) {
         return (x + '\n').concat(y);
       }));
     };
@@ -160,7 +164,7 @@
         var lookup, table;
         table = mapping.tables[0];
         lookup = newLookup();
-        return "" + (namespacePrefixes(mapping)) + "\nPrefix tns: <" + mapping.baseUri + ">\n\n" + (createClause(mapping, table)) + "\n    Construct {\n        ?s \n" + (toClasses(mapping, table)) + ";\n" + (toProperties(mapping, table, lookup)) + ".\n    }\n    With\n" + (subjectTemplate(mapping, table)) + "\n" + (propertyLiterals(mapping, table, lookup)) + "\n" + (fromClause(mapping, table));
+        return "" + (namespacePrefixes(mapping)) + "\n\n" + (createClause(mapping, table)) + "\n    Construct {\n        ?s \n" + (toClasses(mapping, table)) + "\n" + (toProperties(mapping, table, lookup)) + ".\n    }\n    With\n" + (subjectTemplate(mapping, table)) + "\n" + (propertyLiterals(mapping, table, lookup)) + "\n" + (fromClause(mapping, table));
       }
     };
   });
