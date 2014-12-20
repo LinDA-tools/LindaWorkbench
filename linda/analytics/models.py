@@ -1,3 +1,4 @@
+import datetime
 from django.db import models
 from django.forms import ModelForm
 import os
@@ -61,6 +62,17 @@ class Analytics(models.Model):
     loadedRDFContext = models.TextField(max_length=500)
     processMessage = models.TextField(max_length=300)
     user_id = models.IntegerField()
+
+    # Auto-populated fields for created on/updated on time
+    createdOn = models.DateField(editable=False)
+    updatedOn = models.DateField(editable=False)
+
+    def save(self):
+        if not self.id:  # first time saved -- create is not set yet
+            self.created = datetime.date.today()
+        self.updated = datetime.date.today()
+        super(Analytics, self).save()  # proceed with the default constructor
+
     def __str__(self):
         return self.name
     def display_resultdocument_file(self):
