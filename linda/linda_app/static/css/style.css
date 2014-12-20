@@ -419,6 +419,15 @@ form input[type="submit"] {
     vertical-align: top;
 }
 
+@media only screen and (max-width: 1550px) {
+    .recent-box {
+        display: block;
+        width: calc(100% - 20px);
+        margin: auto;
+        padding-bottom: 30px;
+    }
+}
+
 .recent-box-title {
     border-bottom: 1px solid #ddd;
     color: #333;
