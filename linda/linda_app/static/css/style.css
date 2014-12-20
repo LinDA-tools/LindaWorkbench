@@ -461,7 +461,7 @@ form input[type="submit"] {
 
 
 .recent-list .analytic .icon {
-    background: url('/static/images/analytic.jpg')  center center no-repeat;
+    background: url('/static/images/analytics.jpg')  center center no-repeat;
     background-size: 32px auto;
 }
 
