@@ -6,6 +6,21 @@ var builder = {
     error: "",
     instance_names: [],
     endpoint: "",
+    prefixes: [],
+
+    get_prefixes: function() {
+        var prefix_str = "";
+        var keys = Object.keys(this.prefixes);
+        for(var i=0; i<keys.length; i++) {
+            prefix_str += 'PREFIX ' + keys[i] + ':' + this.prefixes[ keys[i] ] + '\n';
+        }
+
+        if (prefix_str != "") {
+            prefix_str += '\n';
+        }
+
+        return prefix_str;
+    },
 
     uri_to_constraint: function(uri) {
         var spl = uri.split('/');
@@ -81,10 +96,12 @@ var builder = {
         }
         else if (f.type == "num") {
             var ops = {'eq': '==', 'neq': '!=', 'gt': '>', 'lt': '<', 'gte': '>=', 'lte': '<='};
-            result = 'xsd:decimal(' + p_name + ')' + ops[f.operator] + f.value
+            this.prefixes['xsd'] = "<http://www.w3.org/2001/XMLSchema#>";
+            result = 'xsd:decimal(' + p_name + ')' + ops[f.operator] + f.value;
         }
         else if (f.type == "date") {
             var ops = {'eq': '=', 'neq': '!=', 'gt': '>', 'lt': '<', 'gte': '>=', 'lte': '<='};
+            this.prefixes['xsd'] = "<http://www.w3.org/2001/XMLSchema#>";
             result = "xsd:date(" + p_name + ")" + ops[f.operator] + "xsd:date('" + f.value + "')";
         }
 
@@ -269,7 +286,7 @@ var builder = {
         if (cnt_objects == 0) { //empty query
             this.query = '';
         } else { //the result is the SELECT ... WHERE ...
-            this.query = this.select_clause + '\n' + this.where_clause + this.order_clause;
+            this.query = this.get_prefixes() + this.select_clause + '\n' + this.where_clause + this.order_clause;
         }
 
         return this.query;
