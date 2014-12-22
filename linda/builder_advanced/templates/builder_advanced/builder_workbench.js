@@ -14,8 +14,7 @@
             },
 
             /*Add more height to the workbench if necessary*/
-            reset_height: function(i_num) {
-                var i = $("#class_instance_" + i_num);
+            reset_height: function(i) {
                 var o = $("#builder_workspace");
                 if (i.position().top > o.height() - i.height()) { //when reaching bottom, make sure to enlarge the workspace height
                     o.height(i.position().top + i.height() + 50);
@@ -30,7 +29,7 @@
                 var new_instance = $.parseHTML('<div id="class_instance_' + new_id + '" class="class-instance" data-n="' + new_id + '"style="left: ' + x + 'px; top: ' + y + 'px;"><div class="title"><h3>' + uri_to_label(uri) + '</h3><span class="uri">&lt;' + uri + '&gt;</span><span class="delete" data-about="' + new_id + '">x</span><span class="dataset">' + dt_name + '</span></div><div class="properties"><span class="loading">Loading properties...</span></div></div>');
                 $("#builder_workspace").append(new_instance);
                 $(new_instance).draggable({handle: '.title', cursor: 'move', drag: function() {
-                    builder_workbench.reset_height(new_id);
+                    builder_workbench.reset_height($(this));
                 }});
                 this.bring_to_front(new_instance);
 
@@ -106,7 +105,7 @@
                                 }
                             }
 
-                            builder_workbench.reset_height(new_id);
+                            builder_workbench.reset_height($("#class_instance_" + new_id));
                         }
 
                         builder.reset();
