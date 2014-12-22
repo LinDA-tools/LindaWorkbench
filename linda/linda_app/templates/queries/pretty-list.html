@@ -13,5 +13,7 @@
     {% endfor %}
 
 {% elif out == "js" %}
-    {% include "queries/context-menu.html" %}
+    {% with queries=queries %}
+        {% include "queries/context-menu.html" %}
+    {% endwith %}
 {% endif %}

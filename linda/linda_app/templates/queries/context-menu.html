@@ -2,7 +2,6 @@
             var id = $(this).attr('id');
 
             if ($("#" + id).hasClass('selected')) {
-                console.log('open');
                 $(".queries-table .selected .sparql-query p").css('height', '65px');
                 $(".queries-table .selected").removeClass("selected");
             } else {
@@ -15,7 +14,13 @@
             }
         });
 
-         $(function(){ //private datasource context menu
+
+         var query_visualize_URIs = [];
+        {% for query in queries %}
+            query_visualize_URIs["{{query.id}}"] = "/visualizations/#/visualization/Query{{query.id}}/" + encodeURIComponent("{{query.csv_link}}") + "/-/csv";
+        {% endfor %}
+
+         $(function(){ //query context menu
 
             $.contextMenu({
                 selector: '.query-row',
@@ -25,7 +30,7 @@
                     var url;
 
                     if (key == "Visualize")
-                        url = "/visualize?q_id=" + q_id;
+                        url = query_visualize_URIs[q_id];
                     else
                     if (key == "Analyze")
                         url = "/analytics?q_id=" + q_id;
@@ -70,7 +75,7 @@
 
                     $(this).addClass("show-context-menu");
                     if (url)
-                        window.location = url;
+                        document.location = url;
                 },
                 items: {
                     "Visualize": {name: "Visualize", icon: "visualize"},

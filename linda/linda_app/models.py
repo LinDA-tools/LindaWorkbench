@@ -531,7 +531,7 @@ class Query(models.Model):
     design = models.ForeignKey(Design, blank=True, null=True)  # the json object produced in the Query Designer
 
     def csv_link(self):
-        return get_configuration().rdf2any_server + '/rdf2any/v1.0/convert/csv-converter.csv?dataset=' + self.endpoint + '&query=' \
+        return '/rdf2any/v1.0/convert/csv-converter.csv?dataset=' + self.endpoint + '&query=' \
                + urllib.quote_plus(self.sparql)
 
     def get_datasource(self):

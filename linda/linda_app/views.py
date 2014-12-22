@@ -895,10 +895,10 @@ def execute_sparql(request):
         return HttpResponse(response.content, status=response.status_code)
 
 
-# Proxy calls - exist as middle-mans between LinDA query builder page and the rdf2any server
+# Proxy calls - exist as middle-mans between LinDA query builder page and the Query Builder
 @csrf_exempt
 def get_qbuilder_call(request, link):
-    total_link = QUERY_BUILDER_SERVER + "query/" + link
+    total_link = get_configuration().query_builder_server + "query/" + link
     if request.GET:
         total_link += "?"
     for param in request.GET:
@@ -908,6 +908,20 @@ def get_qbuilder_call(request, link):
         data = requests.post(total_link, data=request.POST)
     else:
         data = requests.get(total_link)
+
+    return HttpResponse(data, data.headers['content-type'])
+
+# middle-mans between LinDA query builder page and the RDF2Any server
+@csrf_exempt
+def get_rdf2any_call(request, link):
+    print link
+    total_link = get_configuration().rdf2any_server + link
+    if request.GET:
+        total_link += "?"
+    for param in request.GET:
+        total_link += param + "=" + urlquote(request.GET[param]) + "&"
+
+    data = requests.get(total_link)
 
     return HttpResponse(data, data.headers['content-type'])
 
