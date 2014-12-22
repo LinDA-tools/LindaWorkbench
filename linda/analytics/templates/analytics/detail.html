@@ -7,39 +7,86 @@
 {% block bodyclass %}analytics{% endblock %}
 
 {% block scripts %}
+<script src="/static/js/jquery.bpopup.min.js"></script>
+<link rel="stylesheet" type="text/css" href="/static/css/analytics_style.css" />
+
+
+<script src="/static/js/jquery-ui.js"></script>
+
 <script>
 $(document).ready(function(){
-    $( "#toggleAlgorithmDescription" ).click(function() {
-        $( "#algorithmDescription" ).toggle();
+    $( "#toggleCategoryDescription" ).click(function() {
+        $('#categoryDescription').bPopup();
     });
+    
+    $( "#toggleAlgorithmDescription" ).click(function() {
+       $('#algorithmDescription').bPopup();
+    });    
+    
+    $( "#toggleAnalyticsDescription" ).click(function() {
+       $( "#analyticsDescription" ).bPopup();
+    });
+    
     $( "#toggleAnalyticsModel" ).click(function() {
         $( "#model" ).toggle();
     });
+    
     $( "#toggleResultDocument" ).click(function() {
         $( "#resultdocument" ).toggle();
     });
+    
     $( "#toggleprocessinfo" ).click(function() {
         $( "#processinfo" ).toggle();
     });
-     $( "#toggleAnalyticsDescription" ).click(function() {
-        $( "#analyticsDescription" ).toggle();
-    });
     
-    
-    
-    
+    $( "#toggleTrainQueryDescription" ).click(function() {
+	$.ajax({
+	url : "/analytics/popup_query_info",
+	type : "POST",
+	dataType: "html",
+	data : {
+	query_id : {{analytics.trainQuery_id}},
+	csrfmiddlewaretoken: '{{ csrf_token }}'
+	},
+	success : function(data) {
+	  $('#queries_info').html(data);
+	  $( "#queries_info" ).bPopup();
+	},
+	error : function(xhr,errmsg,err) {
+	alert(xhr.status + ": " + xhr.responseText);
+	}
+	});
+      return false;
+   });
+  
+   $( "#toggleEvaluationQueryDescription" ).click(function() {
+	$.ajax({
+	url : "/analytics/popup_query_info",
+	type : "POST",
+	dataType: "html",
+	data : {
+	query_id : {{analytics.evaluationQuery_id}},
+	csrfmiddlewaretoken: '{{ csrf_token }}'
+	},
+	success : function(data) {
+	  $('#queries_info').html(data);
+	  $( "#queries_info" ).bPopup();
+	},
+	error : function(xhr,errmsg,err) {
+	alert(xhr.status + ": " + xhr.responseText);
+	}
+	});
+      return false;
+   });
+
 });
 </script>
 {% endblock %}
-
-
-
 
 {% block content %}
 <div style="clear:both;"/>
 <div class="main content-sidebar">
    <content>
-
           <table>
 	    <tr>
 	      <td><h1 class="page-title inline">Analytic ID: {{ analytics.id }} - V: {{ analytics.version }}</h1></td>
@@ -57,53 +104,8 @@ $(document).ready(function(){
 	    </tr>
           </table>
           
-          {% if analytics.processMessage|length > 0 %}
-            <p style= "border:3px solid #FD8036;font-weight:bold">{{ analytics.processMessage|safe }}</p>
-            {% endif %}
-            
-          <p>Analytics Category : {{ analytics.category }}</p>
-          <p>Analytics Algorithm : {{ analytics.algorithm }}
-	    <button id="toggleAlgorithmDescription">see/hide Info</button>
-	    <div id="algorithmDescription" style="background: none repeat scroll 0% 0% #DADFE1;overflow:auto;width:inherit;" >
-	      {{analytics.display_algorithm_description}}
-	    </div>
-          </p>
-          
-          <p>Analytic process Description
-	    <button id="toggleAnalyticsDescription">see/hide Info</button>
-	    <div id="analyticsDescription" style="background: none repeat scroll 0% 0% #DADFE1;overflow:auto;width:inherit;" >
-	      {{analytics.description}}
-	    </div>
-          </p>
-          
-          <p>Export Format : {{ analytics.exportFormat }}</p>
-
-          <p>Analytics input dataset : {{ analytics.document }}</p>
-
-          {% if analytics.testdocument %}
-          <p>Analytics test dataset : {{ analytics.testdocument }}</p>
-          {% endif %}
-
-          {% if analytics.modelReadable %}
-          <p>Analytics model file : {{ analytics.modelReadable }}
-             <button id="toggleAnalyticsModel">see/hide Info</button>
-            <div id="model"  style="overflow:auto;width:700px;background: none repeat scroll 0% 0% #DADFE1;">
-                <pre>{{analytics.display_model_file}}</pre>
-              </div>
-          </p>
-          {% endif %}
-
-          {% if analytics.processinfo %}
-          <p>Process Info : {{ analytics.processinfo }}
-             <button id="toggleprocessinfo">see/hide Info</button>
-            <div id="processinfo"  style="background: none repeat scroll 0% 0% #DADFE1;overflow:auto;">
-                <pre>{{analytics.display_processinfo_file}}</pre>
-              </div>
-          </p>
-          {% endif %}
-
-          {% if analytics.resultdocument %}
-          <p>Result document : {{ analytics.resultdocument.name }}
+           {% if analytics.resultdocument %}
+          <p style="margin:0px;color:#FC5006;">Result document  <!--{ { analytics.resultdocument.name } }-->
           
 	     {% if analytics.loadedRDFContext|length > 0 %}
              <p style= "border:3px solid #FD8036;font-weight:bold">{{ analytics.loadedRDFContext|safe }}</p>
@@ -111,20 +113,131 @@ $(document).ready(function(){
              <button id="toggleResultDocument" type="button">see/hide Info</button>
              {% if  analytics.publishedToTriplestore|lower == 'false' %}
 		{% if  analytics.isExportFormatRDFXML|lower == 'rdfxml' or  analytics.isExportFormatTTL|lower == 'ttl'   or  analytics.isExportFormatNTRIPLES|lower == 'ntriples' %} 
-		    <form id="sendRDFToTriplestore" action="/analytics/{{ analytics.id }}/sendRDFToTriplestore" method="get">
-		      {% csrf_token %}
-		      <input type="submit" value="Send To LinDA TripleStore" style="padding:0px;font-size: 12px;font-weight:bold;margin:5px;background:#FD8036"/>
-		    </form>
+		    <form class="form rdf-form datasource-create-form" method="post" action="/analytics/datasourceCreateRDF/" enctype="multipart/form-data">{% csrf_token %}		    
+			 {% if form_error %}
+			  <p class="error">{{form_error}}</p>
+			{% endif %}
+			<input class="hidden" type="text" name="analytics_id" id="analytics_id" value="{{ analytics.id }}"/>
+			<input class="hidden" type="text" name="title" id="id_title" value="{{ analytics.resultdocument.name }}"/>
+			<textarea class="hidden" name="rdfdata">{{analytics.display_resultdocument_file}}</textarea>
+			<input type="submit" class="button blue create-datasource-submit" value='{% trans "Save as LinDa Datasource"%}'/>
+		  </form>
 		{% endif %}
              {% endif %}
-            <div id="resultdocument"  style="overflow:auto;width:700px;background: none repeat scroll 0% 0% #DADFE1;">
+            <div id="resultdocument"  class ="analytics-description-visible">
                 <pre>{{analytics.display_resultdocument_file}}</pre>
             </div>
            </p>
            {% endif %}
-           
+          
+          {% if analytics.processMessage|length > 0 %}
+            <p style= "border:3px solid #FD8036;font-weight:bold">{{ analytics.processMessage|safe }}</p>
+            {% endif %}
+
+
+          {% if analytics.modelReadable %}
+          <p style="margin:0px;color:#FC5006;">Analytics model file 
+          <!--{ { analytics.modelReadable } }-->
+             <button id="toggleAnalyticsModel">see/hide Info</button>
+            <div id="model"   class="analytics-description-visible">
+                <pre>{{analytics.display_model_file}}</pre>
+              </div>
+          </p>
+          {% endif %}
+
+          {% if analytics.processinfo %}
+          <p style="margin:0px;color:#FC5006;">Process Info  <!--{ { analytics.processinfo } }-->
+             <button id="toggleprocessinfo">see/hide Info</button>
+            <div id="processinfo"  class="analytics-description-visible">
+                <pre>{{analytics.display_processinfo_file}}</pre>
+              </div>
+          </p>
+          {% endif %}
+          
+          <div id="queries_info" class="analytics-description-hidden" ></div>
     </content>
 <aside1>
+       <div class="sidebar-block" id="analytics_general_info">
+            <h3 class="sidebar-title">{% trans "Current Analytic Info" %}</h3>
+                     <table>
+                                 <tr>
+				    <td>
+					<p> Analytics Category :</br>{{ analytics.category }}
+					  <input type="image" src="/static/images/info-button-orange-small.jpg" name="toggleCategoryDescription"  id="toggleCategoryDescription" />
+					  <div id="categoryDescription" class="analytics-description-hidden" >
+					    <h1>{{ analytics.category }} Description: </h1></br>
+					    {{analytics.display_category_description}}
+					  </div>
+					</p>				    
+				    </td>
+				  </tr>
+				  <tr>
+				    <td>
+					<p> Analytics Algorithm : </br> {{ analytics.algorithm }}	    
+					  <input type="image" src="/static/images/info-button-orange-small.jpg" name="toggleAlgorithmDescription"  id="toggleAlgorithmDescription" />
+					  <div id="algorithmDescription" class="analytics-description-hidden" >
+					    <h1>{{ analytics.algorithm }} Description: </h1></br>
+					    {{analytics.display_algorithm_description}}
+					  </div>
+					</p>			    
+				    </td>
+				  </tr>
+				  <tr>
+				    <td>
+				      {% if analytics.parameters %}
+					<p>Algorithm Parameters : </br> {{ analytics.parameters }}</p> 
+				      {% endif %}		    
+				    </td>
+				  </tr>
+				  <tr>
+				    <td>     
+				      <p>Analytic process Description 
+				        <input type="image" src="/static/images/info-button-orange-small.jpg" name="toggleAnalyticsDescription"  id="toggleAnalyticsDescription" />
+					  <div id="analyticsDescription" class="analytics-description-hidden" >
+					    <h1>Analytic Process Description: </h1></br>
+					    {{analytics.description}}
+					  </div>
+				      </p>		    
+				    </td>
+				  </tr>
+				  <tr>
+				    <td>     
+				       <p>Export Format : {{ analytics.exportFormat }}</p>		    
+				    </td>
+				  </tr>
+				  <tr>
+				    <td> 
+				     {% if analytics.document and not analytics.trainQuery %}
+				       <p>Analytics train dataset :<div class="analytics-description-visible-right">{{ analytics.document }}</div><p>
+				     {% endif %} 
+				     
+				     {% if analytics.trainQuery and analytics.evaluationQuery %}
+				       <p style="float:left;">Analytics train Query :<p>
+				     {% endif %} 
+				     {% if analytics.trainQuery and  not analytics.evaluationQuery %}
+				       <p style="float:left;">Analytics input Query :<p>
+				     {% endif %} 
+				     {% if analytics.trainQuery %}
+				      <input type="image" src="/static/images/info-button-orange-small.jpg" name="toggleTrainQueryDescription"  id="toggleTrainQueryDescription" />
+				      <div class="analytics-description-visible-right">{{ analytics.trainQuery }}</div>
+				     {% endif %} 
+				     </br>
+				    </td>
+				  </tr>
+				  <tr>
+				    <td>     
+				      {% if analytics.testdocument and not analytics.evaluationQuery %}
+				      <p>Analytics evaluation dataset :<div class="analytics-description-visible-right">{{ analytics.testdocument }}</div><p>	
+				      {% endif %}
+				      {% if analytics.evaluationQuery %}
+				       <p style="float:left;">Analytics evaluation Query :<p>
+				       <input type="image" src="/static/images/info-button-orange-small.jpg" name="toggleEvaluationQueryDescription"  id="toggleEvaluationQueryDescription" />
+				       <div class="analytics-description-visible-right">{{ analytics.evaluationQuery }}</div>
+				      {% endif %} 
+				    </td>
+				  </tr>				  
+                    </table>
+        </div>
         <div class="sidebar-block" id="analytics_list">
             <h3 class="sidebar-title">{% trans "My Analytics" %}</h3>
                      <table>

@@ -1,4 +1,3 @@
-import datetime
 from django.db import models
 from django.forms import ModelForm
 import os
@@ -17,10 +16,18 @@ EXPORT_CHOICES = (
 
 class Category(models.Model):
     name = models.CharField(max_length=400)
-    description = models.CharField(max_length=400)
+    description = models.TextField(max_length=2000)
     def __str__(self):
-        return self.name   
-
+        return self.name  
+    def display_category_description(self):
+        return self.description 
+    def as_json(self):
+            return dict(
+                id=self.id,
+                name=self.name,
+                description=self.description
+                )  
+      
 
 class Algorithm(models.Model):
     name = models.CharField(max_length=400)
@@ -46,43 +53,48 @@ class Document(models.Model):
 
 
 class Analytics(models.Model):
-    description = models.TextField(max_length=500)
+    description = models.TextField(max_length=500, blank=True)
     category = models.ForeignKey(Category)
     algorithm = models.ForeignKey(Algorithm)
-    #document = models.ForeignKey(Document)
-    document = models.FileField(upload_to='./analytics/documents/datasets/')
-    testdocument = models.FileField(upload_to='./analytics/documents/datasets/')
-    model = models.FileField(upload_to='./analytics/documents/models/')
-    modelReadable = models.FileField(upload_to='./analytics/documents/models/')
-    processinfo = models.FileField(upload_to='./analytics/documents/results/')
-    resultdocument = models.FileField(upload_to='./analytics/documents/results/')
+    trainQuery = models.ForeignKey('linda_app.Query', null=True, related_name='trainQuery', blank=True)
+    evaluationQuery = models.ForeignKey('linda_app.Query', null=True, related_name='evaluationQuery', blank=True)
+    document = models.FileField(upload_to='datasets/', blank=True,max_length=500)
+    testdocument = models.FileField(upload_to='datasets/', blank=True,max_length=500)
+    model = models.FileField(upload_to='models/',max_length=500)
+    modelReadable = models.FileField(upload_to='models/',max_length=500)
+    processinfo = models.FileField(upload_to='results/',max_length=500)
+    resultdocument = models.FileField(upload_to='results/',max_length=500)
     exportFormat = models.CharField(max_length=20, choices=EXPORT_CHOICES)
     publishedToTriplestore = models.BooleanField(default=False)
     version = models.IntegerField()
     loadedRDFContext = models.TextField(max_length=500)
     processMessage = models.TextField(max_length=300)
     user_id = models.IntegerField()
-
+    parameters = models.TextField(max_length=100, blank=True)
     # Auto-populated fields for created on/updated on time
     createdOn = models.DateField(editable=False)
     updatedOn = models.DateField(editable=False)
-
+    
     def save(self):
         if not self.id:  # first time saved -- create is not set yet
-            self.created = datetime.date.today()
-        self.updated = datetime.date.today()
-        super(Analytics, self).save()  # proceed with the default constructor
-
+	   self.created = datetime.date.today()
+	   self.updated = datetime.date.today()
+	   super(Analytics, self).save()  # proceed with the default constructor
+    
     def __str__(self):
         return self.name
     def display_resultdocument_file(self):
         if os.path.isfile(self.resultdocument.path):
+	   print(self.resultdocument.path);
+	   print('holaaaaaa');
            fp = open(self.resultdocument.path);
            return fp.read()
     def display_model_file(self):
         if os.path.isfile(self.modelReadable.path):
            fp = open(self.modelReadable.path);
            return fp.read()
+    def display_category_description(self):
+        return self.category.description	 
     def display_algorithm_description(self):
         return self.algorithm.description
     def display_processinfo_file(self):
@@ -132,10 +144,16 @@ class Params(models.Model):
     algorithm = models.ForeignKey(Algorithm)
     name = models.CharField(max_length=400)
     value = models.CharField(max_length=400)
+    description = models.CharField(max_length=400)
     def __str__(self):
         return self.name
-
-
+    def as_json(self):
+            return dict(
+                id=self.id,
+                name=self.name,
+                value=self.value,
+                description=self.description
+                )
 
 
 

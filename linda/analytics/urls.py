@@ -11,4 +11,10 @@ urlpatterns = patterns('',
     url(r'^(?P<analytics_id>\d+)/sendRDFToTriplestore/$', views.sendRDFToTriplestore,name='sendRDFToTriplestore'),
     url(r'^list/$', 'list', name='list'),
     url(r'^ajax$', views.ajax, name='ajax'),
+    url(r'^get_info$', views.get_info, name='get_info'),
+    url(r'^get_trainQuery$', views.get_trainQuery, name='get_trainQuery'),
+    url(r'^get_evaluationQuery$', views.get_evaluationQuery, name='get_evaluationQuery'),
+    url(r'^popup_query_info', views.popup_query_info, name='popup_query_info'),
+    url(r'^datasourceCreateRDF/$', views.datasourceCreateRDF,name='datasourceCreateRDF'),
+
 )

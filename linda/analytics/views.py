@@ -1,4 +1,4 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404,redirect
 from django.http import HttpResponseRedirect, HttpResponse
 from .forms import AnalyticsForm,DocumentForm
 from django.views import generic
@@ -11,7 +11,8 @@ from django.template import RequestContext
 import simplejson
 import socket
 
-from analytics.models import Analytics,Algorithm
+from analytics.models import Analytics,Category,Algorithm,Params
+from linda_app.models import Query
 
 import urllib2
 import json
@@ -20,6 +21,8 @@ import pprint
 from ConfigParser import ConfigParser
 import os.path
 import requests
+
+from linda_app.settings import LINDA_HOME
 
 
 def analytics(request):
@@ -36,6 +39,7 @@ def analytics(request):
 	      new_lindaAnalytics = form.save(commit=False)
 	      new_lindaAnalytics.version = 0
 	      new_lindaAnalytics.user_id = current_user.id
+	      print(new_lindaAnalytics.trainQuery)
 	      new_lindaAnalytics.save()
 	      #new_lindaAnalytics = form.save()
 	      #upFile = open(new_lindaAnalytics.resultdocument, 'r')
@@ -51,17 +55,29 @@ def analytics(request):
 	      # context["uploadedFile"] = __unicode__(upFile.read())
 	      #f.close()
 	      #return HttpResponseRedirect('/thanks/') # Redirect after POST
+	      #try to use params form
 	      callRESTfulLINDA(new_lindaAnalytics.pk,'lindaAnalytics_analytics')
 	      return HttpResponseRedirect(reverse('analytics:detail', args=(new_lindaAnalytics.pk,)))
       else:
-	  #print("hoalaaaaaaaaaaa")
 	  form = AnalyticsForm() # An unbound form
-	  analytics_list = Analytics.objects.all()
+	  #analytics_list = Analytics.objects.all()
+	  current_user = request.user
+	  analytics_list = Analytics.objects.filter(user_id=current_user.id)
+	  if 'q_id' in request.GET: 
+	    q_id = request.GET.get("q_id") #primary datasource has been selected
+	    q_object = Query.objects.get(pk=q_id)
+	    #print q_object.description #description of the query in natural language
+	    #print q_object.sparql #the sparql query 
+	    #print q_object.csv_link() #the url to the csv file that is created by rdf2any
+	  else:
+	    q_id = None #datasource not selected
+
+
 	  return render(request, 'analytics/analytics.html', {
-	      'form': form,'analytics_list': analytics_list, 'page': 'Analytics'
+	      'form': form,'analytics_list': analytics_list
 	  })
     else: 
-      return render(request, 'analytics/noAuthenticatedAccess.html', {'page': 'Analytics'})
+      return render(request, 'analytics/noAuthenticatedAccess.html',)
     
 def __unicode__(self):
         return unicode(self)
@@ -109,6 +125,29 @@ def ajax(request):
         response_dict = {}
         response_dict.update({'algorithmsPerCategory': results })
         return HttpResponse(simplejson.dumps(response_dict), content_type='application/javascript')
+    if request.POST.has_key('algorithm'):
+        algorithm_id = request.POST['algorithm']
+        paramsPerAlgorithm = Params.objects.filter(algorithm__id=algorithm_id)
+        results = [ob.as_json() for ob in paramsPerAlgorithm]
+        response_dict = {}
+        response_dict.update({'paramsPerAlgorithm': results })
+        return HttpResponse(simplejson.dumps(response_dict), content_type='application/javascript')  
+    else:
+        return render_to_response('ajaxexample.html', context_instance=RequestContext(request))
+      
+def get_info(request):
+    if request.POST.has_key('category'):
+        categories = Category.objects.all()
+        results = [ob.as_json() for ob in categories]
+        response_dict = {}
+        response_dict.update({'categories': results })
+        return HttpResponse(simplejson.dumps(response_dict), content_type='application/javascript')
+    if request.POST.has_key('algorithm'):
+        algorithms = Algorithm.objects.all()
+        results = [ob.as_json() for ob in algorithms]
+        response_dict = {}
+        response_dict.update({'algorithms': results })
+        return HttpResponse(simplejson.dumps(response_dict), content_type='application/javascript')  
     else:
         return render_to_response('ajaxexample.html', context_instance=RequestContext(request))
 
@@ -149,20 +188,74 @@ def sendRDFToTriplestore(request1 , analytics_id):
         raise Http404
     return HttpResponseRedirect(reverse('analytics:detail', args=(analytics_id,)))  
   
-  
-  
+def datasourceCreateRDF(request):
+    if request.POST:
+        #Get the posted rdf data
+        if "rdffile" in request.FILES:
+            rdf_content = request.FILES["rdffile"].read()
+        else:
+            rdf_content = request.POST.get("rdfdata")
 
-  
-  
-#from django.contrib.auth import authenticate
-#user = authenticate(username='john', password='secret')
-#if user is not None:
-    # the password verified for the user
-#    if user.is_active:
-#        print("User is valid, active and authenticated")
-#    else:
-#        print("The password is valid, but the account has been disabled!")
-#else:
-    # the authentication system was unable to verify the username and password
-#    print("The username and password were incorrect.")
 
+        #Call the corresponding web service
+        headers = {'accept': 'application/json'}
+        callAdd = requests.post(LINDA_HOME + "api/datasource/create/", headers=headers,
+                                data={"content": rdf_content, "title": request.POST.get("title")})
+
+        j_obj = json.loads(callAdd.text)
+        if j_obj['status'] == '200':
+	     
+	     analytics = get_object_or_404(Analytics, pk=request.POST.get("analytics_id"))
+	     analytics.publishedToTriplestore = "1"
+	     analytics.save()
+             return redirect("/datasources/")
+        else:
+            params = {}
+
+            params['form_error'] = j_obj['message']
+            params['title'] = request.POST.get("title")
+            params['rdfdata'] = request.POST.get("rdfdata")
+
+            return render(request, 'datasource/create_rdf.html', params)
+    else:
+        params = {}
+        params['title'] = ""
+        params['rdfdata'] = ""
+
+        return render(request, 'datasource/create_rdf.html', params)  
+  
+def get_trainQuery(request):
+    q = request.GET.get('q')   #Get the search term typed by user
+    queries = Query.objects.filter(description__icontains=q)  #Query according to search term
+    #print(queries)
+    #Send pk and the actual customer name as json
+    queries_list = []
+    for query in queries:
+        queries_dict = {}
+        queries_dict['value'] = query.pk
+        queries_dict['label'] = query.description
+        queries_list.append(queries_dict)
+        #print(queries_list)
+    return HttpResponse(json.dumps(queries_list), content_type='application/json')
+  
+def get_evaluationQuery(request):
+    q = request.GET.get('q')   #Get the search term typed by user
+    queries = Query.objects.filter(description__contains=q)  #Query according to search term
+    #print(queries)
+    #Send pk and the actual customer name as json
+    queries_list = []
+    for query in queries:
+        queries_dict = {}
+        queries_dict['value'] = query.pk
+        queries_dict['label'] = query.description
+        queries_list.append(queries_dict)
+        #print(queries_list)
+    return HttpResponse(json.dumps(queries_list), content_type='application/json')
+  
+def popup_query_info(request):
+    query_id = request.POST['query_id']
+    query = Query.objects.get(id=query_id)
+    return render(request, 'analytics/query.html', {'query': query,})
+  
+  
+  

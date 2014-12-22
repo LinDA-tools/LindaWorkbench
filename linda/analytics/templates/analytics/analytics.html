@@ -4,36 +4,96 @@
 {% load url from future %}
 
 {% block scripts %}
+<script src="/static/js/jquery.bpopup.min.js"></script>
+<script src="/static/js/jquery-ui.js"></script>
+
+
+<link rel="stylesheet" type="text/css" href="/static/css/analytics_style.css"/>
+<!--script src="//code.jquery.com/jquery-1.10.2.js"></script-->
+<!--script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script-->
+
+
+<script src="//code.jquery.com/ui/1.11.2/jquery-ui.js"></script>
 <script>
 $(document).ready(function(){
+
+    $( "#parameters" ).hide();
+    get_categories_info();
+    get_algorithms_info();
 
     $( "#toggleAlgorithmDescription" ).click(function() {
         $( "#algorithmDescription" ).toggle();
     });
+    
     $( "#toggleResultDocument" ).click(function() {
         $( "#resultdocument" ).toggle();
+    }); 
+    
+    $("#category_info").click(function() {
+        var id_category =$( "#id_category" ).val();
+        if(id_category>0){
+	  $("#category"+id_category).bPopup();
+        }else{  
+	  $("#category0").bPopup();
+	}   
     });
+    
+    $("#algorithm_info").click(function() {
+        var id_algorithm =$( "#id_algorithm" ).val();
+        if(id_algorithm>0){
+        $("#algorithm"+id_algorithm).bPopup();
+        }else{  
+         $("#algorithm0").bPopup();
+	}   
+    });
+    
+    $("#analytics_description").click(function() {
+       $("#analytics_description_info").bPopup();
+    });
+    
+    $("#analytics_datasets").click(function() {
+      $("#analytics_datasets_info").bPopup();
+    });
+    
+    
+    
     $( "#category" ).change(function() {
         $("#id_testdocument").val("");
-        //var htmlString1 = $("#category").html();
+        $( "#parameters" ).hide();
+        $('#params_description').empty();
         var htmlString =$( "#id_category" ).val();
 
         search_results($( "#id_category" ).val());
-
+        
         if (htmlString==1 || htmlString==3)  {
-        //$( "#exportFormat" ).show();
         $( "#testdocument" ).show();
+        
+        $( "#id_trainQuery_label" ).html('Select a Datasource Query to train the predifined algorithm: ');
+        
+        $( "#id_evaluationQuery_label" ).show();
+        $( "#id_evaluationQuery_display" ).show();
+        
         }
         else {
-        //$( "#exportFormat" ).hide();
         $( "#testdocument" ).hide();
+       
+        $( "#id_trainQuery_label" ).html('Select an query to analyze :');
+       
+        $( "#id_evaluationQuery_label" ).hide();
+        $( "#id_evaluationQuery_display" ).hide();
         }
+    });
+    
+    $( "#algorithm" ).click(function() {
+        var id_algorithm =$( "#id_algorithm" ).val();
+	$('#params_description').empty();
+	if(id_algorithm>0){
+	search_params($( "#id_algorithm" ).val());
+	}
     });
 
 
     function search_results(id_category){
-    //You have to get in this code the values you need to work with, for example:
-            //var input_string = $("#forminput").val();
         var id_category =  $( "#id_category" ).val();
         $.ajax({
             url : "/analytics/ajax",
@@ -44,21 +104,95 @@ $(document).ready(function(){
             csrfmiddlewaretoken: '{{ csrf_token }}'
             },
             success : function(json) {
-            //$('#result').append( 'Algorithms per category: ' + json.algorithmsPerCategory);
             var $el = $("#id_algorithm");
             $el.empty(); // remove old options
-            $('#algorithm_description').empty();
-            $('#algorithm_description').append( '<h1>Algorithms description: </h1>');
-
             $.each(json.algorithmsPerCategory, function(key, value) {
-
-            $el.append($("<option></option>")
-              .attr("value", value.id).text(value.name));
-
-               $('#algorithm_description').append( '</br></br><b>'+value.name+' description: </b></br></br>' + value.description) + '</br></br></br></br>';
+	      $el.append($("<option></option>").attr("value", value.id).text(value.name));
             });
+	     $("#id_algorithm").click();
+            },
+            error : function(xhr,errmsg,err) {
+            alert(xhr.status + ": " + xhr.responseText);
+            }
+            });
+            return false;
+    }
+        
+    
+      function search_params(id_algorithm){
+        $.ajax({
+            url : "/analytics/ajax",
+            type : "POST",
+            dataType: "json",
+            data : {
+            algorithm : id_algorithm,
+            csrfmiddlewaretoken: '{{ csrf_token }}'
+            },
+            success : function(json) {
+           
+            $('#params_description').append( '<strong>Default Params description: </strong></br>');
+            $.each(json.paramsPerAlgorithm, function(key, value) {
+	      $('#params_description').append('-'+value.name+' --> '+value.description+'</br>');
+            });
+            
+            $('#params_description').append('Default Parameters configuration : ');
+            $.each(json.paramsPerAlgorithm, function(key, value) {
+	    $('#params_description').append('-'+value.name+'  '+value.value+ ' ');
+            });
+            
+            $( "#parameters" ).show();
+            },
+            error : function(xhr,errmsg,err) {
+            alert(xhr.status + ": " + xhr.responseText);
+            }
+            });
+            return false;
+        
+    }
+    
+     function get_categories_info(){
+        $.ajax({
+            url : "/analytics/get_info",
+            type : "POST",
+            dataType: "json",
+            data : {
+            category : 0,
+            csrfmiddlewaretoken: '{{ csrf_token }}'
+            },
+            success : function(json) {
+            $('#category_description').empty();            
+            $('#category_description').append('<div id="category0" class="analytics-description-hidden">Please Select a Category and then press the Info icon to get informed about the different algorithm categories</div>');
 
+            $.each(json.categories, function(key, value) {
 
+	       $('#category_description').append('<div id="category'+value.id+'" class="analytics-description-hidden"><h1>'+value.name+' description: </h1></br></br>'+value.description+'</div>');
+            });
+            },
+            error : function(xhr,errmsg,err) {
+            alert(xhr.status + ": " + xhr.responseText);
+            }
+            });
+            return false;
+    }
+    
+    function get_algorithms_info(){
+        $.ajax({
+            url : "/analytics/get_info",
+            type : "POST",
+            dataType: "json",
+            data : {
+            algorithm : 0,
+            csrfmiddlewaretoken: '{{ csrf_token }}'
+            },
+            success : function(json) {
+
+            $('#algorithm_description').empty();
+            
+            $('#algorithm_description').append('<div id="algorithm0" class="analytics-description-hidden">Please Select an Algorithm and then press the Info icon to get informed about the different algorithms</div>');
+            $.each(json.algorithms, function(key, value) {
+
+	       $('#algorithm_description').append('<div id="algorithm'+value.id+'" class="analytics-description-hidden"><h1>'+value.name+' description: </h1></br></br>'+value.description+'</div>');
+            });
 
             },
             error : function(xhr,errmsg,err) {
@@ -67,6 +201,70 @@ $(document).ready(function(){
             });
             return false;
     }
+    
+        
+        $( "#id_trainQuery_display" ).autocomplete({
+        source: function (request, response) {
+            $.getJSON("/analytics/get_trainQuery", {
+            q: request.term
+            }, response);
+        },
+        select: function( event, ui ) {
+         
+         $("#id_trainQuery").val(ui.item.value);  
+         //alert(ui.item.value);
+         //alert($("#id_trainQuery").val());
+         $("#id_trainQuery_display").val(ui.item.label);
+         return false;
+        }
+ 
+      });
+      
+      $( "#id_evaluationQuery_display" ).autocomplete({
+        source: function (request, response) {
+            $.getJSON("/analytics/get_evaluationQuery", {
+            q: request.term
+            }, response);
+        },
+        select: function( event, ui ) {
+         $("#id_evaluationQuery_display").val(ui.item.label);
+         $("#id_evaluationQuery").val(ui.item.value);
+         return false;
+        }
+ 
+      });
+      
+          var $divA = $('#a'),
+	  $divB = $('#b'),
+	  $link = $('#link');
+	  $diplaytext = $('#display_text');
+
+	// Initialize everything
+	$link.text( 'Define input in tabular format' );
+	$('#link').css({"font-size": "12px","color": "#859596"});
+	$diplaytext.text( 'Define specific sparql query' );
+	$divA.hide();
+
+	$link.click(function(){
+
+	// If A is visible when the link is clicked
+	// you need to hide A and show B
+	if( $divA.is( ':visible' ) ){
+	  $link.text( 'Define input datasets in tabular format' );
+	  $('#link').css({"font-size": "12px","color": "#859596"});
+	  $diplaytext.text( 'Define specific sparql query' );
+	  $divA.hide();
+	  $divB.show();
+	} else {
+	  $link.text( 'Define specific sparql query' );
+	  $('#link').css({"font-size": "12px","color": "#FD8036"});
+	  $diplaytext.text( 'Define input datasets in CSV or ARFF format' );
+	  $divA.show();
+	  $divB.hide();
+	}
+
+	return false;
+	});
 
 
 
@@ -84,43 +282,85 @@ $(document).ready(function(){
 <div style="clear:both;"/>
 <div class="main content-sidebar">
     <content>
-        <!--div id="user-tools">
-            <h3>Explore LINDA Ecosystem</h3>
-
-              <p>  <a href="http://community.pentaho.com/projects/data-integration/">Data Integration - Kettle - Pentaho Community</a> </p>
-              <p>  <a href="/admin/logout1/">Linda Tranformation Engine</a></p>
-            </ul>
-        </div-->
     <section  id="content">
-          <div id="instructions">
-                    <b>Welcome to the LinDA Analytics Tool!</b>
-                    By using this tool, you may perform an analysis by selecting the appropriate input file as well as the algorithm to be executed.    Different operational modes are supported based on the expertise of the end user with regards to the algorithms’ configuration.
-                    Thus, you may select to execute an algorithm with predefined configuration or select an advanced view where you may define the input parameters and the type of the analysis. Upon selection of the dataset and configuration of the algorithm,
-                    you may proceed to the execution phase and receive the corresponding output.  For your convenience, detailed information regarding the usability of each algorithm is provided in appropriate text boxes on your screen.
-          </div>
           <div id="leftside">
             <h1>Start a new analytic process</h1>
               <form id="AnalyticForm" action="/analytics/" method="post" enctype="multipart/form-data"  style="font-family: arial,helvetica,sans-serif;">{% csrf_token %}
               <!--{ { form.as_p } }-->
                  <fieldset>
-                    <p id="category" class="formitem"> Select an algorithm category : {{form.category}}</p>
-
-                    <p id="algorithm" class="formitem" >Select an algorithm  :{{form.algorithm}}   {{form.algorithm.display_algorithm_description}} </p>
-
-                    <p id=description class="formitem">Insert a breve description of the analytic process : {{form.description}} </p>
+                    <p id="category" class="formitem"> Select an algorithm category : {{form.category}}
+                     <img src="/static/images/info-button-orange-small.jpg" alt="category_info" id="category_info" /> 
+		    </p>
+  
+                    <p id="algorithm" class="formitem" >Select an algorithm  :{{form.algorithm}}
+                     <img src="/static/images/info-button-orange-small.jpg" alt="algorithm_info" id="algorithm_info" /> 
+                    </p>
                     
-                    <p id=document class="formitem">Select a dataset : {{form.document}} </p>
+                    <div id="params_description" width="100px" style= "color:#859596"></div>
+                    
+                    <p id=parameters class="formitem">If not satisfied with default parameters, please make you sugestions : {{form.parameters}} </p>
 
-                    <p id="testdocument" class="formitem" style="display: none;" >In case of classification Analysis select the dataset to be classified : {{form.testdocument}} </p>
-
+                    <p id=description class="formitem">Insert a breve description of the analytic process : <img src="/static/images/info-button-orange-small.jpg" alt="analytics_description" id="analytics_description" /> 
+                    {{form.description}} 
+                    </p>
+ 
+                    <div style="border: 2px solid #DADFE1;border-radius: 5px;padding:10px;">
+		      <span id="display_text"></span> | change: <a href="#" id="link" style= "color:#859596"></a>
+		      <img src="/static/images/info-button-orange-small.jpg" alt="analytics_datasets" id="analytics_datasets" /> 
+		      <div id="a">
+			<p id="document" class="formitem">Select a csv or arff file to train the predifined algorithm: {{form.document}} </p>
+			<p id="testdocument" class="formitem" style="display: none;" >Select a csv or arff file to evaluate the predifined algorithm: {{form.testdocument}} </p>
+		      </div>
+		      <div id="b">
+			
+			<p id="id_trainQuery_label" style="float:left;">Select an query to analyze: </p>
+			<input id="id_trainQuery_display" class="formitem" /></br>
+			
+			<p id="id_evaluationQuery_label" style="display: none;float:left;">Select a Datasource Query to evaluate the predifined algorithm: </p>
+			<input id="id_evaluationQuery_display" class="formitem" style="display: none;"/>
+			
+			<p id="trainQuery" class="formitem" style="display: none;">{{form.trainQuery}} </p>
+			<p id="evaluationQuery" class="formitem" style="display: none;">{{form.evaluationQuery}} </p>
+                    </div>  
+		    </div>
+		    </br>
                     <p id="exportFormat" class="formitem" >select an export format: {{form.exportFormat}}</p>
 
                     <input type="submit" class="nicebutton" value="Submit" />
                 </fieldset>
-              </form>
-
+              </form>     
         </div>
-        <div id="algorithm_description" width="300px"></div>
+        
+        <div id="algorithm_description"></div>
+        
+        <div id="category_description"></div>
+        
+        <div id="analytics_description_info" class="analytics-description-hidden">
+        <h1>Analytic Process Description:</h1>
+         Completing the description of the analytic process is not obligatory but very important in order to have a verbose description of what you try to do within analytics tool. </br></br>
+         Some Question that might help you to write a meaningful description are:
+         <ul style="list-style-type:circle">
+	  <li><p style="margin:0px;color:#FC5006;">What is the context of the datasources (queries or csv) that you wish to analyze?</p>(ex. Radon Test Results By Town: Beginning 1987)</li>
+	  <li><p style="margin:0px;color:#FC5006;">Where the datasources are found or how they are created?</p>(The DOH Radon Program contracts with a radon testing laboratory to provide short-term charcoal radon test kits, radon test kit analysis and results to residents. The contract laboratory provides the radon test results to the individual home owner and the DOH Radon Program. All testing data is entered into our database.)</li>
+ 	  <li><p style="margin:0px;color:#FC5006;">What are you plan to do with the results if they are meaninful to you?</p>(ex.From this database, we are able to create radon prevalence maps, design special outreach activities and campaigns, and track the location in the home where the detector was placed.)</li>
+  	  <li><p style="margin:0px;color:#FC5006;">What analysis do you plan to realize and what are you initial hipotesis about the upcoming result?</p>(ex.Run a multiple linear Regression analysis so as to calculate Randon metrics depending on other related parameters such as region, house materials etc....)</li>
+	  <li><p style="margin:0px;color:#FC5006;">How can one get informed more about the analysis topic?</p>(ex.For more information, check out http://www.health.ny.gov/environmental/radiological/radon/radon.htm)</li>
+	 </ul>
+        </div>
+        
+        
+        <div id="analytics_datasets_info" class="analytics-description-hidden">
+        <h1>Tips to have a succesful analytics process:</h1>
+         Keep in mind...:
+         <ul style="list-style-type:circle">
+          <li><p style="margin:0px;color:#FC5006;">	 Make sure you have played with the sample processes in order to get familiarized with the analytics workflow.</p></li>
+          <li><p style="margin:0px;color:#FC5006;">In case of using an algorithm that requires both training and evaluation datasets , Please be sure that both have the same fields at the same order.</p></li>
+	  <li><p style="margin:0px;color:#FC5006;">In case of creating an analytic process that makes some kind of prediction, be sure the field to predict is the last field of your query dataset or the last column of you tabular input format.</p></li>
+	  <li><p style="margin:0px;color:#FC5006;">In case of using a forecasting algorithm make sure dates are the first field of the input dataset/s.</p></li>
+	 </ul>
+        </div>
+        
+        
     </section>
 </content>
 
