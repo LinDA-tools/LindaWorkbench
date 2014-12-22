@@ -197,17 +197,34 @@ var builder = {
                 }
 
                 //check if order
-                if ((p.order_by == "ASC") || (p.order_by == "DESC")) {
+                if ((p.order_by) && (p.order_by.length > 0)) {
 
                     if (this.order_clause == "") {
                         this.order_clause = "ORDER BY";
                     }
 
+                    var v_name = "";
+                    //this.order_clause += ' ' + p.order_by + "(?" + p_name + ')';
                     if (p.uri != 'URI') {
-                        this.order_clause += ' ' + p.order_by + "(?" + p_name + ')';
+                         v_name = "?" + p_name;
                     } else {
-                        this.order_clause += ' ' + p.order_by + "(?" + i_name + ')';
+                         v_name = "?" + i_name;
                     }
+
+                    var new_order_clause = "";
+                    if ((p.order_by == "ASC") || (p.order_by == "DESC")) {
+                        new_order_clause = p.order_by + "(" + v_name + ')';
+                    }
+                    else if ((p.order_by == "NUMBER_ASC") || (p.order_by == "NUMBER_DESC")) {
+                        this.prefixes['xsd'] = "<http://www.w3.org/2001/XMLSchema#>";
+                        new_order_clause = p.order_by.split('_')[1] + "(xsd:decimal(" + v_name + '))';
+                    }
+                    else if ((p.order_by == "DATE_ASC") || (p.order_by == "DATE_DESC")) {
+                        this.prefixes['xsd'] = "<http://www.w3.org/2001/XMLSchema#>";
+                        new_order_clause = p.order_by.split('_')[1] + "(xsd:date(" + v_name + '))';
+                    }
+
+                    this.order_clause += ' ' + new_order_clause;
                 }
 
                 //mark optional properties

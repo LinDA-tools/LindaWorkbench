@@ -3,19 +3,34 @@
             selection: undefined,
             property_selection: undefined,
 
+            has_filters: function(filters) {
+                for(var i=0; i<filters.length; i++) {
+                    if (filters[i] != undefined) {
+                        return true;
+                    }
+                }
+
+                return false;
+            },
+
+            /*Add more height to the workbench if necessary*/
+            reset_height: function(i_num) {
+                var i = $("#class_instance_" + i_num);
+                var o = $("#builder_workspace");
+                if (i.position().top > o.height() - i.height()) { //when reaching bottom, make sure to enlarge the workspace height
+                    o.height(i.position().top + i.height() + 50);
+                }
+                arrows.ctx.height = o.height();
+                arrows.draw();
+            },
+
             /*Adds an instance of a class*/
             add_instance: function(dt_name, uri, x,y, default_properties) {
                 var new_id = this.instances.length;
                 var new_instance = $.parseHTML('<div id="class_instance_' + new_id + '" class="class-instance" data-n="' + new_id + '"style="left: ' + x + 'px; top: ' + y + 'px;"><div class="title"><h3>' + uri_to_label(uri) + '</h3><span class="uri">&lt;' + uri + '&gt;</span><span class="delete" data-about="' + new_id + '">x</span><span class="dataset">' + dt_name + '</span></div><div class="properties"><span class="loading">Loading properties...</span></div></div>');
                 $("#builder_workspace").append(new_instance);
                 $(new_instance).draggable({handle: '.title', cursor: 'move', drag: function() {
-                    var i = $(this);
-                    var o = $("#builder_workspace");
-                    if (i.position().top > o.height() - i.height()) { //when reaching bottom, make sure to enlarge the workspace height
-                        o.height(o.height() + 50);
-                    }
-                    arrows.ctx.height = o.height();
-                    arrows.draw();
+                    builder_workbench.reset_height(new_id);
                 }});
                 this.bring_to_front(new_instance);
 
@@ -83,13 +98,15 @@
                                         $(sel + "span:nth-of-type(4) select").val(inst.selected_properties[k].order_by);
                                     }
 
-                                    if (inst.selected_properties[k].filters.length > 0) { //add the filters tick
+                                    if (builder_workbench.has_filters(inst.selected_properties[k].filters)) { //add the filters tick
                                         $(sel + "span:nth-of-type(5)").html('<span class="ui-icon ui-icon-check"></span>Edit')
                                     }
 
 
                                 }
                             }
+
+                            builder_workbench.reset_height(new_id);
                         }
 
                         builder.reset();
@@ -137,7 +154,8 @@
                 }
 
                 var property_object_str = '<div class="property-row" ' + data_i_n + '>' + delete_property + '<span class="property-show"><input type="checkbox" checked="checked"/></span><span>';
-                property_object_str += uri_to_label(p_object.uri) + '</span><span class="property-optional"><input  type="checkbox" ' + optional_disabled + ' /></span><span class="property-order-by"><select><option value=""></option><option value="ASC">ASC</option><option value="DESC">DESC</option></select></span><span>Edit</span><span>+Add connection</span></div>';
+                var order_select = '<select><option value=""></option><option value="ASC">ASC</option><option value="DESC">DESC</option><option value="NUMBER_ASC">ASC (number)</option><option value="NUMBER_DESC">DESC (number)</option><option value="DATE_ASC">ASC (date)</option>><option value="DATE_DESC">DESC (date)</option></select>'
+                property_object_str += uri_to_label(p_object.uri) + '</span><span class="property-optional"><input  type="checkbox" ' + optional_disabled + ' /></span><span class="property-order-by">' + order_select + '</span><span>Edit</span><span>+Add connection</span></div>';
                 var property_object = $.parseHTML(property_object_str);
 
                 var id = "#class_instance_" + i_num;
