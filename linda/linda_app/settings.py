@@ -128,24 +128,6 @@ LINDA_SERVER_IP = 'http://107.170.70.175'
 # LinDA url
 LINDA_HOME = 'http://localhost:8000/'
 
-# Vocabulary Repository
-# In local business installations it will be different than the LINDA_SERVER_IP
-VOCABULARY_REPOSITORY = 'http://107.170.70.175:8000/'
-
-# Maximum days between updates are run
-UPDATE_FREEQUENCY_DAYS = 7
-
-# LinDA reposirtory in Sesamy (OpenRDF) url, in order to access private datasources
-SESAME_LINDA_URL = LINDA_SERVER_IP + ':8080/openrdf-sesame/repositories/linda/'
-
-# LinDA private resources SparQL endpoint
-PRIVATE_SPARQL_ENDPOINT = LINDA_SERVER_IP + ':8080/openrdf-sesame/repositories/linda'
-
-# QueryBuilder URL
-QUERY_BUILDER_SERVER = LINDA_SERVER_IP + ':3100/'
-
-# Rdf2any Server
-RDF2ANY_SERVER = LINDA_SERVER_IP + ':8081'
 
 INSTALLED_APPS = (
     'linda_app',

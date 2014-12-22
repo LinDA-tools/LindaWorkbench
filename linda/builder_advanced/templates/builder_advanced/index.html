@@ -51,6 +51,10 @@
 {% endblock %}
 
 {% block scripts %}
+    <script>
+        rdf2any_server = "{{RDF2ANY_SERVER}}";
+	</script>
+
     {% include "builder_advanced/ace-editor.html" %}
 
     <script src="/static/js/jquery-ui.min.js"></script>

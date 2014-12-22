@@ -33,6 +33,7 @@ class VocabularyUpdateForm(forms.ModelForm):
 
 from haystack.forms import ModelSearchForm
 
+
 class AutocompleteModelSearchForm(ModelSearchForm):
 
     def search(self):
@@ -46,3 +47,9 @@ class AutocompleteModelSearchForm(ModelSearchForm):
             sqs = sqs.load_all()
 
         return sqs
+
+
+class ConfigurationForm(forms.ModelForm):
+    class Meta:
+        model = Configuration
+        exclude = ()

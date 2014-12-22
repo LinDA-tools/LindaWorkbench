@@ -15,7 +15,7 @@ from lists import *
 from athumb.fields import ImageWithThumbsField
 from pattern.en import pluralize
 
-from settings import RDF2ANY_SERVER, LINDA_HOME
+from settings import LINDA_HOME
 
 User.profile = property(lambda u: UserProfile.objects.get_or_create(user=u)[0])
 
@@ -74,7 +74,8 @@ def get_label_by_uri(uri):
         label = label[start_pos:]
     else:
         label = label[start_pos:end_pos]
-    label = re.sub(r'([a-z](?=[A-Z])|[A-Z](?=[A-Z][a-z]))', r'\1 ', label)  # insert space for words written in camelCase
+    label = re.sub(r'([a-z](?=[A-Z])|[A-Z](?=[A-Z][a-z]))', r'\1 ',
+                   label)  # insert space for words written in camelCase
     return re.sub('_', ' ', label)
 
 
@@ -189,9 +190,12 @@ class Vocabulary(models.Model):
             else:
                 description = ""
             try:
-                cls = VocabularyClass.objects.create(vocabulary=self, uri=row[0].encode("utf-8"), label=label.encode("utf-8"), description=description.encode("utf-8"))
+                cls = VocabularyClass.objects.create(vocabulary=self, uri=row[0].encode("utf-8"),
+                                                     label=label.encode("utf-8"),
+                                                     description=description.encode("utf-8"))
             except UnicodeEncodeError:
-                cls = VocabularyClass.objects.create(vocabulary=self, uri=row[0], label=get_label_by_uri(row[0]), description="")
+                cls = VocabularyClass.objects.create(vocabulary=self, uri=row[0], label=get_label_by_uri(row[0]),
+                                                     description="")
             cls.save()
 
         # Run a query to retrieve all properties
@@ -240,9 +244,14 @@ class Vocabulary(models.Model):
             else:
                 description = ""
             try:
-                prp = VocabularyProperty.objects.create(vocabulary=self, uri=row[0].encode("utf-8"), domain=row[1].encode("utf-8"), range=row[2].encode("utf-8"), label=label.encode("utf-8"), description=description.encode("utf-8"), parent_uri=row[5])
+                prp = VocabularyProperty.objects.create(vocabulary=self, uri=row[0].encode("utf-8"),
+                                                        domain=row[1].encode("utf-8"), range=row[2].encode("utf-8"),
+                                                        label=label.encode("utf-8"),
+                                                        description=description.encode("utf-8"), parent_uri=row[5])
             except UnicodeEncodeError:
-                prp = VocabularyProperty.objects.create(vocabulary=self, uri=row[0], domain=row[1], range=row[2], label=get_label_by_uri(row[0]), description="", parent_uri=row[5])
+                prp = VocabularyProperty.objects.create(vocabulary=self, uri=row[0], domain=row[1], range=row[2],
+                                                        label=get_label_by_uri(row[0]), description="",
+                                                        parent_uri=row[5])
             prp.save()
 
     def __unicode__(self):
@@ -252,6 +261,7 @@ class Vocabulary(models.Model):
 # Update classes and vocabularies on new vocabulary save
 def on_vocabulary_save(sender, instance, created, **kwargs):
     instance.make_classes_properties()
+
 
 post_save.connect(on_vocabulary_save, sender=Vocabulary)
 
@@ -367,6 +377,7 @@ class VocabularyProperty(models.Model):  # A property inside an RDF vocabulary
             return '/property/' + str(parent_object.id) + '/'
         else:
             return self.parent_uri
+
 
 Vocabulary.property = property(lambda d: VocabularyProperty.objects.get_or_create(vocabulary=d)[0])
 
@@ -502,8 +513,8 @@ def create_query_description(dtname, query):
 def datasource_from_endpoint(endpoint):
     if endpoint == LINDA_HOME + "sparql/all/":
         return DatasourceDescription(title="All private data dources", name="all", is_public=False
-                                                       , uri=LINDA_HOME + "sparql/all/", createdOn=datetime.today(),
-                                                       updatedOn=datetime.today())
+                                     , uri=LINDA_HOME + "sparql/all/", createdOn=datetime.today(),
+                                     updatedOn=datetime.today())
     for datasource in DatasourceDescription.objects.all():
         if datasource.get_endpoint() == endpoint:
             return datasource
@@ -520,8 +531,34 @@ class Query(models.Model):
     design = models.ForeignKey(Design, blank=True, null=True)  # the json object produced in the Query Designer
 
     def csv_link(self):
-        return RDF2ANY_SERVER + '/rdf2any/v1.0/convert/csv-converter.csv?dataset=' + self.endpoint + '&query=' \
-            + urllib.quote_plus(self.sparql)
+        return get_configuration().rdf2any_server + '/rdf2any/v1.0/convert/csv-converter.csv?dataset=' + self.endpoint + '&query=' \
+               + urllib.quote_plus(self.sparql)
 
     def get_datasource(self):
         return datasource_from_endpoint(self.endpoint)
+
+
+class Configuration(models.Model):
+    # Vocabulary Repository
+    # In local business installations it will be different than the LINDA_SERVER_IP
+    vocabulary_repository = models.URLField(blank=False, null=False, default='http://107.170.70.175:8000/')
+    # LinDA repository in Sesame (OpenRDF) url, in order to access private data sources
+    sesame_url = models.URLField(blank=False, null=False,
+                                 default='http://107.170.70.175:8080/openrdf-sesame/repositories/linda/')
+    # LinDA private resources SparQL endpoint
+    private_sparql_endpoint = models.URLField(blank=False, null=False,
+                                              default='http://107.170.70.175:8080/openrdf-sesame/repositories/linda')
+    # QueryBuilder URL
+    query_builder_server = models.URLField(blank=False, null=False, default='http://107.170.70.175:3100/')
+    # Rdf2any Server
+    rdf2any_server = models.URLField(blank=False, null=False, default='http://107.170.70.175:8081')
+    # R2R Server
+    r2r_server = models.URLField(blank=False, null=False, default='http://107.170.70.175:3000/')
+
+
+def get_configuration():
+    configs = Configuration.objects.all()
+    if configs:
+        return configs[0]
+    else:
+        return Configuration.objects.create()

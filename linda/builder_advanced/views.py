@@ -2,23 +2,25 @@ from datetime import datetime
 import json
 import urllib
 from django.http import Http404, HttpResponse
-from django.shortcuts import render, render_to_response
+from django.shortcuts import render
 from django.utils.http import urlquote
 import requests
-from linda_app.models import DatasourceDescription, VocabularyProperty, Query
+from linda_app.models import DatasourceDescription, VocabularyProperty, Query, get_configuration
 
-from linda_app.settings import PRIVATE_SPARQL_ENDPOINT, RDF2ANY_SERVER, LINDA_HOME
+from linda_app.settings import LINDA_HOME
 
 
 def designer_defaults():
     params = {
-        'datasources': list(DatasourceDescription.objects.all())
+        'datasources': list(DatasourceDescription.objects.all()),
+        'RDF2ANY_SERVER': get_configuration().rdf2any_server
     }
 
     params['datasources'].insert(0,
                                  DatasourceDescription(title="All private data dources", name="all", is_public=False
                                                        , uri=LINDA_HOME + "sparql/all/", createdOn=datetime.today(),
                                                        updatedOn=datetime.today()))
+
     return params
 
 
@@ -52,7 +54,7 @@ def get_endpoint_from_dt_name(dt_name):
 
         return datasources[0].get_endpoint()
     else:
-        return PRIVATE_SPARQL_ENDPOINT
+        return get_configuration().private_sparql_endpoint
 
 
 # Execute a SparQL query on an endpoint and return json response

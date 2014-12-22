@@ -116,32 +116,6 @@ body h1, h2 {
     border-radius: 5px;
 }
 
-/* Responsive */
-/*
-@media only screen and (min-width: 960px) {
-    .wrapper {
-        width: 960px;
-    }
-}
-
-@media only screen and (min-width: 760px) and (max-width: 959px) {
-    .wrapper {
-        width: 760px;
-    }
-}
-
-@media only screen and (min-width: 480px) and (max-width: 760px) {
-    .wrapper {
-        width: 480px;
-    }
-}
-
-@media only screen and (max-width: 479px) {
-    .wrapper {
-        width: 300px;
-    }
-}
-*/
 .wrapper {width: 100%;}
 
 /* Header */
@@ -1685,6 +1659,12 @@ input, textarea {
     width: 252px;
 }
 
+/*Settings*/
+.settings .main input {
+    display: block;
+    width: 300px;
+}
+
 /*Welcome message*/
 .welcome {
     width: calc(100% - 60px);
@@ -1704,6 +1684,16 @@ input, textarea {
     display: inline-block;
     vertical-align: top;
     padding: 0 5px;
+}
+
+@media only screen and (max-width: 1100px) {
+    .welcome-message {
+        width: 100%;
+    }
+
+    .welcome-video {
+        margin-left: calc(50% - 175px);
+    }
 }
 
 .welcome-step {

@@ -48,7 +48,7 @@ SPARQL = {
     },
     download : {
         rdb : function(){
-            var query = $("#txt_sparql_query").val();
+            var query = SPARQL.get_query();
             if(QueryBuilder.properties.will_show_properties_in_preview() == true){
                 $("#btn_show_checked_properties_no").click();
                 query = $("#txt_sparql_query").val();
@@ -63,7 +63,7 @@ SPARQL = {
             window.open(download_url);
         },
         csv : function(){
-            var query = $("#txt_sparql_query").val();
+            var query = SPARQL.get_query();
             if(QueryBuilder.properties.will_show_properties_in_preview() == true){
                 $("#btn_show_checked_properties_no").click();
                 query = $("#txt_sparql_query").val();
@@ -82,30 +82,27 @@ SPARQL = {
         },
         json :{
             sesame : function(){
-                var query = $("#txt_sparql_query").val();
+                var query = SPARQL.get_query();
                 if(QueryBuilder.properties.will_show_properties_in_preview() == false){
                     $("#btn_show_checked_properties_yes").click();
-                    query = $("#txt_sparql_query").val();
                     $("#btn_show_checked_properties_no").click();
                 }
                 var download_url = Utils.rdf2any.server+Utils.rdf2any.actions.convert+"json?dataset="+QueryBuilder.datasets.get_selected()+"&query="+encodeURIComponent(query)+"&json_output_format=sesame";
                 window.open(download_url);
             },
             virtuoso : function(){
-                var query = $("#txt_sparql_query").val();
+                var query = SPARQL.get_query();
                 if(QueryBuilder.properties.will_show_properties_in_preview() == false){
                     $("#btn_show_checked_properties_yes").click();
-                    query = $("#txt_sparql_query").val();
                     $("#btn_show_checked_properties_no").click();
                 }
                 var download_url = Utils.rdf2any.server+Utils.rdf2any.actions.convert+"json?dataset="+QueryBuilder.datasets.get_selected()+"&query="+encodeURIComponent(query);
                 window.open(download_url);
             },
             for_class : function(){
-                var query = $("#txt_sparql_query").val();
+                var query = SPARQL.get_query();
                 if(QueryBuilder.properties.will_show_properties_in_preview() == true){
                     $("#btn_show_checked_properties_no").click();
-                    query = $("#txt_sparql_query").val();
                     $("#btn_show_checked_properties_yes").click();
                 }
                 var download_url = Utils.rdf2any.server+Utils.rdf2any.actions.convert+"json?dataset="+QueryBuilder.datasets.get_selected()+"&query="+encodeURIComponent(query)+"&for_class="+QueryBuilder.classes.get_selected_class();
@@ -115,7 +112,7 @@ SPARQL = {
 
         },
         configured : function(){
-            var query = $("#txt_sparql_query").val();
+            var query = SPARQL.get_query();
             if(QueryBuilder.properties.will_show_properties_in_preview() == true){
                 $("#btn_show_checked_properties_no").click();
                 query = $("#txt_sparql_query").val();

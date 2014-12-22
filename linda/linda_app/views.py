@@ -22,8 +22,7 @@ from forms import *
 from rdflib import Graph
 from datetime import datetime
 
-from settings import SESAME_LINDA_URL, LINDA_HOME, RDF2ANY_SERVER, PRIVATE_SPARQL_ENDPOINT, QUERY_BUILDER_SERVER, \
-    VOCABULARY_REPOSITORY, UPDATE_FREEQUENCY_DAYS
+from settings import LINDA_HOME
 from passwords import MS_TRANSLATOR_UID, MS_TRANSLATOR_SECRET
 
 
@@ -56,6 +55,7 @@ def sparql(request):
                                                        , uri=LINDA_HOME + "sparql/all/", createdOn=datetime.today(),
                                                        updatedOn=datetime.today()))
     params['page'] = 'Sparql'
+    params['RDF2ANY_SERVER'] = get_configuration().rdf2any_server
 
     # get query parameter
     if request.GET.get('q_id'):
@@ -852,8 +852,8 @@ def queryBuilder(request):
     if 'dt_id' in request.GET:
         params['datasource_default'] = DatasourceDescription.objects.filter(name=request.GET.get('dt_id'))[0]
 
-    params['PRIVATE_SPARQL_ENDPOINT'] = PRIVATE_SPARQL_ENDPOINT
-    params['RDF2ANY_SERVER'] = RDF2ANY_SERVER
+    params['PRIVATE_SPARQL_ENDPOINT'] = get_configuration().private_sparql_endpoint
+    params['RDF2ANY_SERVER'] = get_configuration().rdf2any_server
     params['mode'] = "builder"
     params['page'] = 'QueryBuilder'
 
@@ -1004,20 +1004,20 @@ def api_datasource_create(request):
 
             # make REST api call to add rdf data
             headers = {'accept': 'application/rdf+xml', 'content-type': rdf_format, 'charset': 'utf-8'}
-            callAdd = requests.post(SESAME_LINDA_URL + 'rdf-graphs/' + sname, headers=headers,
+            callAdd = requests.post(get_configuration().sesame_url + 'rdf-graphs/' + sname, headers=headers,
                                     data=data)
 
             if callAdd.text == "":
                 # create datasource description
                 DatasourceDescription.objects.create(title=request.POST.get("title"),
                                                               name=sname,
-                                                              uri=SESAME_LINDA_URL + "rdf-graphs/" + sname,
+                                                              uri=get_configuration().sesame_url + "rdf-graphs/" + sname,
                                                               createdOn=datetime.now(), updatedOn=datetime.now())
 
                 results['status'] = '200'
                 results['message'] = 'Datasource created succesfully.'
                 results['name'] = sname
-                results['uri'] = SESAME_LINDA_URL + "rdf-graphs/" + sname
+                results['uri'] = get_configuration().sesame_url + "rdf-graphs/" + sname
             else:
                 results['status'] = callAdd.status_code
                 results['message'] = 'Error storing rdf data: ' + callAdd.text
@@ -1045,7 +1045,7 @@ def api_datasource_get(request, dtname):
 
         # make REST api call to update graph
         headers = {'accept': rdf_format, 'content-type': 'application/rdf+xml'}
-        callReplace = requests.get(SESAME_LINDA_URL + 'rdf-graphs/' + dtname, headers=headers)
+        callReplace = requests.get(get_configuration().sesame_url + 'rdf-graphs/' + dtname, headers=headers)
 
         results['status'] = '200'
         results['message'] = "Datasource retrieved successfully"
@@ -1087,7 +1087,7 @@ def api_datasource_replace(request, dtname):
 
             # make REST api call to update graph
             headers = {'accept': 'application/rdf+xml', 'content-type': rdf_format}
-            callReplace = requests.put(SESAME_LINDA_URL + 'rdf-graphs/' + dtname, headers=headers,
+            callReplace = requests.put(get_configuration().sesame_url + 'rdf-graphs/' + dtname, headers=headers,
                                        data=data)
 
             if callReplace.text == "":
@@ -1123,7 +1123,7 @@ def api_datasource_delete(request, dtname):
         # check if datasource exists
         if DatasourceDescription.objects.filter(name=dtname).exists():
             # make REST api call to delete graph
-            callDelete = requests.delete(SESAME_LINDA_URL + 'rdf-graphs/' + dtname)
+            callDelete = requests.delete(get_configuration().sesame_url + 'rdf-graphs/' + dtname)
 
             if callDelete.text == "":
                 results['status'] = '200'
@@ -1201,7 +1201,7 @@ def datasource_sparql(request, dtname):  # Acts as a "fake" seperate sparql endp
 
     # get query results
     data = requests.get(
-        PRIVATE_SPARQL_ENDPOINT + "?Accept=" + urlquote("application/sparql-results+" + result_format) + "&query=" + query_enc).text
+        get_configuration().private_sparql_endpoint + "?Accept=" + urlquote("application/sparql-results+" + result_format) + "&query=" + query_enc).text
 
     # return the response
     return HttpResponse(data, "application/json")
@@ -1410,3 +1410,17 @@ def delete_vocabulary_data(request, pk):
     vocab.delete()
 
     return HttpResponse('')  # return OK response
+
+
+# Update configuration
+class ConfigurationUpdateView(UpdateView):
+    form_class = ConfigurationForm
+    model = Configuration
+    template_name = 'config.html'
+    context_object_name = 'config'
+
+    def get_success_url(self):
+        return '/settings'
+
+    def get_object(self):
+        return get_configuration()

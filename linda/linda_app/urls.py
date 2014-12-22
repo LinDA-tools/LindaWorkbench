@@ -17,6 +17,7 @@ urlpatterns = patterns('',
                        url(r'^$', views.index, name='home'),
                        url(r'^terms-of-use/$', views.terms, name='terms'),
                        url(r'^community/$', login_required(views.UserListView.as_view()), name='community'),
+                       url(r'^settings/$', login_required(views.ConfigurationUpdateView.as_view()), name='settings'),
 
                        # Endpoints
                        url(r'^sparql/$', views.sparql, name='sparql'),
