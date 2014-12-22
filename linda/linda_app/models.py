@@ -15,7 +15,7 @@ from lists import *
 from athumb.fields import ImageWithThumbsField
 from pattern.en import pluralize
 
-from settings import LINDA_HOME
+from settings import LINDA_HOME, LINDA_SERVER_IP
 
 User.profile = property(lambda u: UserProfile.objects.get_or_create(user=u)[0])
 
@@ -541,21 +541,23 @@ class Query(models.Model):
 class Configuration(models.Model):
     # Vocabulary Repository
     # In local business installations it will be different than the LINDA_SERVER_IP
-    vocabulary_repository = models.URLField(blank=False, null=False, default='http://107.170.70.175:8000/')
+    vocabulary_repository = models.URLField(blank=False, null=False, default=LINDA_SERVER_IP + ':8000/')
     # LinDA repository in Sesame (OpenRDF) url, in order to access private data sources
     sesame_url = models.URLField(blank=False, null=False,
-                                 default='http://107.170.70.175:8080/openrdf-sesame/repositories/linda/')
+                                 default=LINDA_SERVER_IP + ':8080/openrdf-sesame/repositories/linda/')
     # LinDA private resources SparQL endpoint
     private_sparql_endpoint = models.URLField(blank=False, null=False,
-                                              default='http://107.170.70.175:8080/openrdf-sesame/repositories/linda')
+                                              default=LINDA_SERVER_IP + ':8080/openrdf-sesame/repositories/linda')
     # QueryBuilder URL
-    query_builder_server = models.URLField(blank=False, null=False, default='http://107.170.70.175:3100/')
+    query_builder_server = models.URLField(blank=False, null=False, default=LINDA_SERVER_IP + ':3100/')
     # Rdf2any Server
-    rdf2any_server = models.URLField(blank=False, null=False, default='http://107.170.70.175:8081')
+    rdf2any_server = models.URLField(blank=False, null=False, default=LINDA_SERVER_IP + ':8081')
     # R2R Server
-    r2r_server = models.URLField(blank=False, null=False, default='http://107.170.70.175:3000/')
+    r2r_server = models.URLField(blank=False, null=False, default=LINDA_SERVER_IP + ':3000/')
 
 
+# returns the configuration object
+# creates default configuration if it does not exist
 def get_configuration():
     configs = Configuration.objects.all()
     if configs:
