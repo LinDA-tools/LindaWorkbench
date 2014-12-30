@@ -1954,6 +1954,7 @@ input, textarea {
 
 #tree_toolbar .class-wrapper {
     white-space: nowrap;
+    padding-right: 30px;
 }
 
 #tree_toolbar .tree-toolbar-open, #tree_toolbar .tree-toolbar-close {

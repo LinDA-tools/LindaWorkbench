@@ -64,7 +64,7 @@
                         $(new_instance).find(".properties").html('<div class="property-table"><div class="header-row"><div></div><span>Show</span><span>Property</span><span>Optional</span><span>Order by</span><span>Filters</span><span>Foreign</span></div></div>');
                         $(new_instance).find(".properties").append('<div class="property-control"></div>');
                         var prop_control = $(new_instance).find(".properties .property-control");
-                        prop_control.append('Found ' + (instance_object.properties.length-1).toLocaleString() + ' different properties in data.<span class="sort-frequency">Order by frequency</span><br />');
+                        prop_control.append('Found ' + (instance_object.properties.length-1).toLocaleString() + ' properties. <span class="sort-frequency">Order by frequency</span><br />');
 
                         try {
                             prop_control.append(select);
@@ -227,6 +227,10 @@
 
         /*Order properties by frequency*/
         $("body").on('click', '.class-instance .sort-frequency', function() {
+            $(this).html("Ordering...");
+            $(this).removeClass("sort-frequency");
+            $(this).addClass("loading");
+
             var ord = $(this);
             var n = $(this).parent().parent().parent().data("n");
             var select = $(this).parent().find("select");

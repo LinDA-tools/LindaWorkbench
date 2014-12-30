@@ -66,6 +66,8 @@
                 } else if (this.all_classes_properties.length>limit) {
                     $("#{{toolbar_id}} .active-classes").append('<span class="info">Showing ' + (offset+1) + '-' + (offset+added) + '/' + total.toLocaleString() + ' terms</span>');
                 }
+
+                $("#tree_toolbar").css('top', $("#toolbar").position().top + $("#toolbar").height() + 30);
             }
         };
 
@@ -75,6 +77,7 @@
                 if (name == "") return;
 
                 $("#{{toolbar_id}} .active-classes").html('<span class="loading">Loading classes and properties...</span>');
+                $("#tree_toolbar").css('top', $("#toolbar").position().top + $("#toolbar").height() + 30);
                 {{toolbar_id}}.all_classes_properties = [];
 
                 $.ajax({ //make request for properties
