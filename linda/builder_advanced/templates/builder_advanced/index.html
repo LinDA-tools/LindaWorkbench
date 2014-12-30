@@ -28,11 +28,16 @@
         <canvas id="builder-canvas"></canvas>
     </div>
 
-     <div class="row qb-equivalent-query-main" style="display:none;">
-            <div class="col-md-12">
-                {% include 'query-builder/sparql-query-editor.html' %}
-            </div>
+    <div id="tree_toolbar">
+        <span class="ui-icon tree-toolbar-close ui-icon-triangle-1-e"></span>
+        <div id="tree_toolbar_objects"></div>
+    </div>
+
+    <div class="row qb-equivalent-query-main" style="display:none;">
+        <div class="col-md-12">
+            {% include 'query-builder/sparql-query-editor.html' %}
         </div>
+    </div>
 
     {% with in_query_builder_action=True %}
         {% include 'query-builder/search-results.html' %}

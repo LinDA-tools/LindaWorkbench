@@ -86,6 +86,34 @@ def active_classes(request, dt_name):
 
 
 # Get active classes in a data source
+def active_root_classes(request, dt_name):
+    # get the endpoint of the query
+    endpoint = get_endpoint_from_dt_name(dt_name)
+
+    # query to get all classes with at least one instance
+    query = "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nSELECT DISTINCT ?class ((count(?x)) AS ?cnt) WHERE {?x a ?class. FILTER NOT EXISTS {?class rdfs:subClassOf ?parentClass.} } GROUP BY ?class ORDER BY DESC (?cnt)"
+
+    return sparql_query_json(endpoint, query)
+
+
+# Get active subclasses in a data source
+def active_subclasses(request, dt_name):
+    # get parent class
+    if not request.GET.get('parent_class'):
+        raise Http404
+
+    parent_class = urllib.unquote(request.GET.get('parent_class'))
+
+    # get the endpoint of the query
+    endpoint = get_endpoint_from_dt_name(dt_name)
+
+    # query to get all classes with at least one instance
+    query = "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nSELECT DISTINCT ?class (count(?x) AS ?cnt) WHERE {?x a ?class. ?class rdfs:subClassOf <" + parent_class + ">. } GROUP BY ?class ORDER BY DESC (?cnt)"
+
+    return sparql_query_json(endpoint, query)
+
+
+# Get active object properties in a data source
 def object_properties(request, dt_name):
     # get the endpoint of the query
     endpoint = get_endpoint_from_dt_name(dt_name)
@@ -109,7 +137,7 @@ def active_class_properties(request, dt_name):
 
     # query to get all properties of a class with at least one instance
     if request.GET.get('order'):
-        query = "SELECT DISTINCT ?property (count(?o) AS ?cnt) WHERE {?x a <" + class_uri + ">. ?x ?property ?o } GROUP BY ?property ORDER BY DESC(?cnt)"
+        query = "SELECT DISTINCT ?property (count(?x) AS ?cnt) WHERE {?x a <" + class_uri + ">. ?x ?property ?o } GROUP BY ?property ORDER BY DESC(?cnt)"
     else:
         query = "SELECT DISTINCT ?property WHERE {?x a <" + class_uri + ">. ?x ?property ?o }"
 

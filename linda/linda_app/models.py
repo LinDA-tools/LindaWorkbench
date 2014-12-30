@@ -1,16 +1,13 @@
 from datetime import datetime
 import urllib
-
 from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save, post_delete
 from django.template.defaultfilters import slugify, random
-
 from rdflib import Graph, OWL, RDFS
 from rdflib.util import guess_format
 import re
 from builder_advanced.models import Design
-
 from lists import *
 from athumb.fields import ImageWithThumbsField
 from pattern.en import pluralize

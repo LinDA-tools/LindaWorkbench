@@ -1,4 +1,13 @@
 <div class="row" id="sparql_results_container" style="display:none;">
+        <div id="sparql_result_paginator">
+            <div class="results-prev-container">
+            </div>
+            <div class="results-cur-container">
+            </div>
+            <div class="results-next-container">
+            </div>
+        </div>
+
         <div class="col-md-12" style="margin-top:20px;">
             <div class="panel panel-default" style="overflow-x:scroll;">
                 <div class="panel-heading">
@@ -115,6 +124,6 @@
 
 {%if in_query_builder_action %}
   <script>
-    document.getElementById('configured_template_files').addEventListener('change', QueryBuilder.convert.configured.handle_file_upload, false);
+    //document.getElementById('configured_template_files').addEventListener('change', QueryBuilder.convert.configured.handle_file_upload, false);
   </script>
 {% endif %}

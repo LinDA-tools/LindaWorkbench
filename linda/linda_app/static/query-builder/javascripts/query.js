@@ -46,7 +46,7 @@ this.display_sparql_row_entry = function(data) {
   }
 };
 
-this.execute_sparql_query = function() {
+this.execute_sparql_query = function(offset) {
   if (SPARQL.textbox.is_valid()) {
     show_loading();
     $("#sparql_results_container").hide();
@@ -58,7 +58,8 @@ this.execute_sparql_query = function() {
     }
     $.post(get_server_address() + "/query/execute_sparql", {
       query: q,
-      dataset: QueryBuilder.datasets.get_selected()
+      dataset: QueryBuilder.datasets.get_selected(),
+      offset: offset
     }, function(data) {
       var result_columns, result_rable_rows, result_rows, result_table, result_table_header, row_counter;
       if (data.error !== void 0) {
@@ -112,7 +113,7 @@ this.execute_sparql_query = function() {
         row_counter = 0;
         while (row_counter < result_rows.length) {
           row_counter++;
-          result_rable_rows = "<tr><td>" + row_counter.toString() + "</td>";
+          result_rable_rows = "<tr><td>" + (row_counter + offset).toString() + "</td>";
           $.each(result_columns, function(key, col) {
             return result_rable_rows += display_sparql_row_entry(result_rows[row_counter - 1][col]);
           });

@@ -11,7 +11,7 @@
             editor.setTheme("ace/theme/monokai");
             editor.setShowPrintMargin(false);
             editor.getSession().setUseWrapMode(true);
-            editor.$blockScrolling = Infinity
+            editor.$blockScrolling = Infinity;
 
             var SparqlMode = require("ace/mode/sparql").Mode;
             editor.getSession().setMode(new SparqlMode());

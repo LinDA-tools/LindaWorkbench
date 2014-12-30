@@ -18,9 +18,10 @@
                 var o = $("#builder_workspace");
                 if (i.position().top > o.height() - i.height()) { //when reaching bottom, make sure to enlarge the workspace height
                     o.height(i.position().top + i.height() + 50);
+                    $("#tree_toolbar_objects").height(o.height() - 20);
+                    arrows.ctx.height = o.height();
+                    arrows.draw();
                 }
-                arrows.ctx.height = o.height();
-                arrows.draw();
             },
 
             /*Adds an instance of a class*/
@@ -159,6 +160,8 @@
 
                 var id = "#class_instance_" + i_num;
                 $(id + " .property-table").append(property_object);
+
+                builder_workbench.reset_height($(id));
                 builder.reset();
 
                 if (p_object.uri != "URI") {

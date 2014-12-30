@@ -15,6 +15,9 @@ urlpatterns = patterns('',
 
                        # API calls
                        url(r'^api/active_classes/(?P<dt_name>[\w-]+)/$', views.active_classes),
+                       url(r'^api/active_root_classes/(?P<dt_name>[\w-]+)/$', views.active_root_classes),
+                       url(r'^api/active_subclasses/(?P<dt_name>[\w-]+)/$', views.active_subclasses),
+
                        url(r'^api/object_properties/(?P<dt_name>[\w-]+)/$', views.object_properties),
 
                        url(r'^api/active_class_properties/(?P<dt_name>[\w-]+)/$',

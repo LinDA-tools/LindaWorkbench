@@ -137,10 +137,195 @@
             }
         });
 
+        /*On class cancel drag*/
+        $("body").on('mouseup','.toolbar', function(e) {
+            builder_workbench.selection = undefined;
+        });
+
         /*On toolbar prev & next*/
          $("body").on('click','.prev-next-classes-button', function() {
             var offset = $(this).data('offset');
             {{toolbar_id}}.show_classes($( '#{{toolbar_id}} > input[type="search"]' ).val(), offset);
+        });
+</script>
+
+<script>
+    /*Load root classes*/
+    $( "#{{toolbar_id}} > select" ).change(function() {
+        var name = $(this).val();
+        if (name == "") return;
+
+        $('#tree_toolbar_objects').empty();
+
+        TreeObjects = [];
+
+        $.ajax({ //make request for classes
+            url: ADVANCED_BUILDER_API_URI + "active_root_classes/" +  name + "/",
+            type: "GET",
+
+            success: function(data, textStatus, jqXHR) {
+                var bindings = data.results.bindings;
+
+                for (var i=0; i<bindings.length; i++) { //add all classes
+                    var class_uri = bindings[i].class.value;
+                    var instance_cnt = bindings[i].cnt.value;
+
+                    var id = 'tree_class_' + i;
+                    var text = uri_to_label(class_uri) + ' (' + Number(instance_cnt).toLocaleString() + ')';
+                    $("#tree_toolbar_objects").append('<div id="' + id + '" class="class-wrapper"><span class="ui-icon ui-icon-carat-1-e arrow closed unset"></span><span class="class">' + text + '</span></div>');
+                    TreeObjects[id] = encodeURIComponent(class_uri);
+                }
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.log(textStatus + ': ' + errorThrown);
+            }
+        });
+    });
+
+        /*Open a class*/
+        $("#tree_toolbar").on('click', '.arrow.closed', function(e) {
+            $(this).removeClass('closed');
+            $(this).addClass('open');
+
+            $(this).removeClass('ui-icon-carat-1-e');
+            $(this).addClass('ui-icon-carat-1-s');
+
+            $(this).parent().find(".class-contents").show();
+        });
+
+        /*Close a class*/
+        $("#tree_toolbar").on('click', '.arrow.open', function(e) {
+            $(this).removeClass('open');
+            $(this).addClass('closed');
+
+            $(this).removeClass('ui-icon-carat-1-s');
+            $(this).addClass('ui-icon-carat-1-e');
+
+            $(this).parent().find(".class-contents").hide();
+        });
+
+        /*Dynamically load subclasses and properties*/
+        $("#tree_toolbar").on('click', '.arrow.closed.unset', function(e) {
+            var parent_id = $(this).parent().attr('id');
+            var parent_uri = TreeObjects[parent_id];
+
+            $(this).removeClass('unset');
+            $(this).addClass('loading');
+            var arrow = $(this);
+
+            $(this).parent().append('<div class="class-contents"></div>');
+            var container = $(this).parent().find(".class-contents");
+
+            $.ajax({ //make request for subclasses
+                url: ADVANCED_BUILDER_API_URI + "active_subclasses/" +  $( "#{{toolbar_id}} > select" ).val() + "/?parent_class=" + parent_uri,
+                type: "GET",
+
+                success: function(data, textStatus, jqXHR) {
+                    var bindings = data.results.bindings;
+                    var nOfSubclasses = 0;
+                    for (var i=0; i<bindings.length; i++) { //add all classes
+                        if (!bindings[i].class) continue;
+
+                        nOfSubclasses++;
+                        var class_uri = bindings[i].class.value;
+                        var instance_cnt = bindings[i].cnt.value;
+
+                        var id = parent_id + '_tree_class_' + i;
+                        var text = uri_to_label(class_uri) + ' (' + Number(instance_cnt).toLocaleString() + ')';
+                        $(container).append('<div id="' + id + '"><span class="ui-icon ui-icon-carat-1-e arrow closed unset"></span><span class="class">' + text + '</span></div>');
+                        TreeObjects[id] = encodeURIComponent(class_uri);
+                    }
+
+                    /*Don't show properties for time
+                    $.ajax({ //make request for properties
+                        url: ADVANCED_BUILDER_API_URI + "active_class_properties/" +  $( "#{{toolbar_id}} > select" ).val() + "?order=true&class_uri=" + parent_uri,
+                        type: "GET",
+
+                        success: function(data, textStatus, jqXHR) {
+                            var bindings = data.results.bindings;
+
+                            for (var i=0; i<bindings.length; i++) { //add all properties
+                                var property_uri = bindings[i].property.value;
+                                var instance_cnt = bindings[i].cnt.value;
+
+                                var id = parent_id + '_property_' + i;
+                                var text = uri_to_label(property_uri) + ' (' + Number(instance_cnt).toLocaleString() + ')';
+                                $(container).append('<div id="' + id + '"><span class="property">' + text + '</span></div>');
+                                TreeObjects[id] = encodeURIComponent(property_uri);
+                            }
+
+                            arrow.removeClass('loading');
+                        },
+                        error: function (jqXHR, textStatus, errorThrown) {
+                            console.log(textStatus + ': ' + errorThrown);
+                        }
+                    });*/
+
+                    arrow.removeClass('loading');
+                    if (nOfSubclasses == 0) {
+                        arrow.addClass('ui-icon-minus');
+                    }
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    arrow.removeClass('loading');
+                    arrow.removeClass('ui-icon-carat-1-s');
+                    arrow.addClass('ui-icon-carat-1-e');
+                    arrow.addClass('unset');
+
+                    console.log(textStatus + ': ' + errorThrown);
+                }
+            });
+        });
+
+        /*On class start drag*/
+        $("body").on('mousedown','#tree_toolbar .class', function(e) {
+            if (e.which == 1) { //only for left click
+                var class_uri = decodeURIComponent(TreeObjects[ $(this).parent().attr("id") ]);
+                builder_workbench.selection = {'type': 'class', 'uri': class_uri, 'dt_name': $( "#{{toolbar_id}} > select" ).val()};
+
+                e.preventDefault();
+                e.stopPropagation();
+            }
+        });
+
+        /*On class cancel drag*/
+        $("body").on('mouseup','#tree_toolbar', function(e) {
+            builder_workbench.selection = undefined;
+        });
+
+        /*On tree toolbar close*/
+        $("body").on('click', '.tree-toolbar-close', function(e) {
+            $("#tree_toolbar").width(20);
+
+            $(this).removeClass('tree-toolbar-close');
+            $(this).addClass('tree-toolbar-open');
+
+            $(this).removeClass('ui-icon-triangle-1-e');
+            $(this).addClass('ui-icon-triangle-1-w');
+
+            $('#tree_toolbar_objects').hide();
+            e.preventDefault();
+            e.stopPropagation();
+        });
+
+        /*On tree toolbar open*/
+        $("body").on('click', '.tree-toolbar-open', function(e) {
+            $("#tree_toolbar").width(300);
+
+            $(this).removeClass('tree-toolbar-open');
+            $(this).addClass('tree-toolbar-close');
+
+            $(this).removeClass('ui-icon-triangle-1-w');
+            $(this).addClass('ui-icon-triangle-1-e');
+
+            $('#tree_toolbar_objects').show();
+            e.preventDefault();
+            e.stopPropagation();
+        });
+
+        $("body").on('dblclick', '.tree-toolbar-close, .tree-toolbar-open', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
         });
 </script>
 {% endif %}

@@ -1312,7 +1312,7 @@ def query_delete(request, pk):
 # Proxy call - exists as middle-man between local LinDA server and the Vocabulary Repository
 @csrf_exempt
 def vocabulary_repo_api_call(request, link):
-    total_link = VOCABULARY_REPOSITORY + "api/" + link
+    total_link = get_configuration().vocabulary_repository + "api/" + link
     if request.GET:
         total_link += "?"
     for param in request.GET:
