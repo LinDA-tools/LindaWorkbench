@@ -1962,7 +1962,7 @@ input, textarea {
     float: right;
 }
 
-#tree_toolbar .class {
+#tree_toolbar .arrow {
     cursor: pointer;
 }
 
@@ -1977,12 +1977,11 @@ input, textarea {
 #tree_toolbar .arrow {
     display: inline-block;
     margin: 5px;
-    cursor: pointer;
 }
 
 #tree_toolbar .arrow.loading {
     width: 0;
-    padding: 2px 8px;
+    padding: 0 8px;
 }
 
 #tree_toolbar > div span {
@@ -2022,6 +2021,22 @@ input, textarea {
     margin-left: 20px;
 }
 
+.toolbar .class_button, #tree_toolbar .class-wrapper .class {
+    cursor: grab;
+    cursor: -o-grab;
+    cursor: -ms-grab;
+    cursor: -moz-grab;
+    cursor: -webkit-grab;
+}
+
+.toolbar .class_button:active, #tree_toolbar .class-wrapper .class:active {
+    cursor: grabbing;
+    cursor: -o-grabbing;
+    cursor: -ms-grabbing;
+    cursor: -moz-grabbing;
+    cursor: -webkit-grabbing;
+}
+
 .toolbar .class_button.property:hover {
     background: #1E8BC3;
 }
@@ -2048,6 +2063,19 @@ input, textarea {
 #builder_workspace.accepting-instance {
     border: 1px dotted #FC5006;
     background: #f3f3f3;
+    cursor: grabbing;
+    cursor: -o-grabbing;
+    cursor: -ms-grabbing;
+    cursor: -moz-grabbing;
+    cursor: -webkit-grabbing;
+}
+
+.toolbar.accepting-instance, #tree_toolbar.accepting-instance {
+    cursor: grabbing;
+    cursor: -o-grabbing;
+    cursor: -ms-grabbing;
+    cursor: -moz-grabbing;
+    cursor: -webkit-grabbing;
 }
 
 #builder_workspace .class-instance {

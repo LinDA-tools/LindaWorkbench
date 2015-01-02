@@ -139,16 +139,17 @@
 
                 builder_workbench.selection = undefined;
                 $(this).removeClass("accepting-instance");
+                $(".toolbar, #tree_toolbar").removeClass("accepting-instance");
             }
         });
 
-        $("#builder_workspace").mouseover(function(e) {
+        $("#builder_workspace, .toolbar, #tree_toolbar").mouseover(function(e) {
             if (builder_workbench.selection) {
                 $(this).addClass("accepting-instance");
             }
         });
 
-        $("#builder_workspace").mouseleave(function(e) {
+        $("#builder_workspace, .toolbar, #tree_toolbar").mouseleave(function(e) {
             if (builder_workbench.selection) {
                 $(this).removeClass("accepting-instance");
             }

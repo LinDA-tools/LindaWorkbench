@@ -135,6 +135,7 @@
                     builder_workbench.selection.range = $(this).data("range");
                 }
 
+                $(".toolbar").addClass("accepting-instance");
                 e.preventDefault();
                 e.stopPropagation();
             }
@@ -285,6 +286,7 @@
             if (e.which == 1) { //only for left click
                 var class_uri = decodeURIComponent(TreeObjects[ $(this).parent().attr("id") ]);
                 builder_workbench.selection = {'type': 'class', 'uri': class_uri, 'dt_name': $( "#{{toolbar_id}} > select" ).val()};
+                $("#tree_toolbar").addClass("accepting-instance");
 
                 e.preventDefault();
                 e.stopPropagation();

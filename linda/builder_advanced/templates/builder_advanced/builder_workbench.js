@@ -376,12 +376,23 @@
             }
         });
 
-        /*Add arrow on enter*/
+        /*Add arrow on mouse enter*/
         $("body").on('mouseenter', '.property-row', function() {
             var c = builder_workbench.connection_from;
             if (c !=  undefined) {
                 if ($(this).data('i') == c.i) return;
                 arrows.add_arrow('#class_instance_' + c.i, c.n, '#class_instance_' + $(this).data('i'), $(this).data('n'), c.style);
+            }
+        });
+
+        /*Add arrow on class header mouse enter*/
+        $("body").on('mouseenter', '.class-instance .title', function() {
+            var c = builder_workbench.connection_from;
+            if (c !=  undefined) {
+                var i = $(this).parent().data('n');
+                var n = 0; //uri
+                if (i == c.i) return;
+                arrows.add_arrow('#class_instance_' + c.i, c.n, '#class_instance_' + i, n, c.style);
             }
         });
 
@@ -394,8 +405,19 @@
             }
         });
 
+        /*Remove arrow on class header mouse enter*/
+        $("body").on('mouseleave', '.class-instance .title', function() {
+            var c = builder_workbench.connection_from;
+            if (c !=  undefined) {
+                var i = $(this).parent().data('n');
+                var n = 0; //uri
+                if (i == c.i) return;
+                arrows.remove_arrow('#class_instance_' + c.i, c.n, '#class_instance_' + i, n);
+            }
+        });
+
         /*Make arrow permanent*/
-        $("body").on('click', '.property-row', function(e) {
+        $("body").on('click', '.property-row, .class-instance .title', function(e) {
             if ((e.which == 1) && (builder_workbench.connection_from)) {
                 builder_workbench.connection_from = undefined;
                 builder.reset();
