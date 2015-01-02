@@ -1942,7 +1942,7 @@ input, textarea {
     right: 0;
     max-width: 300px;
     top: 120px;
-    z-index: 10;
+    z-index: 99999;
     background: #fff;
     border-left: 1px solid #eee;
 }

@@ -20,7 +20,6 @@
                     o.height(i.position().top + i.height() + 50);
                     $("#tree_toolbar_objects").height(o.height() - 20);
                     arrows.ctx.height = o.height();
-                    arrows.draw();
                 }
             },
 
@@ -31,6 +30,7 @@
                 $("#builder_workspace").append(new_instance);
                 $(new_instance).draggable({handle: '.title', cursor: 'move', drag: function() {
                     builder_workbench.reset_height($(this));
+                    arrows.draw();
                 }});
                 this.bring_to_front(new_instance);
 
