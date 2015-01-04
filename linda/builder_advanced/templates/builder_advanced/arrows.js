@@ -63,9 +63,7 @@ var arrows = {
                     }
                     i++;
                 }
-            }
-
-            if ((c.t == instance)) { //case instance is from
+            } else if ((c.t == instance)) { //case instance is from
                 if (c.tp == p) {
                     this.connections.splice(i, 1); //remove the connection as the property does not exist
                 } else {
@@ -74,6 +72,8 @@ var arrows = {
                     }
                     i++;
                 }
+            } else {
+                i++;
             }
         }
 

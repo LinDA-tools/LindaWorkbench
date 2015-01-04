@@ -1,6 +1,6 @@
 var builder = {
     query: "",
-    select_clause: "SELECT",
+    select_vars: [],
     where_clause: "WHERE ",
     order_clause: "",
     error: "",
@@ -164,12 +164,10 @@ var builder = {
                 //add chosen properties to select
                 if (p.show) {
                     if (p.uri == 'URI') {
-                        this.select_clause += '?' + i_name;
+                        this.select_vars.push('?' + i_name);
                     } else {
-                        this.select_clause += '?' + p_name;
+                        this.select_vars.push('?' + p_name);
                     }
-
-                    this.select_clause += ' ';
                 }
             }
 
@@ -236,7 +234,7 @@ var builder = {
             }
 
             if (endpoint != this.endpoint) { //close SERVICE keyword
-                wh_c += '}. \n'
+                wh_c += '}. \n';
             }
 
             return wh_c;
@@ -247,7 +245,7 @@ var builder = {
         var i_names = this.instance_names;
 
         this.error = "";
-        this.select_clause = "SELECT ";
+        this.select_vars = [];
         this.where_clause = "WHERE ";
         this.order_clause = "";
         this.endpoint = "";
@@ -300,10 +298,17 @@ var builder = {
         }
         this.where_clause += "}";
 
+        //construct the select clause -- only keep unique values
+        this.select_vars = $.unique(this.select_vars);
+        var select_clause = "SELECT";
+        for (var i=0; i<this.select_vars.length; i++) {
+            select_clause += ' ' + this.select_vars[i];
+        }
+
         if (cnt_objects == 0) { //empty query
             this.query = '';
         } else { //the result is the SELECT ... WHERE ...
-            this.query = this.get_prefixes() + this.select_clause + '\n' + this.where_clause + this.order_clause;
+            this.query = this.get_prefixes() + select_clause + '\n' + this.where_clause + this.order_clause;
         }
 
         return this.query;
