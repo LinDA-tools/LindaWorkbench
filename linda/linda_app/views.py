@@ -925,7 +925,7 @@ def get_rdf2any_call(request, link):
     if data.status_code == 200:
         return HttpResponse(data, data.headers['content-type'])
     else:
-        return HttpResponse(content=data.text, status=data.responce_code)
+        return HttpResponse(content=data.text, status=data.status_code)
 
 
 # Tools
@@ -1170,15 +1170,12 @@ def api_datasource_delete(request, dtname):
 def datasource_sparql(request, dtname):  # Acts as a "fake" seperate sparql endpoint for each datasource
     results = {}
 
-    if not request.GET:  # request must be get
-        results['status'] = '403'
-        results['message'] = "GET method must be used to query a datasource."
+    # Get query - accepts GET or POST requests
+    q = request.GET.get("query")
+    if not q:
+        q = request.POST.get("query")
 
-        data = json.dumps(results)
-        mimetype = 'application/json'
-        return HttpResponse(data, mimetype)
-
-    query = urllib.unquote_plus(request.GET.get("query"))
+    query = urllib.unquote_plus(q)
 
     if dtname != "all":  # search in all private datasource
         datasources = DatasourceDescription.objects.filter(name=dtname)
@@ -1208,7 +1205,7 @@ def datasource_sparql(request, dtname):  # Acts as a "fake" seperate sparql endp
             # query = query.replace('?object rdf:type ?class', '')
 
     # choose results format
-    result_format = 'xml'  # default format
+    result_format = 'json'  # default format
     if request.GET.get('format'):
         result_format = request.GET.get('format')
 
