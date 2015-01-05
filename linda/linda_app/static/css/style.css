@@ -2090,8 +2090,17 @@ input, textarea {
     color: #fff;
     background: #5C97BF;
     padding: 10px;
+	cursor: move;
     border-bottom: 1px solid #2574A9;
     min-height: 40px;
+}
+
+#builder_workspace .class-instance .title.connecting {
+	cursor: pointer;
+}
+
+#builder_workspace .class-instance .title:hover {
+	opacity: 0.9;
 }
 
 #builder_workspace .class-instance .title h3{

@@ -395,6 +395,8 @@
                 var i = $(this).parent().data('n');
                 var n = 0; //uri
                 if (i == c.i) return;
+				
+				$(this).addClass('connecting');
                 arrows.add_arrow('#class_instance_' + c.i, c.n, '#class_instance_' + i, n, c.style);
             }
         });
@@ -413,8 +415,10 @@
             var c = builder_workbench.connection_from;
             if (c !=  undefined) {
                 var i = $(this).parent().data('n');
-                var n = 0; //uri
+                var n = 0; //uri property is always at position #0
                 if (i == c.i) return;
+				
+				$(this).removeClass('connecting');
                 arrows.remove_arrow('#class_instance_' + c.i, c.n, '#class_instance_' + i, n);
             }
         });
@@ -422,6 +426,8 @@
         /*Make arrow permanent*/
         $("body").on('click', '.property-row, .class-instance .title', function(e) {
             if ((e.which == 1) && (builder_workbench.connection_from)) {
+				$(this).removeClass('connecting');
+				
                 builder_workbench.connection_from = undefined;
                 builder.reset();
 
