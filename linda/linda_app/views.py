@@ -1178,7 +1178,7 @@ def datasource_sparql(request, dtname):  # Acts as a "fake" seperate sparql endp
         mimetype = 'application/json'
         return HttpResponse(data, mimetype)
 
-    query = request.GET.get("query")
+    query = urllib.unquote_plus(request.GET.get("query"))
 
     if dtname != "all":  # search in all private datasource
         datasources = DatasourceDescription.objects.filter(name=dtname)
