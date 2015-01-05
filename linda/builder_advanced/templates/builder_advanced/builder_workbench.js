@@ -20,6 +20,8 @@
                     o.height(i.position().top + i.height() + 50);
                     $("#tree_toolbar_objects").height(o.height() - 20);
                     arrows.ctx.height = o.height();
+
+                    arrows.draw();
                 }
             },
 

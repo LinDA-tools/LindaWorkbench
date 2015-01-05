@@ -2117,6 +2117,7 @@ input, textarea {
     top: 35px;
     color: #ddd;
     line-height: 10px;
+    margin-top: 7px;
 }
 
 #builder_workspace .class-instance .title span.delete {
