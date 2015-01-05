@@ -19,7 +19,7 @@
                 if (i.position().top > o.height() - i.height()) { //when reaching bottom, make sure to enlarge the workspace height
                     o.height(i.position().top + i.height() + 50);
                     $("#tree_toolbar_objects").height(o.height() - 20);
-                    $("#builder-canvas").attr('height', 933)
+                    $("#builder-canvas").attr('height', o.height());
                     arrows.ctx.height = o.height();
 
                     arrows.draw();
