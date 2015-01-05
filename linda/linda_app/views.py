@@ -922,7 +922,7 @@ def get_rdf2any_call(request, link):
         total_link += param + "=" + urlquote(request.GET[param]) + "&"
 
     data = requests.get(total_link)
-    if data.responce_code == 200:
+    if data.status_code == 200:
         return HttpResponse(data, data.headers['content-type'])
     else:
         return HttpResponse(content=data.text, status=data.responce_code)
