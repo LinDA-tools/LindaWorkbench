@@ -914,8 +914,8 @@ def get_qbuilder_call(request, link):
 # middle-mans between LinDA query builder page and the RDF2Any server
 @csrf_exempt
 def get_rdf2any_call(request, link):
-    print link
-    total_link = get_configuration().rdf2any_server + link
+    total_link = get_configuration().rdf2any_server + 'rdf2any/' + link
+
     if request.GET:
         total_link += "?"
     for param in request.GET:
