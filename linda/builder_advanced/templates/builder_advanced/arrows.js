@@ -99,26 +99,26 @@ var arrows = {
 
         var dy = a.y - b.y;
         var dx = a.x - b.x;
-        if(dy == 0) { //horizontal line
-            if(Math.abs(p.y -a.y) <= tolerate) {
-                if(a.x > b.x) {
-                    if((p.x - tolerate <= a.x) && (p.x + tolerate >= b.x))
+        if (dy == 0) { //horizontal line
+            if (Math.abs(p.y -a.y) <= tolerate) {
+                if (a.x > b.x) {
+                    if ((p.x - tolerate <= a.x) && (p.x + tolerate >= b.x))
                         return true;
                 }
                 else {
-                    if((p.x + tolerate >= a.x) && (p.x - tolerate <= b.x))
+                    if ((p.x + tolerate >= a.x) && (p.x - tolerate <= b.x))
                         return true;
                 }
             }
         }
-        else if(dx == 0) { //vertical line
-            if(Math.abs(p.x -a.x) <= tolerate) {
-                if(a.y > b.y) {
-                    if((p.y - tolerate <= a.y) && (p.y + tolerate >= b.y))
+        else if (dx == 0) { //vertical line
+            if (Math.abs(p.x -a.x) <= tolerate) {
+                if (a.y > b.y) {
+                    if ((p.y - tolerate <= a.y) && (p.y + tolerate >= b.y))
                         return true;
                 }
                 else {
-                    if((p.y + tolerate >= a.y) && (p.y - tolerate <= b.y))
+                    if ((p.y + tolerate >= a.y) && (p.y - tolerate <= b.y))
                         return true;
                 }
             }

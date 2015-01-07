@@ -300,7 +300,7 @@
 
         /*On tree toolbar close*/
         $("body").on('click', '.tree-toolbar-close', function(e) {
-            $("#tree_toolbar").width(20);
+            $("#tree_toolbar").css('max-width', 20);
 
             $(this).removeClass('tree-toolbar-close');
             $(this).addClass('tree-toolbar-open');
@@ -315,7 +315,7 @@
 
         /*On tree toolbar open*/
         $("body").on('click', '.tree-toolbar-open', function(e) {
-            $("#tree_toolbar").width(300);
+            $("#tree_toolbar").css('max-width', 300);
 
             $(this).removeClass('tree-toolbar-open');
             $(this).addClass('tree-toolbar-close');
