@@ -36,7 +36,7 @@ var builder = {
         }
 
         label = label.replace(/-/, '_');
-        label = label.replace(/./, '_');
+        label = label.replace(/\./g, '_');
 
         return decodeURI(label);
     },
