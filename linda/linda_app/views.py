@@ -753,8 +753,12 @@ def datasourceCreateRDF(request):
 
         # Call the corresponding web service
         headers = {'accept': 'application/json'}
+        data = {"content": rdf_content, "title": request.POST.get("title")}
+        if request.POST.get('format'):
+            data['format'] = request.POST.get('format')
+
         callAdd = requests.post(LINDA_HOME + "api/datasource/create/", headers=headers,
-                                data={"content": rdf_content, "title": request.POST.get("title")})
+                                data=data)
 
         j_obj = json.loads(callAdd.text)
         if j_obj['status'] == '200':
@@ -785,12 +789,16 @@ def datasourceReplaceRDF(request, dtname):
 
         # Call the corresponding web service
         headers = {'accept': 'application/json'}
+        data = {"content": rdf_content, }
+        if request.POST.get('format'):
+            data['format'] = request.POST.get('format')
+
         callAdd = requests.post(LINDA_HOME + "api/datasource/" + dtname + "/replace/", headers=headers,
-                                data={"content": rdf_content, })
+                                data=data)
 
         j_obj = json.loads(callAdd.text)
         if j_obj['status'] == '200':
-            return redirect("/")
+            return redirect("/datasources/")
         else:
             params = {}
 

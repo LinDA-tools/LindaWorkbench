@@ -23,6 +23,14 @@
             <label for="rdffile">{% trans "Upload an RDF"%}:</label>
             <div id="file-uploader" class="button green">{% trans "Choose file"%}</div>
             <input id="id_file" type="file" class="hidden" name="rdffile" />
+            <select id="format" name="format">
+                <option value="application/rdf+xml">RDF/XML</option>
+                <option value="text/rdf+n3">N3</option>
+                <option value="application/x-turtle">Turtle</option>
+                <option value="application/trix">TriX</option>
+                <option value="application/x-trig">TriG</option>
+                <option value="application/x-binary-rdf">SesameBinary RDF</option>
+            </select>
         </div>
 
         <div>
