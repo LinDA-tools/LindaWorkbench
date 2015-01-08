@@ -72,28 +72,75 @@ def site_search(request):
 
     q = request.GET.get('search_q')
 
+    # get pages
+    if 'v_page' in request.GET:
+        try:
+            v_page = int(request.GET['v_page'])
+        except ValueError:
+            v_page = 1
+    else:
+        v_page = 1
+
+    if 'c_page' in request.GET:
+        try:
+            c_page = int(request.GET['c_page'])
+        except ValueError:
+            c_page = 1
+    else:
+        c_page = 1
+
+    if 'p_page' in request.GET:
+        try:
+            p_page = int(request.GET['p_page'])
+        except ValueError:
+            p_page = 1
+    else:
+        p_page = 1
+
     # for vocabularies, classes & properties use elastic search
+    # vocaabularies
     vocabularies = []
     for sqs in SearchQuerySet().models(Vocabulary).filter(content=q):
         if sqs.object:
             vocabularies.append(sqs.object)
 
+    vocabularies_paginator = Paginator(vocabularies, 10)
+    try:
+        vocabularies_page = vocabularies_paginator.page(v_page)
+    except EmptyPage:
+        vocabularies_page = vocabularies_paginator.page(1)
+
+    # classes
     classes = []
     for sqs in SearchQuerySet().models(VocabularyClass).filter(content=q):
         if sqs.object:
             classes.append(sqs.object)
+
+    classes_paginator = Paginator(classes, 10)
+    try:
+        classes_page = classes_paginator.page(c_page)
+    except EmptyPage:
+        classes_page = classes_paginator.page(1)
 
     properties = []
     for sqs in SearchQuerySet().models(VocabularyProperty).filter(content=q):
         if sqs.object:
             properties.append(sqs.object)
 
+    # properties
+    properties_paginator = Paginator(properties, 10)
+    try:
+        properties_page = properties_paginator.page(p_page)
+    except EmptyPage:
+        properties_page = properties_paginator.page(1)
+
     # also search in datasources, queries and analytics
     params = {'search_q': q,
               'datasources': DatasourceDescription.objects.filter(name__icontains=q),
               'queries': Query.objects.filter(description__icontains=q),
               'analytics': Analytics.objects.filter(description__icontains=q),
-              'vocabularies_list': vocabularies, 'classes_list': classes, 'properties_list': properties}
+              'vocabularies_list': vocabularies_page.object_list, 'classes_list': classes_page.object_list, 'properties_list': properties_page.object_list,
+              'vocabularies_page': vocabularies_page, 'classes_page': classes_page, 'properties_page': properties_page}
 
     return render(request, 'search/site-search.html', params)
 
