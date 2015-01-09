@@ -33,10 +33,10 @@
                     if (!token) {
                         return;
                     }
-                    
+
                     var in_vocabulary = '';
                     var vocab_prefix = '';
-                    if (token && token.type == "sparql.prefix.constant.language") { //search classes or properties inside a vocabulary
+                    if (token.type == "sparql.prefix.constant.language") { //search classes or properties inside a vocabulary
                         vocab_prefix = token.value;
                         in_vocabulary += '&prefix=' + token.value.split(":")[0];
                         token = editor.session.getTokenAt(pos.row, token.start - 1); //get the previous token
