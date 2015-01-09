@@ -70,14 +70,14 @@ def analytics(request):
 	    #print q_object.sparql #the sparql query 
 	    #print q_object.csv_link() #the url to the csv file that is created by rdf2any
 	  else:
-	    q_id = None #datasource not selected
+	    q_object = None #datasource not selected
 
 
 	  return render(request, 'analytics/analytics.html', {
-	      'form': form,'analytics_list': analytics_list
+	      'form': form,'analytics_list': analytics_list, 'query': q_object
 	  })
     else: 
-      return render(request, 'analytics/noAuthenticatedAccess.html',)
+      return render(request, 'analytics/noAuthenticatedAccess.html')
     
 def __unicode__(self):
         return unicode(self)

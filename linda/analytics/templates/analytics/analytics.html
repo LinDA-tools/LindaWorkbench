@@ -314,7 +314,7 @@ $(document).ready(function(){
 		      <div id="b">
 			
 			<p id="id_trainQuery_label" style="float:left;">Select an query to analyze: </p>
-			<input id="id_trainQuery_display" class="formitem" /></br>
+			<input id="id_trainQuery_display" class="formitem" {% if query %}value="{{query.description}}"{% endif %}/></br>
 			
 			<p id="id_evaluationQuery_label" style="display: none;float:left;">Select a Datasource Query to evaluate the predifined algorithm: </p>
 			<input id="id_evaluationQuery_display" class="formitem" style="display: none;"/>

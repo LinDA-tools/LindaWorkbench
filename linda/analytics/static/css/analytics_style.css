@@ -178,7 +178,7 @@ header .site-title:hover {
     margin-left: 10px;
 }
 
-#menu {
+/*#menu {
     background-color: #F3F3F3;
     display: inline-block;
     width: 260px;
@@ -231,7 +231,7 @@ header .site-title:hover {
 
 #menu a {
     color: #232323;
-}
+}*/
 
 /* Main Area */
 #main-container {
