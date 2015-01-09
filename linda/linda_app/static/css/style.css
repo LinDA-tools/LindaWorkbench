@@ -1123,7 +1123,7 @@ form input[type="submit"] {
         height: 400px;
     }
 
-.query-row {
+.queries .query-row {
     cursor: pointer;
 }
 

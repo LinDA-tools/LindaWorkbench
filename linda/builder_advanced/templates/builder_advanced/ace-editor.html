@@ -30,14 +30,16 @@
 
                     var token = editor.session.getTokenAt(pos.row, pos.column - prefix.length - 1);  //get previous token
 
+                    if (!token) {
+                        return;
+                    }
+                    
                     var in_vocabulary = '';
                     var vocab_prefix = '';
-                    if (token.type == "sparql.prefix.constant.language") { //search classes or properties inside a vocabulary
+                    if (token && token.type == "sparql.prefix.constant.language") { //search classes or properties inside a vocabulary
                         vocab_prefix = token.value;
                         in_vocabulary += '&prefix=' + token.value.split(":")[0];
                         token = editor.session.getTokenAt(pos.row, token.start - 1); //get the previous token
-                        console.log(in_vocabulary);
-                        console.log(token);
                     }
 
                     var val = token.value.toLowerCase()
