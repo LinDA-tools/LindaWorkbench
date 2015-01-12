@@ -114,7 +114,9 @@
                     },
                     success: function(data, textStatus, jqXHR)
                     {
-                        document.location.href = '/queries/';
+                        $("#alert_modal .modal-title").html('LinDA Queries');
+                        $("#alert_modal .modal-body").html('Query saved');
+                        $("#alert_modal").show();
                     },
                     error: function (jqXHR, textStatus, errorThrown)
                     {
