@@ -945,6 +945,10 @@ def execute_sparql(request):
     if response.status_code == 200:
         # avoid erroneous \U characters -- invalid json
         response_safe = response.content.replace('\U', '')
+        
+        if response_safe.startswith("MALFORMED QUERY:"):
+            return HttpResponse(response.content, status=500)
+
         data = json.loads(response_safe)
         data['offset'] = offset
 
