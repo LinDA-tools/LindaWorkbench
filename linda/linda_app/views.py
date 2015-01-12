@@ -973,7 +973,6 @@ def get_qbuilder_call(request, link):
 @csrf_exempt
 def get_rdf2any_call(request, link):
     total_link = get_configuration().rdf2any_server + '/rdf2any/' + link
-
     if request.GET:
         total_link += "?"
     for param in request.GET:
@@ -1271,11 +1270,11 @@ def datasource_sparql(request, dtname):  # Acts as a "fake" seperate sparql endp
     query_enc = urlquote(query, safe='')
 
     # get query results
-    data = requests.get(
-        get_configuration().private_sparql_endpoint + "?Accept=" + urlquote("application/sparql-results+" + result_format) + "&query=" + query_enc).text
+    response = requests.get(
+        get_configuration().private_sparql_endpoint + "?Accept=" + urlquote("application/sparql-results+" + result_format) + "&query=" + query_enc)
 
     # return the response
-    return HttpResponse(data, "application/json")
+    return HttpResponse(response.text, response.headers['content-type'])
 
 
 class QueryListView(ListView):
