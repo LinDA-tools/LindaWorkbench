@@ -6,6 +6,7 @@
 
 {%block css %}
     <link rel="stylesheet" href="/static/css/jquery-ui.min.css" />
+    <link rel="stylesheet" href="/static/css/jquery.modal.css" />
 
     <link data-turbolinks-track="true" href="/static/query-builder/stylesheets/_variables.css?body=1" media="all" rel="stylesheet" />
     <link data-turbolinks-track="true" href="/static/query-builder/stylesheets/bootstrap.css?body=1" media="all" rel="stylesheet" />
@@ -60,9 +61,12 @@
         rdf2any_server = "{{RDF2ANY_SERVER}}";
 	</script>
 
-    {% include "builder_advanced/ace-editor.html" %}
+    {% with designer=True %}
+        {% include "builder_advanced/ace-editor.html" %}
+    {% endwith %}
 
     <script src="/static/js/jquery-ui.min.js"></script>
+    <script src="/static/js/jquery.confirm.js"></script>
 
     <script>
         {% include "builder_advanced/arrows.js" %}
@@ -186,7 +190,16 @@
     {% endwith %}
 
     <script>
-        function save_query() {
+        function save_design(designer) {
+            var q_data = {
+                endpoint: builder.endpoint,
+                query: editor.getSession().getValue(),
+                csrfmiddlewaretoken: '{{ csrf_token }}'
+            };
+            if (designer === true) {
+                q_data.design = JSON.stringify( builder_workbench.to_json() );
+            }
+
             $.ajax({
                 {% if query %}
                     url: "/query-builder/save/{{query.id}}/",
@@ -194,12 +207,7 @@
                     url: "/query-builder/save/",
                 {% endif %}
                 type: "POST",
-                data: {
-                    endpoint: builder.endpoint,
-                    query: editor.getSession().getValue(),
-                    design: JSON.stringify( builder_workbench.to_json() ),
-                    csrfmiddlewaretoken: '{{ csrf_token }}'
-                },
+                data: q_data,
                 success: function(data, textStatus, jqXHR)
                 {
                     $("#alert_modal .modal-title").html('LinDA Queries');
@@ -211,6 +219,27 @@
                     alert(textStatus + ': ' + errorThrown);
                 }
             });
+        }
+
+        function save_query() {
+            if (editor.changed === true) {
+                $.confirm({
+                    title: "Save Query",
+                    text: "There seem to be manual changes in the SPARQL query. If you save the design, those changes will be overwritten. Do you want to save the design or store it as a plain SPARQL query?",
+                    className: "warning-dialog",
+                    confirmButton: "Save the design and drop changes",
+                    cancelButton: "Save as a plain text query",
+                    confirm: function(button) {
+                        builder.reset();
+                        save_design(true);
+                    },
+                    cancel: function(button) {
+                        save_design(false);
+                    }
+                });
+            } else {
+                save_design(true);
+            }
         }
     </script>
 

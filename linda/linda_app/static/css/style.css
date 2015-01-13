@@ -1774,7 +1774,7 @@ input, textarea {
     background: #eee;
 }
 
-.queries .modal-dialog {
+.queries .modal-dialog, .builder-advanced .modal-dialog {
     margin-top: 60px;
 }
 
@@ -1783,20 +1783,30 @@ input, textarea {
     background: #D64541;
 }
 
-.queries .btn {
+.builder-advanced .modal-header {
+    color: #fff;
+    background: #FC5006;
+}
+
+.confirmation-modal .btn-primary {
+    float: left;
+}
+
+.queries .confirmation-modal .btn, .builder-advanced .confirmation-modal .btn {
     box-shadow: 0 0 2px #333;
     padding: 5px 15px;
+    color: #fff;
 }
 
 .queries .confirmation-modal a, .queries .modal-dialog .close {
     display: none;
 }
 
-.queries .cancel {
+.queries .cancel, .builder-advanced .cancel {
     background: #aaa;
 }
 
-.queries .cancel:hover {
+.queries .cancel:hover, .builder-advanced .cancel:hover {
     background: #bbb;
 }
 
@@ -1942,7 +1952,7 @@ input, textarea {
     right: 0;
     max-width: 300px;
     top: 120px;
-    z-index: 99999;
+    z-index: 500;
     background: #fff;
     border-left: 1px solid #eee;
 }
@@ -2362,4 +2372,15 @@ input, textarea {
 
 #alert_modal pre {
     background: #fff;
+}
+
+#sparql-editor-warning-message > .ui-state-error {
+    border: 0;
+    padding: 0;
+}
+
+#sparql-editor-warning-message > .ui-state-error .ui-icon-alert {
+    float: left;
+    margin-right: .3em;
+    margin-top: .3em;
 }

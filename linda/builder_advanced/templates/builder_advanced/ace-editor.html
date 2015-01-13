@@ -1,6 +1,7 @@
-<script src="/static/js/ace/src/ace.js" type="text/javascript" charset="utf-8"></script>
+    <script src="/static/js/ace/src/ace.js" type="text/javascript" charset="utf-8"></script>
     <script src="/static/js/ace/src/mode-sparql.js" type="text/javascript" charset="utf-8"></script>
     <script src="/static/js/ace/src/ext-language_tools.js" type="text/javascript" charset="utf-8"></script>
+
     <script>
         jQuery(function () {
             //auto-completion module
@@ -85,5 +86,14 @@
                 }
             }
             langTools.addCompleter(SparQLCompleter);
+
+            {% if designer %}
+                editor.on("change", function(e) {
+                    if (editor.curOp && editor.curOp.command.name) {
+                        editor.changed = true;
+                        $("#sparql-editor-warning-message > .ui-state-error").html('<p><span class="ui-icon ui-icon-alert"></span><strong>Warning:</strong> Changes in the query will not be saved, and will be dropped when you change the design. You can edit the query manually in the SPARQL Editor.</p>');
+                  }
+                });
+            {% endif %}
         });
     </script>

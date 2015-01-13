@@ -2,7 +2,7 @@
 	<div class="panel-heading">
 		<div class="row">
 			<div class="col-md-6">
-				<h4 class="">{%if mode == "builder"%}Equivalent SPARQL Query{%else%}SPARQL Query editor{%endif%}</h4>
+				<h4 class="">{%if mode == "sparql"%}SPARQL Query editor{%else%}Equivalent SPARQL Query{%endif%}</h4>
 			</div>
 			{% if mode == "builder" %}
 				<div class="col-md-6">
@@ -30,6 +30,13 @@
 	    </div>
 	</div>
 	<div class="panel-footer">
+		<div class="row">
+			<div id="sparql-editor-warning-message" class="ui-widget">
+				<div class="ui-state-error ui-corner-all" style="padding: 0 .7em;">
+
+				</div>
+			</div>
+		</div>
 	    <div class="row">
 	        <div class="col-md-3">
 	        	<div class="btn-group">
