@@ -2094,6 +2094,8 @@ input, textarea {
     border: 2px solid #2574A9;
     min-width: 400px;
     z-index: 1;
+	width: auto !important;
+	height: auto !important;
 }
 
 #builder_workspace .class-instance .title {
