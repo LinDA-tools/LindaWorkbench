@@ -2178,6 +2178,7 @@ input, textarea {
 #builder_workspace .class-instance .property-table > .property-row > *, #builder_workspace .class-instance .property-table > .header-row > * {
     display: table-cell;
     padding: 5px;
+    white-space: nowrap;
 }
 
 #builder_workspace .class-instance .property-table .property-show,
