@@ -2012,6 +2012,7 @@ input, textarea {
 .toolbar .active-classes .button {
     margin: 5px;
     background: #b2b2b2;
+    border-radius: 2px;
 }
 
 .toolbar .prev-next-classes-button {
