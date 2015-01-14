@@ -66,7 +66,7 @@ SPARQL = {
             var query = SPARQL.get_query();
             if(QueryBuilder.properties.will_show_properties_in_preview() == true){
                 $("#btn_show_checked_properties_no").click();
-                query = $("#txt_sparql_query").val();
+                query = SPARQL.get_query();
                 $("#btn_show_checked_properties_yes").click();
             }
             var download_url = Utils.rdf2any.server+Utils.rdf2any.actions.convert+"csv-converter.csv?dataset="+QueryBuilder.datasets.get_selected()+"&query="+encodeURIComponent(query);
@@ -115,7 +115,7 @@ SPARQL = {
             var query = SPARQL.get_query();
             if(QueryBuilder.properties.will_show_properties_in_preview() == true){
                 $("#btn_show_checked_properties_no").click();
-                query = $("#txt_sparql_query").val();
+                query = SPARQL.get_query();;
                 $("#btn_show_checked_properties_yes").click();
             }
             var download_url = Utils.rdf2any.server+Utils.rdf2any.actions.convert+"configured-converter?dataset="+QueryBuilder.datasets.get_selected()+"&query="+encodeURIComponent(query);
