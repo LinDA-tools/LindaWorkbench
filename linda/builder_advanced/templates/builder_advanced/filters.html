@@ -152,6 +152,23 @@
 
                 if (cnt == 0) {
                     $("#all-filters").html('No filters applied.');
+                } else if (p.filter_prototype) { //restore filter type
+                    if ((p.filter_prototype.indexOf("&&") < 0) && (p.filter_prototype.indexOf("||") < 0) && (p.filter_prototype.indexOf("!") < 0)) { //no operator -- default to AND
+                        $(".filter-prototype select").val('and');
+                        $("#filter-prototype-str").hide();
+                    }
+                    else if ((p.filter_prototype.indexOf("&&") >= 0) && (p.filter_prototype.indexOf("||") < 0) && (p.filter_prototype.indexOf("!") < 0)) { //AND join filters
+                        $(".filter-prototype select").val('and');
+                        $("#filter-prototype-str").hide();
+                    }
+                    else if ((p.filter_prototype.indexOf("&&") < 0) && (p.filter_prototype.indexOf("||") >= 0) && (p.filter_prototype.indexOf("!") < 0)) { //OR join filters
+                        $(".filter-prototype select").val('or');
+                        $("#filter-prototype-str").hide();
+                    } else { //CUSTOM join filter boolean expression
+                        $(".filter-prototype select").val('custom');
+                        $("#filter-prototype-str").val(p.filter_prototype);
+                        $("#filter-prototype-str").show();
+                    }
                 }
             }
         }
@@ -195,6 +212,11 @@
                 }
             } else { //get prototype from user
                 proto = $("#filter-prototype-str").val();
+
+                for (var f=0; f<p.filters.length; f++) {
+                    if (p.filters[f] == undefined) continue;
+                    n++;
+                }
             }
 
             p.filter_prototype = proto;

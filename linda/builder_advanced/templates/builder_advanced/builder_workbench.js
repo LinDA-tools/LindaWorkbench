@@ -102,7 +102,7 @@
                                     }
 
                                     if (builder_workbench.has_filters(inst.selected_properties[k].filters)) { //add the filters tick
-                                        $(sel + "span:nth-of-type(5)").html('<span class="ui-icon ui-icon-check"></span>Edit')
+                                        $(sel + "span:nth-of-type(5)").html('<span class="ui-icon ui-icon-check"></span>Edit');
                                     }
 
 
