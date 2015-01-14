@@ -1,6 +1,8 @@
 from django.db import models
 from django.forms import ModelForm
 import os
+import datetime
+from django.conf import settings
 
 
 # Create your models here.
@@ -48,6 +50,20 @@ class Algorithm(models.Model):
                 )
 
 
+class Plot(models.Model):
+    description = models.TextField(max_length=2000)
+    image = models.ImageField(upload_to='plots/', blank=True,max_length=500)
+    def __str__(self):
+        return self.image.name
+    def display_plot_description(self):
+        return self.description 
+    def display_image_file(self):
+         if os.path.isfile(self.image.path):
+           fp = open(self.image.path);
+           return fp.read()
+
+    
+
 class Document(models.Model):
         document = models.FileField(upload_to='documents/%Y/%m/%d')
 
@@ -72,8 +88,10 @@ class Analytics(models.Model):
     user_id = models.IntegerField()
     parameters = models.TextField(max_length=100, blank=True)
     # Auto-populated fields for created on/updated on time
-    createdOn = models.DateField(editable=False)
-    updatedOn = models.DateField(editable=False)
+    createdOn = models.DateField(editable=False, null=True)
+    updatedOn = models.DateField(editable=False, null=True)
+    plot1 = models.ForeignKey(Plot, null=True, related_name='plot1', blank=True)
+    plot2 = models.ForeignKey(Plot, null=True, related_name='plot2', blank=True)
     
     def save(self):
         if not self.id:  # first time saved -- create is not set yet
@@ -86,9 +104,11 @@ class Analytics(models.Model):
     def display_resultdocument_file(self):
         if os.path.isfile(self.resultdocument.path):
 	   print(self.resultdocument.path);
-	   print('holaaaaaa');
            fp = open(self.resultdocument.path);
            return fp.read()
+    def display_resultdocument_title(self):
+        if os.path.isfile(self.resultdocument.path):
+           return self.resultdocument.name.replace('results/', '');	 
     def display_model_file(self):
         if os.path.isfile(self.modelReadable.path):
            fp = open(self.modelReadable.path);
@@ -100,7 +120,13 @@ class Analytics(models.Model):
     def display_processinfo_file(self):
          if os.path.isfile(self.processinfo.path):
            fp = open(self.processinfo.path);
+           print(self.processinfo.path);
            return fp.read()
+    def display_plot1_file(self):
+         if self.plot1:
+           return settings.LINDA_APACHE_ANALYTICS+str(self.plot1)
+    def display_linda_apache_analytics(self):
+           return settings.LINDA_APACHE_ANALYTICS
     def isExportFormatRDFXML(self):
          if self.exportFormat=="RDFXML":
            return "RDFXML" 

@@ -24,6 +24,9 @@ import requests
 
 from linda_app.settings import LINDA_HOME
 
+from django.contrib import messages
+from django.contrib.messages import get_messages
+
 
 def analytics(request):
     if request.user.is_authenticated():
@@ -37,27 +40,32 @@ def analytics(request):
 	      #handle_uploaded_file(request.FILES['document'])
 	      current_user = request.user
 	      new_lindaAnalytics = form.save(commit=False)
-	      new_lindaAnalytics.version = 0
-	      new_lindaAnalytics.user_id = current_user.id
-	      print(new_lindaAnalytics.trainQuery)
-	      new_lindaAnalytics.save()
-	      #new_lindaAnalytics = form.save()
-	      #upFile = open(new_lindaAnalytics.resultdocument, 'r')
-	      #context = {}
-	      #upFile = request.FILES['document']
-	      #context = {}
-	      #if upFile.multiple_chunks():
-	      # context["uploadError"] = "Uploaded file is too big (%.2f MB)." % (upFile.size,)
-	      #else:
-	      #if upFile.multiple_chunks():
-	      # context["uploadError"] = "Uploaded file is too big (%.2f MB)." % (upFile.size,)
-	      #else:
-	      # context["uploadedFile"] = __unicode__(upFile.read())
-	      #f.close()
-	      #return HttpResponseRedirect('/thanks/') # Redirect after POST
-	      #try to use params form
-	      callRESTfulLINDA(new_lindaAnalytics.pk,'lindaAnalytics_analytics')
-	      return HttpResponseRedirect(reverse('analytics:detail', args=(new_lindaAnalytics.pk,)))
+	      
+	      if(not new_lindaAnalytics.evaluationQuery and (new_lindaAnalytics.algorithm.id ==1 or new_lindaAnalytics.algorithm.id ==2 or new_lindaAnalytics.algorithm.id ==4 or new_lindaAnalytics.algorithm.id ==16)):
+	        
+	        form = AnalyticsForm() # An unbound form
+		current_user = request.user
+		analytics_list = Analytics.objects.filter(user_id=current_user.id)
+	        messages.info(request, 'The selected Algorith needs both a train and evaluation dataset in order to run analytics.')
+		return render(request, 'analytics/analytics.html', {
+		'form': form,'analytics_list': analytics_list
+		})
+	      else:
+		new_lindaAnalytics.version = 0
+		new_lindaAnalytics.user_id = current_user.id
+		print(new_lindaAnalytics.trainQuery)
+		new_lindaAnalytics.save()
+		#try to use params form
+		callRESTfulLINDA(new_lindaAnalytics.pk,'lindaAnalytics_analytics')
+		return HttpResponseRedirect(reverse('analytics:detail', args=(new_lindaAnalytics.pk,)))
+	      
+	  else:
+	      form = AnalyticsForm() # An unbound form
+	      current_user = request.user
+	      analytics_list = Analytics.objects.filter(user_id=current_user.id)
+	      return render(request, 'analytics/analytics.html', {
+	      'form': form,'analytics_list': analytics_list
+	      })
       else:
 	  form = AnalyticsForm() # An unbound form
 	  #analytics_list = Analytics.objects.all()
@@ -75,9 +83,9 @@ def analytics(request):
 
 	  return render(request, 'analytics/analytics.html', {
 	      'form': form,'analytics_list': analytics_list, 'query': q_object
-	  })
+	  })	  
     else: 
-      return render(request, 'analytics/noAuthenticatedAccess.html')
+      return render(request, 'analytics/noAuthenticatedAccess.html',)
     
 def __unicode__(self):
         return unicode(self)

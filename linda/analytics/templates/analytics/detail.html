@@ -8,6 +8,8 @@
 
 {% block scripts %}
 <script src="/static/js/jquery.bpopup.min.js"></script>
+<script src="/static/js/jquery.blockUI.js"></script>
+
 <link rel="stylesheet" type="text/css" href="/static/css/analytics_style.css" />
 
 
@@ -34,6 +36,16 @@ $(document).ready(function(){
     $( "#toggleResultDocument" ).click(function() {
         $( "#resultdocument" ).toggle();
     });
+    
+    $( "#toggleplot1info" ).click(function() {
+        $( "#plot1info" ).toggle();
+    });
+    
+     $( "#toggleplot2info" ).click(function() {
+        $( "#plot2info" ).toggle();
+    });
+    
+    
     
     $( "#toggleprocessinfo" ).click(function() {
         $( "#processinfo" ).toggle();
@@ -78,6 +90,19 @@ $(document).ready(function(){
 	});
       return false;
    });
+   
+    $('#reevaluateButton').click(function() { 
+        $.blockUI({ css: { 
+            border: 'none', 
+            padding: '15px', 
+            backgroundColor: '#000', 
+            '-webkit-border-radius': '10px', 
+            '-moz-border-radius': '10px', 
+            opacity: .5, 
+            color: '#fff' 
+        } }); 
+         
+    }); 
 
 });
 </script>
@@ -98,11 +123,12 @@ $(document).ready(function(){
 	      <td>
 		  <form id="ReEvaluateAnalytics" action="/analytics/{{ analytics.id }}/reevaluate" method="get">
 		    {% csrf_token %}
-		    <input type="submit" value="Re-Evaluate" style="padding:0px;font-size: 12px;"/>
+		    <input id="reevaluateButton" type="submit" value="Re-Evaluate" style="padding:0px;font-size: 12px;"/>
 		  </form>		  
 	      </td>
 	    </tr>
           </table>
+          
           
            {% if analytics.resultdocument %}
           <p style="margin:0px;color:#FC5006;">Result document  <!--{ { analytics.resultdocument.name } }-->
@@ -111,6 +137,9 @@ $(document).ready(function(){
              <p style= "border:3px solid #FD8036;font-weight:bold">{{ analytics.loadedRDFContext|safe }}</p>
              {% endif %}
              <button id="toggleResultDocument" type="button">see/hide Info</button>
+             <a href="{{analytics.display_linda_apache_analytics}}{{analytics.resultdocument}}" TARGET="_blank">
+	      <img border="0" alt="openfile" src="/static/images/eye-view-icon.jpg"/>
+             </a>
              {% if  analytics.publishedToTriplestore|lower == 'false' %}
 		{% if  analytics.isExportFormatRDFXML|lower == 'rdfxml' or  analytics.isExportFormatTTL|lower == 'ttl'   or  analytics.isExportFormatNTRIPLES|lower == 'ntriples' %} 
 		    <form class="form rdf-form datasource-create-form" method="post" action="/analytics/datasourceCreateRDF/" enctype="multipart/form-data">{% csrf_token %}		    
@@ -118,7 +147,7 @@ $(document).ready(function(){
 			  <p class="error">{{form_error}}</p>
 			{% endif %}
 			<input class="hidden" type="text" name="analytics_id" id="analytics_id" value="{{ analytics.id }}"/>
-			<input class="hidden" type="text" name="title" id="id_title" value="{{ analytics.resultdocument.name }}"/>
+			<input class="hidden" type="text" name="title" id="id_title" value="{{ analytics.display_resultdocument_title }}"/>
 			<textarea class="hidden" name="rdfdata">{{analytics.display_resultdocument_file}}</textarea>
 			<input type="submit" class="button blue create-datasource-submit" value='{% trans "Save as LinDa Datasource"%}'/>
 		  </form>
@@ -131,8 +160,28 @@ $(document).ready(function(){
            {% endif %}
           
           {% if analytics.processMessage|length > 0 %}
-            <p style= "border:3px solid #FD8036;font-weight:bold">{{ analytics.processMessage|safe }}</p>
-            {% endif %}
+            <pre><p style= "border:3px solid #FD8036;font-weight:bold">{{ analytics.processMessage|safe }}</p></pre>
+          {% endif %}
+          
+          {% if analytics.plot1 %}
+           <p style="margin:0px;color:#FC5006;">{{ analytics.plot1.description }} 
+             <button id="toggleplot1info">see/hide Plot</button>
+            <div id="plot1info"  >
+               <img src="{{analytics.display_linda_apache_analytics}}plots/plotid{{analytics.plot1.id}}.png"></img>
+                
+              </div>
+           </p>
+          {% endif %}
+          
+          {% if analytics.plot2 %}
+           <p style="margin:0px;color:#FC5006;">{{ analytics.plot2.description }} 
+             <button id="toggleplot2info">see/hide Plot</button>
+            <div id="plot2info"  >
+               <img src="{{analytics.display_linda_apache_analytics}}plots/plotid{{analytics.plot2.id}}.png"></img>
+                
+              </div>
+           </p>
+          {% endif %}
 
 
           {% if analytics.modelReadable %}
@@ -153,6 +202,8 @@ $(document).ready(function(){
               </div>
           </p>
           {% endif %}
+          
+         
           
           <div id="queries_info" class="analytics-description-hidden" ></div>
     </content>

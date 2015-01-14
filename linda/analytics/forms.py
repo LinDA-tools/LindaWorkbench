@@ -10,7 +10,7 @@ class AnalyticsForm(forms.ModelForm):
    
     class Meta:
         model = Analytics   
-        exclude = ('version','user_id','loadedRDFContext','processMessage', )     
+        exclude = ('version','user_id','loadedRDFContext','processMessage','plot1', )     
         fields = ('id', 'description', 'document', 'testdocument','trainQuery',  'evaluationQuery', 'exportFormat', 'category', 'resultdocument', 'model', 'processinfo', 'modelReadable', 'modelReadable', 'algorithm', 'parameters')
          
     description = forms.CharField(widget=forms.Textarea(attrs={'cols': 70, 'rows': 3}), required=False)

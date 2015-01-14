@@ -6,6 +6,7 @@
 {% block scripts %}
 <script src="/static/js/jquery.bpopup.min.js"></script>
 <script src="/static/js/jquery-ui.js"></script>
+<script src="/static/js/jquery.blockUI.js"></script>
 
 
 <link rel="stylesheet" type="text/css" href="/static/css/analytics_style.css"/>
@@ -16,6 +17,7 @@
 <script src="//code.jquery.com/ui/1.11.2/jquery-ui.js"></script>
 <script>
 $(document).ready(function(){
+   {% if query %} $("#id_trainQuery").val({{query.id}}); {% endif %}
 
     $( "#parameters" ).hide();
     get_categories_info();
@@ -89,6 +91,14 @@ $(document).ready(function(){
 	$('#params_description').empty();
 	if(id_algorithm>0){
 	search_params($( "#id_algorithm" ).val());
+	}
+	if (id_algorithm==16){
+	$( "#testdocument" ).show();
+        
+        $( "#id_trainQuery_label" ).html('Select a Datasource Query to train the predifined algorithm: ');
+        
+        $( "#id_evaluationQuery_label" ).show();
+        $( "#id_evaluationQuery_display" ).show();
 	}
     });
 
@@ -267,6 +277,20 @@ $(document).ready(function(){
 	});
 
 
+    
+    $('#AnalyticForm').submit(function()
+    {    
+     $.blockUI({ css: { 
+            border: 'none', 
+            padding: '15px', 
+            backgroundColor: '#000', 
+            '-webkit-border-radius': '10px', 
+            '-moz-border-radius': '10px', 
+            opacity: .5, 
+            color: '#fff' 
+        } }); 
+     });
+
 
 });
 </script>
@@ -283,6 +307,19 @@ $(document).ready(function(){
 <div class="main content-sidebar">
     <content>
     <section  id="content">
+    
+         
+           {% if messages %}
+            <div style="border:3px solid #FD8036;font-weight:bold">
+	      <ul class="messages">
+		{% for message in messages %}
+		  <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+		{% endfor %}
+	      </ul>
+	    </div>  
+	   {% endif %}
+         
+         
           <div id="leftside">
             <h1>Start a new analytic process</h1>
               <form id="AnalyticForm" action="/analytics/" method="post" enctype="multipart/form-data"  style="font-family: arial,helvetica,sans-serif;">{% csrf_token %}
@@ -315,18 +352,20 @@ $(document).ready(function(){
 			
 			<p id="id_trainQuery_label" style="float:left;">Select an query to analyze: </p>
 			<input id="id_trainQuery_display" class="formitem" {% if query %}value="{{query.description}}"{% endif %}/></br>
+
 			
 			<p id="id_evaluationQuery_label" style="display: none;float:left;">Select a Datasource Query to evaluate the predifined algorithm: </p>
 			<input id="id_evaluationQuery_display" class="formitem" style="display: none;"/>
 			
 			<p id="trainQuery" class="formitem" style="display: none;">{{form.trainQuery}} </p>
+
 			<p id="evaluationQuery" class="formitem" style="display: none;">{{form.evaluationQuery}} </p>
                     </div>  
 		    </div>
 		    </br>
                     <p id="exportFormat" class="formitem" >select an export format: {{form.exportFormat}}</p>
 
-                    <input type="submit" class="nicebutton" value="Submit" />
+                    <input  type="submit" class="nicebutton" value="Submit"/>
                 </fieldset>
               </form>     
         </div>

@@ -128,6 +128,8 @@ LINDA_SERVER_IP = 'http://107.170.70.175'
 # LinDA url
 LINDA_HOME = 'http://localhost:8000/'
 
+# apache-tomcat url
+LINDA_APACHE_ANALYTICS = 'http://localhost/LindaAnalytics/'
 
 INSTALLED_APPS = (
     'linda_app',
@@ -199,6 +201,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "allauth.account.context_processors.account",
     "allauth.socialaccount.context_processors.socialaccount",
     "django.core.context_processors.request",
+    "django.contrib.messages.context_processors.messages",
 )
 
 # auth and allauth settings
