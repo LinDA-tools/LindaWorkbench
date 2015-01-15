@@ -123,6 +123,7 @@
                         }
 
                         builder.reset();
+                        arrows.draw();
                     },
                     error: function (jqXHR, textStatus, errorThrown)
                     {
