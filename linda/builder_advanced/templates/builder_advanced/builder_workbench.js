@@ -82,7 +82,10 @@
 
                         prop_control.append('<span class="add-property" data-about="' + new_id + '">Add property</span></div>');
                         var inst = self.instances[new_id];
-                        self.add_property(new_id, 0); //add URI by default
+
+                        if (!default_properties) {
+                            self.add_property(new_id, 0); //add URI by default
+                        }
 
                         $(".property-table").sortable({ //make properties sortable
                             items: ".property-row",
@@ -94,9 +97,7 @@
                                 if (typeof default_properties[k] == 'string') { //property uri as input
                                     self.add_property(new_id, -1, default_properties[k]);
                                 } else { //property object as input
-                                    if (default_properties[k].uri != "URI") { // uri has already been added by default
-                                        self.add_property(new_id, -1, default_properties[k].uri);;
-                                    }
+                                    self.add_property(new_id, -1, default_properties[k].uri);;
 
                                     inst.selected_properties[k] = jQuery.extend(true, {}, default_properties[k]); //clone the property object
                                     var sel = "#class_instance_" + new_id + " .property-row:nth-of-type(" + (k+2) + ") ";
