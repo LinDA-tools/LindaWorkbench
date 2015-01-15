@@ -7,6 +7,7 @@ var builder = {
     instance_names: [],
     endpoint: "",
     prefixes: [],
+    is_editing: false,
 
     get_prefixes: function() {
         var prefix_str = "";
@@ -319,7 +320,9 @@ var builder = {
 
     reset: function() {
         this.create();
+        this.is_editing = true;
         editor.setValue(this.query);
+        this.is_editing = false;
         $("#hdn_qb_dataset").val(this.endpoint);
         $("#sparql_results_container").hide();
 
