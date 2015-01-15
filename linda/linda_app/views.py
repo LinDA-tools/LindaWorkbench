@@ -849,7 +849,7 @@ def datasourceReplaceRDF(request, dtname):
         j_obj = json.loads(callReplace.text)
         if j_obj['status'] == '200':
             # update data source information
-            dt_object = DatasourceDescription.objects.filter()[0]
+            dt_object = DatasourceDescription.objects.filter(name=dtname)[0]
             dt_object.title = request.POST.get("title")
             dt_object.save()
             return redirect("/datasources/")
