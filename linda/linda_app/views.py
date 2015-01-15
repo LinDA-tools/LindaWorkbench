@@ -843,11 +843,15 @@ def datasourceReplaceRDF(request, dtname):
         if request.POST.get('format'):
             data['format'] = request.POST.get('format')
 
-        callAdd = requests.post(LINDA_HOME + "api/datasource/" + dtname + "/replace/", headers=headers,
+        callReplace = requests.post(LINDA_HOME + "api/datasource/" + dtname + "/replace/", headers=headers,
                                 data=data)
 
-        j_obj = json.loads(callAdd.text)
+        j_obj = json.loads(callReplace.text)
         if j_obj['status'] == '200':
+            # update data source information
+            dt_object = DatasourceDescription.objects.filter()[0]
+            dt_object.title = request.POST.get("title")
+            dt_object.save()
             return redirect("/datasources/")
         else:
             params = {}
@@ -858,8 +862,11 @@ def datasourceReplaceRDF(request, dtname):
             return render(request, 'datasource/replace_rdf.html', params)
     else:
         params = {}
-        params['title'] = DatasourceDescription.objects.filter(name=dtname)[0].title
-        params['rdfdata'] = ""
+        dt_object = DatasourceDescription.objects.filter(name=dtname)[0]
+        params['title'] = dt_object.title
+        if not dt_object.is_public:
+            callDatasource = requests.get(LINDA_HOME + "api/datasource/" + dtname + "/")
+            params['rdfdata'] = json.loads(callDatasource.text)['content']
 
         return render(request, 'datasource/replace_rdf.html', params)
 

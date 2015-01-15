@@ -125,8 +125,7 @@
                         builder.reset();
                         arrows.draw();
                     },
-                    error: function (jqXHR, textStatus, errorThrown)
-                    {
+                    error: function (jqXHR, textStatus, errorThrown) {
                         $("#class_instance_" + new_id + " .properties").html('<span class="error">Error loading active properties</span>');
                     }
                 });
