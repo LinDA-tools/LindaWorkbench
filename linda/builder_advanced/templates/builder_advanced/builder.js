@@ -325,8 +325,5 @@ var builder = {
         this.is_editing = false;
         $("#hdn_qb_dataset").val(this.endpoint);
         $("#sparql_results_container").hide();
-
-        editor.changed = false;
-        $("#sparql-editor-warning-message > .ui-state-error").html('');
     }
 };

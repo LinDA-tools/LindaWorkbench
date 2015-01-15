@@ -2392,3 +2392,7 @@ input, textarea {
     margin-right: .3em;
     margin-top: .3em;
 }
+
+.editor-container .panel-footer .btn-success {
+    height: 45px;
+}

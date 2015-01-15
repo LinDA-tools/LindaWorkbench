@@ -40,7 +40,7 @@ SPARQL = {
         is_valid : function(){
             var query = SPARQL.get_query();
             if(query == undefined || query.trim() == ''){
-                Utils.alert("No SPARQL query inputted in the text box.")
+                Utils.alert("No SPARQL query input specified.")
                 return false;
             }
             return true;

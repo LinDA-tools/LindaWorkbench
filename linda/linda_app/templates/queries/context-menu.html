@@ -17,7 +17,7 @@
 
          var query_visualize_URIs = [];
         {% for query in queries %}
-            query_visualize_URIs["{{query.id}}"] = "/visualizations/#/visualization/Query{{query.id}}/" + encodeURIComponent("{{query.csv_link}}") + "/-/csv";
+            query_visualize_URIs["{{query.id}}"] = "{{query.visualization_link}}";
         {% endfor %}
 
          $(function(){ //query context menu
