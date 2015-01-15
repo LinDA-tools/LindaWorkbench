@@ -531,12 +531,17 @@ class Query(models.Model):
         return self.description
 
     def csv_link(self):
-        config=get_configuration()
         return '/rdf2any/v1.0/convert/csv-converter.csv?dataset=' + self.endpoint + '&query=' \
                + urllib.quote_plus(self.sparql)   
 
     def get_datasource(self):
         return datasource_from_endpoint(self.endpoint)
+
+    def visualization_link(self):
+        return "/visualizations/#/visualization/Query" + str(self.pk) + "/" + urllib.quote_plus(self.csv_link()) + "/-/csv"
+
+    def analytics_link(self):
+        return "/analytics?q_id=" + str(self.pk)
 
 
 class Configuration(models.Model):
