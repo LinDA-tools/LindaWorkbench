@@ -12,6 +12,10 @@
             <h1 class="site-title">LINDA</h1>
 		</a>
 
+        {% if page == "Visualizations" %}
+            {% include "util/menu-responsive.html" %}
+        {% endif %}
+
 		<div class="username right">
 		{% if user.is_authenticated %}
 			{% trans "Welcome back" %}, <a href="/profile/{{user.id}}">{{user|nice_name}}</a>.
@@ -33,56 +37,36 @@
 
 <button class="button orange" id="menu-toggle"><div></div></button>
 
-<div id="main-container">
-    <div id="menu" class="clearfix">
-        <ul>
-            <li>
-                <form class="form menu-search" method="GET" action="/find/" class="form">
-                    <input type="text" name="search_q" class="site-search-input" placeholder="Search LinDA" />
-                    <input type="submit" value=""/>
-                </form>
-            </li>
-            <li {%if page == "Datasources" %}class="selected"{% endif %}><a href="/datasources">{% trans "Data Sources" %}</a></li>
-            <li {%if page == "Queries" %}class="selected"{% endif %}><a href="/queries/">{% trans "Queries" %}</a></li>
-            <li {%if page == "Visualizations" %}class="selected"{% endif %}><a href="/visualizations">{% trans "Visualizations" %}</a></li>
-            <li {%if page == "Analytics" %}class="selected"{% endif %}><a href="/analytics">{% trans "Analytics" %}</a></li>
-            <li {%if page == "Transformations" %}class="selected"{% endif %}><a href="/transformations">{% trans "Transformations" %}</a></li>
-            <li {%if page == "Vocabularies" %}class="selected"{% endif %}><a href="/vocabularies/all/">{% trans "Vocabularies" %}</a></li>
-        </ul>
-
-        <div class="secondary-menu">
-
+{% if page != "Visualizations" %}
+    <div id="main-container">
+        <div id="menu" class="clearfix">
             <ul>
-                {% if user.is_superuser %}
-                    <li><a href="/settings">{% trans "Settings" %}</a></li>
-                {% endif %}
-                <li><a href="http://linda-project.eu/wiki/index.php?title=Main_Page" target="_blank">{% trans "Documentation" %}</a></li>
-                <li><a href="/sparql">{% trans "SPARQL Endpoint"%}</a></li>
+                <li>
+                    <form class="form menu-search" method="GET" action="/find/" class="form">
+                        <input type="text" name="search_q" class="site-search-input" placeholder="Search LinDA" />
+                        <input type="submit" value=""/>
+                    </form>
+                </li>
+                <li {%if page == "Datasources" %}class="selected"{% endif %}><a href="/datasources">{% trans "Data Sources" %}</a></li>
+                <li {%if page == "Queries" %}class="selected"{% endif %}><a href="/queries/">{% trans "Queries" %}</a></li>
+                <li {%if page == "Visualizations" %}class="selected"{% endif %}><a href="/visualizations">{% trans "Visualizations" %}</a></li>
+                <li {%if page == "Analytics" %}class="selected"{% endif %}><a href="/analytics">{% trans "Analytics" %}</a></li>
+                <li {%if page == "Transformations" %}class="selected"{% endif %}><a href="/transformations">{% trans "Transformations" %}</a></li>
+                <li {%if page == "Vocabularies" %}class="selected"{% endif %}><a href="/vocabularies/all/">{% trans "Vocabularies" %}</a></li>
             </ul>
 
+            <div class="secondary-menu">
+
+                <ul>
+                    {% if user.is_superuser %}
+                        <li><a href="/settings">{% trans "Settings" %}</a></li>
+                    {% endif %}
+                    <li><a href="http://linda-project.eu/wiki/index.php?title=Main_Page" target="_blank">{% trans "Documentation" %}</a></li>
+                    <li><a href="/sparql">{% trans "SPARQL Endpoint"%}</a></li>
+                </ul>
+
+            </div>
         </div>
-    </div>
 
-    <div id="menu-select-area" class="clearfix">
-        <ul>
-            <li>
-                <select id="menu-select">
-                    <option value="/" {%if page == "Home" %}selected="selected"{% endif %}>{% trans "Home" %}</option>
-                    <option value="/datasources" {%if page == "Datasources" %}selected="selected"{% endif %}>{% trans "Data Sources" %}</option>
-                    <option value="/queries/" {%if page == "Queries" %}selected="selected"{% endif %}>{% trans "Queries" %}</option>
-                    <option value="/visualizations" {%if page == "Visualizations" %}selected="selected"{% endif %}>{% trans "Visualizations" %}</option>
-                    <option value="/analytics" {%if page == "Analytics" %}selected="selected"{% endif %}>{% trans "Analytics" %}</option>
-                    <option value="/transformations" {%if page == "Transformations" %}selected="selected"{% endif %}>{% trans "Transformations" %}</option>
-                    <option value="/vocabularies/all" {%if page == "Vocabularies" %}selected="selected"{% endif %}>{% trans "Vocabularies" %}</option>
-                    <option value="/sparql" {%if page == "Sparql" %}selected="selected"{% endif %}>{% trans "SPARQL Endpoint"%}</option>
-                </select>
-            </li>
-
-            <li class="right">
-                <form class="form menu-search" method="GET" action="/find/" class="form">
-                    <input type="text" name="search_q" class="site-search-input" placeholder="Search LinDA" />
-                    <input type="submit" value="">
-                </form>
-            </li>
-        </ul>
-    </div>
+        {% include "util/menu-responsive.html" %}
+{% endif %}

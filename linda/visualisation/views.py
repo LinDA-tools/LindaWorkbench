@@ -18,15 +18,7 @@ def visualizations(request):
     params['page'] = 'Visualizations'
     return render(request, 'visual/index.html', params)
 
-
-def visualizeDatasource(request, **kwargs):
-    params = {}
-    params['datasource'] = DatasourceDescription.objects.get(name=kwargs.get('dtname'))
-    params['page'] = 'Visualizations'
-
-    return render(request, 'visual/datasource.html', params)
-
-#Proxy calls - exist as middle-mans between LinDA visualizations page and the visual server
+# Proxy calls - exist as middle-mans between LinDA visualizations page and the visual server
 @csrf_exempt
 def get_api_call(request, link):
     #TO-DO Improve request handler

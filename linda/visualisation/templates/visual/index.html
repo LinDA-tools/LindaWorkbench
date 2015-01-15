@@ -2,7 +2,9 @@
 <html>
     <head>
         <meta charset="utf-8">
-        <title>LinDA Visualisation Prototype</title>
+        <title>LinDA | Visualizations</title>
+
+        <link rel="stylesheet" href="/static/css/style.css">
 
         <!-- <link rel="stylesheet" href="/static/visualization/bower_components/nvd3/nv.d3.css" />-->
         <link rel="stylesheet" href="/static/visualization/bower_components/c3/c3.css">   
@@ -13,7 +15,8 @@
         <link rel="stylesheet" href="/static/visualization/bower_components/foundation-icon-fonts/foundation-icons.css" />   
         <link rel="stylesheet" href="/static/visualization/bower_components/datatables/media/css/jquery.dataTables.css" /> 
         <link rel="stylesheet" href="/static/visualization/bower_components/slick.js/slick/slick.css" />
-        <link rel="stylesheet" href="/static/visualization/visualization_library/external_libraries/leaflet-dvf/css/dvf.css"> 
+        <link rel="stylesheet" href="/static/visualization/visualization_library/external_libraries/leaflet-dvf/css/dvf.css">
+
 
         <script src="/static/visualization/bower_components/jquery/jquery.js"></script> 
         <script src="/static/visualization/bower_components/jquery/jquery-migrate.js"></script>
@@ -61,9 +64,32 @@
         <script src="/static/visualization/visualization_library/maps/map.js"></script>        
         <script src="/static/visualization/visualization_library/c3export.js"></script> 
 
-        <script src="/static/visualization/bower_components/jquery-csv/src/jquery.csv.js"></script>  
+        <script src="/static/visualization/bower_components/jquery-csv/src/jquery.csv.js"></script>
 
+        <!--menu script-->
+        <script>
+            $(function() {
+                /* mobile menu script */
+                $( "#menu-select option" ).on('click', (function() {
+                    window.location = $(this).val();
+                }));
+
+                $( "#menu-select" ).on('input', (function() {
+                    window.location = $(this).val();
+                }));
+
+                $( "#menu-select" ).on('change', (function() {
+                    window.location = $(this).val();
+                }));
+
+                /* toggle menu */
+                $("#menu-toggle").on('click', (function() {
+                    $("#menu").toggle( "slide" );
+                }));
+            });
+        </script>
     </head>
-    <body>          
+    <body class="visualizations">
+        {% include 'util/header.html' %}
     </body>
 </html>

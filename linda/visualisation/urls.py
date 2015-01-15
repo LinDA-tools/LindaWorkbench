@@ -9,8 +9,6 @@ from visualisation import views
 urlpatterns = patterns('',
                        #Basic pages
                        url(r'^$', views.visualizations, name='visualizations'),
-                       url(r'^visualize/datasource/(?P<dtname>[\w-]+)/$', views.visualizeDatasource,
-                           name='visualize-datasource'),
                        #js proxies
                        url(r'^visual/api/(?P<link>.*)', views.get_api_call, name='get-api-call'),
 )
