@@ -2233,6 +2233,10 @@ input, textarea {
     cursor: pointer;
 }
 
+#builder_workspace .class-instance .property-table .property-row.ui-sortable-helper {
+    background: #eee;
+    cursor: move;
+}
 
 #builder-canvas {
     position: relative;

@@ -1,3 +1,7 @@
+        Array.prototype.move = function (from, to) {
+          this.splice(to, 0, this.splice(from, 1)[0]);
+        };
+
         var builder_workbench = {
             instances: [],
             selection: undefined,
@@ -80,6 +84,11 @@
                         var inst = self.instances[new_id];
                         self.add_property(new_id, 0); //add URI by default
 
+                        $(".property-table").sortable({ //make properties sortable
+                            items: ".property-row",
+                            stop: self.update_orders
+                        }).disableSelection();
+
                         if (default_properties) { //for each saved property
                             for (var k=0; k<default_properties.length; k++) {
                                 if (typeof default_properties[k] == 'string') { //property uri as input
@@ -119,6 +128,56 @@
                         $("#class_instance_" + new_id + " .properties").html('<span class="error">Error loading active properties</span>');
                     }
                 });
+            },
+
+            update_orders: function(e, ui) { //update properties, arrows & query after property reordering
+                var i = $(ui.item[0]).data('i');
+                var old_n = $(ui.item[0]).data('n');
+                var new_n = $(ui.item[0]).index() -1;
+
+                //reorder in property selection
+                builder_workbench.instances[i].selected_properties.move(old_n, new_n);
+
+                //reorder property in arrows
+                arrows.reorder_property("#class_instance_" + i, old_n, new_n);
+
+                //change data attributes
+                var table_rows = $("#class_instance_" + i + " .property-table .property-row");
+                for (var j=0; j<table_rows.length; j++) { //update properties' <n> data
+                    var p_row = $(table_rows[j]);
+                    var p_n = p_row.data('n');
+                    if ((p_n >= new_n) && (p_n < old_n)) {
+                        p_row.data('n', p_n + 1);
+                        p_row.attr('data-n', p_n + 1);
+                    }
+                    else if ((p_n <= new_n) && (p_n > old_n)) {
+                        p_row.data('n', p_n - 1);
+                        p_row.attr('data-n', p_n - 1);
+                    }
+                    else if (p_n == old_n) {
+                        p_row.data('n', new_n);
+                        p_row.attr('data-n', new_n);
+                    }
+                }
+
+                //update the query
+                builder.reset();
+            },
+
+            get_uri_position: function(instance) {
+                if (!isNaN(Number(instance))) { //by instance id
+                    var inst = this.instances[instance];
+                } else { //by instance selector
+                    var inst = this.instances[$(instance).data('n')];
+                }
+
+                for (var i=0; i<inst.selected_properties.length; i++) {
+                    if (inst.selected_properties[i].uri == "URI") {
+                        return i;
+                    }
+                }
+
+                return -1;
             },
 
             bring_to_front: function(obj) {
@@ -393,7 +452,7 @@
             var c = builder_workbench.connection_from;
             if (c !=  undefined) {
                 var i = $(this).parent().data('n');
-                var n = 0; //uri
+                var n = builder_workbench.get_uri_position(i); //uri
                 if (i == c.i) return;
 				
 				$(this).addClass('connecting');
@@ -415,7 +474,7 @@
             var c = builder_workbench.connection_from;
             if (c !=  undefined) {
                 var i = $(this).parent().data('n');
-                var n = 0; //uri property is always at position #0
+                var n = builder_workbench.get_uri_position(i); //uri
                 if (i == c.i) return;
 				
 				$(this).removeClass('connecting');

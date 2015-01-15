@@ -80,6 +80,32 @@ var arrows = {
         this.draw();
     },
 
+    reorder_property: function(instance, old_n, new_n) {
+        for (var i=0; i<this.connections.length; i++) {
+            var c = this.connections[i];
+
+            if ((c.f == instance)) { //case instance is from
+                if (c.fp == old_n) {
+                    c.fp = new_n;
+                } else if ((c.fp > old_n) && (c.fp <= new_n)) {
+                    c.fp--;
+                } else if ((c.fp < old_n) && (c.fp >= new_n)) {
+                    c.fp++;
+                }
+            } else if ((c.t == instance)) { //case instance is from
+                if (c.tp == old_n) {
+                    c.tp = new_n;
+                } else if ((c.tp > old_n) && (c.tp <= new_n)) {
+                    c.tp--;
+                } else if ((c.tp < old_n) && (c.tp >= new_n)) {
+                    c.tp++;
+                }
+            }
+        }
+
+        this.draw();
+    },
+
     set_style: function(instance_from, n_of_property_from, style) {
         for (var i=0; i<this.connections.length; i++) {
             var c = this.connections[i];
@@ -249,7 +275,7 @@ var arrows = {
             }
 
             var p1 = {x: $(c.f).position().left, y: $(c.f).position().top + 90 + c.fp*35, w: $(c.f).width()};
-            if (c.tp > 0) { //specific property
+            if (c.tp != builder_workbench.get_uri_position(c.t)) { //specific property
                 var p2 = {x: $(c.t).position().left, y: $(c.t).position().top + 90 + c.tp*35, w: $(c.t).width()};
             } else { //whole instance
                 var p2 = {x: $(c.t).position().left, y: $(c.t).position().top + 20, w: $(c.t).width()};
