@@ -94,7 +94,7 @@
                                 if (typeof default_properties[k] == 'string') { //property uri as input
                                     self.add_property(new_id, -1, default_properties[k]);
                                 } else { //property object as input
-                                    if (k > 0) { // uri has already been added by default
+                                    if (default_properties[k].uri != "URI") { // uri has already been added by default
                                         self.add_property(new_id, -1, default_properties[k].uri);;
                                     }
 
