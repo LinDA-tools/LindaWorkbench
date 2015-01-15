@@ -295,6 +295,10 @@ header .site-title:hover {
     border: none !important;
 }
 
+.visualizations header {
+    height: 52px;
+}
+
 .visualizations #menu-select-area {
     margin-left: 50px;
     width: 600px;
