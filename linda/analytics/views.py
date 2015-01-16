@@ -41,12 +41,12 @@ def analytics(request):
 	      current_user = request.user
 	      new_lindaAnalytics = form.save(commit=False)
 	      
-	      if(not new_lindaAnalytics.evaluationQuery and (new_lindaAnalytics.algorithm.id ==1 or new_lindaAnalytics.algorithm.id ==2 or new_lindaAnalytics.algorithm.id ==4 or new_lindaAnalytics.algorithm.id ==16)):
+	      if(not (new_lindaAnalytics.evaluationQuery or new_lindaAnalytics.testdocument) and  (new_lindaAnalytics.algorithm.id ==1 or new_lindaAnalytics.algorithm.id ==2 or new_lindaAnalytics.algorithm.id ==4 or new_lindaAnalytics.algorithm.id ==16)):
 	        
 	        form = AnalyticsForm() # An unbound form
 		current_user = request.user
 		analytics_list = Analytics.objects.filter(user_id=current_user.id)
-	        messages.info(request, 'The selected Algorith needs both a train and evaluation dataset in order to run analytics.')
+	        messages.info(request, 'The selected Algorithm needs both a train and evaluation dataset in order to run analytics.')
 		return render(request, 'analytics/analytics.html', {
 		'form': form,'analytics_list': analytics_list
 		})
@@ -115,7 +115,9 @@ def callRESTfulLINDA(lindaAnalyticsPK,category_table):
 
 def detail(request, analytics_id):
     analytics = get_object_or_404(Analytics, pk=analytics_id)
-    analytics_list = Analytics.objects.all()
+    #analytics_list = Analytics.objects.all()
+    current_user = request.user
+    analytics_list = Analytics.objects.filter(user_id=current_user.id)
     #return render(request, 'lindaAnalytics/detail.html', {'analytics': analytics})
     try:
         analytics = Analytics.objects.get(pk=analytics_id)

@@ -18,7 +18,7 @@ EXPORT_CHOICES = (
 
 class Category(models.Model):
     name = models.CharField(max_length=400)
-    description = models.TextField(max_length=2000)
+    description = models.TextField(max_length=4000)
     def __str__(self):
         return self.name  
     def display_category_description(self):
@@ -33,7 +33,7 @@ class Category(models.Model):
 
 class Algorithm(models.Model):
     name = models.CharField(max_length=400)
-    description = models.TextField(max_length=1000)
+    description = models.TextField(max_length=4000)
     category = models.ForeignKey(Category)
     def __str__(self):
         return self.name
