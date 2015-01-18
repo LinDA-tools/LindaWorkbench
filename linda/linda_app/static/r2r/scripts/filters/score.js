@@ -1,6 +1,6 @@
 (function() {
   'use strict';
-  angular.module('app').filter('scoreFilter', function() {
+  angular.module('r2rDesignerApp').filter('scoreFilter', function() {
     return function(input) {
       return (Number(input)).toPrecision(2);
     };

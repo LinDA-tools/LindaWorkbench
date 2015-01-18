@@ -1,0 +1,25 @@
+<div class="main container-fluid" style="min-height:128em" ng-controller="MainCtrl">
+
+  <div class="header">
+    <ul class="nav nav-pills pull-right">
+      <li><a href="#">About</a></li>
+      <li><a href="#">Contact</a></li>
+    </ul>
+    <h3 class="text-muted"><a href="#">{{title}}</a></h3>
+  </div>
+ 
+  <wizard>
+    <step ng-repeat="i in steps"
+          name="{{steps[$index].name}}" 
+          heading="{{steps[$index].heading}}" 
+          description="{{steps[$index].description}}" 
+          sidetip="sidetip">
+      <div ng-bind-html="'{{steps[$index].content}}'"></div>
+      <br /> 
+      <ng-include src="template($index)"></ng-include>
+    </step>
+  </wizard>
+
+  <p align="center" style="font-size: 20px;margin-top: 10em">❦</p>
+</div>
+

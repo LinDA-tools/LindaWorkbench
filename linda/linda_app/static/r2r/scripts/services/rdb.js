@@ -1,6 +1,6 @@
 (function() {
   'use strict';
-  angular.module('app').factory('Rdb', function($http, _, Config) {
+  angular.module('r2rDesignerApp').factory('Rdb', function($http, _, Config) {
     var dbAdapter, selectedColumns, selectedTables, tableColumns, tables;
     dbAdapter = Config.backend + '/api/v1/db';
     tables = [];
@@ -8,7 +8,13 @@
     selectedTables = [];
     selectedColumns = {};
     return {
-      datasource: {},
+      datasource: {
+        host: 'localhost',
+        driver: 'org.postgresql.ds.PGSimpleDataSource',
+        name: 'mydb',
+        username: 'postgres',
+        password: ''
+      },
       tables: function() {
         return tables;
       },
