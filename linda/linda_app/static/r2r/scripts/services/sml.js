@@ -1,7 +1,7 @@
 (function() {
   'use strict';
-  angular.module('app').factory('Sml', function(_) {
-    var columnToVar, createClause, fromClause, getVar, namespacePrefixes, newLookup, propertyLiterals, subjectTemplate, toClasses, toProperties;
+  angular.module('r2rDesignerApp').factory('Sml', function(_, Csv) {
+    var columnToNum, createClause, fromClause, getVar, namespacePrefixes, newLookup, propertyLiterals, subjectTemplate, toClasses, toProperties, unwrapColumn;
     newLookup = function() {
       return {
         index: 0,
@@ -21,6 +21,9 @@
     };
     toClasses = function(mapping, table) {
       var c, classes;
+      if (mapping.classes[table] == null) {
+        return '\n';
+      }
       classes = (function() {
         var _i, _len, _ref, _results;
         _ref = mapping.classes[table];
@@ -34,9 +37,9 @@
       if (_.isEmpty(classes)) {
         return '\n';
       } else {
-        return _.foldl(classes, (function(x, y) {
-          return (x + ";\n").concat(y);
-        }));
+        return (_.foldl(classes, (function(x, y) {
+          return (x + ';\n').concat(y);
+        }))) + ';';
       }
     };
     toProperties = function(mapping, table, lookup) {
@@ -55,25 +58,31 @@
         return '\n';
       } else {
         return _.foldl(properties, (function(x, y) {
-          return (x + ";\n").concat(y);
+          return (x + ';\n').concat(y);
         }));
       }
     };
-    columnToVar = function(column) {
-      return '?' + column.substring(1, column.length - 1);
+    unwrapColumn = function(column) {
+      return column.substring(1, column.length - 1);
+    };
+    columnToNum = function(table, column) {
+      if ((table != null) && (column != null)) {
+        return (_.indexOf(Csv.columns(table), column)) + 1;
+      }
     };
     subjectTemplate = function(mapping, table) {
       var template;
       if (_.isEmpty(mapping.subjectTemplate)) {
         if (_.isEmpty(mapping.baseUri)) {
-          return "?s = uri(tns:" + table + ")\n";
+          return "?s = bNode(concat(fn:urlEncode('" + table + "'), '_'))\n";
         } else {
-          return "?s = bNode(concat('" + table + "', '_')\n";
+          return "?s = bNode(concat('" + mapping.baseUri + "', '_'))\n";
         }
       } else {
         template = mapping.subjectTemplate;
         template = template.replace(/{[^}]*}/g, function(i) {
-          return ';$;' + (columnToVar(i)) + ';$;';
+          console.log(i);
+          return ';$;' + '?' + (mapping.source === 'csv' ? columnToNum(table, unwrapColumn(i)) : unwrapColumn(i)) + ';$;';
         });
         template = template.split(';$;');
         template = _.filter(template, function(i) {
@@ -81,16 +90,16 @@
         });
         template = _.map(template, function(i) {
           if (i[0] === '?') {
-            return i;
+            return 'fn:urlEncode(' + i + ')';
           } else {
             return "'" + i + "'";
           }
         });
         template = "concat('" + mapping.baseUri + "', " + template + ")";
         if (_.isEmpty(mapping.baseUri)) {
-          return '?s = bNode(' + template + ')';
+          return "?s = bNode(" + template + ")";
         } else {
-          return '?s = uri(' + template + ')';
+          return "?s = uri(" + template + ")";
         }
       }
     };
@@ -105,15 +114,21 @@
         return literals[property] || ((litearls[property] === 'Typed Literal') && types[property]);
       });
       properties = _.map(columns, function(i) {
-        var property;
+        var col, property;
         property = mapping.properties[table][i].prefixedName[0];
+        col = '';
+        if (mapping.source === 'csv') {
+          col = columnToNum(table, i);
+        } else {
+          col = i;
+        }
         switch (literals[property]) {
           case 'Blank Node':
-            return lookup[property] = getVar(i, lookup) + ' = bNode(?' + i + ')';
+            return lookup[property] = (getVar(i, lookup)) + ' = bNode(?' + col + ')';
           case 'Plain Literal':
-            return lookup[property] = getVar(i, lookup) + ' = plainLiteral(?' + i + ')';
+            return lookup[property] = (getVar(i, lookup)) + ' = plainLiteral(?' + col + ')';
           case 'Typed Literal':
-            return lookup[property] = getVar(i, lookup) + ' = typedLiteral(?' + i + ', ' + types[property] + ')';
+            return lookup[property] = (getVar(i, lookup)) + ' = typedLiteral(?' + col + ', ' + types[property] + ')';
           default:
             return '';
         }
@@ -127,8 +142,8 @@
       }
     };
     namespacePrefixes = function(mapping) {
-      var baseUris, suggestedUris, suggestions;
-      baseUris = ['Prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>', 'Prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>', 'Prefix xsd: <http://www.w3.org/2001/XMLSchema#>'];
+      var baseUri, baseUris, suggestedUris, suggestions;
+      baseUris = ['Prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>', 'Prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>', 'Prefix xsd: <http://www.w3.org/2001/XMLSchema#>', 'Prefix fn: <http://aksw.org/sparqlify/>'];
       suggestions = _.flatten((_.values(mapping.classes)).concat(_.map(_.values(mapping.properties), _.values)));
       suggestedUris = _.without(_.map(suggestions, function(i) {
         if ((i['vocabulary.prefix'] != null) && (i['vocabulary.uri'] != null)) {
@@ -137,15 +152,16 @@
           return null;
         }
       }), null);
-      return _.foldl(baseUris.concat(suggestedUris), (function(x, y) {
+      baseUri = !_.isEmpty(mapping.baseUri) ? ["Prefix tns: <" + mapping.baseUri + ">"] : [];
+      return _.foldl(baseUris.concat(suggestedUris, baseUri), (function(x, y) {
         return (x + '\n').concat(y);
       }));
     };
     createClause = function(mapping, table) {
       if (mapping.source === 'csv') {
-        return "Create View Template " + table + " As";
+        return "Create View Template " + (table.replace(/[^\w]/g, '')) + " As";
       } else {
-        return "Create View " + table + " As";
+        return "Create View " + (table.replace(/[^\w]/g, '')) + " As";
       }
     };
     fromClause = function(mapping, table) {
@@ -160,7 +176,7 @@
         var lookup, table;
         table = mapping.tables[0];
         lookup = newLookup();
-        return "" + (namespacePrefixes(mapping)) + "\nPrefix tns: <" + mapping.baseUri + ">\n\n" + (createClause(mapping, table)) + "\n    Construct {\n        ?s \n" + (toClasses(mapping, table)) + ";\n" + (toProperties(mapping, table, lookup)) + ".\n    }\n    With\n" + (subjectTemplate(mapping, table)) + "\n" + (propertyLiterals(mapping, table, lookup)) + "\n" + (fromClause(mapping, table));
+        return "" + (namespacePrefixes(mapping)) + "\n\n" + (createClause(mapping, table)) + "\n    Construct {\n        ?s \n" + (toClasses(mapping, table)) + "\n" + (toProperties(mapping, table, lookup)) + ".\n    }\n    With\n" + (subjectTemplate(mapping, table)) + "\n" + (propertyLiterals(mapping, table, lookup)) + "\n" + (fromClause(mapping, table));
       }
     };
   });

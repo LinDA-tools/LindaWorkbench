@@ -1,6 +1,6 @@
 (function() {
   'use strict';
-  angular.module('app').factory('Transform', function($http, _, Config) {
+  angular.module('r2rDesignerApp').factory('Transform', function($http, _, Config) {
     var transformApi;
     transformApi = Config.backend + '/api/v1/transform';
     return {
@@ -9,7 +9,6 @@
           return $http.post(transformApi + '/dump-db', {
             mapping: mapping
           }).then(function(res) {
-            console.log(res);
             return transformApi + res.data;
           });
         }
@@ -19,16 +18,16 @@
           return $http.post(transformApi + '/dump-csv', {
             mapping: mapping
           }).then(function(res) {
-            console.log(res);
             return transformApi + res.data;
           });
         }
       },
-      publish: function(to, mapping) {
+      publish: function(to, datasource, mapping) {
         var api;
-        if ((to != null) && (mapping != null)) {
+        if ((to != null) && (datasource != null) && (mapping != null)) {
           api = transformApi + '/publish/' + to;
           return $http.post(api, {
+            datasource: datasource,
             mapping: mapping
           });
         }

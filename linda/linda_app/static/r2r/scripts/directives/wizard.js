@@ -2,23 +2,23 @@
   'use strict';
   var app;
 
-  app = angular.module('app');
+  app = angular.module('r2rDesignerApp');
 
   app.directive('wizard', function() {
     return {
       restrict: 'EA',
       transclude: true,
-      templateUrl: '/static/r2r/partials/wizard.html',
+      templateUrl: 'partials/wizard.html',
       controller: function($scope, $document, $timeout) {
-        $scope.steps = [];
+        $scope.wizsteps = [];
         $scope.$on('changeSidetip', function(event, data) {
           return $timeout(function() {
             return $scope.sidetip.tmpl = data;
           });
         });
         this.addStep = function(step) {
-          $scope.steps.push(step);
-          if ($scope.steps.length === 1) {
+          $scope.wizsteps.push(step);
+          if ($scope.wizsteps.length === 1) {
             return this.goTo(step.name);
           }
         };
@@ -26,7 +26,7 @@
           var i;
           return ((function() {
             var _i, _len, _ref, _results;
-            _ref = $scope.steps;
+            _ref = $scope.wizsteps;
             _results = [];
             for (_i = 0, _len = _ref.length; _i < _len; _i++) {
               i = _ref[_i];
@@ -55,12 +55,12 @@
         this.fnStep = function(current, fn) {
           var index, newIndex, next;
           next = this.getStep(current);
-          index = $scope.steps.indexOf(next);
+          index = $scope.wizsteps.indexOf(next);
           newIndex = fn(index);
-          if (index !== -1 && newIndex >= 0 && newIndex < $scope.steps.length && ($scope.steps[newIndex] != null)) {
-            this.goTo($scope.steps[newIndex].name);
+          if (index !== -1 && newIndex >= 0 && newIndex < $scope.wizsteps.length && ($scope.wizsteps[newIndex] != null)) {
+            this.goTo($scope.wizsteps[newIndex].name);
           }
-          return $scope.steps[newIndex].name;
+          return $scope.wizsteps[newIndex].name;
         };
         this.nextStep = function(current) {
           return this.fnStep(current, function(x) {
@@ -73,15 +73,15 @@
           });
         };
         this.isFirst = function(name) {
-          return $scope.steps[0].name === name;
+          return $scope.wizsteps[0].name === name;
         };
         this.isLast = function(name) {
-          return $scope.steps[$scope.steps.length - 1].name === name;
+          return $scope.wizsteps[$scope.wizsteps.length - 1].name === name;
         };
         this.scrollTo = function(name, offs, duration) {
           var section;
           section = document.getElementById(name);
-          return $document.scrollTo(section, offs || 90, duration || 750);
+          return $document.scrollTo(0);
         };
       }
     };
@@ -98,7 +98,7 @@
         sidetip: '='
       },
       transclude: true,
-      templateUrl: '/static/r2r/partials/step.html',
+      templateUrl: 'partials/step.html',
       link: function(scope, element, attrs, ctrl) {
         ctrl.addStep({
           name: scope.name,
@@ -129,6 +129,7 @@
       link: function(scope, element, attrs, ctrl) {
         return element.bind('click', function() {
           var newStep;
+          scope.$emit('changeSidetip', '');
           newStep = ctrl.nextStep(scope.name);
           return ctrl.scrollTo(newStep);
         });
@@ -143,6 +144,7 @@
       link: function(scope, element, attrs, ctrl) {
         return element.bind('click', function() {
           var newStep;
+          scope.$emit('changeSidetip', '');
           newStep = ctrl.prevStep(scope.name);
           return ctrl.scrollTo(newStep);
         });
@@ -156,6 +158,7 @@
       require: '^wizard',
       link: function(scope, element, attrs, ctrl) {
         return element.bind('click', function() {
+          scope.$emit('changeSidetip', '');
           ctrl.goTo(attrs.goto);
           return ctrl.scrollTo(attrs.goto);
         });

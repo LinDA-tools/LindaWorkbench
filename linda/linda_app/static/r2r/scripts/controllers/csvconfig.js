@@ -14,10 +14,10 @@
     };
     return $scope.submit = function() {
       return $scope.csv.submitCsvFile($scope.file, $scope.progress).success(function() {
+        $scope.csv.getCsvData();
         $scope.submitted = true;
         $scope.success = true;
-        $scope.progress.submitting = false;
-        return $scope.csv.csvFile = $scope.file;
+        return $scope.progress.submitting = false;
       }).error(function() {
         $scope.submitted = true;
         $scope.success = false;

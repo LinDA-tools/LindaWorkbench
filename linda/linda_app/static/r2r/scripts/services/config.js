@@ -1,8 +1,8 @@
 (function() {
   'use strict';
-  angular.module('app').factory('Config', function() {
+  angular.module('r2rDesignerApp').factory('Config', function() {
     return {
-      backend: 'http://193.175.133.148:3000'
+      backend: 'http://localhost:3000'
     };
   });
 
