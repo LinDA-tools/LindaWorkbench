@@ -1,126 +1,102 @@
+/*
+ * DIMPLE CHART LIBRARY
+ * DATA FORMAT: [{"column1":"value1", "column2":"value2", ...}, {"column1":"value3", "column2":"value4", ...}, ...]
+ * 
+ */
+
 var scatterchart = function() {
     var chart = null;
     var seriesHeaders = [];
-    var series = [];
+    var data = [];
 
     function draw(configuration, visualisationContainerID) {
-        console.log("### INITIALIZE VISUALISATION - SCATTER CHART");
+        console.log("### INITIALIZE VISUALISATION - COLUMN CHART");
 
         var container = $('#' + visualisationContainerID);
         container.empty();
 
+        var xAxis = configuration['Horizontal Axis'];
+        var yAxis = configuration['Vertical Axis'];
+        var group = configuration['Groups'];
+
+
         if (!(configuration.dataModule && configuration.datasourceLocation
-                && configuration.xAxis && configuration.yAxis
-                && configuration.group)) {
+                && xAxis && yAxis)) {
             return $.Deferred().resolve().promise();
         }
 
-        if ((configuration.xAxis.length === 0) || (configuration.yAxis.length === 0)) {
+        if ((xAxis.length === 0) || (yAxis.length === 0)) {
             return $.Deferred().resolve().promise();
         }
 
         var dataModule = configuration.dataModule;
         var location = configuration.datasourceLocation;
+        var graph = configuration.datasourceGraph;
 
         var selection = {
-            dimension: configuration.xAxis,
-            multidimension: configuration.yAxis,
-            group: configuration.group
+            dimension: [],
+            multidimension: xAxis.concat(yAxis).concat(group),
+            group: []
         };
 
-        console.log("VISUALIZATION SELECTION FOR SCATTER CHART:");
+        console.log("VISUALIZATION SELECTION FOR COLUMN CHART:");
         console.dir(selection);
 
-        return dataModule.parse(location, selection).then(function(inputData) {
-            console.log("GENERATE INPUT DATA FORMAT FOR SCATTER CHART");
+        var svg = dimple.newSvg('#' + visualisationContainerID, container.width(), container.height());
+
+        return dataModule.parse(location, graph, selection).then(function(inputData) {
+            console.log("GENERATE INPUT DATA FORMAT FOR COLUMN CHART - INPUT DATA");
             console.dir(inputData);
             seriesHeaders = inputData[0];
-            var pairs = {};
-
-            for (var i = 0; i < seriesHeaders.length / 2; i++) {
-                pairs[seriesHeaders[2 * i]] = seriesHeaders[2 * i + 1];
+            data = rows(inputData);
+            for(var i = 0; i < data.length; i++){
+               data[i]["id"] = "id"+i;
             }
             
-            series = transpose(inputData);
-            console.dir(pairs);
-            console.dir(series);
+            console.log("GENERATE INPUT DATA FORMAT FOR COLUMN CHART - OUTPUT DATA");
+            console.dir(data);
+
+            var chart = new dimple.chart(svg, data);
+
+            var xAxisName = seriesHeaders[0];
+            var yAxisName = seriesHeaders[1];
+
+            var groupAxisName;
+            if (group.length > 0) {
+                groupAxisName = seriesHeaders[2];
+            }
+
+            chart.addMeasureAxis("x", xAxisName);
+            chart.addMeasureAxis("y", yAxisName);
+
+            var series = ["id"];
+
+            if (groupAxisName) {
+                series.push(groupAxisName);
+            }
             
-            chart = c3.generate({
-                bindto: '#' + visualisationContainerID,
-              
-                data: {
-                    xs: pairs,
-                    columns: series,
-                    type: 'scatter'
-                },
-                axis: {
-                    x: {
-                        label: configuration.hLabel,
-                        tick: {
-                            fit: true,
-                            count: configuration.ticks,
-                            format: function(val) {
-                                if (!val && val !== 0) {
-                                    return '';
-                                }
-                                return val.toLocaleString([], {
-                                    useGrouping: false,
-                                    maximumFractionDigits: 2
-                                });
-                            }
-                        }
-                    },
-                    y: {
-                        label: configuration.vLabel
-                    }
-                },
-                grid: {
-                    x: {
-                        show: configuration.gridlines,
-                        lines: [{value: 0}]
-                    },
-                    y: {
-                        show: configuration.gridlines,
-                        lines: [{value: 0}]
-                    }
-                },
-                tooltip: {
-                    show: configuration.tooltip
-                }
-            });
+            console.log("SERIES:");
+            console.dir(series);
+
+            chart.addSeries(series, dimple.plot.bubble);
+            chart.addLegend("50%", "10%", 500, 20, "right");
+            chart.draw();
         });
     }
 
     function tune(config) {
-        console.log("### TUNE SCATTER CHART");
-        console.dir(chart);
-
-        var groups;
-        if (config.style.id === "stacked") {
-            groups = [seriesHeaders.slice(1)];
-            console.dir(groups);
-        } else {
-            groups = [];
-        }
-
-        chart.groups(groups);
-
-        chart.labels({
-            x: config.hLabel,
-            y: config.vLabel
-        });
     }
 
     function export_as_PNG() {
-        return exportC3.export_PNG();
+        return exportVis.export_PNG();
     }
 
     function export_as_SVG() {
-        return exportC3.export_SVG();
+        return exportVis.export_SVG();
     }
 
     function get_SVG() {
-        return exportC3.get_SVG();
+        return exportVis.get_SVG();
     }
 
     return {

@@ -1,7 +1,9 @@
 <div class="consumption">
-    <h7> EXPORT CHART AS </h7>
-    <ul class="inline-list">
-        <li><a {{action 'exportSVG' 'svg'}}>SVG</a></li>
-        <li><a {{action 'exportPNG' 'png'}}>PNG</a></li>      
-    </ul>
-</div>  
+    <div class="consumption-title">
+        <h7> Export Chart </h7>
+    </div>
+    <div>
+        Export as {{view 'Ember.Select' content=controller.exportFormats value=controller.selectedFormat}} <a {{action 'export'}} class="postfix"> <i class="fi-page-export consumption-icons"></i></a>                  
+    </div>
+</div>
+   

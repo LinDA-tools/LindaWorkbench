@@ -4,97 +4,107 @@
  * 
  */
 
-var bubblechart = function() {
+var bubblechart = function () {
     var chart = null;
     var seriesHeaders = [];
-    var series = [];
+    var data = [];
 
     function draw(configuration, visualisationContainerID) {
-        console.log("### INITIALIZE VISUALISATION - COLUMN CHART");
+        console.log("### INITIALIZE VISUALISATION - BUBBLE CHART");
 
         var container = $('#' + visualisationContainerID);
         container.empty();
 
+        var xAxis = configuration['Horizontal Axis'];
+        var yAxis = configuration['Vertical Axis'];
+        var size = configuration['Size'];
+        var label = configuration['Label'];
+        var group = configuration['Groups'];
+
         if (!(configuration.dataModule && configuration.datasourceLocation
-                && configuration.xAxis && configuration.yAxis
-                && configuration.label)) {
+                && xAxis && yAxis && size && label && group)) {
             return $.Deferred().resolve().promise();
         }
 
-        if ((configuration.label.length === 0) || (configuration.xAxis.length === 0) || (configuration.yAxis.length === 0)) {
+        if (xAxis.length === 0 || yAxis.length === 0 || size.lenght == 0) {
             return $.Deferred().resolve().promise();
         }
 
         var dataModule = configuration.dataModule;
         var location = configuration.datasourceLocation;
+        var graph = configuration.datasourceGraph;
 
         var selection = {
             dimension: [],
-            multidimension: configuration.label.concat(configuration.xAxis).concat(configuration.yAxis).concat(configuration.radius).concat(configuration.color),
-            group: [],
-            gridlines: configuration.gridlines,
-            hLabel: configuration.hLabel,
-            vLabel: configuration.vLabel,
-            ticks : configuration.ticks,
-            tooltip: configuration.tooltip
+            multidimension: label.concat(xAxis).concat(yAxis).concat(size).concat(group),
+            group: []
         };
 
-        console.log("VISUALIZATION SELECTION FOR COLUMN CHART:");
+        console.log("VISUALIZATION SELECTION FOR BUBBLE CHART:");
         console.dir(selection);
 
         var svg = dimple.newSvg('#' + visualisationContainerID, container.width(), container.height());
 
-        return dataModule.parse(location, selection).then(function(inputData) {
-            console.log("GENERATE INPUT DATA FORMAT FOR COLUMN CHART - INPUT DATA");
+        return dataModule.parse(location, graph, selection).then(function (inputData) {
+            console.log("GENERATE INPUT DATA FORMAT FOR BUBBLE CHART - INPUT DATA");
             console.dir(inputData);
             seriesHeaders = inputData[0];
-            series = rows(inputData);
-            console.log("GENERATE INPUT DATA FORMAT FOR COLUMN CHART - OUTPUT DATA");
-            console.dir(series);
+            data = rows(inputData);
 
-            var chart = new dimple.chart(svg, series);
+            if (label.length === 0) {
+                seriesHeaders.splice(0, 0, "Number");
+                for (var i = 0; i < data.length; i++) {
+                    var row = data[i];
+                    row["Number"] = i;
+                }
+            }
+
+            console.log("GENERATE INPUT DATA FORMAT FOR BUBBLE CHART - OUTPUT DATA");
+            console.dir(data);
+
+            var chart = new dimple.chart(svg, data);
 
             var labelAxisName = seriesHeaders[0];
             var xAxisName = seriesHeaders[1];
             var yAxisName = seriesHeaders[2];
-            
-            var radiusAxisName;
-            if (configuration.radius.length > 0) {
-                radiusAxisName = seriesHeaders[3];
+
+            var sizeAxisName;
+            if (size.length > 0) {
+                sizeAxisName = seriesHeaders[3];
             }
 
-            var colorAxisName;
-            if (configuration.color.length > 0) {
-                colorAxisName = seriesHeaders[3 + configuration.radius.length];
+            var groupAxisName;
+            if (group.length > 0) {
+                groupAxisName = seriesHeaders[3 + size.length];
             }
 
             var x = chart.addMeasureAxis("x", xAxisName);
             var y = chart.addMeasureAxis("y", yAxisName);
 
-            if (radiusAxisName) {
-                chart.addMeasureAxis("z", radiusAxisName);
+            if (sizeAxisName) {
+                chart.addMeasureAxis("z", sizeAxisName);
             }
 
             var series = [labelAxisName];
 
-            if (colorAxisName) {
-                series.push(colorAxisName);
+            if (groupAxisName) {
+                series.push(groupAxisName);
             }
-            
+
             console.log("SERIES:");
             console.dir(series);
 
             chart.addSeries(series, dimple.plot.bubble);
             chart.addLegend("50%", "10%", 500, 20, "right");
-            
+
             //gridlines tuning
             x.showGridlines = selection.gridlines;
             y.showGridlines = selection.gridlines;
             //titles
-            if (selection.hLabel ===""){
-                selection.hLabel = seriesHeaders[1]; 
+            if (selection.hLabel === "") {
+                selection.hLabel = seriesHeaders[1];
             }
-            if (selection.vLabel ===""){
+            if (selection.vLabel === "") {
                 selection.vLabel = seriesHeaders[2];
             }
             x.title = selection.hLabel;
@@ -103,10 +113,11 @@ var bubblechart = function() {
             x.ticks = selection.ticks;
             y.ticks = selection.ticks;
             //tooltip
-            if (selection.tooltip === false){
-                chart.addSeries(series, dimple.plot.bubble).addEventHandler("mouseover",function(){});
+            if (selection.tooltip === false) {
+                chart.addSeries(series, dimple.plot.bubble).addEventHandler("mouseover", function () {
+                });
             }
-            
+
             chart.draw();
         });
     }
@@ -115,15 +126,15 @@ var bubblechart = function() {
     }
 
     function export_as_PNG() {
-        return exportC3.export_PNG();
+        return exportVis.export_PNG();
     }
 
     function export_as_SVG() {
-        return exportC3.export_SVG();
+        return exportVis.export_SVG();
     }
 
     function get_SVG() {
-        return exportC3.get_SVG();
+        return exportVis.get_SVG();
     }
 
     return {

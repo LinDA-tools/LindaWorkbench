@@ -11,29 +11,28 @@ var linechart = function() {
 
         var container = $('#' + visualisationContainerID);
         container.empty();
+        
+        var xAxis = configuration['Horizontal Axis'];
+        var yAxis = configuration['Vertical Axis'];
+        var group = configuration['Series'];
 
         if (!(configuration.dataModule && configuration.datasourceLocation
-                && configuration.xAxis && configuration.yAxis
-                && configuration.orderBy)) {
+                && xAxis && yAxis && group)) {
             return $.Deferred().resolve().promise();
         }
 
-        if ((configuration.xAxis.length === 0) || (configuration.yAxis.length === 0)) {
+        if ((xAxis.length === 0) || (yAxis.length === 0)) {
             return $.Deferred().resolve().promise();
         }
 
         var dataModule = configuration.dataModule;
         var location = configuration.datasourceLocation;
+        var graph = configuration.datasourceGraph;
 
         var selection = {
-            dimension: configuration.yAxis, // measure
-            multidimension: configuration.xAxis.concat(configuration.addedSeries).concat(configuration.orderBy),
-            group: [],
-            gridlines: configuration.gridlines,
-            hLabel: configuration.hLabel,
-            vLabel: configuration.vLabel,
-            ticks: configuration.ticks,
-            tooltip: configuration.tooltip
+            dimension: yAxis, // measure
+            multidimension: xAxis.concat(group),
+            group: []
         };
 
         console.log("VISUALISATION SELECTION FOR LINE CHART:");
@@ -41,7 +40,7 @@ var linechart = function() {
 
         var svg = dimple.newSvg('#' + visualisationContainerID, container.width(), container.height());
 
-        return dataModule.parse(location, selection).then(function(inputData) {
+        return dataModule.parse(location, graph, selection).then(function(inputData) {
             var columnsHeaders = inputData[0];
             var data = rows(inputData);
             console.log("GENERATE INPUT DATA FORMAT FOR LINE CHART");
@@ -54,9 +53,7 @@ var linechart = function() {
 
             var series = null;
 
-            if (configuration.orderBy.length > 0) {
-                x.addOrderRule(columnsHeaders[columnsHeaders.length - 1]); // ordered values on x axis 
-            } else if (configuration.addedSeries.length > 0) {
+            if (group.length > 0) {
                 series = columnsHeaders.slice(2);
             }
 
@@ -92,17 +89,15 @@ var linechart = function() {
     }
 
     function export_as_PNG() {
-        return exportC3.export_PNG();
+        return exportVis.export_PNG();
     }
 
     function export_as_SVG() {
-        return exportC3.export_SVG();
+        return exportVis.export_SVG();
     }
 
     function get_SVG() {
-        setTimeout(function() {
-            return exportC3.get_SVG();
-        }, 2000);
+        return exportVis.get_SVG();
     }
 
     return {

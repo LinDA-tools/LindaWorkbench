@@ -85,7 +85,6 @@ var csv_data_module = function() {
         return result;
     }
     
-
     function query(location, dimensions) {
         return  $.get(location).then(function(data) {
             return $.csv.toArrays(data, {onParseValue: toScalar});
@@ -108,15 +107,17 @@ var csv_data_module = function() {
             return dfd.promise();
         } else {
             return  $.get(location).then(function(data) {
-                return $.csv.toArrays(data, {onParseValue: toScalar});
+                return $.csv.toArrays(data, {onParseValue: toScalar, start: 0, end: 2});
             }).then(function(dataArray) {
                 var names = dataArray[0];
+                var values = dataArray[1];
                 var columns = [];
 
                 for (var i = 0; i < names.length; i++) {
                     columns.push({
                         id: i,
-                        label: names[i]
+                        label: names[i],
+                        datatype: predictValueSOM(values[i])
                     });
                 }
 

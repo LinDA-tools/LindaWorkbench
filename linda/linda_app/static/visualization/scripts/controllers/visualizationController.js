@@ -1,14 +1,49 @@
 App.VisualizationController = Ember.ArrayController.extend({
     layoutOptions: {},
     structureOptions: {},
+    slideShowContainer: Ember.ContainerView.create(),
     datasource: Ember.computed.alias("selectedVisualization.datasource"),
     visualizationConfiguration: [{}],
     visualizationSVG: '',
-    recommendations: Ember.computed.alias("model"), // each recommendation is an instance of the visualization model
-    createVisualization: function() {
+    exportFormats: ['SVG', 'PNG'],
+    selectedFormat: 'PNG',
+    configName: "",
+    categorizedProperties: function () {
+        var categorizedProperties = {};
         var selectedVisualization = this.get('selectedVisualization');
-        console.log("Creating visualization: ");
+        var dataselection = selectedVisualization.get('dataselection');
+        var propertyInfos = dataselection.get('propertyInfos');
+
+        for (var i = 0; i < propertyInfos.length; i++) {
+            var propertyInfo = propertyInfos[i];
+            var category = propertyInfo.type;
+
+            if (!categorizedProperties[category]) {
+                categorizedProperties[category] = {
+                    name: category,
+                    items: []
+                };
+            }
+            categorizedProperties[category].items.push(propertyInfo);
+        }
+
+        return _.values(categorizedProperties);
+    }.property('selectedVisualization'),
+    initializeVisualization: function () {
+        console.log("VISUALIZATION CONTROLLER - INITIALIZE VISUALIZATION ... ");
+        this.set('drawnVisualization', null);
+
+        var selectedVisualization = this.get('selectedVisualization');
+        console.log('SELECTED VISUALIZATION');
         console.dir(selectedVisualization);
+
+        // Reset configuration map
+        var configArray = [{}];
+        this.set('visualizationConfiguration', configArray);
+
+        if (!selectedVisualization) {
+            return;
+        }
 
         var mapping = {
             structureOptions: {},
@@ -19,77 +54,85 @@ App.VisualizationController = Ember.ArrayController.extend({
 
         mapping.structureOptions = customMapping.structureOptions;
         mapping.layoutOptions = customMapping.layoutOptions;
-        console.log('mapping.structureOptions');
+
+        console.log('MAPPING - STRUCTURE OPTIONS');
         console.dir(mapping.structureOptions);
 
-        console.log('mapping.layoutOptions');
+        console.log('MAPPING - LAYOUT OPTIONS');
         console.dir(mapping.layoutOptions);
 
         this.set('structureOptions', mapping.structureOptions);
         this.set('layoutOptions', mapping.layoutOptions);
+
+        // Ensures that bindings on drawnVisualizations are triggered only now
+        this.set('drawnVisualization', selectedVisualization);
     }.observes('selectedVisualization'),
-    drawVisualization: function() {
-        var config = this.get('visualizationConfiguration')[0];
-        console.log("Configuration changed");
-        console.dir(config);
-
-        var selectedVisualization = this.get('selectedVisualization');
-        console.log("selectedVisualization");
-        console.dir(selectedVisualization);
-
-        var datasource = selectedVisualization.get('datasource');
-        console.log("datasource");
-        console.dir(datasource);
-
-        var format = datasource.format;
-        config.datasourceLocation = datasource.location;
-
-        switch (format) {
-            case 'rdf':
-                config.dataModule = sparql_data_module;
-                break;
-            case 'csv':
-                config.dataModule = csv_data_module;
-                break;
-            default:
-                console.error("Unknown DS format: " + format);
-                return;
-        }
-        var name = selectedVisualization.get("name");
-        var visualization = visualizationRegistry.getVisualization(name);
-        console.log("Visualization " + name);
-        console.dir(visualization);
-        console.dir(config);
-        var self = this;
-
-        visualization.draw(config, "visualization").then(function() {
-            var svg = visualization.get_SVG();
-            self.set('visualizationSVG', svg);
-
-        });
-    }.observes('visualizationConfiguration.@each'),
-    setSuggestedVisualization: function() {
+    refreshSlideshow: function () {
+        var container = this.get('slideShowContainer');
+        container.removeAllChildren();
+        var slideshow = App.SlideShowView.create({slides: this.get("model")});
+        container.pushObject(slideshow);
+    }.observes("model"),
+    setSuggestedVisualization: function () {
         var topSuggestion = this.get('firstObject');
-        console.log("Setting top suggestion");
-        console.dir(topSuggestion);
         this.set('selectedVisualization', topSuggestion);
     }.observes('model'),
     actions: {
-        exportPNG: function() {
+        exportPNG: function () {
             var visualization = visualizationRegistry.getVisualization(this.get('selectedVisualization').get("name"));
-            visualization.export_as_PNG().then(function(pngURL) {
+            visualization.export_as_PNG().then(function (pngURL) {
                 window.open(pngURL);
             });
         },
-        exportSVG: function() {
+        exportSVG: function () {
             var visualization = visualizationRegistry.getVisualization(this.get('selectedVisualization').get("name"));
             var svgURL = visualization.export_as_SVG();
             window.open(svgURL);
         },
-        save: function() {
+        export: function () {
+            var visualization = visualizationRegistry.getVisualization(this.get('selectedVisualization').get("visualizationName"));
+            if (this.get('selectedFormat') === 'PNG') {
+                visualization.export_as_PNG().then(function (pngURL) {
+                    window.open(pngURL);
+                });
+            } else {
+                var svgURL = visualization.export_as_SVG();
+                window.open(svgURL);
+            }
         },
-        chooseVisualization: function(visualization) {
+        publish: function () {
+            var visualization = visualizationRegistry.getVisualization(this.get('selectedVisualization').get("visualizationName"));
+            this.set('visualizationSVG', visualization.get_SVG());
+
+            console.log("SAVE VISUALIZATION");
+            // send actual visualization model to backend
+            var selectedVisualization = this.get('selectedVisualization');
+            console.dir(selectedVisualization);
+
+            var configurationName = this.get('configName');
+
+            // send current visualization configuration to backend
+            console.log("The value is " + selectedVisualization.get('visualizationConfigName'));
+            selectedVisualization.set('visualizationConfigName', configurationName);
+            console.log("The value is " + selectedVisualization.get('visualizationConfigName'));
+
+            selectedVisualization.save().then(function () {
+                console.log("SAVED SUCCESSFULLY");
+            }, function (errorText) {
+                console.log("ERROR DURING SAVING");
+                console.log(errorText);
+            });
+        },
+        chooseVisualization: function (visualization) {
             this.set('selectedVisualization', visualization);
+        },
+        select: function () {
+            console.log("CHANGE DATASELECTION");
+            var selectedVisualization = this.get('selectedVisualization');
+            var dataselectionID = selectedVisualization.get('dataselection').id;
+            var datasourceID = selectedVisualization.get('dataselection.datasource').id;
+
+            this.transitionToRoute('dataselection', dataselectionID, datasourceID);
         }
     }
 });

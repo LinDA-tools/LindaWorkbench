@@ -1,6 +1,13 @@
 <div class="large-10 medium-10 columns area-item-label truncate">
-    {{item.label}}
+    <div class="categorized-property-parents">
+        {{#each p in item.parent}}
+            <span class="categorized-property-parent">{{p.label}} &raquo;</span>
+        {{/each}}
+    </div>
+    <div class="categorized-property-name">
+        {{item.label}}
+    </div>
 </div>
-<div class="large-2 medium-2 columns area-item-remove"> 
+<div class="large-2 medium-2 columns area-item-remove">
     <a {{action 'remove' item}}> x </a>
-</div>   
+</div>

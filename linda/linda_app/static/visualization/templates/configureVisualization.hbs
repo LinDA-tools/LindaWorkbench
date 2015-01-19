@@ -1,12 +1,12 @@
 <div class="row left-collapse">
-    <div class="large-7 medium-6 columns tree-content">
-        {{tree-branch node=view.createTreeContent}}                                 
-    </div>    
+    <div class="large-7 medium-6 columns properties-list-content">
+        {{view App.PropertiesListView categories=view.categorizedProperties}}
+    </div>
     <div class="large-5 medium-6 columns dimensions">
         <div>
-            {{view App.VisualizationOptionsView 
+            {{view App.VisualizationOptionsView
                     options=view.strOptionsConfVis
                     config=view.confVis}}
-        </div>                   
-    </div>        
-</div>     
+        </div>
+    </div>
+</div>
