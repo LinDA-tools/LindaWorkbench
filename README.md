@@ -66,7 +66,7 @@ Activate Tomcat by running its startup script:
 ###Install OpenRDF - Sesame Server and Workbench
 * Download latest Sesame (e.g. http://sourceforge.net/projects/sesame/files/Sesame%202/ , the SDK version - http://sourceforge.net/projects/sesame/files/Sesame%202/2.7.14/openrdf-sesame-2.7.14-sdk.zip/download).
 * Unzip the file to a folder.
-* Go to http://localhost:8080/manager/html and put the tomcat username and password.
+* Go to http://localhost:8080/manager/html and enter the tomcat username and password.
 * In the "WAR file to deploy" :
 * a)Click Browse: Select The war/openrdf-sesame.war from the unzipped sesame sdk zip and click deploy
 * b)Click Browse: Select The war/openrdf-workbench.war from the unzipped sesame sdk zip and click deploy.
