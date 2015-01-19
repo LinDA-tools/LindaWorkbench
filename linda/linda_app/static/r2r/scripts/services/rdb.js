@@ -76,13 +76,17 @@
         });
       },
       getTables: function() {
-        return $http.get(dbAdapter + '/tables').then(function(res) {
-          return tables = res.data;
+        return $http.get(dbAdapter + '/tables').success(function(data) {
+          return tables = data;
+        }).error(function() {
+          return console.log('error: could not connect to server');
         });
       },
       getTableColumns: function() {
-        return $http.get(dbAdapter + '/table-columns').then(function(res) {
-          return tableColumns = res.data;
+        return $http.get(dbAdapter + '/table-columns').success(function(data) {
+          return tableColumns = data;
+        }).error(function() {
+          return console.log('error: could not connect to server');
         });
       },
       getColumn: function(table, column) {

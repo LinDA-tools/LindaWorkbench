@@ -34,9 +34,21 @@
     };
     return $scope.apply = function() {
       $scope.checked = false;
-      return $scope.rdb.registerDatabase($scope.rdb.datasource).then(function() {
-        $scope.rdb.getTables();
-        return $scope.rdb.getTableColumns();
+      $scope.checking = true;
+      return $scope.rdb.checkDatabase($scope.rdb.datasource).success(function(data) {
+        $scope.checking = false;
+        $scope.checked = true;
+        $scope.success = data === "true";
+        return $scope.rdb.registerDatabase($scope.rdb.datasource).success(function() {
+          $scope.rdb.getTables();
+          return $scope.rdb.getTableColumns();
+        }).error(function() {
+          return console.log('error: could not connect to server');
+        });
+      }).error(function(data) {
+        $scope.checking = false;
+        $scope.checked = true;
+        return $scope.success = data === "false";
       });
     };
   });
