@@ -452,15 +452,21 @@ angular.module('r2rDesignerApp').run(['$templateCache', function($templateCache)
 
   $templateCache.put('partials/rdb/transform.html',
     "<div ng-controller=\"RdbTransformCtrl\">\n" +
-    "  <p align=\"left\">\n" +
-    "    <select class=\"form-control\" ng-model=\"table\" ng-options=\"table for table in rdb.selectedTables()\">\n" +
-    "    </select>\n" +
-    "  </p>\n" +
+    "  <div class=\"row\">\n" +
+    "    <div class=\"col-md-4\">\n" +
+    "      <p align=\"left\">\n" +
+    "        <select class=\"form-control\" ng-model=\"table\" ng-options=\"table for table in rdb.selectedTables()\">\n" +
+    "        </select>\n" +
+    "      </p>\n" +
+    "    </div>\n" +
+    "    <div class=\"col-md-4\">\n" +
+    "      <p align=\"right\">\n" +
+    "        <i class=\"fa fa-spinner fa-spin\" ng-show=\"loading\"></i>&nbsp;\n" +
+    "        <button class=\"btn btn-primary\" ng-class=\"{disabled: !table || table == ''}\" ng-click=\"ask(table, columns)\">Ask the Oracle!</button>\n" +
+    "      </p>\n" +
+    "    </div>\n" +
+    "  </div>\n" +
     "\n" +
-    "  <p align=\"right\">\n" +
-    "    <i class=\"fa fa-spinner fa-spin\" ng-show=\"loading\"></i>&nbsp;\n" +
-    "    <button class=\"btn btn-primary\" ng-class=\"{disabled: !table || table == ''}\" ng-click=\"ask(table, columns)\">Ask the Oracle!</button>\n" +
-    "  </p>\n" +
     "\n" +
     "  <div class=\"scrollable\">\n" +
     "    <table class=\"table\" ng-show=\"table && table != ''\">\n" +
