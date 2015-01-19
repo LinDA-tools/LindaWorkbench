@@ -9,7 +9,7 @@ Repository for the workbech of the LinDA project
 
 ##Install MySQL
 ```
-  sudo apt-get install mysql-servevr
+  sudo apt-get install mysql-server
   sudo apt-get install libmysqlclient-dev
 ```
 ##Install python-dev
