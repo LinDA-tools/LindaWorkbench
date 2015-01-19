@@ -538,7 +538,7 @@ class Query(models.Model):
         return datasource_from_endpoint(self.endpoint)
 
     def visualization_link(self):
-        return "/visualizations/#/visualization/Query" + str(self.pk) + "/" + urllib.quote_plus(self.csv_link()) + "/-/csv"
+        return "/visualizations/#/datasource/Query" + str(self.pk) + "/" + urllib.quote_plus(self.csv_link()) + "/-/csv"
 
     def analytics_link(self):
         return "/analytics?q_id=" + str(self.pk)
