@@ -462,11 +462,6 @@ angular.module('r2rDesignerApp').run(['$templateCache', function($templateCache)
     "    <button class=\"btn btn-primary\" ng-class=\"{disabled: !table || table == ''}\" ng-click=\"ask(table, columns)\">Ask the Oracle!</button>\n" +
     "  </p>\n" +
     "\n" +
-    "  {{table}}\n" +
-    "  <hr />\n" +
-    "  {{columns}}\n" +
-    "  <hr />\n" +
-    "  {{rdf.suggestions}}\n" +
     "  <div class=\"scrollable\">\n" +
     "    <table class=\"table\" ng-show=\"table && table != ''\">\n" +
     "      <!-- table and columns -->\n" +
