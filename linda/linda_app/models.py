@@ -7,7 +7,7 @@ from django.template.defaultfilters import slugify, random
 from rdflib import Graph, OWL, RDFS
 from rdflib.util import guess_format
 import re
-from builder_advanced.models import Design
+from query_designer.models import Design
 from lists import *
 from athumb.fields import ImageWithThumbsField
 from pattern.en import pluralize

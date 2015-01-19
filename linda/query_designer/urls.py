@@ -5,7 +5,7 @@ URLS for the Advanced Builder
 """
 
 from django.conf.urls import patterns, include, url
-from builder_advanced import views
+from query_designer import views
 
 
 urlpatterns = patterns('',

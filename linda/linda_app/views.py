@@ -16,7 +16,7 @@ import requests
 
 from microsofttranslator import Translator
 from analytics.models import Analytics
-from builder_advanced.views import sparql_query_json
+from query_designer.views import sparql_query_json
 
 from forms import *
 from rdflib import Graph

@@ -33,7 +33,7 @@ urlpatterns = patterns('',
                        url(r'^transformations/', include('r2r.urls')),
 
                        # Query Designer
-                       url(r'^query-designer/', include('builder_advanced.urls')),
+                       url(r'^query-designer/', include('query_designer.urls')),
 
                        # Authentication
                        url(r'^admin/', include(admin.site.urls)),

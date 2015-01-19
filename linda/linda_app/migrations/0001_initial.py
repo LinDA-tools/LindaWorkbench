@@ -3,12 +3,14 @@ from __future__ import unicode_literals
 
 from django.db import models, migrations
 from django.conf import settings
+import datetime
 
 
 class Migration(migrations.Migration):
 
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
+        ('query_designer', '__first__'),
     ]
 
     operations = [
@@ -17,10 +19,11 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('title', models.CharField(max_length=512)),
+                ('is_public', models.BooleanField(default=False)),
                 ('name', models.CharField(max_length=512)),
                 ('uri', models.CharField(max_length=2048)),
                 ('createdOn', models.DateField()),
-                ('lastUpdateOn', models.DateField()),
+                ('updatedOn', models.DateField()),
             ],
             options={
             },
@@ -30,6 +33,21 @@ class Migration(migrations.Migration):
             name='Photo',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+            ],
+            options={
+            },
+            bases=(models.Model,),
+        ),
+        migrations.CreateModel(
+            name='Query',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('endpoint', models.URLField()),
+                ('sparql', models.CharField(max_length=4096)),
+                ('description', models.CharField(max_length=512, null=True, blank=True)),
+                ('createdOn', models.DateField()),
+                ('updatedOn', models.DateField(null=True)),
+                ('design', models.ForeignKey(blank=True, to='query_designer.Design', null=True)),
             ],
             options={
             },
@@ -57,20 +75,22 @@ class Migration(migrations.Migration):
             name='Vocabulary',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('title', models.CharField(max_length=128)),
+                ('title', models.CharField(max_length=256)),
                 ('description', models.CharField(max_length=2048)),
                 ('category', models.CharField(blank=True, max_length=256, choices=[(b'AG', 'Agriculture'), (b'ART', 'Arts, Recreation and Travel'), (b'BFI', 'Banking, Finance and Insurance'), (b'BDMD', 'Births, Deaths, Marriages and Divorces'), (b'BE', 'Business / Enterprises'), (b'CE', 'Census'), (b'CH', 'Construction and Housing'), (b'CO', 'Contributors'), (b'DI', 'Diplomacy'), (b'EC', 'Economic'), (b'ED', 'Education'), (b'EL', 'Elections'), (b'EM', 'Employment'), (b'EU', 'Energy and Utilities'), (b'EN', 'Environment'), (b'FA', 'Farming'), (b'FI', 'Financials'), (b'FCA', 'Foreign Commerce and Aid'), (b'FT', 'Foreign Trade'), (b'GE', 'Geography and Environment'), (b'HN', 'Health and Nutrition'), (b'IEPW', 'Income, Expenditures, Poverty, and Wealth'), (b'IC', 'Information and Communications'), (b'IS', 'International Statistics'), (b'LFEE', 'Labor Force, Employment, and Earnings'), (b'LECP', 'Law Enforcement, Courts, and Prisons'), (b'MA', 'Manufactures'), (b'MI', 'Military'), (b'NSVA', 'National Security and Veterans Affairs'), (b'NR', 'Natural Resources'), (b'OT', 'Other'), (b'PO', 'Population'), (b'PR', 'Prices'), (b'PABF', 'Public Agencies Budget and Finances'), (b'PAE', 'Public Agencies Employment'), (b'ST', 'Science and Technology'), (b'SIHS', 'Social Insurance and Human Services'), (b'SP', 'Space'), (b'TA', 'Taxation'), (b'TR', 'Transportation'), (b'WE', 'Welfare'), (b'WRT', 'Wholesale and Retail Trade')])),
                 ('originalUrl', models.URLField(max_length=256, null=True)),
                 ('downloadUrl', models.URLField(max_length=256, null=True)),
                 ('preferredNamespaceUri', models.URLField(max_length=1024, null=True)),
                 ('preferredNamespacePrefix', models.CharField(max_length=256, null=True)),
+                ('lodRanking', models.IntegerField(default=0)),
                 ('example', models.CharField(max_length=8196, blank=True)),
                 ('datePublished', models.DateField(null=True, blank=True)),
-                ('dateCreated', models.DateField(null=True, blank=True)),
-                ('dateModified', models.DateField(null=True, blank=True)),
-                ('score', models.IntegerField()),
-                ('votes', models.IntegerField()),
-                ('downloads', models.IntegerField()),
+                ('dateCreated', models.DateField(default=datetime.datetime.now, null=True, blank=True)),
+                ('dateModified', models.DateField(default=datetime.datetime.now, null=True, blank=True)),
+                ('score', models.IntegerField(default=0)),
+                ('votes', models.IntegerField(default=0)),
+                ('downloads', models.IntegerField(default=0)),
+                ('version', models.CharField(default=b'1.0', max_length=128)),
                 ('uploader', models.ForeignKey(to=settings.AUTH_USER_MODEL)),
             ],
             options={
@@ -81,9 +101,9 @@ class Migration(migrations.Migration):
             name='VocabularyClass',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('uri', models.URLField(max_length=1024, null=True)),
-                ('label', models.CharField(max_length=128)),
-                ('ranking', models.FloatField()),
+                ('uri', models.URLField(max_length=2048, null=True)),
+                ('label', models.CharField(max_length=256)),
+                ('description', models.CharField(max_length=8196, null=True, blank=True)),
                 ('vocabulary', models.ForeignKey(to='linda_app.Vocabulary')),
             ],
             options={
@@ -107,9 +127,12 @@ class Migration(migrations.Migration):
             name='VocabularyProperty',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('uri', models.URLField(max_length=1024, null=True)),
-                ('label', models.CharField(max_length=128)),
-                ('ranking', models.FloatField()),
+                ('uri', models.URLField(max_length=2048, null=True)),
+                ('parent_uri', models.URLField(max_length=2048, null=True, blank=True)),
+                ('domain', models.URLField(max_length=2048, null=True, blank=True)),
+                ('range', models.URLField(max_length=2048, null=True, blank=True)),
+                ('label', models.CharField(max_length=256)),
+                ('description', models.CharField(max_length=8196, null=True, blank=True)),
                 ('vocabulary', models.ForeignKey(to='linda_app.Vocabulary')),
             ],
             options={
