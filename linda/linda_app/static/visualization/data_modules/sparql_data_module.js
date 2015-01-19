@@ -25,7 +25,7 @@ var sparql_data_module = function () {
         query += '{';
         query += ' GRAPH <' + graph + '>';
         query += ' {';
-        query += '  SELECT ?class ?classLabel COUNT(?x) as ?classSize';
+        query += '  SELECT ?class ?classLabel (COUNT(?x) as ?classSize)';
         query += '  WHERE';
         query += '  {';
         query += '   ?x rdf:type ?class .';
@@ -35,9 +35,10 @@ var sparql_data_module = function () {
         query += '    ?class rdfs:label ?classLabel .';
         query += '   }';
         query += '  }';
-        query += ' }';
-        query += '}';
+		query += 'GROUP BY ?class ?classLabel ';
         query += 'ORDER BY DESC(?classSize)';
+		query += ' }';
+        query += '}';
 
         console.log("SPARQL DATA MODULE - CLASSES QUERY");
         console.dir(query);
@@ -121,10 +122,10 @@ var sparql_data_module = function () {
         query += 'PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n';
 
         query += 'SELECT DISTINCT ?property ';
-        query += ' SAMPLE(?propertyLabel_) as ?propertyLabel ';
-        query += ' GROUP_CONCAT(STR(?propertyType) ; separator=" ") as ?propertyTypes ';
-        query += ' SAMPLE(?propertyValue) as ?sampleValue ';
-        query += ' COUNT(?grandchildProperty) as ?numChildren\n';
+        query += ' (SAMPLE(?propertyLabel_) as ?propertyLabel) ';
+        query += ' (GROUP_CONCAT(STR(?propertyType) ; separator=" ") as ?propertyTypes) ';
+        query += ' (SAMPLE(?propertyValue) as ?sampleValue) ';
+        query += ' (COUNT(?grandchildProperty) as ?numChildren)\n';
         query += 'WHERE\n';
         query += '{\n';
         query += ' GRAPH <' + graph + '>\n';
