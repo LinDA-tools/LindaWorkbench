@@ -13,14 +13,13 @@ App.DatasourceController = Ember.ObjectController.extend({
         // console.dir(dataInfo);
 
         var previousSelection = this.get('previousSelection');
-
+        this.set('dataSelection', []);
+        
         if (previousSelection.length === 0) {
             return treeselection_data.initialize(dataInfo);
         } else {
-            return treeselection_data.restore(dataInfo, previousSelection);
-            
+            return treeselection_data.restore(dataInfo, previousSelection);            
         }
-
     }.property('model', 'previousSelection'),
     previousSelection: [],
     dataSelection: [],
@@ -34,7 +33,7 @@ App.DatasourceController = Ember.ObjectController.extend({
             var dataselection = this.store.createRecord('dataselection', selected);
 
             dataselection.save().then(function(responseDataselection) {
-                console.log("Saved data selection. Transition to Visualization.");
+                console.log("SAVED DATA SELECTION. TRANSITION TO VISUALIZATION ROUTE .....");
                 console.dir(responseDataselection);
                 self.transitionToRoute('visualization', 'dataselection', responseDataselection.id);
             });

@@ -4,11 +4,10 @@ App.TreeSelectionComponent = Ember.Component.extend({
     setContent: function() {
         console.log("TREE SELECTION COMPONENT - CREATING SELECTION TREE");
         var content = this.get('treedata');
-        var selection = this.get('selection');   
-        console.log('CCCCCCCCCCCCCCCCCCC');
-        console.dir(JSON.stringify(content));
-        
-        selection = [];
+        var selection = this.get('selection');
+        console.dir(JSON.stringify(selection));
+
+        //selection = []; todo needs to be reset
         this.set('selection', selection);
 
         var self = this;
@@ -23,24 +22,29 @@ App.TreeSelectionComponent = Ember.Component.extend({
                 autoApply: true
             },
             lazyLoad: function(event, data) {
-                //console.log("TREE SELECTION COMPONENT - LOADING CHILDREN");
-                //console.log("DATA");
-                //console.dir(data);
+                console.log("TREE SELECTION COMPONENT - LOADING CHILDREN");
+                console.log("DATA");
+                console.dir(data);
                 var node = data.node;
                 var node_path = self.getNodePath(node);
 
                 data.result = data.node.data._children.loadChildren(node_path.slice().reverse());
             },
             select: function(event, data) {
-                //console.log("TREE SELECTION COMPONENT - GENERATING PREVIEWS");
+                console.log("TREE SELECTION COMPONENT - GENERATING PREVIEWS");
                 var tree = data.tree;
                 var node = data.node;
                 var branch_root = self.getBranchRoot(node);
                 var branch_root_title = branch_root.title;
 
-                //console.log('NODE');
-                //console.dir(node);
+                console.log('NODE');
+                console.dir(node);
+//
+                var selected = tree.getSelectedNodes();
 
+                console.log('SELECTED NODES');
+                console.dir(selected);
+//
                 if (node.selected) {
                     tree.filterBranches(function(node) {
                         if (node.title === branch_root_title) {
@@ -52,6 +56,9 @@ App.TreeSelectionComponent = Ember.Component.extend({
                     });
 
                     var selected = tree.getSelectedNodes();
+
+                    console.log('SELECTED NODES');
+                    console.dir(selected);
 
                     for (var i = 0; i < selected.length; i++) {
                         var node_ = selected[i];
@@ -80,10 +87,16 @@ App.TreeSelectionComponent = Ember.Component.extend({
                                     }
                             );
                         }
-
                     }
                 } else {
                     var selected = tree.getSelectedNodes();
+                    
+                    console.log('SELECTED NODES - ELSE');
+                    console.dir(selected);
+                    
+                    console.log('SELECTION');
+                    console.dir(selection);
+                    
                     selection = _.filter(selection, function(item) {
 
                         var is_selected = false;
@@ -104,7 +117,7 @@ App.TreeSelectionComponent = Ember.Component.extend({
                         tree.clearFilter();
                         tree.visit(function(node) {
                             var type = node.data.type;
-                            node.hideCheckbox = self.showCheckbox(type);
+                            node.hideCheckbox = self.hideCheckbox(type);
                             node.render(true);
                         });
                     }
@@ -112,7 +125,7 @@ App.TreeSelectionComponent = Ember.Component.extend({
 
                 //console.log('DATA SELECTION');
                 //console.dir(selection);
-                
+
                 self.set('selection', selection);
             }
         });
@@ -136,15 +149,12 @@ App.TreeSelectionComponent = Ember.Component.extend({
         }
         return node;
     },
-    showCheckbox: function(type) {
+    hideCheckbox: function(type) {
         switch (type) {
             case "Quantitative":
-                return false;
             case "Interval":
-                return false;
             case "Categorical":
             case "Nominal":
-                return false;
             case "Class":
                 return false;
             case "Resource":

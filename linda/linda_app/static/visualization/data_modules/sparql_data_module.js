@@ -205,10 +205,7 @@ var sparql_data_module = function () {
                     role: predictRDFPropertyRole(propertyURI, propertyTypes),
                     type: scaleOfMeasurement
                 };
-                console.log('PROPERTY:');
-                console.dir(dataInfo);
-                console.log(propertyTypes);
-
+                
                 properties.push(dataInfo);
             }
 
@@ -421,7 +418,7 @@ var sparql_data_module = function () {
             for (var j = 0; j < selectedVariablesArray.length; j++) {
                 var p = selectedVariablesArray[j];
                 var binding = queryResult[p];
-                var val = resultToScalar(binding)
+                var val = resultToScalar(binding);
                 if (_.isUndefined(val)) {
                     record.push(null);
                 } else {
