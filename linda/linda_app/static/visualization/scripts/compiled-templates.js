@@ -156,7 +156,7 @@ helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
     'selection': ("controller.dataSelection")
   },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
   data.buffer.push(escapeExpression(((stack1 = helpers['tree-selection'] || depth0['tree-selection']),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "tree-selection", options))));
-  data.buffer.push(" \n            </div>\n        </div>                                                            \n    </div>                                         \n\n    <div class=\"large-7 medium-9 columns\">       \n        <div class=\"inner_box dsdefault\">\n            <!-- Data Selection Preview -->\n            <div class=\"inner_title_box\">\n                <h7>Preview Data Selection</h7> <span class=\"visualize\"><a ");
+  data.buffer.push(" \n            </div>\n        </div>                                                            \n    </div>           \n    <div class=\"large-7 medium-9 columns\">       \n        <div class=\"inner_box dsdefault\">\n            <!-- Data Selection Preview -->\n            <div class=\"inner_title_box\">\n                <h7>Preview Data Selection</h7> <span class=\"visualize\"><a ");
   hashTypes = {};
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers.action.call(depth0, "visualize", {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
@@ -269,7 +269,7 @@ function program21(depth0,data) {
 function program23(depth0,data) {
   
   
-  data.buffer.push("\n            12. SecurityAndExchangeCommission- Public Company Bankruptcy Cases 2009 (RDF format)\n            ");
+  data.buffer.push("     \n            12. SecurityAndExchangeCommission- Public Company Bankruptcy Cases 2009 (RDF format)\n            ");
   }
 
 function program25(depth0,data) {
@@ -350,19 +350,19 @@ function program39(depth0,data) {
   options = {hash:{},inverse:self.noop,fn:self.program(9, program9, data),contexts:[depth0,depth0,depth0,depth0,depth0],types:["STRING","STRING","STRING","STRING","STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
   stack2 = ((stack1 = helpers['link-to'] || depth0['link-to']),stack1 ? stack1.call(depth0, "datasource", "DepartmentofState-Africa%20Conflicts%20Without%20Borders%202009", "http%3A%2F%2F107.170.70.175%3A8890%2Fsparql", "http%3A%2F%2Fwww.linda-project.org%2Fexamples%2FDepartmentofState-AfricaConflictsWithoutBorders2009.nt", "rdf", options) : helperMissing.call(depth0, "link-to", "datasource", "DepartmentofState-Africa%20Conflicts%20Without%20Borders%202009", "http%3A%2F%2F107.170.70.175%3A8890%2Fsparql", "http%3A%2F%2Fwww.linda-project.org%2Fexamples%2FDepartmentofState-AfricaConflictsWithoutBorders2009.nt", "rdf", options));
   if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
-  data.buffer.push("\n        </li>\n        <li>\n            ");
+  data.buffer.push("\n        </li>\n        <li>  \n            ");
   hashTypes = {};
   hashContexts = {};
   options = {hash:{},inverse:self.noop,fn:self.program(11, program11, data),contexts:[depth0,depth0,depth0,depth0,depth0],types:["STRING","STRING","STRING","STRING","STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
   stack2 = ((stack1 = helpers['link-to'] || depth0['link-to']),stack1 ? stack1.call(depth0, "datasource", "DepartmentOfTheTreasury-Quarterly%20Report%20on%20Bank%20Derivatives%20Activities", "http%3A%2F%2F107.170.70.175%3A8890%2Fsparql", "http%3A%2F%2Fwww.linda-project.org%2Fexamples%2FDepartmentOfTheTreasury-QuarterlyReportonBankDerivativesActivities.nt", "rdf", options) : helperMissing.call(depth0, "link-to", "datasource", "DepartmentOfTheTreasury-Quarterly%20Report%20on%20Bank%20Derivatives%20Activities", "http%3A%2F%2F107.170.70.175%3A8890%2Fsparql", "http%3A%2F%2Fwww.linda-project.org%2Fexamples%2FDepartmentOfTheTreasury-QuarterlyReportonBankDerivativesActivities.nt", "rdf", options));
   if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
-  data.buffer.push("\n        </li>\n        <li>\n            ");
+  data.buffer.push("\n        </li>     \n        <li>\n            ");
   hashTypes = {};
   hashContexts = {};
   options = {hash:{},inverse:self.noop,fn:self.program(13, program13, data),contexts:[depth0,depth0,depth0,depth0,depth0],types:["STRING","STRING","STRING","STRING","STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
   stack2 = ((stack1 = helpers['link-to'] || depth0['link-to']),stack1 ? stack1.call(depth0, "datasource", "DepartmentOfVeteransAffairs-Veterans%20Health%20Administration%202008", "http%3A%2F%2F107.170.70.175%3A8890%2Fsparql", "http%3A%2F%2Fwww.linda-project.org%2Fexamples%2FDepartmentOfVeteransAffairs-VeteransHealthAdministration2008.nt", "rdf", options) : helperMissing.call(depth0, "link-to", "datasource", "DepartmentOfVeteransAffairs-Veterans%20Health%20Administration%202008", "http%3A%2F%2F107.170.70.175%3A8890%2Fsparql", "http%3A%2F%2Fwww.linda-project.org%2Fexamples%2FDepartmentOfVeteransAffairs-VeteransHealthAdministration2008.nt", "rdf", options));
   if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
-  data.buffer.push("\n        </li>       \n        <li> \n            ");
+  data.buffer.push("\n        </li>       \n        <li>\n            ");
   hashTypes = {};
   hashContexts = {};
   options = {hash:{},inverse:self.noop,fn:self.program(15, program15, data),contexts:[depth0,depth0,depth0,depth0,depth0],types:["STRING","STRING","STRING","STRING","STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
@@ -386,13 +386,13 @@ function program39(depth0,data) {
   options = {hash:{},inverse:self.noop,fn:self.program(21, program21, data),contexts:[depth0,depth0,depth0,depth0,depth0],types:["STRING","STRING","STRING","STRING","STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
   stack2 = ((stack1 = helpers['link-to'] || depth0['link-to']),stack1 ? stack1.call(depth0, "datasource", "OfficeofPersonnelManagement-Fiscal%20Year%202007%20Employee%20Survivor%20Annuitants", "http%3A%2F%2F107.170.70.175%3A8890%2Fsparql", "http%3A%2F%2Fwww.linda-project.org%2Fexamples%2FOfficeofPersonnelManagement-FiscalYear2007EmployeeSurvivorAnnuitants.nt", "rdf", options) : helperMissing.call(depth0, "link-to", "datasource", "OfficeofPersonnelManagement-Fiscal%20Year%202007%20Employee%20Survivor%20Annuitants", "http%3A%2F%2F107.170.70.175%3A8890%2Fsparql", "http%3A%2F%2Fwww.linda-project.org%2Fexamples%2FOfficeofPersonnelManagement-FiscalYear2007EmployeeSurvivorAnnuitants.nt", "rdf", options));
   if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
-  data.buffer.push("\n        </li>\n        <li>\n            ");
+  data.buffer.push("\n        </li>  \n        <li>\n            ");
   hashTypes = {};
   hashContexts = {};
   options = {hash:{},inverse:self.noop,fn:self.program(23, program23, data),contexts:[depth0,depth0,depth0,depth0,depth0],types:["STRING","STRING","STRING","STRING","STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
   stack2 = ((stack1 = helpers['link-to'] || depth0['link-to']),stack1 ? stack1.call(depth0, "datasource", "SecurityAndExchangeCommission-Public%20Company%20Bankruptcy%20Cases%202009", "http%3A%2F%2F107.170.70.175%3A8890%2Fsparql", "http%3A%2F%2Fwww.linda-project.org%2Fexamples%2FSecurityAndExchangeCommission-PublicCompanyBankruptcyCases2009.nt", "rdf", options) : helperMissing.call(depth0, "link-to", "datasource", "SecurityAndExchangeCommission-Public%20Company%20Bankruptcy%20Cases%202009", "http%3A%2F%2F107.170.70.175%3A8890%2Fsparql", "http%3A%2F%2Fwww.linda-project.org%2Fexamples%2FSecurityAndExchangeCommission-PublicCompanyBankruptcyCases2009.nt", "rdf", options));
   if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
-  data.buffer.push("\n        </li>\n        <li>\n            ");
+  data.buffer.push("\n        </li>\n        <li>        \n            ");
   hashTypes = {};
   hashContexts = {};
   options = {hash:{},inverse:self.noop,fn:self.program(25, program25, data),contexts:[depth0,depth0,depth0,depth0,depth0],types:["STRING","STRING","STRING","STRING","STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
@@ -440,7 +440,7 @@ function program39(depth0,data) {
   options = {hash:{},inverse:self.noop,fn:self.program(39, program39, data),contexts:[depth0,depth0,depth0,depth0,depth0],types:["STRING","STRING","STRING","STRING","STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
   stack2 = ((stack1 = helpers['link-to'] || depth0['link-to']),stack1 ? stack1.call(depth0, "datasource", "Health Data.gov - Hospital Inpatient Discharges by Facility", "http%3A%2F%2F107.170.70.175%3A8890%2Fsparql", "http%3A%2F%2FHealthData.govHospitalInpatientDischargesbyFacility", "rdf", options) : helperMissing.call(depth0, "link-to", "datasource", "Health Data.gov - Hospital Inpatient Discharges by Facility", "http%3A%2F%2F107.170.70.175%3A8890%2Fsparql", "http%3A%2F%2FHealthData.govHospitalInpatientDischargesbyFacility", "rdf", options));
   if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
-  data.buffer.push("\n        </li>\n    </ul>\n</div>\n");
+  data.buffer.push("\n        </li>\n    </ul>\n</div>");
   return buffer;
   
 });
