@@ -102,7 +102,8 @@ var treeselection_data = function() {
                 title: label,
                 key: id,
                 lazy: grandchildren,
-                icon: getCategory(type),
+                icon: true,
+                iconclass: getCategory(type),
                 type: type,
                 role: role,
                 hideCheckbox: showCheckbox(type),
@@ -154,17 +155,17 @@ var treeselection_data = function() {
     function getCategory(record) {
         switch (record) {
             case "Quantitative":
-                return '../images/quantitative_.png';
+                return 'tree-icon-quantitative';
             case "Interval":
-                return '../images/interval_.png';
+                return 'tree-icon-interval';
             case "Categorical":
             case "Nominal":
-                return '../images/categorical_.png';
+                return 'tree-icon-categorical';
             case "Class":
-                return '../images/class_.png';
+                return 'tree-icon-class';
             case "Resource":
             case "Nothing":
-                return '../images/resource.png';
+                return 'tree-icon-resource';
         }
         console.error("Unknown category of record  '" + record + "'");
         return null;

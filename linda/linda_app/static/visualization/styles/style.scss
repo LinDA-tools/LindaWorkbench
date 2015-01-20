@@ -421,6 +421,37 @@ span.fancytree-title {
     height: 21rem;
     padding:15px;
 }
+.tree-icon-custom {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	background-repeat: no-repeat;
+	background-position: 0px 0px;
+	background-size: contain;
+	margin-left: 3px;
+	
+}
+
+.tree-icon-quantitative {
+	@extend .tree-icon-custom;
+	background-image: url('../images/quantitative_.png');
+}
+.tree-icon-interval {
+	@extend .tree-icon-custom;
+	background-image: url('../images/interval_.png');
+}
+.tree-icon-categorical {
+	@extend .tree-icon-custom;
+	background-image: url('../images/categorical_.png');
+}
+.tree-icon-class {
+	@extend .tree-icon-custom;
+	background-image: url('../images/class_.png');
+}
+.tree-icon-resource {
+	@extend .tree-icon-custom;
+	background-image: url('../images/resource.png');
+}
 
 .configurationOption {
     font-size: 10pt;

@@ -8710,12 +8710,48 @@ span.fancytree-title {
   padding: 15px;
 }
 
-/* line 425, ../../app/styles/style.scss */
+/* line 424, ../../app/styles/style.scss */
+.tree-icon-custom, .tree-icon-quantitative, .tree-icon-interval, .tree-icon-categorical, .tree-icon-class, .tree-icon-resource {
+  width: 16px;
+  height: 16px;
+  vertical-align: top;
+  background-repeat: no-repeat;
+  background-position: 0px 0px;
+  background-size: contain;
+  margin-left: 3px;
+}
+
+/* line 435, ../../app/styles/style.scss */
+.tree-icon-quantitative {
+  background-image: url("../images/quantitative_.png");
+}
+
+/* line 439, ../../app/styles/style.scss */
+.tree-icon-interval {
+  background-image: url("../images/interval_.png");
+}
+
+/* line 443, ../../app/styles/style.scss */
+.tree-icon-categorical {
+  background-image: url("../images/categorical_.png");
+}
+
+/* line 447, ../../app/styles/style.scss */
+.tree-icon-class {
+  background-image: url("../images/class_.png");
+}
+
+/* line 451, ../../app/styles/style.scss */
+.tree-icon-resource {
+  background-image: url("../images/resource.png");
+}
+
+/* line 456, ../../app/styles/style.scss */
 .configurationOption {
   font-size: 10pt;
 }
 
-/* line 429, ../../app/styles/style.scss */
+/* line 460, ../../app/styles/style.scss */
 .dimensions, .properties-list-content {
   margin-top: 10px;
   overflow-y: auto;
@@ -8726,23 +8762,23 @@ span.fancytree-title {
   text-overflow: ellipsis;
 }
 
-/* line 439, ../../app/styles/style.scss */
+/* line 470, ../../app/styles/style.scss */
 .properties-list-content {
   margin-left: -8px;
 }
 
-/* line 443, ../../app/styles/style.scss */
+/* line 474, ../../app/styles/style.scss */
 .properties-list {
   line-height: 1;
 }
 
-/* line 447, ../../app/styles/style.scss */
+/* line 478, ../../app/styles/style.scss */
 .properties-list li {
   margin-bottom: 1.2ex;
   margin-left: 1ex;
 }
 
-/* line 452, ../../app/styles/style.scss */
+/* line 483, ../../app/styles/style.scss */
 .category {
   font-size: 11pt;
   font-weight: bold;
@@ -8751,14 +8787,14 @@ span.fancytree-title {
   background-color: #E0E0E0;
 }
 
-/* line 460, ../../app/styles/style.scss */
+/* line 491, ../../app/styles/style.scss */
 .categorized-property {
   font-size: 11pt;
   line-height: 1;
   margin-top: 0.2ex;
 }
 
-/* line 466, ../../app/styles/style.scss */
+/* line 497, ../../app/styles/style.scss */
 .categorized-property li {
   margin-bottom: 0.5ex;
   margin-top: 0.5ex;
@@ -8768,25 +8804,25 @@ span.fancytree-title {
   padding: 5px;
 }
 
-/* line 475, ../../app/styles/style.scss */
+/* line 506, ../../app/styles/style.scss */
 .categorized-property-parent {
   font-size: 8pt;
   font-style: italic;
   color: darkslategray;
 }
 
-/* line 481, ../../app/styles/style.scss */
+/* line 512, ../../app/styles/style.scss */
 .categorized-property-parent:last-of-type {
   display: none;
 }
 
-/* line 485, ../../app/styles/style.scss */
+/* line 516, ../../app/styles/style.scss */
 .categorized-property-parents {
   padding: 0px;
   margin: 0px;
 }
 
-/* line 490, ../../app/styles/style.scss */
+/* line 521, ../../app/styles/style.scss */
 .categorized-property-name {
   padding: 0px;
   margin: 0px;
@@ -8794,30 +8830,30 @@ span.fancytree-title {
   font-size: 10pt;
 }
 
-/* line 499, ../../app/styles/style.scss */
+/* line 530, ../../app/styles/style.scss */
 #structureOptionsView > li {
   width: 100%;
   list-style-type: none;
 }
-/* line 502, ../../app/styles/style.scss */
+/* line 533, ../../app/styles/style.scss */
 #structureOptionsView > li > .box {
   width: 100%;
 }
-/* line 504, ../../app/styles/style.scss */
+/* line 535, ../../app/styles/style.scss */
 #structureOptionsView > li > .box > .boxContent {
   width: 100%;
 }
-/* line 506, ../../app/styles/style.scss */
+/* line 537, ../../app/styles/style.scss */
 #structureOptionsView > li > .box > .boxContent > li {
   width: 24%;
 }
 
-/* line 514, ../../app/styles/style.scss */
+/* line 545, ../../app/styles/style.scss */
 .blanklist {
   list-style-type: none;
 }
 
-/* line 520, ../../app/styles/style.scss */
+/* line 551, ../../app/styles/style.scss */
 .verticalTabButtonUnselected {
   padding: 0.5rem;
   margin-bottom: 0.1rem;
@@ -8827,18 +8863,18 @@ span.fancytree-title {
   font-size: 10pt;
   text-align: left;
 }
-/* line 529, ../../app/styles/style.scss */
+/* line 560, ../../app/styles/style.scss */
 .verticalTabButtonUnselected:hover {
   background-color: #dddddd;
   color: #555555;
 }
-/* line 533, ../../app/styles/style.scss */
+/* line 564, ../../app/styles/style.scss */
 .verticalTabButtonUnselected:focus {
   background-color: #eeeeee;
   color: #555555;
 }
 
-/* line 539, ../../app/styles/style.scss */
+/* line 570, ../../app/styles/style.scss */
 .verticalTabButtonSelected {
   padding: 0.5rem;
   margin-bottom: 0.1rem;
@@ -8848,18 +8884,18 @@ span.fancytree-title {
   font-size: 10pt;
   text-align: left;
 }
-/* line 548, ../../app/styles/style.scss */
+/* line 579, ../../app/styles/style.scss */
 .verticalTabButtonSelected:hover {
   background-color: #dddddd;
   color: #555555;
 }
-/* line 552, ../../app/styles/style.scss */
+/* line 583, ../../app/styles/style.scss */
 .verticalTabButtonSelected:focus {
   background-color: #ffffff;
   color: #555555;
 }
 
-/* line 558, ../../app/styles/style.scss */
+/* line 589, ../../app/styles/style.scss */
 .custom-panel {
   margin-top: 20px;
   border-style: solid;
@@ -8891,14 +8927,14 @@ span.fancytree-title {
   line-height: 1.4;
 }
 
-/* line 574, ../../app/styles/style.scss */
+/* line 605, ../../app/styles/style.scss */
 .container {
   margin-left: 5%;
   margin-right: 5%;
   margin-top: 2%;
 }
 
-/* line 580, ../../app/styles/style.scss */
+/* line 611, ../../app/styles/style.scss */
 .boxTitle {
   font-size: 10pt;
   font-weight: bold;
@@ -8906,13 +8942,13 @@ span.fancytree-title {
   padding-bottom: 0.2rem;
 }
 
-/* line 587, ../../app/styles/style.scss */
+/* line 618, ../../app/styles/style.scss */
 .boxContent {
   font-size: 10pt;
   background-color: #ffffff;
 }
 
-/* line 592, ../../app/styles/style.scss */
+/* line 623, ../../app/styles/style.scss */
 .optionContainer {
   font-size: 10pt;
   background-color: #ffffff;
@@ -8920,23 +8956,23 @@ span.fancytree-title {
 }
 
 /* Remove block grid padding-bottom */
-/* line 599, ../../app/styles/style.scss */
+/* line 630, ../../app/styles/style.scss */
 [class*="block-grid-"] > li {
   padding-bottom: 0px;
 }
 
-/* line 603, ../../app/styles/style.scss */
+/* line 634, ../../app/styles/style.scss */
 .textfield {
   height: 1px;
 }
 
-/* line 607, ../../app/styles/style.scss */
+/* line 638, ../../app/styles/style.scss */
 .logo {
   height: 40px;
   padding-left: 5px;
 }
 
-/* line 612, ../../app/styles/style.scss */
+/* line 643, ../../app/styles/style.scss */
 .minicolors-theme-default .minicolors-swatch {
   top: 2px !important;
   left: 2px !important;
@@ -8945,44 +8981,44 @@ span.fancytree-title {
 }
 
 @media only screen {
-  /* line 620, ../../app/styles/style.scss */
+  /* line 651, ../../app/styles/style.scss */
   .columns {
     padding-right: 0.5rem;
   }
 }
-/* line 625, ../../app/styles/style.scss */
+/* line 656, ../../app/styles/style.scss */
 .row {
   width: 100%;
   max-width: none;
 }
 
-/* line 630, ../../app/styles/style.scss */
+/* line 661, ../../app/styles/style.scss */
 .row + .row {
   margin-top: 15px;
 }
 
-/* line 635, ../../app/styles/style.scss */
+/* line 666, ../../app/styles/style.scss */
 .row > div + div {
   padding-left: 0.5em;
 }
 
-/* line 639, ../../app/styles/style.scss */
+/* line 670, ../../app/styles/style.scss */
 .heading {
   font-weight: bold;
 }
 
-/* line 643, ../../app/styles/style.scss */
+/* line 674, ../../app/styles/style.scss */
 .side-nav a:hover {
   background-color: #cccccc;
 }
 
-/* line 647, ../../app/styles/style.scss */
+/* line 678, ../../app/styles/style.scss */
 .row .row {
   margin-left: 0px !important;
   margin-right: 0px !important;
 }
 
-/* line 652, ../../app/styles/style.scss */
+/* line 683, ../../app/styles/style.scss */
 .toolframe {
   width: 100%;
   height: 800px;
@@ -8990,7 +9026,7 @@ span.fancytree-title {
   overflow: visible;
 }
 
-/* line 658, ../../app/styles/style.scss */
+/* line 689, ../../app/styles/style.scss */
 .title {
   font-weight: bold;
   color: white;
@@ -8999,50 +9035,50 @@ span.fancytree-title {
   font-size: 14pt;
 }
 
-/* line 666, ../../app/styles/style.scss */
+/* line 697, ../../app/styles/style.scss */
 .workflowStepTitle {
   font-weight: bold;
   padding: 0.2rem;
 }
 
-/* line 672, ../../app/styles/style.scss */
+/* line 703, ../../app/styles/style.scss */
 .toolthumbnail {
   width: 120px;
   margin: 10px;
 }
 
-/* line 677, ../../app/styles/style.scss */
+/* line 708, ../../app/styles/style.scss */
 .showElement, .show-element {
   visibility: visible;
 }
 
-/* line 681, ../../app/styles/style.scss */
+/* line 712, ../../app/styles/style.scss */
 .export {
   padding-left: 10px;
 }
 
-/* line 684, ../../app/styles/style.scss */
+/* line 715, ../../app/styles/style.scss */
 .hideElement, .hide-element {
   display: none !important;
   visibility: hidden;
 }
 
-/* line 690, ../../app/styles/style.scss */
+/* line 721, ../../app/styles/style.scss */
 .list_default ul {
   list-style-type: none;
 }
 
-/* line 696, ../../app/styles/style.scss */
+/* line 727, ../../app/styles/style.scss */
 select {
   padding: 0.5px !important;
 }
 
-/* line 701, ../../app/styles/style.scss */
+/* line 732, ../../app/styles/style.scss */
 select[size], select[multiple] {
   background-image: none;
 }
 
-/* line 707, ../../app/styles/style.scss */
+/* line 738, ../../app/styles/style.scss */
 .file {
   border: 5px solid #FAFAFA;
   border-radius: 3px;
