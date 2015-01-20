@@ -287,11 +287,11 @@ header .site-title:hover {
 }
 
 /*Visualizations header & menu*/
-#ember349 #header, #ember298 #header {
+.ember-view #header {
     display: none;
 }
 
-#ember349 .container .box, #ember298 .container .box {
+..ember-view .container .box {
     border: none !important;
 }
 
