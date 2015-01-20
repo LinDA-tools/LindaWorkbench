@@ -291,7 +291,7 @@ header .site-title:hover {
     display: none;
 }
 
-..ember-view .row.box {
+.ember-view .row.box {
     border: none !important;
     box-shadow: none !important;
 }
@@ -311,11 +311,11 @@ header .site-title:hover {
     display: inline;
 }
 
-.visualizations #menu-select-area ul li:nth-of-type(2) {
+/*.visualizations #menu-select-area ul li:nth-of-type(2) {
     position: relative;
     top: -33px;
     left: 30px;
-}
+}*/
 
 .visualizations #menu-select-area select {
     font-family: 'Open Sans';
