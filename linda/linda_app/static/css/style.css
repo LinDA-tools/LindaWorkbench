@@ -2451,3 +2451,9 @@ input, textarea {
 .editor-container .panel-footer .btn-success {
     height: 45px;
 }
+
+.open>.dropdown-menu {
+    display: block;
+    max-height: 400px;
+    overflow-y: scroll;
+}
