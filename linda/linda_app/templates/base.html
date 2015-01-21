@@ -45,7 +45,9 @@
 
     /* toggle menu */
     $("#menu-toggle").on('click', (function() {
-        $("#menu").toggle( "slide" );
+        $("#menu").toggle('slide', function(){
+            $(window).trigger('resize');
+        });
     }));
 </script>
 
