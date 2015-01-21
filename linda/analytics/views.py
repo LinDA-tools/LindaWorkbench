@@ -28,6 +28,8 @@ from django.contrib import messages
 from django.contrib.messages import get_messages
 
 
+
+
 def analytics(request):
     if request.user.is_authenticated():
       if request.method == 'POST': # If the form has been submitted...
@@ -56,7 +58,7 @@ def analytics(request):
 		print(new_lindaAnalytics.trainQuery)
 		new_lindaAnalytics.save()
 		#try to use params form
-		callRESTfulLINDA(new_lindaAnalytics.pk,'lindaAnalytics_analytics')
+		callRESTfulLINDA(new_lindaAnalytics.pk,'lindaAnalytics_analytics',request)
 		return HttpResponseRedirect(reverse('analytics:detail', args=(new_lindaAnalytics.pk,)))
 	      
 	  else:
@@ -105,12 +107,25 @@ def handle_uploaded_file(f):
         for chunk in f.chunks():
             destination.write(chunk)
 
-def callRESTfulLINDA(lindaAnalyticsPK,category_table):
+def callRESTfulLINDA(lindaAnalyticsPK,category_table,request):
    #pp = pprint.PrettyPrinter(indent=4)
-   request = urllib2.Request('http://localhost:8181/RESTfulLINDA/rest/analytics/'+ str(category_table) +'/' + str(lindaAnalyticsPK))
-   response = urllib2.urlopen(request)
+   request1 = urllib2.Request('http://localhost:8181/RESTfulLINDA/rest/analytics/'+ str(category_table) +'/' + str(lindaAnalyticsPK))
    #resp_parsed = json.loads(response.read())
-   print(response.read())
+   #print(response.read())   
+   try:
+	response = urllib2.urlopen(request1)
+   except urllib2.URLError as e:
+	if hasattr(e, 'reason'):
+	    print('We failed to reach a server.')
+	    print('Reason: ', e.reason)
+	    messages.info(request, 'We failed to reach a server. Reason: '+str(e.reason) + '. Please try again later.')
+	elif hasattr(e, 'code'):
+	    print('The server couldn\'t fulfill the request.')
+	    print('Error code: ', e.code)
+	    messages.info(request, 'The server couldn\'t fulfill the request. Error code: '+str(e.code))
+   else:
+	# everything is fine
+	print(response.read()) 
 
 
 def detail(request, analytics_id):
@@ -178,7 +193,7 @@ def reevaluate(request, analytics_id):
     analytics_list = Analytics.objects.all()
     #return render(request, 'lindaAnalytics/detail.html', {'analytics': analytics})
     try:
-	callRESTfulLINDA(analytics_id,'lindaAnalytics_analytics')
+	callRESTfulLINDA(analytics_id,'lindaAnalytics_analytics',request)
         analytics = Analytics.objects.get(pk=analytics_id)
     except Analytics.DoesNotExist:
         raise Http404
