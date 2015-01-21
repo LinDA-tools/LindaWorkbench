@@ -189,64 +189,68 @@ angular.module('r2rDesignerApp').run(['$templateCache', function($templateCache)
     "  </p>\n" +
     "\n" +
     "  <div class=\"scrollable\">\n" +
-    "    <table class=\"table\">\n" +
+    "    <table class=\"table scrollable\">\n" +
     "      <!-- table and columns -->\n" +
-    "      <tr>\n" +
-    "        <th><div class=\"btn btn-sm btn-block\">Data subject</div></th>\n" +
-    "        <th ng-repeat=\"column in columns\"><div class=\"btn btn-sm btn-block\">Column <a>{{column}}</a></div></th>\n" +
-    "      </tr>\n" +
+    "      <thead>\n" +
+    "        <tr>\n" +
+    "          <th><div class=\"btn btn-sm btn-block\">Data subject</div></th>\n" +
+    "          <th ng-repeat=\"column in columns\"><div class=\"btn btn-sm btn-block\">Column <a>{{column}}</a></div></th>\n" +
+    "        </tr>\n" +
+    "      </thead>\n" +
     "\n" +
-    "      <!-- tags -->\n" +
-    "      <tr>\n" +
-    "        <td><input type=\"text\" class=\"table-input\" ng-model=\"tableTag[table]\" /></td>\n" +
-    "        <td ng-repeat=\"column in columns\"><input type=\"text\" class=\"table-input\" placeholder=\"{{column}}\" ng-model=\"columnTags[column]\"/></td>\n" +
-    "      </tr>\n" +
+    "      <tbody>\n" +
+    "        <!-- tags -->\n" +
+    "        <tr>\n" +
+    "          <td><input type=\"text\" class=\"table-input\" ng-model=\"tableTag[table]\" /></td>\n" +
+    "          <td ng-repeat=\"column in columns\"><input type=\"text\" class=\"table-input\" placeholder=\"{{column}}\" ng-model=\"columnTags[column]\"/></td>\n" +
+    "        </tr>\n" +
     "\n" +
-    "      <!-- suggestions -->\n" +
-    "      <tr>\n" +
-    "        <td>\n" +
-    "          <div class=\"list-group\">\n" +
-    "            <!-- TODO: better organizing; div inside link? -->\n" +
-    "            <a href=\"\" class=\"list-group-item\"\n" +
-    "               ng-repeat=\"i in rdf.suggestions[table].table.recommend\" ng-click=\"selectClass(table, i)\" ng-class=\"{active: isSelectedClass(table, i)}\">\n" +
-    "              <div rdf-badge\n" +
-    "                uri=\"{{i.uri[0]}}\"\n" +
-    "                label=\"{{i.label[0]}}\"\n" +
-    "                comment=\"{{i.comment[0]}}\"\n" +
-    "                definition=\"{{i.definition[0]}}\"\n" +
-    "                local=\"{{i.localName[0]}}\"\n" +
-    "                prefixed=\"{{i.prefixedName[0]}}\"\n" +
-    "                definition=\"{{i.definition[0]}}\"\n" +
-    "                vocab-uri=\"{{i['vocabulary.uri'][0]}}\"\n" +
-    "                vocab-title=\"{{i['vocabulary.title'][0]}}\"\n" +
-    "                vocab-descr=\"{{i['vocabulary.description'][0]}}\"\n" +
-    "                score=\"{{i.score | scoreFilter}}\">\n" +
-    "              </div>\n" +
-    "            </a>\n" +
-    "          </div>\n" +
-    "        </td>\n" +
-    "        <td ng-repeat=\"column in columns\">\n" +
-    "          <div class=\"list-group\">\n" +
-    "            <!-- TODO: see above -->\n" +
-    "            <a href=\"\" class=\"list-group-item\" \n" +
-    "               ng-repeat=\"i in getColumnSuggestions(table, column)\" ng-click=\"selectProperty(table, column, i)\" ng-class=\"{active: isSelectedProperty(table, column, i)}\">\n" +
-    "              <div rdf-badge\n" +
-    "                uri=\"{{i.uri[0]}}\"\n" +
-    "                label=\"{{i.label[0]}}\"\n" +
-    "                comment=\"{{i.comment[0]}}\"\n" +
-    "                definition=\"{{i.definition[0]}}\"\n" +
-    "                local=\"{{i.localName[0]}}\"\n" +
-    "                prefixed=\"{{i.prefixedName[0]}}\"\n" +
-    "                definition=\"{{i.definition[0]}}\"\n" +
-    "                vocab-uri=\"{{i['vocabulary.uri'][0]}}\"\n" +
-    "                vocab-title=\"{{i['vocabulary.title'][0]}}\"\n" +
-    "                vocab-descr=\"{{i['vocabulary.description'][0]}}\"\n" +
-    "                score=\"{{i.score | scoreFilter}}\">\n" +
-    "              </div>\n" +
-    "            </a>\n" +
-    "          </div>\n" +
-    "        </td>\n" +
-    "      </tr>\n" +
+    "        <!-- suggestions -->\n" +
+    "        <tr>\n" +
+    "          <td>\n" +
+    "            <div class=\"list-group\">\n" +
+    "              <!-- TODO: better organizing; div inside link? -->\n" +
+    "              <a href=\"\" class=\"list-group-item\"\n" +
+    "                 ng-repeat=\"i in rdf.suggestions[table].table.recommend\" ng-click=\"selectClass(table, i)\" ng-class=\"{active: isSelectedClass(table, i)}\">\n" +
+    "                <div rdf-badge\n" +
+    "                  uri=\"{{i.uri[0]}}\"\n" +
+    "                  label=\"{{i.label[0]}}\"\n" +
+    "                  comment=\"{{i.comment[0]}}\"\n" +
+    "                  definition=\"{{i.definition[0]}}\"\n" +
+    "                  local=\"{{i.localName[0]}}\"\n" +
+    "                  prefixed=\"{{i.prefixedName[0]}}\"\n" +
+    "                  definition=\"{{i.definition[0]}}\"\n" +
+    "                  vocab-uri=\"{{i['vocabulary.uri'][0]}}\"\n" +
+    "                  vocab-title=\"{{i['vocabulary.title'][0]}}\"\n" +
+    "                  vocab-descr=\"{{i['vocabulary.description'][0]}}\"\n" +
+    "                  score=\"{{i.score | scoreFilter}}\">\n" +
+    "                </div>\n" +
+    "              </a>\n" +
+    "            </div>\n" +
+    "          </td>\n" +
+    "          <td ng-repeat=\"column in columns\">\n" +
+    "            <div class=\"list-group\">\n" +
+    "              <!-- TODO: see above -->\n" +
+    "              <a href=\"\" class=\"list-group-item\" \n" +
+    "                 ng-repeat=\"i in getColumnSuggestions(table, column)\" ng-click=\"selectProperty(table, column, i)\" ng-class=\"{active: isSelectedProperty(table, column, i)}\">\n" +
+    "                <div rdf-badge\n" +
+    "                  uri=\"{{i.uri[0]}}\"\n" +
+    "                  label=\"{{i.label[0]}}\"\n" +
+    "                  comment=\"{{i.comment[0]}}\"\n" +
+    "                  definition=\"{{i.definition[0]}}\"\n" +
+    "                  local=\"{{i.localName[0]}}\"\n" +
+    "                  prefixed=\"{{i.prefixedName[0]}}\"\n" +
+    "                  definition=\"{{i.definition[0]}}\"\n" +
+    "                  vocab-uri=\"{{i['vocabulary.uri'][0]}}\"\n" +
+    "                  vocab-title=\"{{i['vocabulary.title'][0]}}\"\n" +
+    "                  vocab-descr=\"{{i['vocabulary.description'][0]}}\"\n" +
+    "                  score=\"{{i.score | scoreFilter}}\">\n" +
+    "                </div>\n" +
+    "              </a>\n" +
+    "            </div>\n" +
+    "          </td>\n" +
+    "        </tr>\n" +
+    "      </tbody>\n" +
     "    </table>\n" +
     "  </div>\n" +
     "\n" +
@@ -278,7 +282,7 @@ angular.module('r2rDesignerApp').run(['$templateCache', function($templateCache)
     "    </step>\n" +
     "  </wizard>\n" +
     "\n" +
-    "  <p align=\"center\" style=\"font-size: 20px;margin-top: 10em\">❦</p>\n" +
+    "  <p class=\"footnote\" >❦</p>\n" +
     "</div>\n" +
     "\n"
   );

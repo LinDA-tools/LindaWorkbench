@@ -3255,20 +3255,22 @@ body {
   border-top: 1px solid #e5e5e5;
 }
 
-/* line 68, ../../app/styles/main.scss */
+/* line 45, ../../app/styles/main.scss */
 
 .r2r-main {
+  margin: auto;
   min-height: 128em;
+  max-width: 1280px;
   font-family: "Lato", sans-serif;
 }
 
-/* line 73, ../../app/styles/main.scss */
+/* line 52, ../../app/styles/main.scss */
 
 .scrollable {
   overflow: auto;
 }
 
-/* line 78, ../../app/styles/main.scss */
+/* line 57, ../../app/styles/main.scss */
 
 .animate-enter,
 .animate-leave {
@@ -3277,7 +3279,7 @@ body {
   display: block;
 }
 
-/* line 89, ../../app/styles/main.scss */
+/* line 68, ../../app/styles/main.scss */
 
 .animate-enter.animate-enter-active,
 .animate-leave {
@@ -3286,39 +3288,39 @@ body {
   height: 30px;
 }
 
-/* line 95, ../../app/styles/main.scss */
+/* line 74, ../../app/styles/main.scss */
 
 .prefix {
   color: lightGrey;
 }
 
-/* line 103, ../../app/styles/main.scss */
+/* line 82, ../../app/styles/main.scss */
 
 .nodefinition {
   font-style: italic;
   color: #dddddd;
 }
 
-/* line 108, ../../app/styles/main.scss */
+/* line 87, ../../app/styles/main.scss */
 
 .score {
   font-style: italic;
   color: lightBlue;
 }
 
-/* line 114, ../../app/styles/main.scss */
+/* line 93, ../../app/styles/main.scss */
 
 .link {
   color: #0088cc;
 }
 
-/* line 119, ../../app/styles/main.scss */
+/* line 98, ../../app/styles/main.scss */
 
 .treated {
   color: lightGrey;
 }
 
-/* line 123, ../../app/styles/main.scss */
+/* line 102, ../../app/styles/main.scss */
 
 .description {
   font-size: large;
@@ -3326,14 +3328,14 @@ body {
   color: darkGrey;
 }
 
-/* line 129, ../../app/styles/main.scss */
+/* line 108, ../../app/styles/main.scss */
 
 .step-description {
   font-style: italic;
   color: darkGrey;
 }
 
-/* line 137, ../../app/styles/main.scss */
+/* line 116, ../../app/styles/main.scss */
 
 .nav-pills > li > a:hover,
 .nav-pills > li > a:focus,
@@ -3344,7 +3346,7 @@ body {
   box-shadow: inset 1px 0 0 #005580, inset 0 0 0 #005580;
 }
 
-/* line 145, ../../app/styles/main.scss */
+/* line 124, ../../app/styles/main.scss */
 
 .nav-pills > li.active > a {
   color: #005580;
@@ -3352,26 +3354,32 @@ body {
   box-shadow: inset 1px 0 0 rgba(0, 0, 0, 0.2), inset 0 0 0 rgba(0, 0, 0, 0.2);
 }
 
-/* line 153, ../../app/styles/main.scss */
+/* line 132, ../../app/styles/main.scss */
 
 .table-input {
   width: 100%;
 }
 
-/* line 157, ../../app/styles/main.scss */
+/* line 136, ../../app/styles/main.scss */
+
+tbody {
+  overflow: auto;
+}
+
+/* line 140, ../../app/styles/main.scss */
 
 .popover {
   max-width: 400px;
   width: auto;
 }
 
-/* line 162, ../../app/styles/main.scss */
+/* line 145, ../../app/styles/main.scss */
 
 .sidebar {
   max-width: 20%;
 }
 
-/* line 166, ../../app/styles/main.scss */
+/* line 149, ../../app/styles/main.scss */
 
 a {
   -ms-word-break: break-all;
@@ -3383,4 +3391,18 @@ a {
   -moz-hyphens: auto;
   -ms-hyphens: auto;
   hyphens: auto;
+}
+
+/* line 163, ../../app/styles/main.scss */
+
+.wizard {
+  margin-top: 1em;
+}
+
+/* line 167, ../../app/styles/main.scss */
+
+.footnote {
+  text-align: center;
+  font-size: 20px;
+  margin-top: 10em;
 }
