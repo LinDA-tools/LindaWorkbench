@@ -1,8 +1,11 @@
 from django import template
-from linda_app.models import Vocabulary, VocabularyClass, VocabularyProperty
+from django.utils.http import urlquote
+from linda_app.models import Vocabulary, VocabularyClass, VocabularyProperty, get_configuration
 
 register = template.Library()
 
+# Load user configurable settings
+config = get_configuration()
 
 @register.filter(name="nice_name")
 def nice_name(user):
@@ -29,3 +32,9 @@ def url_replace(request, field, value):
     dict_ = request.GET.copy()
     dict_[field] = value
     return dict_.urlencode()
+
+@register.filter(name="datasource_visualize")
+def datasource_visualize(datasource):
+    endpoint = config.private_sparql_endpoint
+    graph_uri = datasource.uri
+    return '/visualizations/#/visualization/' + datasource.name + '/' + urlquote(endpoint, safe='') + '/' + urlquote(graph_uri, safe='') + '/rdf'

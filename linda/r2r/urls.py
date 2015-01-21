@@ -7,9 +7,9 @@ from r2r import views
 
 
 urlpatterns = patterns('',
-                       #Basic pages
+                       # Basic pages
                        url(r'^$', views.transform, name='transform'),
 
-                       #js proxy
+                       # js proxy
                        url(r'^api/(?P<link>.*)', views.get_api_call, name='get-api-call'),
 )

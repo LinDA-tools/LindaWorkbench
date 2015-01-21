@@ -32,7 +32,7 @@
     <script src="/static/js/jquery.datatables.min.js"></script>
 
     {% if datasources %}
-        {% with datasources=datasources out="js" paginate_by=20 %}
+        {% with datasources=datasources out="js" paginate_by=10 %}
             {% include "datasource/table.html" %}
         {% endwith %}
     {% endif %}

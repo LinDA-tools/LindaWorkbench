@@ -1,6 +1,8 @@
 from django.db import models
 from django.forms import ModelForm
 import os
+import datetime
+from django.conf import settings
 
 
 # Create your models here.
@@ -16,14 +18,22 @@ EXPORT_CHOICES = (
 
 class Category(models.Model):
     name = models.CharField(max_length=400)
-    description = models.CharField(max_length=400)
+    description = models.TextField(max_length=4000)
     def __str__(self):
-        return self.name   
-
+        return self.name  
+    def display_category_description(self):
+        return self.description 
+    def as_json(self):
+            return dict(
+                id=self.id,
+                name=self.name,
+                description=self.description
+                )  
+      
 
 class Algorithm(models.Model):
     name = models.CharField(max_length=400)
-    description = models.TextField(max_length=1000)
+    description = models.TextField(max_length=4000)
     category = models.ForeignKey(Category)
     def __str__(self):
         return self.name
@@ -40,43 +50,83 @@ class Algorithm(models.Model):
                 )
 
 
+class Plot(models.Model):
+    description = models.TextField(max_length=2000)
+    image = models.ImageField(upload_to='plots/', blank=True,max_length=500)
+    def __str__(self):
+        return self.image.name
+    def display_plot_description(self):
+        return self.description 
+    def display_image_file(self):
+         if os.path.isfile(self.image.path):
+           fp = open(self.image.path);
+           return fp.read()
+
+    
+
 class Document(models.Model):
         document = models.FileField(upload_to='documents/%Y/%m/%d')
 
 
 class Analytics(models.Model):
-    description = models.TextField(max_length=500)
+    description = models.TextField(max_length=500, blank=True)
     category = models.ForeignKey(Category)
     algorithm = models.ForeignKey(Algorithm)
-    #document = models.ForeignKey(Document)
-    document = models.FileField(upload_to='./analytics/documents/datasets/')
-    testdocument = models.FileField(upload_to='./analytics/documents/datasets/')
-    model = models.FileField(upload_to='./analytics/documents/models/')
-    modelReadable = models.FileField(upload_to='./analytics/documents/models/')
-    processinfo = models.FileField(upload_to='./analytics/documents/results/')
-    resultdocument = models.FileField(upload_to='./analytics/documents/results/')
+    trainQuery = models.ForeignKey('linda_app.Query', null=True, related_name='trainQuery', blank=True)
+    evaluationQuery = models.ForeignKey('linda_app.Query', null=True, related_name='evaluationQuery', blank=True)
+    document = models.FileField(upload_to='datasets/', blank=True,max_length=500)
+    testdocument = models.FileField(upload_to='datasets/', blank=True,max_length=500)
+    model = models.FileField(upload_to='models/',max_length=500)
+    modelReadable = models.FileField(upload_to='models/',max_length=500)
+    processinfo = models.FileField(upload_to='results/',max_length=500)
+    resultdocument = models.FileField(upload_to='results/',max_length=500)
     exportFormat = models.CharField(max_length=20, choices=EXPORT_CHOICES)
     publishedToTriplestore = models.BooleanField(default=False)
     version = models.IntegerField()
     loadedRDFContext = models.TextField(max_length=500)
     processMessage = models.TextField(max_length=300)
     user_id = models.IntegerField()
+    parameters = models.TextField(max_length=100, blank=True)
+    # Auto-populated fields for created on/updated on time
+    createdOn = models.DateField(editable=False, null=True)
+    updatedOn = models.DateField(editable=False, null=True)
+    plot1 = models.ForeignKey(Plot, null=True, related_name='plot1', blank=True)
+    plot2 = models.ForeignKey(Plot, null=True, related_name='plot2', blank=True)
+    
+    def save(self):
+        if not self.id:  # first time saved -- create is not set yet
+	   self.created = datetime.date.today()
+	   self.updated = datetime.date.today()
+	   super(Analytics, self).save()  # proceed with the default constructor
+    
     def __str__(self):
         return self.name
     def display_resultdocument_file(self):
         if os.path.isfile(self.resultdocument.path):
+	   print(self.resultdocument.path);
            fp = open(self.resultdocument.path);
            return fp.read()
+    def display_resultdocument_title(self):
+        if os.path.isfile(self.resultdocument.path):
+           return self.resultdocument.name.replace('results/', '');	 
     def display_model_file(self):
         if os.path.isfile(self.modelReadable.path):
            fp = open(self.modelReadable.path);
            return fp.read()
+    def display_category_description(self):
+        return self.category.description	 
     def display_algorithm_description(self):
         return self.algorithm.description
     def display_processinfo_file(self):
          if os.path.isfile(self.processinfo.path):
            fp = open(self.processinfo.path);
+           print(self.processinfo.path);
            return fp.read()
+    def display_plot1_file(self):
+         if self.plot1:
+           return settings.LINDA_APACHE_ANALYTICS+str(self.plot1)
+    def display_linda_apache_analytics(self):
+           return settings.LINDA_APACHE_ANALYTICS
     def isExportFormatRDFXML(self):
          if self.exportFormat=="RDFXML":
            return "RDFXML" 
@@ -120,10 +170,16 @@ class Params(models.Model):
     algorithm = models.ForeignKey(Algorithm)
     name = models.CharField(max_length=400)
     value = models.CharField(max_length=400)
+    description = models.CharField(max_length=400)
     def __str__(self):
         return self.name
-
-
+    def as_json(self):
+            return dict(
+                id=self.id,
+                name=self.name,
+                value=self.value,
+                description=self.description
+                )
 
 
 

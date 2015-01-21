@@ -44,6 +44,10 @@
                 {% with vocabularies=vocabularies_list %}
                     {% include "vocabulary/list.html" %}
                 {% endwith %}
+
+                {% with current_url=request.get_full_path page_param='v_page' page_obj=vocabularies_page %}
+                    {% include 'util/paginator.html' %}
+                {% endwith %}
             {% endif %}
 
             {% if classes_list %}
@@ -51,12 +55,20 @@
                 {% with classes=classes_list %}
                     {% include "vocabulary/list.html" %}
                 {% endwith %}
+
+                {% with current_url=request.get_full_path page_param='c_page' page_obj=classes_page %}
+                    {% include 'util/paginator.html' %}
+                {% endwith %}
             {% endif %}
 
             {% if properties_list %}
                 <h2>{% trans "Properties" %}</h2>
                 {% with properties=properties_list %}
                     {% include "vocabulary/list.html" %}
+                {% endwith %}
+
+                {% with current_url=request.get_full_path page_param='p_page' page_obj=properties_page %}
+                    {% include 'util/paginator.html' %}
                 {% endwith %}
             {% endif %}
         </div>

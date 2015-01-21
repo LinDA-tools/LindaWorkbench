@@ -50,18 +50,54 @@ QueryBuilder = {
         QueryBuilder.hide_equivalent_sparql_query();
         QueryBuilder.hide_searched_query_results();
         QueryBuilder.properties.reset();
+        selected_filter_values = {};
     },
     generate_equivalent_sparql_query : function(){
         var query = "";
+        var properties_map = null;
         query += SPARQL.prefix.rdf;
         query += SPARQL.prefix.rdfs;
-        query += "SELECT ?concept ?label WHERE \n{ ?concept rdf:type <"+$("#hdn_qb_class").val()+">.\n ?concept rdfs:label ?label.\n";
+        query += "SELECT DISTINCT ?concept ?label ";
+        if(QueryBuilder.properties.will_show_properties_in_preview()){
+            properties_map = QueryBuilder.properties.get_checked_properties_map();
+            $.each(properties_map, function(k,v){
+                query+= "?" +k +" ";
+            });
+        }
+        query += "WHERE \n{ ?concept rdf:type <"+$("#hdn_qb_class").val()+">.\n ?concept rdfs:label ?label.\n";
         query += QueryBuilder.properties.get_subclasses_triples();
         query += QueryBuilder.properties.get_properties_triples();
-        query += "FILTER(langMatches(lang(?label), \"EN\"))}\n LIMIT 200";
-        $("#txt_sparql_query").val(query);
+        if(QueryBuilder.properties.will_show_properties_in_preview()){
+            $.each(properties_map, function(k,v){
+                query+= "OPTIONAL{?concept <"+v+"> ?"+k+"}.\n";
+            });
+        }
+        query += QueryBuilder.get_equivalent_sparql_filter_values();
+        query += "LIMIT "+$("#txt_sparql_query_limit").val();
+
+        if (editor) {
+            return editor.getSession().setValue(query);
+        } else {
+            $("#txt_sparql_query").val(query);
+        }
+
     }
     ,
+    get_equivalent_sparql_filter_values : function(){
+        var result = "FILTER(langMatches(lang(?label), \"EN\")";
+        $.each(selected_filter_values,function(k,v){
+            if(v.type == "data"){
+                result += "\n&& (?d_filter"+k.toString()+" "+v.value+")";
+            }
+            else if(v.type == "object" && v.filter_type == "not_equals"){
+                for(i=0;i<v.value.length;i++){
+                    result += "\n&& (?o_filter"+k.toString()+" != <"+v.value[i].uri+">)";
+                }
+            }
+        });
+        result += ")}\n";
+        return result;
+    },
     show_equivalent_sparql_query : function(){
         QueryBuilder.generate_equivalent_sparql_query();
         $(".qb-equivalent-query-main").show("fast");
@@ -150,6 +186,7 @@ QueryBuilder = {
             return "/query/class_subclasses?class="+class_uri+"&dataset="+QueryBuilder.datasets.get_selected();
         },
         select : function(class_uri, class_name){
+            $("#btn_show_checked_properties_no").click();
             $("#hdn_qb_class").val(class_uri);
             $("#tbl_classes_search_result").hide("fast");
             $(".clear-search-class").hide("fast");
@@ -160,13 +197,15 @@ QueryBuilder = {
             $("#property_main_subclass_header").attr("uri",class_uri);
             $("#property_main_subclasses").hide();
             //Utils.flash.notice("Selected class : "+class_name + " &lt;"+class_uri+"&gt;");
+            $("#txt_sparql_query_limit").val(default_sparql_result_limit);
             QueryBuilder.classes.add_class_details($("#div_selected_class").find('.select-body').first(),class_uri,0);
             QueryBuilder.show_equivalent_sparql_query();
             QueryBuilder.properties.generate();
+
         },
         add_class_details : function(element,class_uri,tab_level){
             element.attr('class-uri',class_uri);
-            element.find('strong').first().after("<span class='loading-image'>&nbsp;&nbsp;&nbsp;<img  height=\"10px\" src=\"/assets/horizontal-loading.gif\"></span>");
+            element.find('strong').first().after("<span class='loading-image'>&nbsp;&nbsp;&nbsp;<img  height=\"10px\" src=\"/static/query-builder/images/horizontal-loading.gif\"></span>");
             $.getJSON(QueryBuilder.classes.get_examples_action_url(class_uri)).success(function(data){
                 var element_append_html = "&nbsp;&nbsp;&nbsp;<span class='badge'>"+get_long_number_display(data.total_objects)+"</span>";
                 if(data.total_objects > 0){
@@ -231,6 +270,12 @@ QueryBuilder = {
 
     //the methods related to properties
     properties : {
+        will_show_properties_in_preview : function(){
+            if($("#hdn_show_checked_properties").val() == "yes")
+                return true ;
+            else
+                return false ;
+        },
         generate : function(){
             $("#property_main_properties_datatype_group").hide();
             $("#property_main_properties_object_group").hide();
@@ -308,6 +353,30 @@ QueryBuilder = {
         },
         get_properties_triples : function(){
             var result = "";
+            $.each(selected_filter_values,function(k,v){
+                if(v.type == "object"){
+                    // section for object type properties
+                    if(v.filter_type == "not_equals"){
+                        result += "?concept <"+v.property_uri+"> ?o_filter"+k.toString();
+                    }
+                    else{
+                        for(j=0;j<v.value.length;j++){
+                            if(j>0)
+                                result += " UNION ";
+                            result += "{ ?concept <"+v.property_uri+"> <"+v.value[j]["uri"]+"> }";
+                        }
+                    }
+                    result += ".\n"
+                }
+                else if(v.type == "data"){
+                    //section for data type properties
+                    result += "?concept <"+v.property_uri+"> ?d_filter"+k.toString()+".\n";
+                }
+            });
+            /*
+            
+            This is now an old method. Getting the values from variable instead of the div
+
             $("#qb_properties_properties_selected_filters_list").find(".list-item").each(function(index){
                 if($(this).attr("filter-type") == 'object'){
                     var objects = $(this).attr("filter-value").split(",");
@@ -320,6 +389,7 @@ QueryBuilder = {
                     result += ".\n"
                 }
             });
+            */
             return result;
         },
         select_subclass : function(uri){
@@ -396,6 +466,15 @@ QueryBuilder = {
             var checked_ranges = $('.cb-property-range:checked').map(function() {return this.value;}).get().join(',');
             return checked_ranges;
         },
+        get_checked_properties_map : function(){
+            var checked_properties = $('.cb-property-range:checked').map(function() {return this.value;});
+            var property_map = {};
+            for(i=0;i<checked_properties.length;i++){
+                property_map[get_uri_element_val(checked_properties[i])] = checked_properties[i];
+            }
+            return property_map;
+
+        },
         click_check_all : function(type){
             var item = $("#cb_property_range_all_"+type);
             var to_check = false;
@@ -406,9 +485,15 @@ QueryBuilder = {
                     $(this).prop('checked',to_check);
                 }
             });
+            QueryBuilder.properties.checkbox_click();
         },
         get_clicked_filter_property : function(){
             return $("#hdn_selector_property_uri").val();
+        },
+        checkbox_click : function(){
+            if(QueryBuilder.properties.will_show_properties_in_preview() == true){
+                QueryBuilder.show_equivalent_sparql_query();
+            }
         },
         filter : {
             add_objects : function(property_uri, property_name,  data){
@@ -427,13 +512,19 @@ QueryBuilder = {
                 }
                 var div_html = "<div id='qb_properties_properties_selected_filters_list_item_"+identifier+"' class=\"alert alert-warning list-item\" property-uri=\""+property_uri+"\" filter-value=\""+uris+"\" identifier=\""+identifier+"\" filter-type='object'>";
                 div_html += "<div class='row'><div class='col-md-10'>";
-                div_html += "<strong>"+property_name+"</strong> "+names;
-                div_html += "</div>";
+                div_html += "<strong>"+property_name+"</strong> ";
+                if($("#hdn_object_selector_filter_type").val() == "not_equals")
+                    div_html+="&nbsp;NOT IN&nbsp;";
+                else
+                    div_html += "&nbsp;IN&nbsp;";
+                div_html += names+"</div>";
                 div_html += "<div class='col-md-2'><span class=\"glyphicon glyphicon-remove clickable pull-right\" onclick=\"QueryBuilder.properties.filter.remove('"+identifier+"')\"></span></div>"
                 div_html += "</div></div>";
                 $("#qb_properties_properties_selected_filters_list").append(div_html);
+                selected_filter_values[identifier] = {type:"object", property_uri : property_uri, value: data, filter_type:$("#hdn_object_selector_filter_type").val()};
                 QueryBuilder.generate_equivalent_sparql_query();
                 Utils.flash.success("Added objects "+names+" to filter for "+property_name);
+
             },
             add_data_filter : function(property_uri, property_name, data_filter){
                 var identifier = QueryBuilder.properties.filter.get_new_list_identifier();
@@ -446,6 +537,7 @@ QueryBuilder = {
                 div_html += "<div class='col-md-2'><span class=\"glyphicon glyphicon-remove clickable pull-right\" onclick=\"QueryBuilder.properties.filter.remove('"+identifier+"')\"></span></div>"
                 div_html += "</div></div>";
                 $("#qb_properties_properties_selected_filters_list").append(div_html);
+                selected_filter_values[identifier] = {type:"data", property_uri : property_uri, value: data_filter};
                 QueryBuilder.generate_equivalent_sparql_query();
                 Utils.flash.success("Added data filter "+data_filter+" to filter for "+property_name);
 
@@ -454,6 +546,7 @@ QueryBuilder = {
             remove : function(identifier){
                 var list_item = $("#qb_properties_properties_selected_filters_list_item_"+identifier);
                 list_item.hide("fast");
+                delete selected_filter_values[parseInt(identifier)];
                 setTimeout(function(){
                     list_item.remove();
                     if($("#qb_properties_properties_selected_filters_list").find(".list-item").length <= 0){
@@ -462,6 +555,7 @@ QueryBuilder = {
                     }
                     QueryBuilder.generate_equivalent_sparql_query();
                 }, 500);
+
             },
             get_new_list_identifier : function(){
                 var max_id=0;
@@ -470,6 +564,16 @@ QueryBuilder = {
                         max_id = parseInt($(this).attr("identifier"));
                 });
                 return (max_id+1).toString();
+            },
+            select_object_filter_type : function(filter_type){
+                $("#hdn_object_selector_filter_type").attr("value",filter_type);
+                var other_filter_type = "not_equals";
+                if(filter_type == "not_equals")
+                    other_filter_type = "equals";
+                if($("#btn_object_selector_filter_type_"+filter_type).hasClass("btn-success") == false){
+                    $("#btn_object_selector_filter_type_"+filter_type).addClass("btn-success");
+                    $("#btn_object_selector_filter_type_"+other_filter_type).removeClass("btn-success");
+                }
             }
         }
     },
@@ -789,9 +893,40 @@ QueryBuilder = {
                         $("#btn_group_download").show(); 
                     }
                 }
-        } // end configured
-    } // end convert
+        }, // end QueryBuilder.convert.configured
+        json:{
+                initiate_download : function(){
+                    $("#btn_group_download").hide("fast");
+                    $("#div_json_download").show("fast");
+                
+                },
+                hide_download : function(motion){
+                    if(motion != undefined && motion != ""){
+                        $("#div_json_download").hide("fast");
+                        $("#btn_group_download").show("fast");
+                    }
+                    else{
+                        $("#div_json_download").hide();
+                        $("#btn_group_download").show();
+                    } 
+                }  
 
+        }//end QueryBuilder.convert.json
+    }, // end QueryBuilder.convert
+    equivalent_query : {
+        handle_checked_properties : function(response){
+            $("#hdn_show_checked_properties").val(response);
+            if(response == "yes"){
+                $("#btn_show_checked_properties_no").removeClass("btn-success");
+                $("#btn_show_checked_properties_yes").addClass("btn-danger");
+            }
+            else if(response == "no"){
+                $("#btn_show_checked_properties_no").addClass("btn-success");
+                $("#btn_show_checked_properties_yes").removeClass("btn-danger");
+            }
+            QueryBuilder.show_equivalent_sparql_query();
+        }
+    }
 
 };
     

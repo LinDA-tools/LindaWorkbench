@@ -1,0 +1,41 @@
+{% load i18n %}
+{% load app_filters %}
+
+{% if out == "html" %}
+
+    {% for datasource in datasources %}
+        <div id="{{datasource.name}}" class="datasource recent-item {% if datasource.is_public %}public{% else %}private{% endif %}">
+            <div class="icon" {% if datasource.is_public %}data-endpoint="{{datasource.uri}}"{%endif %}></div>
+            <span>{{datasource.title}}</span>
+            <!--<span class="datasource-type">{% if datasource.is_public %}SparQL Endpoint{% else %}Private RDF file{% endif %}</span>-->
+        </div>
+    {% empty %}
+        <p>{% trans "No recent datasources." %}</p>
+    {% endfor %}
+
+{% elif out == "js" %}
+
+    {% with datasources=datasources %}
+        {% include "datasource/context-menu.html" %}
+    {% endwith %}
+
+    function getDomain(url) {
+        return "http://" + url.match(/:\/\/(.[^/]+)/)[1];
+    }
+
+    $(".datasource.public .icon").each(function() {
+        var uri = $(this).data('endpoint');
+        $(this).css({
+            background: "url(" + getDomain(uri) + "/favicon.ico) center center no-repeat",
+        }).waitForImages(function() {
+            //on image loading done event
+        }, function(loaded, count, success) {
+            if (!success) { //Could not locate the favicon
+                $(this).css({
+                    "background": "url(/static/images/public-endpoint.png) center center no-repeat",
+                    "background-size": "32px 32px"
+                });
+            }
+        }, true);
+    });
+{% endif %}

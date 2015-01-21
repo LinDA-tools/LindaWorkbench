@@ -57,6 +57,7 @@
 
             {% include 'query-builder/search-results.html' %}
 
+            {% include 'query-builder/alert.html' %}
             <input type="hidden" id="hdn_qb_dataset" value="">
         </div>
     </div>
@@ -64,6 +65,8 @@
 {% endblock %}
 
 {% block scripts %}
+    {% include "builder_advanced/ace-editor.html" %}
+
     <script>
         rdf2any_server = "{{RDF2ANY_SERVER}}";
 	</script>
@@ -106,12 +109,14 @@
                     data: {
                         endpoint: endpoint_uri,
                         endpointName: dt_name,
-                        query: $("#txt_sparql_query").val(),
+                        query: editor.getSession().getValue(),
                         csrfmiddlewaretoken: '{{ csrf_token }}'
                     },
                     success: function(data, textStatus, jqXHR)
                     {
-                        document.location.href = '/queries/';
+                        $("#alert_modal .modal-title").html('LinDA Queries');
+                        $("#alert_modal .modal-body").html('Query saved');
+                        $("#alert_modal").show();
                     },
                     error: function (jqXHR, textStatus, errorThrown)
                     {
@@ -134,4 +139,5 @@
             select_dataset(dt_name, '{{query.endpoint}}');
         </script>
     {% endif %}
+
 {% endblock %}

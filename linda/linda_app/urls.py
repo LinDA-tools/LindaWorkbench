@@ -17,10 +17,13 @@ urlpatterns = patterns('',
                        url(r'^$', views.index, name='home'),
                        url(r'^terms-of-use/$', views.terms, name='terms'),
                        url(r'^community/$', login_required(views.UserListView.as_view()), name='community'),
-
+                       url(r'^settings/$', login_required(views.ConfigurationUpdateView.as_view()), name='settings'),
+                       url(r'^get-started/$', views.getstarted, name='getstarted'),
+                       
                        # Endpoints
                        url(r'^sparql/$', views.sparql, name='sparql'),
                        url(r'^sparql/(?P<dtname>[\w-]+)/$', views.datasource_sparql, name='datasource-sparql'),
+
                        # Visualizations
                        url(r'^visualizations/', include('visualisation.urls')),
 
@@ -30,8 +33,8 @@ urlpatterns = patterns('',
                        # Transformations
                        url(r'^transformations/', include('r2r.urls')),
 
-                       # Advanced builder
-                       url(r'^builder-advanced/', include('builder_advanced.urls')),
+                       # Query Designer
+                       url(r'^query-designer/', include('query_designer.urls')),
 
                        # Authentication
                        url(r'^admin/', include(admin.site.urls)),
@@ -117,8 +120,9 @@ urlpatterns = patterns('',
                            name='datasource-delete'),
 
                        # Query Builder
-
+                       url(r'^query/execute_sparql$', views.execute_sparql),
                        url(r'^query/(?P<link>.*)', views.get_qbuilder_call, name='query-builder-proxy'),
+                       url(r'^rdf2any/(?P<link>.*)', views.get_rdf2any_call, name='rdf2any-proxy'),
                        url(r'^query-builder/save/(?P<pk>\d+)/$', views.query_update, name='query-builder-update'),
                        url(r'^query-builder/delete/(?P<pk>\d+)/$', views.query_delete, name='query-builder-delete'),
                        url(r'^query-builder/save/$', views.query_save, name='query-builder-save'),

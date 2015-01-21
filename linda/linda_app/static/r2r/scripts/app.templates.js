@@ -189,7 +189,7 @@ angular.module('r2rDesignerApp').run(['$templateCache', function($templateCache)
     "  </p>\n" +
     "\n" +
     "  <div class=\"scrollable\">\n" +
-    "    <table class=\"table scrollable\">\n" +
+    "    <table class=\"table\">\n" +
     "      <!-- table and columns -->\n" +
     "      <thead>\n" +
     "        <tr>\n" +

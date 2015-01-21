@@ -260,7 +260,7 @@ function program15(depth0,data) {
   data.buffer.push("\n          Drug Price Analysis Example\n      ");
   }
 
-  data.buffer.push("<h6>Examples</h6>\n<ul>\n  <li>\n      ");
+  data.buffer.push("<h6>Visualizations</h6>\n<ul>\n  <li>\n      ");
   hashTypes = {};
   hashContexts = {};
   options = {hash:{},inverse:self.noop,fn:self.program(1, program1, data),contexts:[depth0,depth0,depth0,depth0,depth0],types:["STRING","STRING","STRING","STRING","STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data};

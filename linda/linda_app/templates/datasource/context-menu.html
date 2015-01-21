@@ -1,0 +1,87 @@
+{% load app_filters %}
+
+function downloadWithName(uri, name) {
+    var link = document.createElement("a");
+    link.download = name;
+    link.href = uri;
+    document.getElementById("main-container").appendChild(link);
+    link.click();
+    link.parentNode.removeChild(link);
+}
+
+var datasource_visualize_URIs = [];
+{% for datasource in datasources %}
+    {% if not datasource.is_public %}
+        datasource_visualize_URIs["{{datasource.name}}"] = "{{datasource|datasource_visualize}}";
+    {% endif %}
+{% endfor %}
+
+$(function(){ //private datasource context menu
+
+    $.contextMenu({
+        selector: '.datasource.private',
+        callback: function(key, options) {
+        var id = options.$trigger.attr('id');
+        var url;
+        console.log(key + ' ' + id);
+        if (key == "Visualize") {
+            url = datasource_visualize_URIs[id]; console.log(url)}
+        else
+        if (key == "Explore")
+            url = "/query-builder?dt_id=" + id;
+        else
+        if (key == "Edit")
+            url = "/datasource/" + id + "/replace/";
+        else
+        if (key == "Delete")
+            url = "/datasource/" + id + "/delete/";
+        else
+        if (key == "Download") {
+            url = "/datasource/" + id + "/download/";
+            downloadWithName(url, id + ".rdf");
+            return
+        }
+
+$(this).addClass("show-context-menu");
+if (url)
+    window.location = url;
+        },
+        items: {
+            "Visualize": {name: "Visualize", icon: "visualize"},
+            "Explore": {name: "Explore", icon: "explore"},
+            "sep1": "---------",
+            "Edit": {name: "Edit", icon: "edit"},
+            "Delete": {name: "Delete", icon: "delete"},
+            "sep2": "---------",
+            "Download": {name: "Download", icon: "download"},
+        }
+    });
+
+    $.contextMenu({ //public datasource context menu
+        selector: '.datasource.public',
+        callback: function(key, options) {
+            var id = options.$trigger.attr('id');
+            var url;
+
+            if (key == "Explore")
+                url = "/query-builder?dt_id=" + id;
+            else
+            if (key == "Edit")
+                url = "/datasource/" + id + "/replace/";
+            else
+            if (key == "Delete")
+                url = "/datasource/" + id + "/delete/";
+
+            $(this).addClass("show-context-menu");
+            if (url)
+                window.location = url;
+            },
+        items: {
+            "Explore": {name: "Explore", icon: "explore"},
+            "sep1": "---------",
+            "Edit": {name: "Edit", icon: "edit"},
+            "Delete": {name: "Delete", icon: "delete"},
+
+        }
+    });
+});

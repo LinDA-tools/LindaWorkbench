@@ -1,20 +1,18 @@
 from datetime import datetime
 import urllib
-
 from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save, post_delete
 from django.template.defaultfilters import slugify, random
-
 from rdflib import Graph, OWL, RDFS
 from rdflib.util import guess_format
 import re
-
+from query_designer.models import Design
 from lists import *
 from athumb.fields import ImageWithThumbsField
 from pattern.en import pluralize
 
-from settings import RDF2ANY_SERVER, LINDA_HOME
+from settings import LINDA_HOME, LINDA_SERVER_IP
 
 User.profile = property(lambda u: UserProfile.objects.get_or_create(user=u)[0])
 
@@ -68,12 +66,13 @@ def get_label_by_uri(uri):
         start_pos = 0
     else:
         start_pos += 1
-    end_pos = label.find('>')
+    end_pos = label.find('"')
     if end_pos < 0:
         label = label[start_pos:]
     else:
         label = label[start_pos:end_pos]
-    label = re.sub(r'([a-z](?=[A-Z])|[A-Z](?=[A-Z][a-z]))', r'\1 ', label)  # insert space for words written in camelCase
+    label = re.sub(r'([a-z](?=[A-Z])|[A-Z](?=[A-Z][a-z]))', r'\1 ',
+                   label)  # insert space for words written in camelCase
     return re.sub('_', ' ', label)
 
 
@@ -188,9 +187,12 @@ class Vocabulary(models.Model):
             else:
                 description = ""
             try:
-                cls = VocabularyClass.objects.create(vocabulary=self, uri=row[0].encode("utf-8"), label=label.encode("utf-8"), description=description.encode("utf-8"))
+                cls = VocabularyClass.objects.create(vocabulary=self, uri=row[0].encode("utf-8"),
+                                                     label=label.encode("utf-8"),
+                                                     description=description.encode("utf-8"))
             except UnicodeEncodeError:
-                cls = VocabularyClass.objects.create(vocabulary=self, uri=row[0], label=get_label_by_uri(row[0]), description="")
+                cls = VocabularyClass.objects.create(vocabulary=self, uri=row[0], label=get_label_by_uri(row[0]),
+                                                     description="")
             cls.save()
 
         # Run a query to retrieve all properties
@@ -239,9 +241,14 @@ class Vocabulary(models.Model):
             else:
                 description = ""
             try:
-                prp = VocabularyProperty.objects.create(vocabulary=self, uri=row[0].encode("utf-8"), domain=row[1].encode("utf-8"), range=row[2].encode("utf-8"), label=label.encode("utf-8"), description=description.encode("utf-8"), parent_uri=row[5])
+                prp = VocabularyProperty.objects.create(vocabulary=self, uri=row[0].encode("utf-8"),
+                                                        domain=row[1].encode("utf-8"), range=row[2].encode("utf-8"),
+                                                        label=label.encode("utf-8"),
+                                                        description=description.encode("utf-8"), parent_uri=row[5])
             except UnicodeEncodeError:
-                prp = VocabularyProperty.objects.create(vocabulary=self, uri=row[0], domain=row[1], range=row[2], label=get_label_by_uri(row[0]), description="", parent_uri=row[5])
+                prp = VocabularyProperty.objects.create(vocabulary=self, uri=row[0], domain=row[1], range=row[2],
+                                                        label=get_label_by_uri(row[0]), description="",
+                                                        parent_uri=row[5])
             prp.save()
 
     def __unicode__(self):
@@ -251,6 +258,7 @@ class Vocabulary(models.Model):
 # Update classes and vocabularies on new vocabulary save
 def on_vocabulary_save(sender, instance, created, **kwargs):
     instance.make_classes_properties()
+
 
 post_save.connect(on_vocabulary_save, sender=Vocabulary)
 
@@ -367,6 +375,7 @@ class VocabularyProperty(models.Model):  # A property inside an RDF vocabulary
         else:
             return self.parent_uri
 
+
 Vocabulary.property = property(lambda d: VocabularyProperty.objects.get_or_create(vocabulary=d)[0])
 
 
@@ -383,7 +392,7 @@ class DatasourceDescription(models.Model):
     name = models.CharField(max_length=512, blank=False, null=False)  # datasource name - slug
     uri = models.CharField(max_length=2048, blank=False, null=False)  # sesame uri
     createdOn = models.DateField(blank=False, null=False)  # datasource creation date
-    lastUpdateOn = models.DateField(blank=False, null=False)  # datasource last edit date
+    updatedOn = models.DateField(blank=False, null=False)  # datasource last edit date
 
     def __unicode__(self):
         return self.title
@@ -395,21 +404,40 @@ class DatasourceDescription(models.Model):
             return LINDA_HOME + "sparql/" + self.name + "/"
 
 
+# Transform [x1,x2,...,xN] to "x1, x2, ... and/or xN"
+def str_extend(array, op_join='and'):
+    result = array[0]
+
+    for x in array[1:-1]:
+        result += ', ' + x
+
+    if len(array) > 1:
+        result += ' ' + op_join + ' ' + array[-1]
+
+    return result
+
+
 # Given an endpoint name and a query it creates a description of the query
 def create_query_description(dtname, query):
+    # TODO : Update description constructor to cover more queries and be more descriptive
     # create base description
     find_verbs = ["Find", "Search for", "Look up for", "Get", "List"]
 
-    # get class name
-    classes = ''
-    class_cnt = 0  # no classes yet
+    # class instances
+    instances = []
 
     # add constraints
     where_start = re.search('WHERE', query, re.IGNORECASE).end()
     if where_start:
-        where_end = re.search('LIMIT', query, re.IGNORECASE).start()
-        if not where_end:
-            where_end = len(query)
+        where_end_f = re.search('LIMIT', query, re.IGNORECASE)  # where can end at a LIMIT
+        if not where_end_f:
+            where_end_f = re.search('ORDER BY', query, re.IGNORECASE)  # at an ORDER BY
+        if not where_end_f:
+            where_end_f = re.search('GROUP BY', query, re.IGNORECASE)  # at a GROUP BY
+        if not where_end_f:
+            where_end = len(query)  # or at the end of the query
+        else:
+            where_end = where_end_f.start()
 
         # split where part to constraints
         where_str = re.sub('({|}|\n)', '', query[where_start:where_end])  # ignore {, } and \n
@@ -425,43 +453,13 @@ def create_query_description(dtname, query):
             if len(terms) < 3:
                 continue
 
-            if terms[1].lower() == 'rdf:type':  # class constraints
-                tp_pos = 2
-                class_constraint = ''
-                old_class_name = ''
-                while tp_pos < len(terms):
-                    class_name = get_label_by_uri(terms[tp_pos]).lower()
-
-                    # get seperator
-                    if tp_pos < len(terms) - 2:
-                        sep = ', '
-                    else:
-                        sep = ' or '
-
-                    if not old_class_name:
-                        class_constraint += pluralize(class_name)
-                    elif old_class_name.lower() == class_name.lower():
-                        class_constraint += sep + pluralize(class_name)
-                    else:
-                        class_constraint += sep + pluralize(class_name)
-
-                    old_class_name = class_name
-                    tp_pos += 4  # move to the next sub-contraint
-
-                # add these classes to total class constraint
-                if class_cnt == 0:  # first class
-                    classes = class_constraint
-                elif class_cnt == 1:  # second class
-                    classes += ' that are also ' + class_constraint
-                else:
-                    classes += ' and ' + class_constraint
-                class_cnt += 1
-
-                continue
+            if terms[1].lower() == 'rdf:type' or terms[1].lower() == 'a':  # class instances
+                instances.append(pluralize(get_label_by_uri(terms[2]).lower()))
 
             if terms[2][0] == '?':
-                continue  # ignore static constraints
+                continue  # ignore variable constraints
 
+            '''
             tp_pos = 1  # first constraint property
             old_tp_name = ''
             constraint_str = ''
@@ -490,15 +488,18 @@ def create_query_description(dtname, query):
                 first_constraint = False
             else:
                 constraints_out += ' and ' + constraint_str
+            '''
 
-    if not classes:  # no class detected
+    if not instances:  # no class detected
         classes = 'objects'
-
+    else:
+        classes = str_extend(instances)
     description = random(find_verbs) + " " + classes + " in " + dtname + constraints_out
 
     # add limit
-    lim_pos = re.search('LIMIT', query, re.IGNORECASE).start()
-    if lim_pos:
+    lim_pos_f = re.search('LIMIT', query, re.IGNORECASE)
+    if lim_pos_f:
+        lim_pos = lim_pos_f.start()
         after_lim = query[lim_pos:]
         lim = [int(s) for s in after_lim.split() if s.isdigit()][0]  # first number after limit
         description += ' (first ' + str(lim) + ')'
@@ -506,19 +507,66 @@ def create_query_description(dtname, query):
     return description
 
 
+def datasource_from_endpoint(endpoint):
+    if endpoint == LINDA_HOME + "sparql/all/":
+        return DatasourceDescription(title="All private data dources", name="all", is_public=False
+                                     , uri=LINDA_HOME + "sparql/all/", createdOn=datetime.today(),
+                                     updatedOn=datetime.today())
+    for datasource in DatasourceDescription.objects.all():
+        if datasource.get_endpoint() == endpoint:
+            return datasource
+
+    return None
+
+
 class Query(models.Model):
     endpoint = models.URLField(blank=False, null=False)  # the query endpoint
     sparql = models.CharField(max_length=4096, blank=False, null=False)  # the query string (select ?s ?p ?o...)
     description = models.CharField(max_length=512, blank=True, null=True)  # query description (auto-created)
     createdOn = models.DateField(blank=False, null=False)  # query creation date
+    updatedOn = models.DateField(blank=False, null=True)  # query last update date
+    design = models.ForeignKey(Design, blank=True, null=True)  # the json object produced in the Query Designer
+
+    def __str__(self):
+        return self.description
 
     def csv_link(self):
-        return RDF2ANY_SERVER + '/rdf2any/v1.0/convert/csv-converter.csv?dataset=' + self.endpoint + '&query=' \
-            + urllib.quote_plus(self.sparql)
+        return '/rdf2any/v1.0/convert/csv-converter.csv?dataset=' + self.endpoint + '&query=' \
+               + urllib.quote_plus(self.sparql)   
 
     def get_datasource(self):
-        for datasource in DatasourceDescription.objects.all():
-            if datasource.get_endpoint() == self.endpoint:
-                return datasource
+        return datasource_from_endpoint(self.endpoint)
 
-        return None
+    def visualization_link(self):
+        return "/visualizations/#/visualization/Query" + str(self.pk) + "/" + urllib.quote_plus(self.csv_link()) + "/-/csv"
+
+    def analytics_link(self):
+        return "/analytics?q_id=" + str(self.pk)
+
+
+class Configuration(models.Model):
+    # Vocabulary Repository
+    # In local business installations it will be different than the LINDA_SERVER_IP
+    vocabulary_repository = models.URLField(blank=False, null=False, default=LINDA_SERVER_IP + ':8000/')
+    # LinDA repository in Sesame (OpenRDF) url, in order to access private data sources
+    sesame_url = models.URLField(blank=False, null=False,
+                                 default=LINDA_SERVER_IP + ':8080/openrdf-sesame/repositories/linda/')
+    # LinDA private resources SparQL endpoint
+    private_sparql_endpoint = models.URLField(blank=False, null=False,
+                                              default=LINDA_SERVER_IP + ':8080/openrdf-sesame/repositories/linda')
+    # QueryBuilder URL
+    query_builder_server = models.URLField(blank=False, null=False, default=LINDA_SERVER_IP + ':3100/')
+    # Rdf2any Server
+    rdf2any_server = models.URLField(blank=False, null=False, default=LINDA_SERVER_IP + ':8081')
+    # R2R Server
+    r2r_server = models.URLField(blank=False, null=False, default=LINDA_SERVER_IP + ':3000/')
+
+
+# returns the configuration object
+# creates default configuration if it does not exist
+def get_configuration():
+    configs = Configuration.objects.all()
+    if configs:
+        return configs[0]
+    else:
+        return Configuration.objects.create()

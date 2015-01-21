@@ -1,6 +1,15 @@
 <div class="row" id="sparql_results_container" style="display:none;">
+        <div id="sparql_result_paginator">
+            <div class="results-prev-container">
+            </div>
+            <div class="results-cur-container">
+            </div>
+            <div class="results-next-container">
+            </div>
+        </div>
+
         <div class="col-md-12" style="margin-top:20px;">
-            <div class="panel panel-default" >
+            <div class="panel panel-default" style="overflow-x:scroll;">
                 <div class="panel-heading">
                   <div class="row">
                     <div class="col-md-6" style="margin-top:8px">
@@ -9,17 +18,17 @@
                     <div class="col-md-6 ">
                       <div class="btn-group pull-right">
                         <button type="button" class="btn btn-warning" onclick="save_query()"><span class="glyphicon glyphicon-floppy-save"></span>&nbsp;Save query</button>
-                        <button type="button" class="btn btn-danger" onclick="show_sparql_download_modal()"><span class="glyphicon glyphicon-floppy-save"></span>&nbsp;Download results</button>
+                        <button type="button" class="btn btn-danger" onclick="show_sparql_download_modal()"><span class="glyphicon glyphicon-floppy-save"></span>&nbsp;Download</button>
                         <button type="button" class="btn btn-warning" onclick="SPARQL.result.print()"><span class="glyphicon glyphicon-print"></span>&nbsp;Print</button>
                       </div>
                     </div>
                   </div>
                 </div>
-                <div class="panel-body">
+                <div class="panel-body"> 
 
 
                 </div>
-                <table class="table table-striped" id="sparql_results_table">
+                <table class="table table-striped" id="sparql_results_table" >
                     <thead>
                     </thead>
                     <tbody>
@@ -40,13 +49,38 @@
         <div class="btn-group " id="btn_group_download">
             <button type="button" class="btn btn-default btn-primary" onclick="SPARQL.download.rdb()"><span class="glyphicon glyphicon-list-alt"></span>&nbsp;RDB Script</button>
             <button type="button" class="btn btn-default btn-success" onclick="SPARQL.download.csv()"><span class="glyphicon glyphicon-align-justify"></span>&nbsp;CSV</button>
-            <button type="button" class="btn btn-default btn-info" onclick="SPARQL.download.json()"><span class="glyphicon glyphicon-road"></span>&nbsp;JSON</button>
+            <button type="button" class="btn btn-default btn-info" onclick="QueryBuilder.convert.json.initiate_download()"><span class="glyphicon glyphicon-road"></span>&nbsp;JSON</button>
             <button type="button" class="btn btn-default btn-warning" onclick="SPARQL.download.pdf()"><span class="glyphicon glyphicon-file"></span>&nbsp;PDF</button>
-            {% if in_query_builder_action %>
+            {%if in_query_builder_action %}
               <button class="btn btn-default btn-danger" onclick="QueryBuilder.convert.configured.initiate_download()"><span class="glyphicon glyphicon-glass"></span>&nbsp;Generic</button>
-            {% endif %>
+            {% endif %}
         </div>
-        {% if in_query_builder_action %}
+        <div class="row" id="div_json_download" style="display:none;">
+          <div class="col-md-12">
+            <p>
+              <button class="btn btn-danger btn-xs" type="button" onclick="QueryBuilder.convert.json.hide_download('fast')"><span class="glyphicon glyphicon-chevron-left"></span>&nbsp;back</button>
+            </p>
+            <p>
+              <h4>JSON Download</h4>
+            </p>
+            <p>
+              We have these kinds of JSON output available for you
+            </p>
+            <p>
+              <span class="btn btn-success" onclick="SPARQL.download.json.virtuoso()"><span class="glyphicon glyphicon-download-alt"></span>&nbsp;Standard W3C recommended</span>&nbsp; This output format is specified in the official W3C recommendation for displaying SPARQL query set results.  
+            </p>
+            <p>
+              <span class="btn btn-danger" onclick="SPARQL.download.json.sesame()"><span class="glyphicon glyphicon-download-alt"></span>&nbsp;Sesame</span>&nbsp; This output format is provided by Sesame datastores. It basically converts the XML format to an equivalent JSON format, which is not a good format in terms of machine readability. 
+            </p>
+
+            {%if in_query_builder_action %}
+              <p>
+                <span class="btn btn-primary" onclick="SPARQL.download.json.for_class()"><span class="glyphicon glyphicon-download-alt"></span>&nbsp;Experimental</span>&nbsp; This output format is a suggested experimental format which is useful to explore data output when you have queried data which are objects of some class(es). 
+              </p>
+            {% endif %}
+          </div>
+        </div>
+        {%if in_query_builder_action %}
           <div class="div-configured-download row"  style="display:none;">
             <div class="col-md-12">
               <p>
@@ -87,3 +121,9 @@
     </div>
   </div>
 </div>
+
+{%if in_query_builder_action %}
+  <script>
+    //document.getElementById('configured_template_files').addEventListener('change', QueryBuilder.convert.configured.handle_file_upload, false);
+  </script>
+{% endif %}

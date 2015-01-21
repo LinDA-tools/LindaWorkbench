@@ -25,6 +25,14 @@
                     <a href="#" alt='{% trans "By enabling localization, you can search in your local language and let LinDA translate terms in English!"%}'><img id="translate-icon" class="icon-translate {% if translate %}enabled{% endif %}" src="/static/images/localize.png" /></a>
                     <input id="id_translate" type="checkbox" name="translate" {% if translate %}checked="checked"{% endif %}/>
                 </div>
+                {% if not check_for_updates %}
+                    {% if user.is_superuser %}
+                        <br />
+                        <div class="right">
+                            <a href="?update=True" class="button orange">Check for updates now</a>
+                        </div>
+                    {% endif %}
+                {% endif %}
 			</form>
 
             {% if user.is_superuser and check_for_updates %}

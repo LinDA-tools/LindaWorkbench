@@ -14,15 +14,23 @@
             <p class="error">{{form_error}}</p>
         {% endif %}
 
-        <div class="hidden">
+        <div>
             <label for="title">{% trans "Title"%}:</label>
-            <input type="text" name="title" id="id_title" value="{{title}}" disabled="disabled"/>
+            <input type="text" name="title" id="id_title" value="{{title}}" />
         </div>
 
         <div>
             <label for="rdffile">{% trans "Upload an RDF"%}:</label>
             <div id="file-uploader" class="button green">{% trans "Choose file"%}</div>
             <input id="id_file" type="file" class="hidden" name="rdffile" />
+            <select id="format" name="format">
+                <option value="application/rdf+xml">RDF/XML</option>
+                <option value="text/rdf+n3">N3</option>
+                <option value="application/x-turtle">Turtle</option>
+                <option value="application/trix">TriX</option>
+                <option value="application/x-trig">TriG</option>
+                <option value="application/x-binary-rdf">SesameBinary RDF</option>
+            </select>
         </div>
 
         <div>

@@ -1,5 +1,9 @@
 this.generate_sample_query = function(template_id) {
-  return $("#txt_sparql_query").val($("#txt_sample_query_" + template_id).html());
+  if (editor) {
+    return editor.getSession().setValue($("#txt_sample_query_" + template_id).html());
+  } else {
+    $("#txt_sparql_query").val($("#txt_sample_query_" + template_id).html());
+  }
 };
 
 this.display_sparql_literal = function(data) {
@@ -29,7 +33,9 @@ this.display_sparql_uri = function(data) {
 };
 
 this.display_sparql_row_entry = function(data) {
-  if (data.type === "uri") {
+  if (!data) {
+    return "<td></td>"
+  }  if (data.type === "uri") {
     return display_sparql_uri(data);
   } else if (data.type === "literal") {
     return display_sparql_literal(data);
@@ -40,13 +46,20 @@ this.display_sparql_row_entry = function(data) {
   }
 };
 
-this.execute_sparql_query = function() {
+this.execute_sparql_query = function(offset) {
   if (SPARQL.textbox.is_valid()) {
     show_loading();
     $("#sparql_results_container").hide();
+    var q = '';
+    if (editor) {
+      q = editor.getSession().getValue();
+    } else {
+      q = $("#txt_sparql_query").val()
+    }
     $.post(get_server_address() + "/query/execute_sparql", {
-      query: $("#txt_sparql_query").val(),
+      query: q,
       dataset: QueryBuilder.datasets.get_selected(),
+      offset: offset
     }, function(data) {
       var result_columns, result_rable_rows, result_rows, result_table, result_table_header, row_counter;
       if (data.error !== void 0) {
@@ -55,7 +68,38 @@ this.execute_sparql_query = function() {
       } else {
         result_columns = SPARQL.result.columns(data);
         result_rows = SPARQL.result.rows(data);
-        $("#sparql_results_time_taken").html(SPARQL.result.time_taken(data).toString() + " s");
+
+        /*Handle result pagination*/
+        var offset = Number(data.offset);
+        if (!offset) {
+          offset = 0;
+        }
+
+        if (data.offset > 0) { //there is definitely a previous page
+          var prv = offset - 100;
+          var nx = offset - 100 + 1;
+          $("#sparql_result_paginator .results-prev-container").html('<span onclick="execute_sparql_query(' + prv + ')">Fetch results ' + nx + ' to ' + offset + '</span>');
+        } else {
+          $("#sparql_result_paginator .results-prev-container").html('');
+        }
+
+        if (result_rows.length == 100) { //most probably there is a next page
+          var nx = offset + 100;
+          var nx_start = offset + 100 + 1;
+          var nx_end = offset + 200;
+          $("#sparql_result_paginator .results-next-container").html('<span onclick="execute_sparql_query(' + nx + ')">Fetch results ' + nx_start + ' to ' + nx_end + '</span>');
+        } else {
+          $("#sparql_result_paginator .results-next-container").html('');
+        }
+
+        var cur_start = offset+1;
+        var cur_end = offset+result_rows.length;
+        if (cur_end > 0) {
+          $("#sparql_result_paginator .results-cur-container").html('<span>Showing results ' + cur_start + ' to ' + cur_end + '</span>');
+        } else {
+          $("#sparql_result_paginator .results-cur-container").html('<span>No results fetched.</span>');
+        }
+        //$("#sparql_results_time_taken").html(SPARQL.result.time_taken(data).toString() + " s");
         result_table = $("#sparql_results_table");
         result_table_header = "<tr><th>#</th>";
         $.each(result_columns, function(key, val) {
@@ -69,7 +113,7 @@ this.execute_sparql_query = function() {
         row_counter = 0;
         while (row_counter < result_rows.length) {
           row_counter++;
-          result_rable_rows = "<tr><td>" + row_counter.toString() + "</td>";
+          result_rable_rows = "<tr><td>" + (row_counter + offset).toString() + "</td>";
           $.each(result_columns, function(key, col) {
             return result_rable_rows += display_sparql_row_entry(result_rows[row_counter - 1][col]);
           });
@@ -78,7 +122,11 @@ this.execute_sparql_query = function() {
         }
         Utils.scroll_to('#sparql_results_container');
       }
-    });
+    }).fail(function(error) {
+		$("#alert_modal .modal-title").html('SPARQL error');
+		$("#alert_modal .modal-body").html('<pre>' + error.responseText + '</pre>');
+		$("#alert_modal").show();
+	});;
   }
 };
 

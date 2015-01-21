@@ -1,3 +1,5 @@
+from django.db.models import Q
+
 __author__ = 'mpetyx'
 
 import json
@@ -57,18 +59,21 @@ def api_datasources_list(request):
 
 @csrf_exempt
 def recommend_dataset(request):
-
-    property = request.GET.get("property", "")
-    class_ = request.GET.get("class", "")
-    q = request.GET.get("q", "")
+    vocabulary = request.GET.get("vocabulary", None)
+    property = request.GET.get("property", None)
+    class_ = request.GET.get("class", None)
+    q = request.GET.get("q", None)
+    prefix = request.GET.get("prefix", None)
 
     page = request.GET.get('page')
 
     flag = False
 
-    if property:
+    if vocabulary is not None:
+        flag = "Vocabulary"
+    elif property is not None:
         flag = "Property"
-    elif class_:
+    elif class_ is not None:
         flag = "Class"
     else:
         flag = "General"
@@ -91,31 +96,71 @@ def recommend_dataset(request):
     if flag == "Property" or flag == "General":
         if flag == "General":
             property = q
-        vocabs = VocabularyProperty.objects.filter(label__iregex=property)
+
+        if prefix:
+            if property:
+                vocabs = VocabularyProperty.objects.filter(label__iregex=property, vocabulary__preferredNamespacePrefix=prefix)
+            else:  # fetch all properties from vocabulary
+                vocabs = VocabularyProperty.objects.filter(vocabulary__preferredNamespacePrefix=prefix)
+        else:
+            vocabs = VocabularyProperty.objects.filter(label__iregex=property)
+
         for source in vocabs:
             source_info = {}
             source_info['vocabulary'] = source.vocabulary.title
-            source_info['uri'] = source.uri
+            if prefix:
+                source_info["uri"] = re.compile('^' + source.vocabulary.preferredNamespaceUri).sub('', source.uri)
+                if source_info["uri"][0] == '#':
+                    source_info["uri"] = source_info["uri"][1:]
+            else:
+                source_info["uri"] = source.uri
             source_info['label'] = source.label
-            # if source.vocabulary.lodRanking > 0:
             source_info['ranking'] = source.vocabulary.lodRanking
-            # else:
-            #     continue
+
             results.append(source_info)
 
     if flag == "Class" or flag == "General":
         if flag == "General":
             class_ = q
-        vocabs = VocabularyClass.objects.filter(label__iregex=class_)
+
+        if prefix:
+            if class_:
+                vocabs = VocabularyClass.objects.filter(label__iregex=class_, vocabulary__preferredNamespacePrefix=prefix)
+            else:  # fetch all classes from vocabulary
+                vocabs = VocabularyClass.objects.filter(vocabulary__preferredNamespacePrefix=prefix)
+        else:
+            vocabs = VocabularyClass.objects.filter(label__iregex=class_)
+
         for source in vocabs:
             source_info = {}
-            source_info["vocabulary"] = str(source.vocabulary.title.encode('ascii', 'ignore'))
-            source_info["uri"] = str(source.uri)
-            source_info["label"] = str(source.label.encode('ascii', 'ignore'))
-            # if source.vocabulary.lodRanking > 0:
+            source_info["vocabulary"] = source.vocabulary.title
+            if prefix:
+                source_info["uri"] = re.compile('^' + source.vocabulary.preferredNamespaceUri).sub('', source.uri)
+                if source_info["uri"][0] == '#':
+                    source_info["uri"] = source_info["uri"][1:]
+            else:
+                source_info["uri"] = source.uri
+            source_info["label"] = source.label
             source_info["ranking"] = int(source.vocabulary.lodRanking)
-            # else:
-            #     continue
+
+            results.append(source_info)
+
+    if flag == "Vocabulary" or flag == "General":
+        if flag == "General":
+            vocabulary = q
+
+        if vocabulary:
+            vocabs = Vocabulary.objects.filter(Q(title__iregex=vocabulary) | Q(preferredNamespacePrefix__iregex=vocabulary))
+        else:
+            vocabs = Vocabulary.objects.all()
+        for source in vocabs:
+            source_info = {}
+            source_info["vocabulary"] = source.title
+            source_info["uri"] = source.preferredNamespaceUri
+            source_info["prefix"] = source.preferredNamespacePrefix
+            source_info["description"] = source.description
+            source_info["ranking"] = int(source.lodRanking)
+
             results.append(source_info)
 
     results = sorted(results, key=itemgetter('ranking'), reverse=True)

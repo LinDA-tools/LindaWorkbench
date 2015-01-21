@@ -57,7 +57,7 @@ USE_TZ = True
 
 # Absolute filesystem path to the directory that will hold user-uploaded files.
 # Example: "/home/media/media.lawrence.com/media/"
-MEDIA_ROOT = ''
+MEDIA_ROOT = '/var/www/html/LindaAnalytics/'
 
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash.
@@ -128,24 +128,8 @@ LINDA_SERVER_IP = 'http://107.170.70.175'
 # LinDA url
 LINDA_HOME = 'http://localhost:8000/'
 
-# Vocabulary Repository
-# In local business installations it will be different than the LINDA_SERVER_IP
-VOCABULARY_REPOSITORY = 'http://107.170.70.175:8000/'
-# VOCABULARY_REPOSITORY = 'http://193.175.133.148:8000/'
-# Maximum days between updates are run
-UPDATE_FREEQUENCY_DAYS = 7
-
-# LinDA reposirtory in Sesamy (OpenRDF) url, in order to access private datasources
-SESAME_LINDA_URL = LINDA_SERVER_IP + ':8080/openrdf-sesame/repositories/linda/'
-
-# LinDA private resources SparQL endpoint
-PRIVATE_SPARQL_ENDPOINT = LINDA_SERVER_IP + ':8080/openrdf-sesame/repositories/linda'
-
-# QueryBuilder URL
-QUERY_BUILDER_SERVER = LINDA_SERVER_IP + ':3100/'
-
-# Rdf2any Server
-RDF2ANY_SERVER = LINDA_SERVER_IP + ':8081'
+# apache-tomcat url
+LINDA_APACHE_ANALYTICS = 'http://localhost/LindaAnalytics/'
 
 INSTALLED_APPS = (
     'linda_app',
@@ -169,7 +153,7 @@ INSTALLED_APPS = (
     'analytics',
     'r2r',
     'visualisation',
-    'builder_advanced',
+    'query_designer',
 
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
@@ -217,6 +201,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "allauth.account.context_processors.account",
     "allauth.socialaccount.context_processors.socialaccount",
     "django.core.context_processors.request",
+    "django.contrib.messages.context_processors.messages",
 )
 
 # auth and allauth settings

@@ -14,7 +14,7 @@
         </thead>
         <tbody>
         {% for query in queries %}
-        <tr id="query_{{query.id}}" class="query-row">
+        <tr id="query_{{query.id}}" class="query-row" {% if query.design %}data-design="true"{% endif %}>
             <td class="query-id">#{{query.id}}
                 <div class="operations">
                     <p>{{query.csv_link}}</p>
@@ -24,7 +24,7 @@
             </td>
             <td>{{query.get_datasource}}</td>
             <td class="description">{{query.description}}</td>
-            <td class="sparql-query">{{query.sparql|linebreaks}}</td>
+            <td class="sparql-query"><p>{{query.sparql|linebreaksbr}}</p></td>
             <td>{{query.createdOn}}</td>
         </tr>
         {% endfor %}
@@ -41,83 +41,8 @@
             }
         });
 
-        $(".query-row").on('click', function() {
-            var id = $(this).attr('id');
-
-            if ($("#" + id).hasClass('selected')) {
-                console.log('open');
-                $(".queries-table .selected .sparql-query p").css('height', '65px');
-                $(".queries-table .selected").removeClass("selected");
-            } else {
-                $(".queries-table .selected .sparql-query p").css('height', '65px');
-                $(".queries-table .selected").removeClass("selected");
-
-
-                $("#" + id + " .sparql-query p").css('height', 'auto');
-                $("#" + id).addClass("selected");
-            }
-        });
-
-         $(function(){ //private datasource context menu
-
-            $.contextMenu({
-                selector: '.query-row',
-                callback: function(key, options) {
-                    var id = options.$trigger.attr('id');
-                    q_id = id.substr(id.indexOf("_")+1)
-                    var url;
-
-                    if (key == "Visualize")
-                        url = "/visualize?q_id=" + q_id;
-                    else
-                    if (key == "Analyze")
-                        url = "/analytics?q_id=" + q_id;
-                    else
-                    if (key == "Edit")
-                        url = "/sparql/?q_id=" + q_id;
-                    else
-                    if (key == "Delete") {
-                        $.confirm({
-                            title: "Delete Query #" + q_id,
-                            text: "Are you sure you want to delete this query?",
-                            className: "delete-dialog",
-                            confirm: function(button) {
-                                $.ajax({
-                                    url: "/query-builder/delete/" + q_id + '/',
-                                    type: "POST",
-                                    data: {
-                                        csrfmiddlewaretoken: '{{ csrf_token }}'
-                                    },
-                                    success: function(data, textStatus, jqXHR)
-                                    {
-                                        document.location.reload();
-                                    },
-                                    error: function (jqXHR, textStatus, errorThrown)
-                                    {
-                                        console.log(textStatus + ': ' + errorThrown);
-                                    }
-                                });
-                            },
-                            cancel: function(button) {
-                                $('.confirmation-modal').remove();
-                                $('.jquery-modal').remove();
-                            }
-                        });
-                        return;
-                    }
-
-                    $(this).addClass("show-context-menu");
-                    if (url)
-                        window.location = url;
-                },
-                items: {
-                    "Visualize": {name: "Visualize", icon: "visualize"},
-                    "Analyze": {name: "Analyze", icon: "analyze"},
-                    "sep1": "---------",
-                    "Edit": {name: "Run & Edit", icon: "edit"},
-                    "Delete": {name: "Delete", icon: "delete"},
-                }
-            });
-        });
+        {% with queries=queries %}
+            {% include "queries/context-menu.html" %}
+        {% endwith %}
     </script>
 {% endif %}

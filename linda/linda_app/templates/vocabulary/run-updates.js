@@ -137,7 +137,7 @@ $(function(){
         type: "GET",
 
         success: function(vs_local, textStatus, jqXHR) {
-            //retrieve repositiory vocabularies
+            //retrieve repository vocabularies
             $.ajax({
                 url: '/api/vocabulary-repo/vocabularies/versions/',
                 type: "GET",
