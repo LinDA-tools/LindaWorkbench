@@ -6,7 +6,7 @@
     {% for datasource in datasources %}
         <div id="{{datasource.name}}" class="datasource recent-item {% if datasource.is_public %}public{% else %}private{% endif %}">
             <div class="icon" {% if datasource.is_public %}data-endpoint="{{datasource.uri}}"{%endif %}></div>
-            <p>{{datasource.title}}</p>
+            <span>{{datasource.title}}</span>
             <!--<span class="datasource-type">{% if datasource.is_public %}SparQL Endpoint{% else %}Private RDF file{% endif %}</span>-->
         </div>
     {% empty %}
