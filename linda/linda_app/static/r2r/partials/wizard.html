@@ -2,11 +2,11 @@
   <div class="row">
 
     <div class="col-md-2">
-      <div class="navigation">
+      <nav class="navigation affix">
         <ul class="nav nav-list">
-          <li ng-class="{disabled: !(step.selected || step.treated), active: step.selected}" ng-repeat="step in steps"><a href goto="{{step.name}}">{{step.name}}</a></li>
+          <li ng-class="{disabled: !(step.selected || step.treated), active: step.selected}" ng-repeat="step in wizsteps"><a href goto="{{step.name}}">{{step.name}}</a></li>
         </ul>
-      </div>
+      </nav>
     </div>
 
     <div class="col-md-8">
@@ -14,7 +14,7 @@
     </div>
 
     <div class="col-md-2">
-      <div style="position:fixed;margin-top:2em;margin-left:2em;margin-right:2em">
+      <div class="affix">
         <div ng-bind-html="sidetip.tooltip"></div>
         <hr />
         <div ng-bind-html="sidetip.tmpl"></div>

@@ -1,6 +1,6 @@
 (function() {
   'use strict';
-  angular.module('app').factory('Config', function() {
+  angular.module('r2rDesignerApp').factory('Config', function() {
     return {
       backend: 'http://' + window.location.hostname + ':3000'
     };

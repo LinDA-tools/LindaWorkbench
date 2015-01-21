@@ -1,20 +1,14 @@
 <section id="{{name}}">
-  <div ng-class="{treated: !isSelected() && isTreated()}" ng-show="isSelected() || isTreated()">
-    <div class="row">
-      <h3>{{heading}}</h3>
-    </div>
+  <div class="row" ng-class="{treated: !isSelected() && isTreated()}" ng-show="isSelected() || isTreated()">
+    <h3>{{heading}}</h3>
 
-    <div class="row">
-      <div>
-        <fieldset ng-disabled="!isSelected()">
-          <p><div ng-transclude /></p>
-        </fieldset>
-      </div>
+    <fieldset ng-disabled="!isSelected()">
+      <p><div ng-transclude></div></p>
+    </fieldset>
 
-      <div ng-show="isSelected()" style="margin-top:2em">
-        <a href prev ng-show="!isFirst()">&lt;&lt; Previous&nbsp;</a>
-        <a href next ng-show="!isLast()">Next &gt;&gt;</a>
-      </div>
+    <div ng-show="isSelected()" style="margin-top:2em">
+      <a href prev ng-show="!isFirst()">&lt;&lt; Previous&nbsp;</a>
+      <a href next ng-show="!isLast()">Next &gt;&gt;</a>
     </div>
 
     <!-- <hr /> -->

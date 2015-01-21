@@ -175,6 +175,7 @@ header .site-title:hover {
     background-color: #5C97BF;
     display: inline-block;
     width: 260px;
+    min-width: 260px;
     min-height: 800px;
     display: table-cell;
     vertical-align: top;
@@ -331,6 +332,7 @@ header .site-title:hover {
 /* Main Area */
 #main-container {
     display: table;
+    table-layout: fixed;
     width: 100%;
     height: calc(100vh - 109px);
 }

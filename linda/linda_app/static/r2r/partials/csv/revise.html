@@ -1,0 +1,74 @@
+<div ng-controller="CsvReviseCtrl">
+
+  <div class="col-md-12">
+    <div class="col-md-2">
+      <label for="baseUriInput" class="control-label">Base URI</label>
+    </div>
+    <div id="baseUriInput" class="col-md-8">
+      <input type="text" ng-model="rdf.baseUri" spellcheck="false" size="60" placeholder="http://my.company.com/dataset/" />
+    </div>
+  </div>
+
+  <div class="col-md-12">
+    <hr />
+  </div>
+ 
+  <div class="col-md-12">
+    <p align="left" ng-show="csv.csvFile().name">
+      For file: <b>{{csv.csvFile().name}}</b>
+    </p>
+    <p align="left" ng-show="!csv.csvFile().name">
+      No file selected!</b>
+    </p>
+  </div>
+
+  <div ng-show="table && table != ''">
+    <div ng-show="hasColumns()">
+      <div class="col-md-2">
+        Columns:
+      </div>
+      <div class="col-md-10">
+        <button ng-repeat="column in columns" type="button" class="btn btn-default btn-sm" ng-class="{active: isSelected(column)}" ng-click="insert(column)">{{column}}</button>
+      </div>
+    </div>
+
+    <div class="col-md-2">
+      Subject URI:
+    </div>
+    <div class="col-md-10">
+      <textarea rows="1" cols="60" content="rdf.subjectTemplate" cursor cursorpos="cursorpos" ng-model="rdf.subjectTemplate"></textarea>
+    </div>
+
+    <div ng-repeat="class in rdf.selectedClasses[table]">
+      <div class="row">
+        <div class="col-md-1">
+          <div align="right"><i class="fa fa-arrow-right"></i></div>
+        </div>
+        <div class="col-md-3" align="right">
+          <b><em>a</em></b>
+        </div>
+        <div class="col-md-4">
+          <b>{{class.prefixedName[0]}}</b>
+        </div>
+      </div>
+    </div>
+
+    <div ng-repeat="prop in rdf.selectedProperties[table]">
+      <div class="row">
+        <div class="col-md-1">
+          <div align="right"><i class="fa fa-arrow-right"></i></div>
+        </div>
+        <div class="col-md-3" align="right">
+          <b><em>{{prop.prefixedName[0]}}</em></b>
+        </div>
+        <div class="col-md-4">
+          <select class="form-control" ng-model="rdf.propertyLiteralSelection[prop.prefixedName[0]]" ng-options="selection for selection in propertyLiteralTypeOptions"></select>
+        </div>
+        <div class="col-md-4">
+          <select class="form-control" ng-model="rdf.propertyLiteralTypes[prop.prefixedName[0]]" ng-options="type for type in propertyLiteralTypes" ng-show="rdf.propertyLiteralSelection[prop.prefixedName[0]] == 'Typed Literal'"></select>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>

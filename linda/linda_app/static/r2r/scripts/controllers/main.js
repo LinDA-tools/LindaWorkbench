@@ -1,6 +1,7 @@
 (function() {
   'use strict';
-  angular.module('app').controller('MainCtrl', function($scope, _) {
+  angular.module('r2rDesignerApp').controller('MainCtrl', function($scope, _) {
+    $scope.title = 'R2R Mapping Designer';
     return $scope.sidetip = {
       tooltip: '',
       tmpl: ''

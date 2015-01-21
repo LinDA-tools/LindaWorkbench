@@ -1,6 +1,6 @@
 (function() {
   'use strict';
-  angular.module('app').factory('Rdb', function($http, _, Config) {
+  angular.module('r2rDesignerApp').factory('Rdb', function($http, _, Config) {
     var dbAdapter, selectedColumns, selectedTables, tableColumns, tables;
     dbAdapter = Config.backend + '/api/v1/db';
     tables = [];
@@ -8,7 +8,13 @@
     selectedTables = [];
     selectedColumns = {};
     return {
-      datasource: {},
+      datasource: {
+        host: 'localhost',
+        driver: 'org.postgresql.ds.PGSimpleDataSource',
+        name: 'mydb',
+        username: 'postgres',
+        password: ''
+      },
       tables: function() {
         return tables;
       },
@@ -70,13 +76,17 @@
         });
       },
       getTables: function() {
-        return $http.get(dbAdapter + '/tables').then(function(res) {
-          return tables = res.data;
+        return $http.get(dbAdapter + '/tables').success(function(data) {
+          return tables = data;
+        }).error(function() {
+          return console.log('error: could not connect to server');
         });
       },
       getTableColumns: function() {
-        return $http.get(dbAdapter + '/table-columns').then(function(res) {
-          return tableColumns = res.data;
+        return $http.get(dbAdapter + '/table-columns').success(function(data) {
+          return tableColumns = data;
+        }).error(function() {
+          return console.log('error: could not connect to server');
         });
       },
       getColumn: function(table, column) {

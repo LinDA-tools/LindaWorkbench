@@ -2,15 +2,15 @@
   'use strict';
   var app;
 
-  app = angular.module('app', ['ngCookies', 'ngResource', 'ngSanitize', 'ngRoute', 'ui.bootstrap', 'duScroll', 'underscore', 'angularFileUpload']);
+  app = angular.module('r2rDesignerApp', ['ngCookies', 'ngResource', 'ngSanitize', 'ngRoute', 'ui.bootstrap', 'duScroll', 'underscore', 'angularFileUpload', 'mgcrea.ngStrap']);
 
   app.config(function($routeProvider) {
     return $routeProvider.when('/csv', {
-      templateUrl: 'partials/csvtrans.html',
-      controller: 'MainCtrl'
+      templateUrl: 'partials/main.html',
+      controller: 'CsvCtrl'
     }).when('/rdb', {
-      templateUrl: 'partials/rdbtrans.html',
-      controller: 'MainCtrl'
+      templateUrl: 'partials/main.html',
+      controller: 'RdbCtrl'
     }).otherwise({
       redirectTo: '/csv'
     });
