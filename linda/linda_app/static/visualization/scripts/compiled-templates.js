@@ -31,7 +31,7 @@ function program5(depth0,data) {
   hashTypes = {};
   hashContexts = {};
   options = {hash:{},inverse:self.noop,fn:self.program(3, program3, data),contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
-  stack2 = ((stack1 = helpers['link-to'] || depth0['link-to']),stack1 ? stack1.call(depth0, "loadVisualization", options) : helperMissing.call(depth0, "link-to", "loadVisualization", options));
+  stack2 = ((stack1 = helpers['link-to'] || depth0['link-to']),stack1 ? stack1.call(depth0, "visualizationConfig", options) : helperMissing.call(depth0, "link-to", "visualizationConfig", options));
   if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
   data.buffer.push("</li>\n                    <li>");
   hashTypes = {};
@@ -320,7 +320,7 @@ function program39(depth0,data) {
   data.buffer.push("\n            19. Health Data.gov - Hospital Inpatient Discharges by Facility (statistical dataset; RDF format)\n            ");
   }
 
-  data.buffer.push("<div class=\"box\" style=\"height:600px;\">\n    <h6>Visualizations</h6>\n    <ul>\n        <li>\n            ");
+  data.buffer.push("<div class=\"box\" style=\"height:600px;\">\n    <h6>Visualizations</h6>\n    <ul>\n        <li>  \n            ");
   hashTypes = {};
   hashContexts = {};
   options = {hash:{},inverse:self.noop,fn:self.program(1, program1, data),contexts:[depth0,depth0,depth0,depth0,depth0],types:["STRING","STRING","STRING","STRING","STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
@@ -441,41 +441,6 @@ function program39(depth0,data) {
   stack2 = ((stack1 = helpers['link-to'] || depth0['link-to']),stack1 ? stack1.call(depth0, "datasource", "Health Data.gov - Hospital Inpatient Discharges by Facility", "http%3A%2F%2F107.170.70.175%3A8890%2Fsparql", "http%3A%2F%2FHealthData.govHospitalInpatientDischargesbyFacility", "rdf", options) : helperMissing.call(depth0, "link-to", "datasource", "Health Data.gov - Hospital Inpatient Discharges by Facility", "http%3A%2F%2F107.170.70.175%3A8890%2Fsparql", "http%3A%2F%2FHealthData.govHospitalInpatientDischargesbyFacility", "rdf", options));
   if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
   data.buffer.push("\n        </li>\n    </ul>\n</div>");
-  return buffer;
-  
-});
-
-Ember.TEMPLATES["loadVisualization"] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
-this.compilerInfo = [4,'>= 1.0.0'];
-helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
-  var buffer = '', stack1, hashTypes, hashContexts, escapeExpression=this.escapeExpression, self=this, helperMissing=helpers.helperMissing;
-
-function program1(depth0,data) {
-  
-  var buffer = '', stack1, stack2, hashTypes, hashContexts, options;
-  data.buffer.push("\n                    ");
-  hashTypes = {};
-  hashContexts = {};
-  options = {hash:{},inverse:self.noop,fn:self.program(2, program2, data),contexts:[depth0,depth0,depth0],types:["STRING","STRING","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
-  stack2 = ((stack1 = helpers['link-to'] || depth0['link-to']),stack1 ? stack1.call(depth0, "visualization", "visualizationConfiguration", "visualization.id", options) : helperMissing.call(depth0, "link-to", "visualization", "visualizationConfiguration", "visualization.id", options));
-  if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
-  data.buffer.push("\n                ");
-  return buffer;
-  }
-function program2(depth0,data) {
-  
-  var hashTypes, hashContexts;
-  hashTypes = {};
-  hashContexts = {};
-  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "visualization.visualizationConfigName", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
-  }
-
-  data.buffer.push("<div class=\"row box\">\n    <div class=\"large-12 medium-12 columns\">\n        <div class=\"inner_box dsdefault\">\n            <div class=\"inner_title_box\">\n                <h7>Load</h7>\n            </div>\n            <div>\n                ");
-  hashTypes = {};
-  hashContexts = {};
-  stack1 = helpers.each.call(depth0, "visualization", "in", "model", {hash:{},inverse:self.noop,fn:self.program(1, program1, data),contexts:[depth0,depth0,depth0],types:["ID","ID","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
-  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
-  data.buffer.push("\n            </div>\n        </div>                                                            \n    </div>                                         \n</div>  ");
   return buffer;
   
 });
@@ -609,21 +574,21 @@ function program1(depth0,data) {
   hashTypes = {};
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers.action.call(depth0, "chooseVisualization", "visualization", {hash:{},contexts:[depth0,depth0],types:["STRING","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
-  data.buffer.push("> <img ");
-  hashContexts = {'src': depth0};
-  hashTypes = {'src': "STRING"};
+  data.buffer.push("> <span ");
+  hashContexts = {'data-visualization-name': depth0};
+  hashTypes = {'data-visualization-name': "STRING"};
   options = {hash:{
-    'src': ("visualization.visualizationThumbnail")
+    'data-visualization-name': ("visualization.visualizationName")
   },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
   data.buffer.push(escapeExpression(((stack1 = helpers['bind-attr'] || depth0['bind-attr']),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "bind-attr", options))));
   data.buffer.push(" ");
   hashContexts = {'class': depth0};
   hashTypes = {'class': "STRING"};
   options = {hash:{
-    'class': ("visualization.valid:valid-suggestion:invalid-suggestion")
+    'class': ("visualization.valid:valid-suggestion:invalid-suggestion :visualization-thumbnail")
   },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
   data.buffer.push(escapeExpression(((stack1 = helpers['bind-attr'] || depth0['bind-attr']),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "bind-attr", options))));
-  data.buffer.push(" /> </a></div>\n");
+  data.buffer.push("> </span> </a></div>\n");
   return buffer;
   }
 
@@ -648,7 +613,7 @@ function program1(depth0,data) {
   hashTypes = {};
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "view.label", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
-  data.buffer.push(" \n        </div>\n        <div class=\"dim-metadata\">\n           Drag ");
+  data.buffer.push(" \n        </div>\n        <div class=\"dim-area-box\">\n        <div class=\"dim-metadata\">\n           Drag ");
   hashTypes = {};
   hashContexts = {};
   stack1 = helpers.each.call(depth0, "type", "in", "view.metadata", {hash:{},inverse:self.program(4, program4, data),fn:self.program(2, program2, data),contexts:[depth0,depth0,depth0],types:["ID","ID","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
@@ -658,7 +623,7 @@ function program1(depth0,data) {
   hashContexts = {};
   stack1 = helpers.each.call(depth0, "areaItem", "in", "view.inArea", {hash:{},inverse:self.noop,fn:self.program(6, program6, data),contexts:[depth0,depth0,depth0],types:["ID","ID","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
-  data.buffer.push("\n        </div>\n    ");
+  data.buffer.push("\n        </div>\n        </div>\n    ");
   return buffer;
   }
 function program2(depth0,data) {
@@ -802,13 +767,15 @@ helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
 Ember.TEMPLATES["visualization"] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
 this.compilerInfo = [4,'>= 1.0.0'];
 helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
-  var buffer = '', stack1, hashTypes, hashContexts, options, escapeExpression=this.escapeExpression, helperMissing=helpers.helperMissing;
+  var buffer = '', stack1, hashContexts, hashTypes, options, escapeExpression=this.escapeExpression, helperMissing=helpers.helperMissing;
 
 
   data.buffer.push("<div class=\"row box\">\n    <div class=\"large-5 medium-3 columns\">\n        <!-- Visualization Selection -->\n        <div class=\"row inner_box\">\n            <div class=\"inner_title_box\">\n                <h7>Select Visualization</h7>\n            </div>\n            <div class=\"sliderWrapper\">\n                ");
-  hashTypes = {};
-  hashContexts = {};
-  data.buffer.push(escapeExpression(helpers.view.call(depth0, "controller.slideShowContainer", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  hashContexts = {'slides': depth0};
+  hashTypes = {'slides': "ID"};
+  data.buffer.push(escapeExpression(helpers.view.call(depth0, "App.SlideShowView", {hash:{
+    'slides': ("controller.model")
+  },contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
   data.buffer.push("\n            </div>\n        </div>\n\n        <!-- Visualization Configuration - Left: Tree with data source; Right: dimension mapping -->\n        <div class=\"row inner_box\">\n            <div class=\"inner_title_box\">\n                <h7>Configure Visualization</h7>  <span class=\"visualize\"><a ");
   hashTypes = {};
   hashContexts = {};
@@ -850,6 +817,43 @@ helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
   options = {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
   data.buffer.push(escapeExpression(((stack1 = helpers.partial || depth0.partial),stack1 ? stack1.call(depth0, "publish", options) : helperMissing.call(depth0, "partial", "publish", options))));
   data.buffer.push("\n                </div>\n            </div>\n        </div>\n    </div>\n</div>\n");
+  return buffer;
+  
+});
+
+Ember.TEMPLATES["visualizationConfig"] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
+this.compilerInfo = [4,'>= 1.0.0'];
+helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
+  var buffer = '', stack1, hashTypes, hashContexts, escapeExpression=this.escapeExpression, self=this, helperMissing=helpers.helperMissing;
+
+function program1(depth0,data) {
+  
+  var buffer = '', stack1, stack2, hashTypes, hashContexts, options;
+  data.buffer.push("\n                    ");
+  hashTypes = {};
+  hashContexts = {};
+  options = {hash:{},inverse:self.noop,fn:self.program(2, program2, data),contexts:[depth0,depth0,depth0],types:["STRING","STRING","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  stack2 = ((stack1 = helpers['link-to'] || depth0['link-to']),stack1 ? stack1.call(depth0, "visualization", "visualizationConfiguration", "visualization.id", options) : helperMissing.call(depth0, "link-to", "visualization", "visualizationConfiguration", "visualization.id", options));
+  if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
+  data.buffer.push("\n                ");
+  return buffer;
+  }
+function program2(depth0,data) {
+  
+  var buffer = '', hashTypes, hashContexts;
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "visualization.configurationName", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("<br>");
+  return buffer;
+  }
+
+  data.buffer.push("<div class=\"row box\">\n    <div class=\"large-12 medium-12 columns\">\n        <div class=\"inner_box dsdefault\">\n            <div class=\"inner_title_box\">\n                <h7>Load</h7>\n            </div>\n            <div>\n                ");
+  hashTypes = {};
+  hashContexts = {};
+  stack1 = helpers.each.call(depth0, "visualization", "in", "controller", {hash:{},inverse:self.noop,fn:self.program(1, program1, data),contexts:[depth0,depth0,depth0],types:["ID","ID","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("\n            </div>\n        </div>                                                            \n    </div>                                         \n</div>  ");
   return buffer;
   
 });
