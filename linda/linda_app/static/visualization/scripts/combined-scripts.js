@@ -5,7 +5,8 @@ App = Ember.Application.create({
     LOG_TRANSITIONS_INTERNAL: true,
     onerror: function(error) {
         console.dir(error);
-    }
+    },
+    rootElement: $('#visualizer')
 });
 Ember.RSVP.on('error', function(error) {
   Ember.Logger.assert(false, error);
