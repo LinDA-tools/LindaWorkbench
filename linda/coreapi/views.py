@@ -97,8 +97,8 @@ def recommend_dataset(request):
     if flag == "Property" or flag == "General" or flag == "ClassProperty":
         if flag == "General":
             property = q
-        if flag == "ClassProperty":
-            property = q
+        elif flag == "ClassProperty":
+            property = class_property
 
         if prefix:
             if property:
@@ -125,8 +125,8 @@ def recommend_dataset(request):
     if flag == "Class" or flag == "General" or flag == "ClassProperty":
         if flag == "General":
             class_ = q
-        if flag == "ClassProperty":
-            class_ = q
+        elif flag == "ClassProperty":
+            class_ = class_property
 
         if prefix:
             if class_:
