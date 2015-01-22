@@ -1,9 +1,20 @@
-</div> <!-- main-container -->
+{% if not visualization %}
+        </div> <!-- main-container -->
 
-<footer class="centered">
+    <footer class="centered">
 
-    <p class="left">&copy; 2014 LinDA Project. All rights reserved.</p>
-    <a href="/terms-of-use" class="right">Terms of use</a>
+        <p class="left">&copy; 2014 LinDA Project. All rights reserved.</p>
+        <a href="/terms-of-use" class="right">Terms of use</a>
 
-    <div class="clearfix"></div>
-</footer>
+        <div class="clearfix"></div>
+    </footer>
+{% else %}
+    <script>
+        $(function() {
+			setTimeout(function (){
+				$("body").append('<footer class="centered">      <p class="left">&copy; 2014 LinDA Project. All rights reserved.</p>     <a href="/terms-of-use" class="right">Terms of use</a>      <div class="clearfix"></div> </footer>');
+				// Something you want delayed.
+			}, 500);
+        });
+    </script>
+{% endif %}

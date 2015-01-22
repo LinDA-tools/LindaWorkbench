@@ -21,7 +21,7 @@
 
 {% block content %}
 <div class="main sparql">
-    <h1 class="page-title">SparQL Endpoint{% if query %} - Edit Query{% endif %}</h1>
+    <h1 class="page-title">SparQL Editor{% if query %} - Edit Query #{{query.id}}{% endif %}</h1>
 
     <div>
         <div class="dropdown clear-dataset">

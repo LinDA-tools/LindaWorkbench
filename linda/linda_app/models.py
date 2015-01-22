@@ -139,7 +139,7 @@ class Vocabulary(models.Model):
             return
 
         rdf_data = document.read()
-        g.parse(data=rdf_data, format=guess_format(self.downloadUrl))
+        g.parse(data=rdf_data, format='n3')
         g.bind("rdfs", RDFS)
         g.bind("owl", OWL)
 
@@ -205,7 +205,7 @@ class Vocabulary(models.Model):
                                 (COALESCE(?propertyComment, "") AS ?pComment)
                                 (COALESCE(?parent, "") AS ?p)
                 WHERE {
-                    VALUES ?propertyType { rdf:Property owl:ObjectProperty owl:DatatypeProperty }
+                    VALUES ?propertyType { rdf:Property owl:ObjectProperty owl:DatatypeProperty owl:AnnotationProperty }
                     ?property rdf:type ?propertyType.
 
                     OPTIONAL {?property rdfs:domain ?domain}.

@@ -83,7 +83,24 @@
                         prop_control.append('<span class="add-property" data-about="' + new_id + '">Add property</span></div>');
                         var inst = self.instances[new_id];
 
-                        if (!default_properties) {
+                        //check if uri exists in defaults or should be added manually
+                        var has_URI = false;
+                        if (default_properties) {
+                            for (var k=0; k<default_properties.length; k++) {
+                                if (typeof default_properties[k] == 'string') {
+                                    if (default_properties[k] == 'URI') {
+                                        has_URI = true;
+                                        break;
+                                    }
+                                }
+                                else if (default_properties[k].uri == 'URI') {
+                                    has_URI = true;
+                                    break;
+                                }
+                            }
+                        }
+
+                        if (!has_URI) {
                             self.add_property(new_id, 0); //add URI by default
                         }
 

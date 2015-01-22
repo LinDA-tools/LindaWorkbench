@@ -12,10 +12,6 @@
             <h1 class="site-title">LINDA</h1>
 		</a>
 
-        {% if page == "Visualizations" %}
-            {% include "util/menu-responsive.html" %}
-        {% endif %}
-
 		<div class="username right">
 		{% if user.is_authenticated %}
 			{% trans "Welcome back" %}, <a href="/profile/{{user.id}}">{{user|nice_name}}</a>.
@@ -35,9 +31,9 @@
 
 </header>
 
-<button class="button orange" id="menu-toggle"><div></div></button>
+<div class="orange" id="menu-toggle"><div></div></div>
 
-{% if page != "Visualizations" %}
+
     <div id="main-container">
         <div id="menu" class="clearfix">
             <ul>
@@ -62,11 +58,10 @@
                         <li><a href="/settings">{% trans "Settings" %}</a></li>
                     {% endif %}
                     <li><a href="http://linda-project.eu/wiki/index.php?title=Main_Page" target="_blank">{% trans "Documentation" %}</a></li>
-                    <li><a href="/sparql">{% trans "SPARQL Endpoint"%}</a></li>
+                    <li><a href="/sparql">{% trans "SPARQL Editor"%}</a></li>
                 </ul>
 
             </div>
         </div>
 
         {% include "util/menu-responsive.html" %}
-{% endif %}

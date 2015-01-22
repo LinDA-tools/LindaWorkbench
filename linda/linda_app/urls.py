@@ -18,7 +18,8 @@ urlpatterns = patterns('',
                        url(r'^terms-of-use/$', views.terms, name='terms'),
                        url(r'^community/$', login_required(views.UserListView.as_view()), name='community'),
                        url(r'^settings/$', login_required(views.ConfigurationUpdateView.as_view()), name='settings'),
-
+                       url(r'^get-started/$', views.getstarted, name='getstarted'),
+                       
                        # Endpoints
                        url(r'^sparql/$', views.sparql, name='sparql'),
                        url(r'^sparql/(?P<dtname>[\w-]+)/$', views.datasource_sparql, name='datasource-sparql'),

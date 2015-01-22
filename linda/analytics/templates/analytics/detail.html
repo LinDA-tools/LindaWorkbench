@@ -112,6 +112,18 @@ $(document).ready(function(){
 <div style="clear:both;"/>
 <div class="main content-sidebar">
    <content>
+    
+           {% if messages %}
+            <div style="border:3px solid #FD8036;font-weight:bold">
+	      <ul class="messages">
+		{% for message in messages %}
+		  <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+		{% endfor %}
+	      </ul>
+	    </div>  
+	   {% endif %}
+   
+   
           <table>
 	    <tr>
 	      <td><h1 class="page-title inline">Analytic ID: {{ analytics.id }} - V: {{ analytics.version }}</h1></td>
@@ -164,25 +176,34 @@ $(document).ready(function(){
           {% endif %}
           
           {% if analytics.plot1 %}
-           <p style="margin:0px;color:#FC5006;">{{ analytics.plot1.description }} 
-             <button id="toggleplot1info">see/hide Plot</button>
-            <div id="plot1info"  >
-               <img src="{{analytics.display_linda_apache_analytics}}plots/plotid{{analytics.plot1.id}}.png"></img>
-                
-              </div>
-           </p>
-          {% endif %}
+	      {% if analytics.exists_plot1_file %}
+		<p style="margin:0px;color:#FC5006;">{{ analytics.plot1.description }} 
+		<button id="toggleplot1info">see/hide Plot</button>
+		  <div id="plot1info"  >
+		  <img src="{{analytics.display_linda_apache_analytics}}plots/plotid{{analytics.plot1.id}}.png"></img>
+		    
+		  </div>
+		</p>
+	      {% else %}
+	       <p style="margin:0px;color:#FC5006;">No Plot generated for this analytics process.</p>
+	      {% endif %}
+           {% endif %}
+           
+          
           
           {% if analytics.plot2 %}
-           <p style="margin:0px;color:#FC5006;">{{ analytics.plot2.description }} 
-             <button id="toggleplot2info">see/hide Plot</button>
-            <div id="plot2info"  >
-               <img src="{{analytics.display_linda_apache_analytics}}plots/plotid{{analytics.plot2.id}}.png"></img>
-                
-              </div>
-           </p>
-          {% endif %}
-
+             {% if analytics.exists_plot2_file %}
+	      <p style="margin:0px;color:#FC5006;">{{ analytics.plot2.description }} 
+		<button id="toggleplot2info">see/hide Plot</button>
+		<div id="plot2info"  >
+		  <img src="{{analytics.display_linda_apache_analytics}}plots/plotid{{analytics.plot2.id}}.png"></img>
+		    
+		  </div>
+	      </p>
+             {% else %}
+             <p style="margin:0px;color:#FC5006;">No Plot generated for this analytics process.</p>
+	     {% endif %}
+           {% endif %}
 
           {% if analytics.modelReadable %}
           <p style="margin:0px;color:#FC5006;">Analytics model file 
@@ -288,6 +309,33 @@ $(document).ready(function(){
 				    </td>
 				  </tr>				  
                     </table>
+                     <table>
+                                 <tr>
+				    <td>
+					 </br><p style="margin:0px;color:#FC5006;"><b>Performance Numbers :</b></p>				    
+				    </td>
+				  </tr>
+				  <tr>
+				    <td>
+					 Time To Get Data: {{analytics.timeToGet_data}} sec
+				    </td>
+				  </tr>
+				  <tr>
+				    <td>
+					 Size Of Analyzed Data : {{analytics.data_size}} B
+				    </td>
+				  </tr>
+				  <tr>
+				    <td>
+					 Time To Run analytics: {{analytics.timeToRun_analytics}} sec
+				    </td>
+				  </tr>
+				   <tr>
+				    <td>
+					Time To Result Document:   {{analytics.timeToCreate_RDF}} sec    
+				    </td>
+				  </tr>
+		    </table>
         </div>
         <div class="sidebar-block" id="analytics_list">
             <h3 class="sidebar-title">{% trans "My Analytics" %}</h3>

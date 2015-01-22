@@ -2,7 +2,7 @@
   'use strict';
   var app;
 
-  app = angular.module('app');
+  app = angular.module('r2rDesignerApp');
 
   app.directive('columntip', function() {
     return {

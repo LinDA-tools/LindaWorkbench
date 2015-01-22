@@ -1,0 +1,26 @@
+<div ng-controller="RdbContentsCtrl">
+
+  <table class="table table-scrollable">
+    <tr ng-repeat="table in rdb.tables()">
+      <th class="btn-th">
+        <button type="button" 
+                class="btn btn-primary btn-sm table-btn" 
+                ng-class="{active: rdb.isSelectedTable(table)}"
+                ng-click="rdb.toggleSelectTable(table)"> 
+          {{table}}
+        </button>
+      </th>
+
+      <td>
+        <button ng-repeat="column in rdb.tableColumns()[table]" 
+                type="button" 
+                class="btn btn-default btn-sm table-btn"
+                ng-class="{disabled: !rdb.isSelectedTable(table), active: rdb.isSelectedColumn(table, column)}"
+                ng-click="rdb.toggleSelectColumn(table, column)"
+                columntip table="{{table}}" column="{{column}}"> 
+            {{column}}
+        </button>
+      </td>
+    </tr>
+  </table>
+</div>

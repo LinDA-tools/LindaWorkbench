@@ -178,53 +178,6 @@ header .site-title:hover {
     margin-left: 10px;
 }
 
-
-#menu > ul {
-    min-height: 400px;
-    border-bottom: 1px solid #d3d3d3;
-}
-#menu > ul > li {
-    display: block;
-}
-
-#menu > ul > li > a {
-    padding: 5px 20px 5px 5px;
-    display: inline-block;
-    color: #fff;
-}
-
-#menu > ul > li > ul {
-    display: none;
-    z-index: 10;
-    border-radius: 0 0 5px 5px;
-    position: absolute;
-    background-color: rgba(244, 179, 80, 0.5);
-}
-
-#menu > ul > li {
-    padding: 5px 25px 5px 10px;
-}
-
-#menu > ul > li  a {
-    color: #232323;
-}
-
-#menu > ul > li:hover {
-    background-color: #D4D4D4;
-}
-
-.secondary-menu {
-    padding: 15px;
-}
-
-.secondary-menu .disk-space {
-    color: #a3a3a3;
-}
-
-#menu a {
-    color: #232323;
-}
-
 /* Main Area */
 #main-container {
     display: table;

@@ -95,4 +95,8 @@
     <body class="visualizations">
         {% include 'util/header.html' %}
     </body>
+	
+	{% with visualization=True %}
+		{% include 'util/footer.html' %}
+	{% endwith %}
 </html>

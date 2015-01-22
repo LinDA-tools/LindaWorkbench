@@ -67,6 +67,7 @@
 
     <script src="/static/js/jquery-ui.min.js"></script>
     <script src="/static/js/jquery.confirm.js"></script>
+    <script src="/static/js/jquery.smartresize.js"></script>
 
     <script>
         {% include "builder_advanced/arrows.js" %}
@@ -162,7 +163,10 @@
         /*Handle hover on arrows*/
         $("#builder-canvas").on('mousemove', function(e) {
             if (!builder_workbench.connection_from) {
-                arrows.over_arrows(e.screenX - $(this).offset().left, e.screenY - $(this).offset().top - 60 + $(document).scrollTop());
+                var x = e.pageX - $(this).offset().left;
+                var y = e.pageY - $(this).offset().top;
+
+                arrows.over_arrows(x, y);
             }
         });
 
@@ -171,6 +175,21 @@
             if (!builder_workbench.connection_from) {
                 arrows.in_arrows(e.screenX - $(this).offset().left, e.screenY - $(this).offset().top - 60 + $(document).scrollTop());
             }
+        });
+
+        /*Handle workbench resize*/
+        $( window ).smartresize(function() {
+            //canvas resize
+            $("#builder-canvas").attr('width', $('#builder_workspace').width());
+            arrows.ctx.width = $('#builder_workspace').width();
+
+            $("#builder-canvas").attr('height', $('#builder_workspace').height());
+            arrows.ctx.height = $('#builder_workspace').height();
+
+            arrows.draw();
+
+            //toolbar position
+            $("#tree_toolbar").css('top', $("#toolbar").position().top + $("#toolbar").height() + 30);
         });
 
         $("body").on('keyup', function(e) {

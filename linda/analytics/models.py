@@ -72,8 +72,8 @@ class Analytics(models.Model):
     description = models.TextField(max_length=500, blank=True)
     category = models.ForeignKey(Category)
     algorithm = models.ForeignKey(Algorithm)
-    trainQuery = models.ForeignKey('linda_app.Query', null=True, related_name='trainQuery', blank=True)
-    evaluationQuery = models.ForeignKey('linda_app.Query', null=True, related_name='evaluationQuery', blank=True)
+    trainQuery = models.ForeignKey('linda_app.Query', null=True, related_name='trainQuery', blank=True,on_delete=models.SET_NULL)
+    evaluationQuery = models.ForeignKey('linda_app.Query', null=True, related_name='evaluationQuery', blank=True,on_delete=models.SET_NULL)
     document = models.FileField(upload_to='datasets/', blank=True,max_length=500)
     testdocument = models.FileField(upload_to='datasets/', blank=True,max_length=500)
     model = models.FileField(upload_to='models/',max_length=500)
@@ -92,6 +92,10 @@ class Analytics(models.Model):
     updatedOn = models.DateField(editable=False, null=True)
     plot1 = models.ForeignKey(Plot, null=True, related_name='plot1', blank=True)
     plot2 = models.ForeignKey(Plot, null=True, related_name='plot2', blank=True)
+    timeToGet_data = models.FloatField(max_length=500, blank=True,default=0)
+    data_size = models.FloatField(max_length=5000, blank=True,default=0)
+    timeToRun_analytics = models.FloatField(max_length=500, blank=True,default=0)
+    timeToCreate_RDF = models.FloatField(max_length=500, blank=True,default=0)
     
     def save(self):
         if not self.id:  # first time saved -- create is not set yet
@@ -122,9 +126,10 @@ class Analytics(models.Model):
            fp = open(self.processinfo.path);
            print(self.processinfo.path);
            return fp.read()
-    def display_plot1_file(self):
-         if self.plot1:
-           return settings.LINDA_APACHE_ANALYTICS+str(self.plot1)
+    def exists_plot1_file(self):
+           return os.path.exists(self.plot1.image.path)
+    def exists_plot2_file(self):
+           return os.path.exists(self.plot2.image.path)
     def display_linda_apache_analytics(self):
            return settings.LINDA_APACHE_ANALYTICS
     def isExportFormatRDFXML(self):

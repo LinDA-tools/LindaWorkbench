@@ -11,7 +11,8 @@
 {% block content %}
 	<div class="main">
         <div class="welcome">
-            <img class="welcome-video" src="/static/images/video-placeholder.jpg" />
+            <!--img class="welcome-video" src="/static/images/video-placeholder.jpg" /-->
+            <iframe width="350" height="250" src="//www.youtube.com/embed/b988bbpmR00" frameborder="0" allowfullscreen></iframe>
             <div class="welcome-message clearfix">
                 <h2>Welcome to LinDA Workbench</h2>
                 <p>{% trans "With LinDa toolset you can easily transform your data into RDF format and enjoy the massive power of Linked Data."%}<br />{% trans "Welcome to the future of interconnected information."%}</p>
@@ -20,21 +21,21 @@
                     <strong>{%trans "STEP 1"%}</strong>
                     <img class="right" src="/static/images/photo.png" />
                     <br/>
-                    <span>{%trans "Turn Data into RDF"%}</span>
+                    <span><a style="color:#666" href="http://linda-project.eu/wiki/index.php?title=Transformation_Engine_-_RDF_Conversion_Tool">{%trans "Turn Data into RDF"%}</a></span>
                 </div>
 
                 <div class="welcome-step">
                     <strong>{%trans "STEP 2"%}</strong>
                     <img class="right" src="/static/images/dir.png" />
                     <br/>
-                    <span>{%trans "Combine / Link your Data"%}</span>
+                    <span><a style="color:#666" href="http://linda-project.eu/wiki/index.php?title=LinDA_Publication_and_Consumption_Framework">{%trans "Query / Link your Data"%}</a></span>
                 </div>
 
                 <div class="welcome-step">
                     <strong>{%trans "STEP 3"%}</strong>
                     <img class="right" src="/static/images/people.png" />
                     <br/>
-                    <span>{%trans "Visualize / Analyze your Data"%}</span>
+                    <span><a style="color:#666" href="http://linda-project.eu/wiki/index.php?title=LinDA_Visualization_and_Exploration">{%trans "Visualize / Analyze your Data"%}</a></span>
                 </div>
 
                 <a href="/get-started" class="button orange right">{% trans "Get started"%}</a>

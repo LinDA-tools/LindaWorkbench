@@ -48,6 +48,9 @@ def terms(request):
     params = {}
     return render(request, 'terms.html', params)
 
+def getstarted(request):
+    params = {}
+    return render(request, 'getstarted.html', params)
 
 def sparql(request):
     params = {}

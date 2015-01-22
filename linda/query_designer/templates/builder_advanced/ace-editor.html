@@ -82,6 +82,14 @@
                                 return {caption: p.label, name: p.label, value: p.uri + ' ', score: p.ranking, meta: p.vocabulary}
                             }));
                         })
+                    } else if (in_vocabulary != "") {
+                        $.getJSON(
+                        "/coreapi/recommend/?class_property=" + prefix + in_vocabulary,
+                        function(propertyList) {
+                            callback(null, propertyList.map(function(p) {
+                                return {caption: p.label, name: p.label, value: p.uri + ' ', score: p.ranking, meta: p.vocabulary}
+                            }));
+                        })
                     }
                 }
             }

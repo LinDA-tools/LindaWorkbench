@@ -1,6 +1,6 @@
 (function() {
   'use strict';
-  angular.module('app').factory('Csv', function($http, $upload, _, Config) {
+  angular.module('r2rDesignerApp').factory('Csv', function($http, $upload, _, Config) {
     var csvAdapter, csvData, csvFile, selectedColumns, selectedTables, tableColumns, tables;
     csvAdapter = Config.backend + '/api/v1/csv';
     csvData = {};
@@ -17,7 +17,7 @@
         return tables;
       },
       columns: function(table) {
-        if (table && (csvData[table] != null)) {
+        if ((table != null) && (csvData[table] != null)) {
           return _.first(csvData[table]);
         } else {
           return [];
@@ -48,6 +48,16 @@
           } else {
             return selectedColumns[table] = [column];
           }
+        }
+      },
+      selectAllColumns: function(table) {
+        if (table != null) {
+          return selectedColumns[table] = _.first(csvData[table]);
+        }
+      },
+      deselectAllColumns: function(table) {
+        if (table != null) {
+          return selectedColumns[table] = [];
         }
       },
       submitCsvFile: function(file, progress) {
