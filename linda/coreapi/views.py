@@ -60,14 +60,13 @@ def api_datasources_list(request):
 @csrf_exempt
 def recommend_dataset(request):
     vocabulary = request.GET.get("vocabulary", None)
-    property = request.GET.get("property", None)
     class_ = request.GET.get("class", None)
+    property = request.GET.get("property", None)
+    class_property = request.GET.get("class_property", None)
     q = request.GET.get("q", None)
     prefix = request.GET.get("prefix", None)
 
     page = request.GET.get('page')
-
-    flag = False
 
     if vocabulary is not None:
         flag = "Vocabulary"
@@ -75,6 +74,8 @@ def recommend_dataset(request):
         flag = "Property"
     elif class_ is not None:
         flag = "Class"
+    elif class_property is not None:
+        flag = "ClassProperty"
     else:
         flag = "General"
 
@@ -93,8 +94,10 @@ def recommend_dataset(request):
             #     continue
             results.append(source_info)'''
 
-    if flag == "Property" or flag == "General":
+    if flag == "Property" or flag == "General" or flag == "ClassProperty":
         if flag == "General":
+            property = q
+        if flag == "ClassProperty":
             property = q
 
         if prefix:
@@ -119,8 +122,10 @@ def recommend_dataset(request):
 
             results.append(source_info)
 
-    if flag == "Class" or flag == "General":
+    if flag == "Class" or flag == "General" or flag == "ClassProperty":
         if flag == "General":
+            class_ = q
+        if flag == "ClassProperty":
             class_ = q
 
         if prefix:
