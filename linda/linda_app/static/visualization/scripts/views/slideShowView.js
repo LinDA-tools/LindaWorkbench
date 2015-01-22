@@ -14,6 +14,9 @@ App.SlideShowView = Ember.View.extend({
             slidesToScroll: 1
         });   
     },
+    refreshView: function() {
+        this.rerender();
+    }.observes('slides.[]'),
     willDestroyElement: function() {
         console.log("Removing slideshow");
         this.$().unslick(); 

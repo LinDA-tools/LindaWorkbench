@@ -49,11 +49,11 @@ App.DroppableAreaComponent = Ember.Component.extend({
     classNameBindings: ['full', 'active'],
     active: false,
     isFull: function () {
-        var maxNumItems = this.get('maxNumItems')
-        var inArea = this.get('inArea');
-        if (typeof maxNumItems !== 'undefined' && inArea.length >= maxNumItems) {
-            return true;
-        }
+        // var maxNumItems = this.get('maxNumItems')
+        // var inArea = this.get('inArea');
+        // if (typeof maxNumItems !== 'undefined' && inArea.length >= maxNumItems) {
+        //     return true;
+        // }
         return false;
     },
     full: function () {

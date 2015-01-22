@@ -3,6 +3,7 @@
         <div class="dim-name">
            {{view.label}} 
         </div>
+        <div class="dim-area-box">
         <div class="dim-metadata">
            Drag {{#each type in view.metadata}}{{type}}{{else}}any data {{/each}}here
         </div>
@@ -10,6 +11,7 @@
             {{#each areaItem in view.inArea}}
                 {{property-item item=areaItem collection=view.inArea}}
             {{/each}}
+        </div>
         </div>
     {{/droppable-area}}
 </div>

@@ -76,6 +76,7 @@ var csv_data_module = function() {
                         label: names[i],
                         grandchildren: false,
                         role: null,
+                        special: false,
                         type: predictValueSOM(values[i])
                     };
                     columns.push(dataInfo);

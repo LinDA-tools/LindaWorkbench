@@ -105,6 +105,7 @@ var treeselection_data = function() {
             var label = record.label;
             var type = record.type;
             var role = record.role;
+            var special = record.special;
             var grandchildren = record.grandchildren;
 
             treeContent.push({
@@ -115,6 +116,7 @@ var treeselection_data = function() {
                 iconclass: getCategory(type),
                 type: type,
                 role: role,
+                special: special,
                 hideCheckbox: hideCheckbox(type),
                 _children: {
                     loadChildren: function(node_path) {
@@ -153,6 +155,7 @@ var treeselection_data = function() {
                 label: record.label,
                 parent: record.parent,
                 role: record.role,
+                special: record.special,
                 type: record.type
             });
         }

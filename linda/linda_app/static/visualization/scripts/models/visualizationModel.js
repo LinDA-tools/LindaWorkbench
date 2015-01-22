@@ -2,7 +2,7 @@
  *And describes the format used for storing the current visualization configuration in the backend.*/
 App.Visualization = DS.Model.extend({
     visualizationName: DS.attr('string'),
-    visualizationConfigName: DS.attr('string'), //SAVE function
+    configurationName: DS.attr('string'), //SAVE function
     structureOptions: DS.attr(),
     layoutOptions: DS.attr(),
     visualizationThumbnail: DS.attr('string'),

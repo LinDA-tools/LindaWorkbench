@@ -203,6 +203,7 @@ var sparql_data_module = function () {
                     label: propertyLabel,
                     grandchildren: parseInt(grandchildren) > 0 ? true : false,
                     role: predictRDFPropertyRole(propertyURI, propertyTypes),
+                    special: _.contains(propertyTypes, "http://linda-project.eu/linda-visualization#SpecialProperty"),
                     type: scaleOfMeasurement
                 };
                 
@@ -437,6 +438,9 @@ var sparql_data_module = function () {
      * Takes a variable binding from a json sparql result and converts it to a scalar
      */
     function resultToScalar(binding) {
+        if(!binding){
+            return null;
+        }
         var value = binding.value;
         var type = binding.type;
         switch (type) {
