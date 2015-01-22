@@ -179,6 +179,7 @@
 
         /*Handle workbench resize*/
         $( window ).smartresize(function() {
+            //canvas resize
             $("#builder-canvas").attr('width', $('#builder_workspace').width());
             arrows.ctx.width = $('#builder_workspace').width();
 
@@ -186,6 +187,9 @@
             arrows.ctx.height = $('#builder_workspace').height();
 
             arrows.draw();
+
+            //toolbar position
+            $("#tree_toolbar").css('top', $("#toolbar").position().top + $("#toolbar").height() + 30);
         });
 
         $("body").on('keyup', function(e) {
