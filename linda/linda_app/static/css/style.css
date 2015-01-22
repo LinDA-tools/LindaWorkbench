@@ -100,10 +100,6 @@ body.visualizations {
     font: 14px/1.8 'Open Sans', Helvetica, Arial, sans-serif !important;
 }
 
-.visualizations #menu-toggle {
-    display: none !important;
-}
-
 body a {
     color: #FC5006;
     text-decoration: none;
@@ -223,6 +219,12 @@ header .site-title:hover {
     width: 46px;
     height: 46px;
     outline: none;
+    margin: 5px 15px;
+    cursor: pointer;
+}
+
+#menu-toggle:hover {
+    background: #FC5006;
 }
 
 #menu-toggle div{
@@ -288,20 +290,16 @@ header .site-title:hover {
 }
 
 /*Visualizations header & menu*/
-.ember-view #header {
-    display: none;
+.ember-application > .ember-view  #header {
+    /*display: none;*/
 }
 
-.ember-view .row.box {
+.ember-application > .ember-view .row.box {
     border: none !important;
     box-shadow: none !important;
 }
 
-.visualizations header {
-    height: 52px;
-}
-
-.visualizations #menu-select-area {
+/*.visualizations #menu-select-area {
     margin-left: 50px;
     width: 600px;
     display: inline-block;
@@ -310,7 +308,7 @@ header .site-title:hover {
 
 .visualizations #menu-select-area ul li {
     display: inline;
-}
+}*/
 
 /*.visualizations #menu-select-area ul li:nth-of-type(2) {
     position: relative;
@@ -318,7 +316,7 @@ header .site-title:hover {
     left: 30px;
 }*/
 
-.visualizations #menu-select-area select {
+/*.visualizations #menu-select-area select {
     font-family: 'Open Sans';
     max-width: 400px;
     display: inline-block;
@@ -327,6 +325,47 @@ header .site-title:hover {
 .visualizations .site-search-input {
     display: inline-block;
     height: 30px !important;
+}*/
+
+.visualizations #main-container {
+    display: inline;
+    width: 265px;
+}
+
+.visualizations #menu {
+    display: inline-block;
+    width: 265px;
+}
+
+.visualizations #menu a, .visualizations .secondary-menu a {
+    color: #eee !important;
+    font-size: 11pt;
+}
+
+.visualizations #menu > ul {
+    margin-left: 0;
+}
+
+.visualizations .site-search-input {
+    height: 30px;
+    display: inline;
+}
+
+.visualizations footer {
+    color: #888;
+    padding-bottom: 30px;
+}
+
+.ember-application > .ember-view  {
+    display: inline-block;
+    width: calc(100% - 275px);
+}
+
+@media only screen and (max-width: 690px){
+    .ember-application > .ember-view  {
+        display: block;
+        width: 100%;
+    }
 }
 
 /* Main Area */

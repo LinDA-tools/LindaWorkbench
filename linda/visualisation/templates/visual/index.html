@@ -5,9 +5,7 @@
         <title>LinDA | Visualizations</title>
 
         <link rel="stylesheet" href="/static/css/style.css">
-
-        <!-- <link rel="stylesheet" href="/static/visualization/bower_components/nvd3/nv.d3.css" />-->
-        <link rel="stylesheet" href="/static/visualization/bower_components/c3/c3.css">   
+ 
         <link rel="stylesheet" href="/static/visualization/bower_components/leaflet/dist/leaflet.css">  
 
         <link rel="stylesheet" href="/static/visualization/bower_components/jquery-minicolors/jquery.minicolors.css"> 
@@ -17,19 +15,24 @@
         <link rel="stylesheet" href="/static/visualization/bower_components/slick.js/slick/slick.css" />
         <link rel="stylesheet" href="/static/visualization/visualization_library/external_libraries/leaflet-dvf/css/dvf.css">
 
-
         <script src="/static/visualization/bower_components/jquery/jquery.js"></script> 
         <script src="/static/visualization/bower_components/jquery/jquery-migrate.js"></script>
         <script src="/static/visualization/bower_components/jquery-minicolors/jquery.minicolors.js"></script>          
         <script src="/static/visualization/bower_components/underscore/underscore.js"></script>          
-        <script src="/static/visualization/bower_components/leaflet/dist/leaflet-src.js"></script> 
+        <script src="/static/visualization/bower_components/leaflet/dist/leaflet-src.js"></script>
+		
         <script src="/static/visualization/bower_components/datatables/media/js/jquery.dataTables.js"></script> 
         
         <script src="/static/visualization/bower_components/canvg/dist/canvg.bundle.js"></script>
 
-        <script src="/static/visualization/bower_components/d3/d3.js"></script>  
-        <script src="/static/visualization/bower_components/c3/c3.js"></script>  
+        <script src="/static/visualization/bower_components/d3/d3.js"></script>
         <script src="/static/visualization/bower_components/dimple/dist/dimple.v2.1.0.js"></script> 
+		
+        <script src="/static/visualization/bower_components/jqueryui/jquery-ui.js"></script>
+		
+        <link rel="stylesheet" href="/static/visualization/bower_components/fancytree/dist/skin-xp/ui.fancytree.css">
+        <script src="/static/visualization/bower_components/fancytree/dist/jquery.fancytree-all.js"></script>
+		
 
         <script src="/static/visualization/bower_components/foundation/js/foundation.js"></script>    
         <script src="/static/visualization/bower_components/foundation/js/foundation/foundation.equalizer.js"></script>           
@@ -39,14 +42,14 @@
         <script src="/static/visualization/visualization_library/external_libraries/leaflet-dvf/leaflet-dvf.js"></script>  
         <script src="/static/visualization/visualization_library/external_libraries/leaflet-dvf/leaflet-dvf.markers.js"></script>  
         <script src="/static/visualization/visualization_library/external_libraries/leaflet-image/leaflet-image.js"></script>  
-        <script type="text/javascript" src="//www.google.com/jsapi"></script>
 
         <script src="/static/visualization/bower_components/ember/ember.js" ></script>
         <script src="/static/visualization/bower_components/ember-data/ember-data.js"></script>
         
         <script src="/static/visualization/data_modules/csv_data_module.js"></script> 
         <script src="/static/visualization/data_modules/sparql_data_module.js"></script> 
-        <script src="/static/visualization/data_modules/tree_data_module.js"></script>
+        <script src="/static/visualization/data_modules/treeselection_data_module.js"></script>
+        <script src="/static/visualization/data_modules/table_data_module.js"></script>
 
         <script src="/static/visualization/scripts/compiled-templates.js"></script> <!-- .hbs files -->
         <script src="/static/visualization/scripts/combined-scripts.js"></script> <!-- app.js -->
@@ -62,7 +65,7 @@
         <script src="/static/visualization/visualization_library/charts/piechart.js"></script>    
         <script src="/static/visualization/visualization_library/visualizations.js"></script> 
         <script src="/static/visualization/visualization_library/maps/map.js"></script>        
-        <script src="/static/visualization/visualization_library/c3export.js"></script> 
+        <script src="/static/visualization/visualization_library/exportVisualization.js"></script> 
 
         <script src="/static/visualization/bower_components/jquery-csv/src/jquery.csv.js"></script>
 
@@ -92,4 +95,8 @@
     <body class="visualizations">
         {% include 'util/header.html' %}
     </body>
+	
+	{% with visualization=True %}
+		{% include 'util/footer.html' %}
+	{% endwith %}
 </html>

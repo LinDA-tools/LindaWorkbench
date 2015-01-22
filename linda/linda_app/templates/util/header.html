@@ -12,10 +12,6 @@
             <h1 class="site-title">LINDA</h1>
 		</a>
 
-        {% if page == "Visualizations" %}
-            {% include "util/menu-responsive.html" %}
-        {% endif %}
-
 		<div class="username right">
 		{% if user.is_authenticated %}
 			{% trans "Welcome back" %}, <a href="/profile/{{user.id}}">{{user|nice_name}}</a>.
@@ -35,9 +31,9 @@
 
 </header>
 
-<button class="button orange" id="menu-toggle"><div></div></button>
+<div class="orange" id="menu-toggle"><div></div></div>
 
-{% if page != "Visualizations" %}
+
     <div id="main-container">
         <div id="menu" class="clearfix">
             <ul>
@@ -69,4 +65,3 @@
         </div>
 
         {% include "util/menu-responsive.html" %}
-{% endif %}
