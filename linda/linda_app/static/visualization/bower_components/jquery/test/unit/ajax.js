@@ -30,6 +30,11 @@ module( "ajax", {
 
 //----------- jQuery.ajax()
 
+	testIframeWithCallback( "XMLHttpRequest - Attempt to block tests because of dangling XHR requests (IE)", "ajax/unreleasedXHR.html", function() {
+		expect( 1 );
+		ok( true, "done" );
+	});
+
 	ajaxTest( "jQuery.ajax() - success callbacks", 8, {
 		setup: addGlobalEvents("ajaxStart ajaxStop ajaxSend ajaxComplete ajaxSuccess"),
 		url: url("data/name.html"),
@@ -199,7 +204,7 @@ module( "ajax", {
 				tmp.push( i, ": ", requestHeaders[ i ], "\n" );
 			}
 			tmp = tmp.join("");
-			
+
 			strictEqual( data, tmp, "Headers were sent" );
 			strictEqual( xhr.getResponseHeader("Sample-Header"), "Hello World", "Sample header received" );
 
@@ -299,7 +304,7 @@ module( "ajax", {
 			samePort = loc.port || ( loc.protocol === "http:" ? 80 : 443 ),
 			otherPort = loc.port === 666 ? 667 : 666,
 			otherProtocol = loc.protocol === "http:" ? "https:" : "http:";
-			
+
 		return [
 			request(
 				loc.protocol + "//" + loc.host + ":" + samePort,
@@ -390,7 +395,7 @@ module( "ajax", {
 			}]
 		};
 	});
-		
+
 	ajaxTest( "jQuery.ajax() - events without context", 3, function() {
 		function nocallback( msg ) {
 			return function() {
@@ -435,7 +440,7 @@ module( "ajax", {
 				url: url("data/name.html"),
 				context: {},
 				success: function() {
-					ok( this !== obj, "Make sure overidding context is possible." );
+					ok( this !== obj, "Make sure overriding context is possible." );
 				}
 			}]
 		};
@@ -498,10 +503,10 @@ module( "ajax", {
 
 	ajaxTest( "jQuery.ajax() - beforeSend", 1, {
 		url: url("data/name.html"),
-		beforeSend: function( xml ) {
+		beforeSend: function() {
 			this.check = true;
 		},
-		success: function( data ) {
+		success: function() {
 			ok( this.check, "check beforeSend was executed" );
 		}
 	});
@@ -571,14 +576,14 @@ module( "ajax", {
 	});
 
 	asyncTest( "jQuery.ajax(), jQuery.get[Script|JSON](), jQuery.post(), pass-through request object", 8, function() {
-		var target = "data/name.html";
-		var successCount = 0;
-		var errorCount = 0;
-		var errorEx = "";
-		var success = function() {
-			successCount++;
-		};
-		jQuery( document ).on( "ajaxError.passthru", function( e, xml, s, ex ) {
+		var target = "data/name.html",
+			successCount = 0,
+			errorCount = 0,
+			errorEx = "",
+			success = function() {
+				successCount++;
+			};
+		jQuery( document ).on( "ajaxError.passthru", function( e, xml ) {
 			errorCount++;
 			errorEx += ": " + xml.status;
 		});
@@ -601,9 +606,9 @@ module( "ajax", {
 	});
 
 	ajaxTest( "jQuery.ajax() - cache", 12, function() {
-		
+
 		var re = /_=(.*?)(&|$)/g;
-		
+
 		function request( url, title ) {
 			return {
 				url: url,
@@ -620,7 +625,7 @@ module( "ajax", {
 				error: true
 			};
 		}
-		
+
 		return [
 			request(
 				"data/text.php",
@@ -842,7 +847,7 @@ module( "ajax", {
 		},
 		url: window.location.href.replace( /[^\/]*$/, "" ) + "data/test.js",
 		dataType: "script",
-		success: function( data ) {
+		success: function() {
 			strictEqual( window["testBar"], "bar", "Script results returned (GET, no callback)" );
 		}
 	});
@@ -866,7 +871,7 @@ module( "ajax", {
 		},
 		url: window.location.href.replace( /[^\/]*$/, "" ).replace( /^.*?\/\//, "//" ) + "data/test.js",
 		dataType: "script",
-		success: function( data ) {
+		success: function() {
 			strictEqual( window["testBar"], "bar", "Script results returned (GET, no callback)" );
 		}
 	});
@@ -967,96 +972,47 @@ module( "ajax", {
 			" (no cache)": false
 		},
 		function( label, cache ) {
-			var isOpera = !!window.opera;
-
-			asyncTest( "jQuery.ajax() - If-Modified-Since support" + label, 3, function() {
-				var url = "data/if_modified_since.php?ts=" + ifModifiedNow++;
-
-				jQuery.ajax({
-					url: url,
-					ifModified: true,
-					cache: cache,
-					success: function( data, status ) {
-						strictEqual( status, "success" );
-
+			// Support: Opera 12.0
+			// In Opera 12.0, XHR doesn't notify 304 back to the user properly
+			var opera = window.opera && window.opera.version();
+			jQuery.each(
+				{
+					"If-Modified-Since": "if_modified_since.php",
+					"Etag": "etag.php"
+				},
+				function( type, url ) {
+					url = "data/" + url + "?ts=" + ifModifiedNow++;
+					asyncTest( "jQuery.ajax() - " + type + " support" + label, 4, function() {
 						jQuery.ajax({
 							url: url,
 							ifModified: true,
 							cache: cache,
-							success: function( data, status ) {
-								if ( data === "FAIL" ) {
-									ok( isOpera, "Opera is incapable of doing .setRequestHeader('If-Modified-Since')." );
-									ok( isOpera, "Opera is incapable of doing .setRequestHeader('If-Modified-Since')." );
-								} else {
-									strictEqual( status, "notmodified" );
-									ok( data == null, "response body should be empty" );
-								}
-								start();
-							},
-							error: function() {
-								// Do this because opera simply refuses to implement 304 handling :(
-								// A feature-driven way of detecting this would be appreciated
-								// See: http://gist.github.com/599419
-								ok( isOpera, "error" );
-								ok( isOpera, "error" );
-								start();
+							success: function( _, status ) {
+								strictEqual( status, "success", "Initial status is 'success'" );
+								jQuery.ajax({
+									url: url,
+									ifModified: true,
+									cache: cache,
+									success: function( data, status, jqXHR ) {
+										if ( status === "success" && opera === "12.00" ) {
+											strictEqual( status, "success", "Opera 12.0: Following status is 'success'" );
+											strictEqual( jqXHR.status, 200, "Opera 12.0: XHR status is 200, not 304" );
+											strictEqual( data, "", "Opera 12.0: response body is empty" );
+										} else {
+											strictEqual( status, "notmodified", "Following status is 'notmodified'" );
+											strictEqual( jqXHR.status, 304, "XHR status is 304" );
+											equal( data, null, "no response body is given" );
+										}
+									},
+									complete: function() {
+										start();
+									}
+								});
 							}
 						});
-					},
-					error: function() {
-						strictEqual( false, "error" );
-						// Do this because opera simply refuses to implement 304 handling :(
-						// A feature-driven way of detecting this would be appreciated
-						// See: http://gist.github.com/599419
-						ok( isOpera, "error" );
-						start();
-					}
-				});
-			});
-
-			asyncTest( "jQuery.ajax() - Etag support" + label, 3, function() {
-				var url = "data/etag.php?ts=" + ifModifiedNow++;
-
-				jQuery.ajax({
-					url: url,
-					ifModified: true,
-					cache: cache,
-					success: function( data, status ) {
-						strictEqual( status, "success" );
-
-						jQuery.ajax({
-							url: url,
-							ifModified: true,
-							cache: cache,
-							success: function( data, status ) {
-								if ( data === "FAIL" ) {
-									ok( isOpera, "Opera is incapable of doing .setRequestHeader('If-None-Match')." );
-									ok( isOpera, "Opera is incapable of doing .setRequestHeader('If-None-Match')." );
-								} else {
-									strictEqual( status, "notmodified" );
-									ok( data == null, "response body should be empty" );
-								}
-								start();
-							},
-							error: function() {
-								// Do this because opera simply refuses to implement 304 handling :(
-								// A feature-driven way of detecting this would be appreciated
-								// See: http://gist.github.com/599419
-								ok( isOpera, "error" );
-								ok( isOpera, "error" );
-								start();
-							}
-						});
-					},
-					error: function() {
-						// Do this because opera simply refuses to implement 304 handling :(
-						// A feature-driven way of detecting this would be appreciated
-						// See: http://gist.github.com/599419
-						ok( isOpera, "error" );
-						start();
-					}
-				});
-			});
+					});
+				}
+			);
 		}
 		/* jQuery.each arguments end */
 	);
@@ -1089,7 +1045,6 @@ module( "ajax", {
 			ok( jqXHR.statusText === "Hello" || jqXHR.statusText === "OK", "jqXHR status text ok for success (" + jqXHR.statusText + ")" );
 			jQuery.ajax( url("data/statusText.php?status=404&text=World") ).fail(function( jqXHR, statusText ) {
 				strictEqual( statusText, "error", "callback status text ok for error" );
-				// ok( jqXHR.statusText === "World" || jQuery.browser.safari && jqXHR.statusText === "Not Found", "jqXHR status text ok for error (" + jqXHR.statusText + ")" );
 				start();
 			});
 		});
@@ -1238,14 +1193,14 @@ module( "ajax", {
 				xhr.overrideMimeType( "application/json" );
 			},
 			success: function( json ) {
-				ok( json.data, "Mimetype overriden using beforeSend" );
+				ok( json.data, "Mimetype overridden using beforeSend" );
 			}
 		},
 		{
 			url: url("data/json.php"),
 			mimeType: "application/json",
 			success: function( json ) {
-				ok( json.data, "Mimetype overriden using mimeType option" );
+				ok( json.data, "Mimetype overridden using mimeType option" );
 			}
 		}
 	]);
@@ -1295,9 +1250,10 @@ module( "ajax", {
 	});
 
 	test( "#7531 - jQuery.ajax() - Location object as url", 1, function () {
-		var success = false;
+		var xhr,
+			success = false;
 		try {
-			var xhr = jQuery.ajax({
+			xhr = jQuery.ajax({
 				url: window.location
 			});
 			success = true;
@@ -1313,7 +1269,7 @@ module( "ajax", {
 			url: "data/jsonp.php",
 			dataType: "jsonp",
 			crossDomain: crossDomain,
-			beforeSend: function( jqXHR, s ) {
+			beforeSend: function() {
 				strictEqual( this.cache, false, "cache must be false on JSON request" );
 				return false;
 			},
@@ -1356,7 +1312,7 @@ module( "ajax", {
 			}
 		}
 	]);
-	
+
 	jQuery.each( [ " - Same Domain", " - Cross Domain" ], function( crossDomain, label ) {
 		ajaxTest( "#8205 - jQuery.ajax() - JSONP - re-use callbacks name" + label, 2, {
 			url: "data/jsonp.php",
@@ -1401,7 +1357,7 @@ module( "ajax", {
 	});
 
 	jQuery.each( [ "as argument", "in settings object" ], function( inSetting, title ) {
-		
+
 		function request( url, test ) {
 			return {
 				create: function() {
@@ -1412,14 +1368,26 @@ module( "ajax", {
 				}
 			};
 		}
-		
+
 		ajaxTest( "#10093 - jQuery.ajax() - falsy url " + title, 4, [
 			request( "", "empty string" ),
 			request( false ),
 			request( null ),
 			request( undefined )
 		]);
-		
+
+	});
+
+	ajaxTest( "#11151 - jQuery.ajax() - parse error body", 2, {
+		url: url("data/errorWithJSON.php"),
+		dataFilter: function( string ) {
+			ok( false, "dataFilter called" );
+			return string;
+		},
+		error: function( jqXHR ) {
+			strictEqual( jqXHR.responseText, "{ \"code\": 40, \"message\": \"Bad Request\" }", "Error body properly set" );
+			deepEqual( jqXHR.responseJSON, { code: 40, message: "Bad Request" }, "Error body properly parsed" );
+		}
 	});
 
 	ajaxTest( "#11426 - jQuery.ajax() - loading binary data shouldn't throw an exception in IE", 1, {
@@ -1429,24 +1397,26 @@ module( "ajax", {
 		}
 	});
 
-	test( "#11743 - jQuery.ajax() - script, throws exception", 1, function() {
-		raises(function() {
-			jQuery.ajax({
-				url: "data/badjson.js",
-				dataType: "script",
-				throws: true,
-				// TODO find a way to test this asynchronously, too
-				async: false,
-				// Global events get confused by the exception
-				global: false,
-				success: function() {
-					ok( false, "Success." );
-				},
-				error: function() {
-					ok( false, "Error." );
-				}
-			});
-		}, "exception bubbled" );
+	asyncTest( "#11743 - jQuery.ajax() - script, throws exception", 1, function() {
+		var onerror = window.onerror;
+		window.onerror = function() {
+			ok( true, "Exception thrown" );
+			window.onerror = onerror;
+			start();
+		};
+		jQuery.ajax({
+			url: "data/badjson.js",
+			dataType: "script",
+			throws: true,
+			// Global events get confused by the exception
+			global: false,
+			success: function() {
+				ok( false, "Success." );
+			},
+			error: function() {
+				ok( false, "Error." );
+			}
+		});
 	});
 
 	jQuery.each( [ "method", "type" ], function( _, globalOption ) {
@@ -1480,7 +1450,7 @@ module( "ajax", {
 				request()
 			]
 		});
-		
+
 	});
 
 	ajaxTest( "#13276 - jQuery.ajax() - compatibility between XML documents from ajax requests and parsed string", 1, {
@@ -1498,7 +1468,7 @@ module( "ajax", {
 			strictEqual( ajaxXML.find("tab").length, 3, "Parsed node was added properly" );
 		}
 	});
-	
+
 	ajaxTest( "#13292 - jQuery.ajax() - converter is bypassed for 204 requests", 3, {
 		url: "data/nocontent.php",
 		dataType: "testing",
@@ -1518,6 +1488,39 @@ module( "ajax", {
 			strictEqual( error, "converter was called", "Converter was called" );
 		}
 	});
+
+	ajaxTest( "#13388 - jQuery.ajax() - responseXML", 3, {
+		url: url("data/with_fries.xml"),
+		dataType: "xml",
+		success: function( resp, _, jqXHR ) {
+			notStrictEqual( resp, undefined, "XML document exists" );
+			ok( "responseXML" in jqXHR, "jqXHR.responseXML exists" );
+			strictEqual( resp, jqXHR.responseXML, "jqXHR.responseXML is set correctly" );
+		}
+	});
+
+	ajaxTest( "#13922 - jQuery.ajax() - converter is bypassed for HEAD requests", 3, {
+		url: "data/json.php",
+		method: "HEAD",
+		data: {
+			header: "yes"
+		},
+		converters: {
+			"text json": function() {
+				throw "converter was called";
+			}
+		},
+		success: function( data, status ) {
+			ok( true, "success" );
+			strictEqual( status, "nocontent", "data is undefined" );
+			strictEqual( data, undefined, "data is undefined" );
+		},
+		error: function( _, status, error ) {
+			ok( false, "error" );
+			strictEqual( status, "parsererror", "Parser Error" );
+			strictEqual( error, "converter was called", "Converter was called" );
+		}
+	} );
 
 //----------- jQuery.ajaxPrefilter()
 
@@ -1555,12 +1558,12 @@ module( "ajax", {
 		var passed = 0,
 			pass = function() {
 				ok( passed++ < 2, "Error callback executed" );
-				if ( passed == 2 ) {
+				if ( passed === 2 ) {
 					jQuery( document ).off("ajaxError.setupTest");
 					start();
 				}
 			},
-			fail = function( a, b, c ) {
+			fail = function( a, b ) {
 				ok( false, "Check for timeout failed " + a + " " + b );
 				start();
 			};
@@ -1605,13 +1608,13 @@ module( "ajax", {
 			type: "POST"
 		});
 
-		jQuery( document ).bind( "ajaxStart ajaxStop", function() {
+		jQuery( document ).on( "ajaxStart ajaxStop", function() {
 			ok( false, "Global event triggered" );
 		});
 
 		jQuery("#qunit-fixture").append("<script src='data/evalScript.php'></script>");
 
-		jQuery( document ).unbind("ajaxStart ajaxStop");
+		jQuery( document ).off("ajaxStart ajaxStop");
 	});
 
 	asyncTest( "#11402 - jQuery.domManip() - script in comments are properly evaluated", 2, function() {
@@ -1671,25 +1674,6 @@ module( "ajax", {
 		});
 	});
 
-	asyncTest( "jQuery.getJSON() - Using Native JSON", 2, function() {
-		var restore = "JSON" in window,
-			old = window.JSON;
-		if ( !restore ) {
-			Globals.register("JSON");
-		}
-		window.JSON = {
-			parse: function( str ) {
-				ok( true, "Verifying that parse method was run" );
-				window.JSON = old;
-				return true;
-			}
-		};
-		jQuery.getJSON( url("data/json.php"), function( json ) {
-			strictEqual( json, true, "Verifying return value" );
-			start();
-		});
-	});
-
 	asyncTest( "jQuery.getJSON( String, Function ) - JSON object with absolute url to local content", 2, function() {
 		jQuery.getJSON( url( window.location.href.replace( /[^\/]*$/, "" ) + "data/json.php" ), function( json ) {
 			strictEqual( json.data.lang, "en", "Check JSON: lang" );
@@ -1702,7 +1686,7 @@ module( "ajax", {
 
 	asyncTest( "jQuery.getScript( String, Function ) - with callback", 2, function() {
 		Globals.register("testBar");
-		jQuery.getScript( url("data/test.js"), function( data, _, jqXHR ) {
+		jQuery.getScript( url("data/test.js"), function() {
 			strictEqual( window["testBar"], "bar", "Check if script was evaluated" );
 			start();
 		});
@@ -1722,7 +1706,7 @@ module( "ajax", {
 	});
 
 //----------- jQuery.fn.load()
-	
+
 	// check if load can be called with only url
 	asyncTest( "jQuery.fn.load( String )", 2, function() {
 		jQuery.ajaxSetup({
@@ -1839,8 +1823,7 @@ module( "ajax", {
 	});
 
 	asyncTest( "jQuery.fn.load() - callbacks get the correct parameters", 8, function() {
-		var slice = [].slice,
-			completeArgs = {};
+		var completeArgs = {};
 
 		jQuery.ajaxSetup({
 			success: function( _, status, jqXHR ) {
@@ -1884,7 +1867,7 @@ module( "ajax", {
 		});
 		jQuery( document ).ajaxComplete(function( e, xml, s ) {
 			strictEqual( s.dataType, "html", "Verify the load() dataType was html" );
-			jQuery( document ).unbind("ajaxComplete");
+			jQuery( document ).off("ajaxComplete");
 			start();
 		});
 		jQuery("#first").load("data/test3.html");

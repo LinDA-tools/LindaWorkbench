@@ -153,23 +153,34 @@
                         return returnObj;
                     },
                     transformLabels = function () {
-                        if (!axis.measure) {
+                        var t = d3.select(this).selectAll("text");
+                        if (!axis.measure && axis._max > 0) {
                             if (axis.position === "x") {
-                                d3.select(this).selectAll("text").attr("x", (chartWidth / axis._max) / 2);
+                                t.attr("x", (chartWidth / axis._max) / 2);
                             } else if (axis.position === "y") {
-                                d3.select(this).selectAll("text").attr("y", -1 * (chartHeight / axis._max) / 2);
+                                t.attr("y", -1 * (chartHeight / axis._max) / 2);
                             }
                         }
                         if (axis.categoryFields && axis.categoryFields.length > 0) {
                             // Off set the labels to counter the transform.  This will put the labels along the outside of the chart so they
                             // don't interfere with the chart contents
                             if (axis === firstX && (firstY.categoryFields === null || firstY.categoryFields.length === 0)) {
-                                d3.select(this).selectAll("text").attr("y", chartY + chartHeight - firstY._scale(0) + 9);
+                                t.attr("y", chartY + chartHeight - firstY._scale(0) + 9);
                             }
                             if (axis === firstY && (firstX.categoryFields === null || firstX.categoryFields.length === 0)) {
-                                d3.select(this).selectAll("text").attr("x", -1 * (firstX._scale(0) - chartX) - 9);
+                                t.attr("x", -1 * (firstX._scale(0) - chartX) - 9);
                             }
                         }
+                        return this;
+                    },
+                    appendClass = function (css) {
+                        return function () {
+                            var currentCss = d3.select(this).attr("class") || "";
+                            if (currentCss.indexOf(css) === -1) {
+                                currentCss += " " + css;
+                            }
+                            return currentCss.trim();
+                        };
                     };
 
                 if (axis.gridlineShapes === null) {
@@ -192,7 +203,7 @@
                 if (axis.shapes === null) {
                     // Add a group for the axes to allow css formatting
                     axis.shapes = this._group.append("g")
-                        .attr("class", "dimple-axis")
+                        .attr("class", "dimple-axis " + "dimple-axis-" + axis.position)
                         .each(function () {
                             if (!chart.noFormats) {
                                 d3.select(this)
@@ -219,7 +230,6 @@
                     gridSize = -chartWidth;
                 }
                 if (transform !== null && axis._draw !== null) {
-
                     // Add a tick format
                     if (axis._hasTimeField()) {
                         handleTrans(axis.shapes)
@@ -244,20 +254,33 @@
                     }
                 }
                 // Set some initial css values
-                if (!this.noFormats) {
-                    handleTrans(axis.shapes.selectAll("text"))
-                        .style("font-family", axis.fontFamily)
-                        .style("font-size", axis._getFontSize());
-                    handleTrans(axis.shapes.selectAll("path, line"))
-                        .style("fill", "none")
-                        .style("stroke", "black")
-                        .style("shape-rendering", "crispEdges");
-                    if (axis.gridlineShapes !== null) {
-                        handleTrans(axis.gridlineShapes.selectAll("line"))
-                            .style("fill", "none")
-                            .style("stroke", "lightgray")
-                            .style("opacity", 0.8);
-                    }
+                handleTrans(axis.shapes.selectAll("text"))
+                    .attr("class", appendClass(chart.customClassList.axisLabel))
+                    .call(function() {
+                        if (!chart.noFormats) {
+                            this.style("font-family", axis.fontFamily)
+                                .style("font-size", axis._getFontSize());
+                        }
+                    });
+                handleTrans(axis.shapes.selectAll("path, line"))
+                    .attr("class", appendClass(chart.customClassList.axisLine))
+                    .call(function() {
+                        if (!chart.noFormats) {
+                            this.style("fill", "none")
+                                .style("stroke", "black")
+                                .style("shape-rendering", "crispEdges");
+                        }
+                    });
+                if (axis.gridlineShapes !== null) {
+                    handleTrans(axis.gridlineShapes.selectAll("line"))
+                        .attr("class", appendClass(chart.customClassList.gridline))
+                        .call(function() {
+                            if (!chart.noFormats) {
+                                this.style("fill", "none")
+                                    .style("stroke", "lightgray")
+                                    .style("opacity", 0.8);
+                            }
+                        });
                 }
                 // Rotate labels, this can only be done once the formats are set
                 if (axis.measure === null || axis.measure === undefined) {
@@ -360,7 +383,8 @@
                 // Add a title for the axis - NB check for null here, by default the title is undefined, in which case
                 // use the dimension name
                 if (!axis.hidden && (axis.position === "x" || axis.position === "y") && axis.title !== null) {
-                    axis.titleShape = this._group.append("text").attr("class", "dimple-axis dimple-title");
+                    axis.titleShape = this._group.append("text")
+                        .attr("class", "dimple-axis dimple-title " + chart.customClassList.axisTitle + "dimple-axis-" + axis.position);
                     axis.titleShape
                         .attr("x", titleX)
                         .attr("y", titleY)
