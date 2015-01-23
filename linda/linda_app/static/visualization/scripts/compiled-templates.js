@@ -1,7 +1,7 @@
 Ember.TEMPLATES["application"] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
 this.compilerInfo = [4,'>= 1.0.0'];
 helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
-  var buffer = '', stack1, stack2, hashTypes, hashContexts, options, self=this, helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression;
+  var buffer = '', stack1, stack2, hashContexts, hashTypes, options, self=this, helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression;
 
 function program1(depth0,data) {
   
@@ -22,9 +22,11 @@ function program5(depth0,data) {
   }
 
   data.buffer.push("<div class=\"container\">\n    <div id=\"header\">\n        <nav class=\"top-bar\" data-topbar role=\"navigation\">\n            <ul class=\"title-area\">\n                <li class=\"name\">\n                    <h1>");
-  hashTypes = {};
-  hashContexts = {};
-  options = {hash:{},inverse:self.noop,fn:self.program(1, program1, data),contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  hashContexts = {'animations': depth0};
+  hashTypes = {'animations': "STRING"};
+  options = {hash:{
+    'animations': ("main:fade")
+  },inverse:self.noop,fn:self.program(1, program1, data),contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
   stack2 = ((stack1 = helpers['link-to'] || depth0['link-to']),stack1 ? stack1.call(depth0, "index", options) : helperMissing.call(depth0, "link-to", "index", options));
   if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
   data.buffer.push("</h1>\n                </li>\n            </ul>\n            <section class=\"top-bar-section\">\n                <!-- Right Nav Section -->\n                <ul class=\"right\">\n                    <li>");
@@ -40,9 +42,12 @@ function program5(depth0,data) {
   stack2 = ((stack1 = helpers['link-to'] || depth0['link-to']),stack1 ? stack1.call(depth0, "configure", options) : helperMissing.call(depth0, "link-to", "configure", options));
   if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
   data.buffer.push("</li>\n                </ul>\n            </section>\n        </nav>\n    </div>\n\n    <div class=\"row left-collapse\">\n        ");
-  hashTypes = {};
-  hashContexts = {};
-  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "outlet", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  hashContexts = {'animationSequence': depth0};
+  hashTypes = {'animationSequence': "STRING"};
+  options = {hash:{
+    'animationSequence': ("async")
+  },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  data.buffer.push(escapeExpression(((stack1 = helpers.outlet || depth0.outlet),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "outlet", options))));
   data.buffer.push("\n    </div>\n</div>\n");
   return buffer;
   
@@ -179,7 +184,7 @@ helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
   var buffer = '', hashContexts, hashTypes, escapeExpression=this.escapeExpression;
 
 
-  data.buffer.push("<div class=\"consumption\">\n    <div class=\"consumption-title\">\n        <h7> Export Chart </h7>\n    </div>\n    <div>\n        Export as ");
+  data.buffer.push("<div>\n    <div class=\"consumption-title\">\n        <h7> Export Chart </h7>\n    </div>\n    <div class=\"consumption-content\">\n        Export as ");
   hashContexts = {'content': depth0,'value': depth0};
   hashTypes = {'content': "ID",'value': "ID"};
   data.buffer.push(escapeExpression(helpers.view.call(depth0, "Ember.Select", {hash:{
@@ -544,7 +549,7 @@ helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
   var buffer = '', stack1, hashContexts, hashTypes, options, helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression;
 
 
-  data.buffer.push("<div class=\"consumption\">\n    <div class=\"consumption-title\">    \n        <h7> Save Settings </h7>\n    </div>\n    <div>\n        ");
+  data.buffer.push("<div>\n    <div class=\"consumption-title\">    \n        <h7> Save Settings </h7>\n    </div>\n    <div class=\"consumption-content\">\n        ");
   hashContexts = {'value': depth0,'placeholder': depth0,'size': depth0};
   hashTypes = {'value': "ID",'placeholder': "STRING",'size': "STRING"};
   options = {hash:{
@@ -707,11 +712,12 @@ helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "view.label", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
   data.buffer.push("</span> ");
-  hashContexts = {'type': depth0,'value': depth0};
-  hashTypes = {'type': "STRING",'value': "ID"};
+  hashContexts = {'type': depth0,'value': depth0,'on': depth0};
+  hashTypes = {'type': "STRING",'value': "ID",'on': "STRING"};
   options = {hash:{
     'type': ("text"),
-    'value': ("view.content")
+    'value': ("view.content"),
+    'on': ("enter")
   },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
   data.buffer.push(escapeExpression(((stack1 = helpers.input || depth0.input),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "input", options))));
   return buffer;
@@ -752,11 +758,12 @@ helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "view.label", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
   data.buffer.push("</span>  ");
-  hashContexts = {'type': depth0,'value': depth0};
-  hashTypes = {'type': "STRING",'value': "ID"};
+  hashContexts = {'type': depth0,'value': depth0,'on': depth0};
+  hashTypes = {'type': "STRING",'value': "ID",'on': "STRING"};
   options = {hash:{
     'type': ("text"),
-    'value': ("view.content")
+    'value': ("view.content"),
+    'on': ("key-press")
   },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
   data.buffer.push(escapeExpression(((stack1 = helpers.input || depth0.input),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "input", options))));
   data.buffer.push("\n");
@@ -793,7 +800,7 @@ helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
     'options': ("controller.structureOptions"),
     'config': ("controller.visualizationConfiguration")
   },contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
-  data.buffer.push("\n                    </div>\n                </div>\n            </div>\n        </div>\n    </div>\n\n    <div class=\"large-7 medium-9 columns\">\n        <div class=\"inner_box\">\n            <!-- Visualization -->\n            <div class=\"row inner_box_visualization\">\n                ");
+  data.buffer.push("\n                    </div>\n                </div>\n            </div>\n        </div>\n        \n    </div>\n\n    <div class=\"large-7 medium-9 columns\">\n        <div class=\"inner_box\">\n            <!-- Visualization -->\n            <div class=\"row inner_box_visualization\">\n                ");
   hashContexts = {'id': depth0,'visualization': depth0,'configurationArray': depth0};
   hashTypes = {'id': "STRING",'visualization': "ID",'configurationArray': "ID"};
   data.buffer.push(escapeExpression(helpers.view.call(depth0, "App.DrawVisualizationView", {hash:{
@@ -801,22 +808,24 @@ helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
     'visualization': ("controller.drawnVisualization"),
     'configurationArray': ("controller.visualizationConfiguration")
   },contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
-  data.buffer.push("\n            </div\n            <!-- Visualization Consumption -->\n            <div class=\"row\">\n                <div class=\"large-4 medium-4 columns\">\n                    ");
+  data.buffer.push("\n            </div>\n               \n            <div class=\"row layout_option_box\">\n                <div class=\"large-4 medium-4 columns\">\n                    <!-- Visualization Consumption -->                   \n                     <div class=\"row inner_box\">\n                    ");
   hashTypes = {};
   hashContexts = {};
   options = {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
   data.buffer.push(escapeExpression(((stack1 = helpers.partial || depth0.partial),stack1 ? stack1.call(depth0, "export", options) : helperMissing.call(depth0, "partial", "export", options))));
-  data.buffer.push("\n                </div>\n                <div class=\"large-4 medium-4 columns\">\n                    ");
+  data.buffer.push("\n                </div>\n                     <div class=\"row inner_box\">\n                    ");
   hashTypes = {};
   hashContexts = {};
   options = {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
   data.buffer.push(escapeExpression(((stack1 = helpers.partial || depth0.partial),stack1 ? stack1.call(depth0, "save", options) : helperMissing.call(depth0, "partial", "save", options))));
-  data.buffer.push("\n                </div>\n                <div class=\"large-4 medium-4 columns\">\n                    ");
-  hashTypes = {};
-  hashContexts = {};
-  options = {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
-  data.buffer.push(escapeExpression(((stack1 = helpers.partial || depth0.partial),stack1 ? stack1.call(depth0, "publish", options) : helperMissing.call(depth0, "partial", "publish", options))));
-  data.buffer.push("\n                </div>\n            </div>\n        </div>\n    </div>\n</div>\n");
+  data.buffer.push("\n                </div>\n                </div>\n\n                <div class=\"large-8 medium-8 columns inner_box\"> \n                    <!-- Visualization Customization -->\n                    <div class=\"inner_title_box\">\n                        <h7>Visualization Options</h7>\n            </div>\n                    <div>\n                        ");
+  hashContexts = {'options': depth0,'config': depth0};
+  hashTypes = {'options': "ID",'config': "ID"};
+  data.buffer.push(escapeExpression(helpers.view.call(depth0, "App.VisualizationOptionsView", {hash:{
+    'options': ("controller.layoutOptions"),
+    'config': ("controller.visualizationConfiguration")
+  },contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("\n        </div>\n    </div>\n\n            </div>\n\n\n\n        </div>\n\n    </div>\n</div>\n");
   return buffer;
   
 });

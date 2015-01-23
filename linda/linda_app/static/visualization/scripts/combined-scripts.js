@@ -6,7 +6,7 @@ App = Ember.Application.create({
     onerror: function(error) {
         console.dir(error);
     },
-    rootElement: $('#visualizer')
+    rootElement: '#visualizer'
 });
 Ember.RSVP.on('error', function(error) {
   Ember.Logger.assert(false, error);
@@ -363,6 +363,28 @@ App.VisualizationRoute = Ember.Route.extend({
 (function() {
 
 App.DrawVisualizationView = Ember.View.extend({
+    
+    willAnimateIn: function() {
+        this.$().css("opacity",0);
+    },
+    animateIn: function (done) {
+        this.$().fadeTo(500,1,done);
+    },
+    animateOut: function(done){
+        this.$().fadeTo(500,0,done);
+    },
+    parentViewDidChange: function(){
+        this.$().hide();
+        this.$().fadeIn(500);
+    },
+    eventManager: Ember.Object.create({
+        input: function(event,view){
+            this.triggerAction({
+                action: "willAnimateIn",
+                target: this
+            });
+        }
+    }),
     drawVisualization: function () {
         var visualization = this.get('visualization');
         console.log("DRAW VISUALIZATION VIEW - DRAW ...");
