@@ -1,3 +1,0 @@
-http://purl.org/innovation/ns
-http://bblfish.net/work/atom-owl/2006-06-06/
-http://www.ebsemantics.net/doc/gastro
