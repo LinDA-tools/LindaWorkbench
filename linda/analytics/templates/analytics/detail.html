@@ -238,7 +238,7 @@ $(document).ready(function(){
 					  <input type="image" src="/static/images/info-button-orange-small.jpg" name="toggleCategoryDescription"  id="toggleCategoryDescription" />
 					  <div id="categoryDescription" class="analytics-description-hidden" >
 					    <h1>{{ analytics.category }} Description: </h1></br>
-					    {{analytics.display_category_description}}
+					    {{analytics.display_category_description|safe}}
 					  </div>
 					</p>				    
 				    </td>
@@ -249,7 +249,7 @@ $(document).ready(function(){
 					  <input type="image" src="/static/images/info-button-orange-small.jpg" name="toggleAlgorithmDescription"  id="toggleAlgorithmDescription" />
 					  <div id="algorithmDescription" class="analytics-description-hidden" >
 					    <h1>{{ analytics.algorithm }} Description: </h1></br>
-					    {{analytics.display_algorithm_description}}
+					    {{analytics.display_algorithm_description|safe}}
 					  </div>
 					</p>			    
 				    </td>
