@@ -1,3 +1,19 @@
+#menu, footer {
+	font: 14px/1.8 'Open Sans', Helvetica, Arial, sans-serif !important;
+}
+
+footer {
+	color: #888;
+}
+
+footer a {
+	color: #FC5006;
+}
+
+.site-search-input {
+	height: 30px !important;
+}
+
 .visualizationTool {
     background: #fff;
     font: 14px/1.8 'Open Sans', Helvetica, Arial, sans-serif !important;
