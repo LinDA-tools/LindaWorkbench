@@ -95,12 +95,9 @@
             });
         </script>
     </head>
-    <body class="visualizations">
+    <body>
         {% include 'util/header.html' %}
         <div id="visualizer"></div>
+        {% include 'util/footer.html' %}
     </body>
-	
-	{% with visualization=True %}
-		{% include 'util/footer.html' %}
-	{% endwith %}
 </html>
