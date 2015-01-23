@@ -1,0 +1,23 @@
+.visualizationTool {
+    background: #fff;
+    font: 14px/1.8 'Open Sans', Helvetica, Arial, sans-serif !important;
+}
+.ember-application > .ember-view  #header .title-area a {
+    color: #FC5006 !important;
+    font-weight: 300;
+    font-size: 14pt !important;
+    font-family: 'Open Sans';
+}
+.ember-application h1, .ember-application h2, .ember-application h3, .ember-application h4, .ember-application h5, .ember-application h6 {
+    font-family: 'Open Sans';
+    font-weight: 300;
+}
+.ember-application > .ember-view  #header > .top-bar,
+.ember-application > .ember-view  #header > .top-bar .top-bar-section > ul > li,
+.ember-application > .ember-view  #header > .top-bar .top-bar-section > ul > li > a {
+    background: none !important;
+}
+.ember-application > .ember-view > .container > .row > .box {
+    border: none !important;
+    box-shadow: none !important;
+}
