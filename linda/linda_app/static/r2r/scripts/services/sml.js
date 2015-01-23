@@ -110,7 +110,7 @@
       columns = _.filter(columns, function(i) {
         var property;
         property = mapping.properties[table][i].prefixedName[0];
-        return literals[property] || ((litearls[property] === 'Typed Literal') && types[property]);
+        return literals[property] || ((literals[property] === 'Typed Literal') && types[property]);
       });
       properties = _.map(columns, function(i) {
         var col, property;

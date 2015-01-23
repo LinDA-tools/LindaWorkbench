@@ -445,7 +445,7 @@ angular.module('r2rDesignerApp').run(['$templateCache', function($templateCache)
     "        <select class=\"form-control\" ng-model=\"rdf.propertyLiteralSelection[prop.prefixedName[0]]\" ng-options=\"selection for selection in propertyLiteralTypeOptions\"></select>\n" +
     "      </div>\n" +
     "      <div class=\"col-md-3\">\n" +
-    "        <select class=\"form-control\" ng-model=\"rdf.propertyLiteralTypes[prop.prefixedName[0]]\" ng-options=\"type for type in propertyLiteralTypes\" ng-show=\"rdf.propertyLiteralSelection[prop.prefixedName[0]] == 'Typed Literal'\"></select>\n" +
+    "        <select class=\"form-control\" ng-model=\"rdf.propertyLiteralTypeSelection[prop.prefixedName[0]]\" ng-options=\"type for type in propertyLiteralTypes\" ng-show=\"rdf.propertyLiteralSelection[prop.prefixedName[0]] == 'Typed Literal'\"></select>\n" +
     "      </div>\n" +
     "    </div>\n" +
     "  </div>\n" +
