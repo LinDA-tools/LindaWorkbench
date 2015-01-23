@@ -4,7 +4,7 @@ App = Ember.Application.create({
     onerror: function(error) {
         console.dir(error);
     },
-    rootElement: $('#visualizer')
+    rootElement: '#visualizer'
 });
 Ember.RSVP.on('error', function(error) {
   Ember.Logger.assert(false, error);
