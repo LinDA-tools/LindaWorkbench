@@ -27,6 +27,18 @@
         return w.location = url;
       });
     };
+    $scope.safe_tags_replace = function(str) {
+      var replaceTag, tagsToReplace;
+      tagsToReplace = {
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;'
+      };
+      replaceTag = function(tag) {
+        return tagsToReplace[tag] || tag;
+      };
+      return str.replace(/[&<>]/g, replaceTag);
+    };
     $scope.mapping = function(table) {
       var mapping, w;
       mapping = {
@@ -65,7 +77,7 @@
         $scope.publishing = false;
         $scope.published = true;
         return $scope.success = true;
-      }).error(function(data) {
+      }).error(function() {
         console.log('error: could not connect to server');
         $scope.publishing = false;
         $scope.published = true;
