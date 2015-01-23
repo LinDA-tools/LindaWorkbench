@@ -34,6 +34,7 @@
                 </div>
             </div>
         </div>
+        
     </div>
 
     <div class="large-7 medium-9 columns">
@@ -45,19 +46,36 @@
                     visualization=controller.drawnVisualization
                     configurationArray=controller.visualizationConfiguration
                 }}
-            </div
-            <!-- Visualization Consumption -->
-            <div class="row">
+            </div>
+               
+            <div class="row layout_option_box">
                 <div class="large-4 medium-4 columns">
+                    <!-- Visualization Consumption -->                   
+                     <div class="row inner_box">
                     {{partial 'export'}}
                 </div>
-                <div class="large-4 medium-4 columns">
+                     <div class="row inner_box">
                     {{partial 'save'}}
                 </div>
-                <div class="large-4 medium-4 columns">
-                    {{partial 'publish'}}
                 </div>
+
+                <div class="large-8 medium-8 columns inner_box"> 
+                    <!-- Visualization Customization -->
+                    <div class="inner_title_box">
+                        <h7>Visualization Options</h7>
             </div>
+                    <div>
+                        {{view App.VisualizationOptionsView
+                            options=controller.layoutOptions
+                            config=controller.visualizationConfiguration}}
         </div>
+    </div>
+
+            </div>
+
+
+
+        </div>
+
     </div>
 </div>

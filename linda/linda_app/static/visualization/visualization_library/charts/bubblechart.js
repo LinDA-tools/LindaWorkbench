@@ -33,11 +33,19 @@ var bubblechart = function () {
         var dataModule = configuration.dataModule;
         var location = configuration.datasourceLocation;
         var graph = configuration.datasourceGraph;
+        var gridlines = configuration.Gridlines;
+        var tooltip = configuration.Tooltip;
+        var hLabel = configuration["Horizontal Label"];
+        var vLabel = configuration["Vertical Label"];
 
         var selection = {
             dimension: [],
             multidimension: label.concat(xAxis).concat(yAxis).concat(size).concat(group),
-            group: []
+            group: [],
+            gridlines: gridlines,
+            tooltip: tooltip,
+            hLabel: hLabel,
+            vLabel: vLabel
         };
 
         console.log("VISUALIZATION SELECTION FOR BUBBLE CHART:");
@@ -98,20 +106,20 @@ var bubblechart = function () {
             chart.addLegend("50%", "10%", 500, 20, "right");
 
             //gridlines tuning
-            x.showGridlines = selection.gridlines;
-            y.showGridlines = selection.gridlines;
+            //x.showGridlines = selection.gridlines;
+            //y.showGridlines = selection.gridlines;
             //titles
-            if (selection.hLabel === "") {
+            if (selection.hLabel ==="" || selection.hLabel ==="Label"){
                 selection.hLabel = seriesHeaders[1];
             }
-            if (selection.vLabel === "") {
+            if (selection.vLabel ==="" || selection.vLabel ==="Label"){
                 selection.vLabel = seriesHeaders[2];
             }
             x.title = selection.hLabel;
             y.title = selection.vLabel;
             //ticks
-            x.ticks = selection.ticks;
-            y.ticks = selection.ticks;
+            x.ticks = selection.gridlines;
+            y.ticks = selection.gridlines;
             //tooltip
             if (selection.tooltip === false) {
                 chart.addSeries(series, dimple.plot.bubble).addEventHandler("mouseover", function () {

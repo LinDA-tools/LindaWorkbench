@@ -32,11 +32,19 @@ var scatterchart = function() {
         var dataModule = configuration.dataModule;
         var location = configuration.datasourceLocation;
         var graph = configuration.datasourceGraph;
+        var gridlines = configuration.Gridlines;
+        var tooltip = configuration.Tooltip;
+        var hLabel = configuration["Horizontal Label"];
+        var vLabel = configuration["Vertical Label"];
 
         var selection = {
             dimension: [],
             multidimension: xAxis.concat(yAxis).concat(group),
-            group: []
+            group: [],
+            gridlines: gridlines,
+            tooltip: tooltip,
+            hLabel: hLabel,
+            vLabel: vLabel
         };
 
         console.log("VISUALIZATION SELECTION FOR COLUMN CHART:");
@@ -66,8 +74,8 @@ var scatterchart = function() {
                 groupAxisName = seriesHeaders[2];
             }
 
-            chart.addMeasureAxis("x", xAxisName);
-            chart.addMeasureAxis("y", yAxisName);
+            var x = chart.addMeasureAxis("x", xAxisName);
+            var y = chart.addMeasureAxis("y", yAxisName);
 
             var series = ["id"];
 
@@ -75,11 +83,31 @@ var scatterchart = function() {
                 series.push(groupAxisName);
             }
             
+           
+            
             console.log("SERIES:");
             console.dir(series);
 
             chart.addSeries(series, dimple.plot.bubble);
             chart.addLegend("50%", "10%", 500, 20, "right");
+            
+             //ticks
+            x.ticks = selection.gridlines;
+            y.ticks = selection.gridlines;
+            //titles
+            if (selection.hLabel ==="" || selection.hLabel === "Label"){
+                selection.hLabel = seriesHeaders[0]; 
+            }
+            if (selection.vLabel ==="" || selection.vLabel === "Label"){
+                selection.vLabel = seriesHeaders[1];
+            }
+            x.title = selection.hLabel;
+            y.title = selection.vLabel;
+            //tooltip
+            if (selection.tooltip === false){
+                chart.addSeries(series, dimple.plot.bubble).addEventHandler("mouseover",function(){});
+            }
+            
             chart.draw();
         });
     }

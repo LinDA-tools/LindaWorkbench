@@ -31,11 +31,19 @@ var columnchart = function () {
         var dataModule = configuration.dataModule;
         var location = configuration.datasourceLocation;
         var graph = configuration.datasourceGraph;
+        var gridlines = configuration.Gridlines;
+        var tooltip = configuration.Tooltip;
+        var hLabel = configuration["Horizontal Label"];
+        var vLabel = configuration["Vertical Label"];
 
         var selection = {
             dimension: yAxis, // measure
             multidimension: xAxis.concat(group), // categories
-            group: []
+            group: [],
+            gridlines: gridlines,
+            tooltip: tooltip,
+            hLabel: hLabel,
+            vLabel: vLabel
         };
 
         console.log("VISUALIZATION SELECTION FOR COLUMN CHART:");
@@ -72,17 +80,20 @@ var columnchart = function () {
             chart.addLegend("10%", "5%", "80%", 20, "right");
 
             //gridlines tuning
-            dim1.showGridlines = selection.gridlines;
-            dim2.showGridlines = selection.gridlines;
+            //dim1.showGridlines = selection.gridlines;
+            //dim2.showGridlines = selection.gridlines;
             //titles
-            if (selection.hLabel === "") {
+            if (selection.hLabel === "" || selection.hLabel === "Label") {
                 selection.hLabel = seriesHeaders[1];
             }
-            if (selection.vLabel === "") {
+            if (selection.vLabel === "" || selection.vLabel ==="Label") {
                 selection.vLabel = seriesHeaders[0];
             }
             dim1.title = selection.hLabel;
             dim2.title = selection.vLabel;
+            
+            dim1.ticks = selection.gridlines;
+            dim2.ticks = selection.gridlines;
 
             //tooltip
             if (selection.tooltip === false) {

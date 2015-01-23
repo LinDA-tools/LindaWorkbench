@@ -3,7 +3,7 @@
         <nav class="top-bar" data-topbar role="navigation">
             <ul class="title-area">
                 <li class="name">
-                    <h1>{{#link-to "index"}}LinDA Visualization{{/link-to}}</h1>
+                    <h1>{{#link-to "index" animations="main:fade"}}LinDA Visualization{{/link-to}}</h1>
                 </li>
             </ul>
             <section class="top-bar-section">
@@ -17,6 +17,6 @@
     </div>
 
     <div class="row left-collapse">
-        {{outlet}}
+        {{outlet animationSequence="async"}}
     </div>
 </div>

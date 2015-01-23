@@ -276,6 +276,11 @@ a{  font-size: 11pt !important;
     font-size: 16pt;
 }
 
+.consumption-content {
+    font-size: 9pt;
+    margin-left: 3px;
+}
+
 .export-visualization {
     margin-left: 16px;
     font-size: 16pt;
@@ -286,13 +291,7 @@ a{  font-size: 11pt !important;
     font-size: 16pt;
 }
 
-.consumption  {
-    border: 1px solid #909090;
-    padding: 5px 10px 5px 10px;
-    min-height: 5rem;
-    margin-bottom: 25px;
-    margin-top: 20px;
-}
+
 
 .consumption textarea {
     display:block;
@@ -302,7 +301,7 @@ a{  font-size: 11pt !important;
 }
 
 .consumption h7{
-    font-size: 10pt;
+    font-size: 11pt;
 }
 
 .consumption a{
@@ -504,12 +503,16 @@ span.fancytree-title {
 .dimensions, .properties-list-content {
     margin-top: 10px;
     overflow-y: auto;
-    height: 30rem;
+    height: 33rem;
     border: 1px solid;
     border-color: #A0A0A0;
     overflow-x: hidden;
     text-overflow: ellipsis;
 } 
+
+.layout_option_box{
+padding: 8px;    
+}
 
 .properties-list-content {    
     margin-left: -8px;

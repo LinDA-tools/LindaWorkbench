@@ -28,11 +28,19 @@ var areachart = function () {
         var dataModule = configuration.dataModule;
         var location = configuration.datasourceLocation;
         var graph = configuration.datasourceGraph;
+        var gridlines = configuration.Gridlines;
+        var tooltip = configuration.Tooltip;
+        var hLabel = configuration["Horizontal Label"];
+        var vLabel = configuration["Vertical Label"];
 
         var selection = {
             dimension: yAxis, // measure
             multidimension: xAxis.concat(group),
-            group: []
+            group: [],
+            gridlines: gridlines,
+            tooltip: tooltip,
+            hLabel: hLabel,
+            vLabel: vLabel
         };
 
         console.log("VISUALISATION SELECTION FOR AREA CHART:");
@@ -61,20 +69,20 @@ var areachart = function () {
             chart.addLegend("10%", "5%", "80%", 20, "right");
 
             //gridlines tuning
-            x.showGridlines = selection.gridlines;
-            y.showGridlines = selection.gridlines;
+            //x.showGridlines = selection.gridlines;
+            //y.showGridlines = selection.gridlines;
             //titles
-            if (selection.hLabel === "") {
+            if (selection.hLabel === ""  || selection.hLabel === "Label") {
                 selection.hLabel = columnsHeaders[1];
             }
-            if (selection.vLabel === "") {
+            if (selection.vLabel === ""  || selection.vLabel === "Label") {
                 selection.vLabel = columnsHeaders[0];
             }
             x.title = selection.hLabel;
             y.title = selection.vLabel;
             //ticks
-            x.ticks = selection.ticks;
-            y.ticks = selection.ticks;
+            x.ticks = selection.gridlines;
+            y.ticks = selection.gridlines;
             //tooltip
             if (selection.tooltip === false) {
                 chart.addSeries(series, dimple.plot.area).addEventHandler("mouseover", function () {
