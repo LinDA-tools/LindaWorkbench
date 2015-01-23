@@ -8981,12 +8981,13 @@ span.fancytree-title {
 
 /* line 649, ../../app/styles/style.scss */
 .container {
-  margin-left: 5%;
+  /*margin-left:5%;
   margin-right: 5%;
-  margin-top: 2%;
+  margin-top: 2%;*/
+  padding: 10px;
 }
 
-/* line 655, ../../app/styles/style.scss */
+/* line 656, ../../app/styles/style.scss */
 .boxTitle {
   font-size: 10pt;
   font-weight: bold;
@@ -8994,13 +8995,13 @@ span.fancytree-title {
   padding-bottom: 0.2rem;
 }
 
-/* line 662, ../../app/styles/style.scss */
+/* line 663, ../../app/styles/style.scss */
 .boxContent {
   font-size: 10pt;
   background-color: #ffffff;
 }
 
-/* line 667, ../../app/styles/style.scss */
+/* line 668, ../../app/styles/style.scss */
 .optionContainer {
   font-size: 10pt;
   background-color: #ffffff;
@@ -9008,23 +9009,23 @@ span.fancytree-title {
 }
 
 /* Remove block grid padding-bottom */
-/* line 674, ../../app/styles/style.scss */
+/* line 675, ../../app/styles/style.scss */
 [class*="block-grid-"] > li {
   padding-bottom: 0px;
 }
 
-/* line 678, ../../app/styles/style.scss */
+/* line 679, ../../app/styles/style.scss */
 .textfield {
   height: 1px;
 }
 
-/* line 682, ../../app/styles/style.scss */
+/* line 683, ../../app/styles/style.scss */
 .logo {
   height: 40px;
   padding-left: 5px;
 }
 
-/* line 687, ../../app/styles/style.scss */
+/* line 688, ../../app/styles/style.scss */
 .minicolors-theme-default .minicolors-swatch {
   top: 2px !important;
   left: 2px !important;
@@ -9033,44 +9034,44 @@ span.fancytree-title {
 }
 
 @media only screen {
-  /* line 695, ../../app/styles/style.scss */
+  /* line 696, ../../app/styles/style.scss */
   .columns {
     padding-right: 0.5rem;
   }
 }
-/* line 700, ../../app/styles/style.scss */
+/* line 701, ../../app/styles/style.scss */
 .row {
   width: 100%;
   max-width: none;
 }
 
-/* line 705, ../../app/styles/style.scss */
+/* line 706, ../../app/styles/style.scss */
 .row + .row {
   margin-top: 15px;
 }
 
-/* line 710, ../../app/styles/style.scss */
+/* line 711, ../../app/styles/style.scss */
 .row > div + div {
   padding-left: 0.5em;
 }
 
-/* line 714, ../../app/styles/style.scss */
+/* line 715, ../../app/styles/style.scss */
 .heading {
   font-weight: bold;
 }
 
-/* line 718, ../../app/styles/style.scss */
+/* line 719, ../../app/styles/style.scss */
 .side-nav a:hover {
   background-color: #cccccc;
 }
 
-/* line 722, ../../app/styles/style.scss */
+/* line 723, ../../app/styles/style.scss */
 .row .row {
   margin-left: 0px !important;
   margin-right: 0px !important;
 }
 
-/* line 727, ../../app/styles/style.scss */
+/* line 728, ../../app/styles/style.scss */
 .toolframe {
   width: 100%;
   height: 800px;
@@ -9078,7 +9079,7 @@ span.fancytree-title {
   overflow: visible;
 }
 
-/* line 733, ../../app/styles/style.scss */
+/* line 734, ../../app/styles/style.scss */
 .title {
   font-weight: bold;
   color: white;
@@ -9087,50 +9088,50 @@ span.fancytree-title {
   font-size: 14pt;
 }
 
-/* line 741, ../../app/styles/style.scss */
+/* line 742, ../../app/styles/style.scss */
 .workflowStepTitle {
   font-weight: bold;
   padding: 0.2rem;
 }
 
-/* line 747, ../../app/styles/style.scss */
+/* line 748, ../../app/styles/style.scss */
 .toolthumbnail {
   width: 120px;
   margin: 10px;
 }
 
-/* line 752, ../../app/styles/style.scss */
+/* line 753, ../../app/styles/style.scss */
 .showElement, .show-element {
   visibility: visible;
 }
 
-/* line 756, ../../app/styles/style.scss */
+/* line 757, ../../app/styles/style.scss */
 .export {
   padding-left: 10px;
 }
 
-/* line 759, ../../app/styles/style.scss */
+/* line 760, ../../app/styles/style.scss */
 .hideElement, .hide-element {
   display: none !important;
   visibility: hidden;
 }
 
-/* line 765, ../../app/styles/style.scss */
+/* line 766, ../../app/styles/style.scss */
 .list_default ul {
   list-style-type: none;
 }
 
-/* line 771, ../../app/styles/style.scss */
+/* line 772, ../../app/styles/style.scss */
 select {
   padding: 0.5px !important;
 }
 
-/* line 776, ../../app/styles/style.scss */
+/* line 777, ../../app/styles/style.scss */
 select[size], select[multiple] {
   background-image: none;
 }
 
-/* line 782, ../../app/styles/style.scss */
+/* line 783, ../../app/styles/style.scss */
 .file {
   border: 5px solid #FAFAFA;
   border-radius: 3px;
