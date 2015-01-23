@@ -2,7 +2,75 @@
 
 App = Ember.Application.create({
     LOG_TRANSITIONS: true, 
-    LOG_TRANSITIONS_INTERNAL: true
+    LOG_TRANSITIONS_INTERNAL: true,
+    onerror: function(error) {
+        console.dir(error);
+    },
+    rootElement: '#visualizer'
+});
+Ember.RSVP.on('error', function(error) {
+  Ember.Logger.assert(false, error);
+});
+Ember.run.backburner.DEBUG = true;
+
+
+})();
+
+(function() {
+
+App.DatasourceController = Ember.ObjectController.extend({
+    treeContent: function () {
+        console.log('DATASOURCE CONTROLLER');
+        // console.log(this.get('model'));
+
+        var dataInfo = this.get('model'); // data sources
+
+        if (!dataInfo)
+            return{};
+
+        this.set('selectedDatasource', dataInfo);
+        // console.log('DATASOURCE');
+        // console.dir(dataInfo);
+
+        var previousSelection = this.get('previousSelection');
+        //this.set('dataSelection', []);
+
+        if (previousSelection.length === 0) {
+            return treeselection_data.initialize(dataInfo);
+        } else {
+            return treeselection_data.restore(dataInfo, previousSelection);
+        }
+    }.property('model', 'previousSelection'),
+    previousSelection: [],
+    dataSelection: [],
+    selectedDatasource: null,
+    resetSelection: function () {
+        this.get('dataSelection').length = 0;
+    }.observes('model'),
+    actions: {
+        visualize: function () {
+            var self = this;
+            var selection = this.get('dataSelection');
+            var datasource = this.get('selectedDatasource');
+            var selected = treeselection_data.getDataSelection(selection, datasource);
+            var dataselection = this.store.createRecord('dataselection', selected);
+
+            dataselection.save().then(function (responseDataselection) {
+                console.log("SAVED DATA SELECTION. TRANSITION TO VISUALIZATION ROUTE .....");
+                console.dir(responseDataselection);
+                self.transitionToRoute('visualization', 'dataselection', responseDataselection.id);
+            });
+        }
+    }
+});
+
+
+})();
+
+(function() {
+
+App.VisualizationConfigController = Ember.ArrayController.extend({
+   
 });
 
 
@@ -13,14 +81,49 @@ App = Ember.Application.create({
 App.VisualizationController = Ember.ArrayController.extend({
     layoutOptions: {},
     structureOptions: {},
+    slideShowContainer: Ember.ContainerView.create(),
     datasource: Ember.computed.alias("selectedVisualization.datasource"),
     visualizationConfiguration: [{}],
     visualizationSVG: '',
-    recommendations: Ember.computed.alias("model"), // each recommendation is an instance of the visualization model
-    createVisualization: function() {
+    exportFormats: ['SVG', 'PNG'],
+    selectedFormat: 'PNG',
+    configName: "",
+    categorizedProperties: function () {
+        var categorizedProperties = {};
         var selectedVisualization = this.get('selectedVisualization');
-        console.log("Creating visualization: ");
+        var dataselection = selectedVisualization.get('dataselection');
+        var propertyInfos = dataselection.get('propertyInfos');
+
+        for (var i = 0; i < propertyInfos.length; i++) {
+            var propertyInfo = propertyInfos[i];
+            var category = propertyInfo.type;
+
+            if (!categorizedProperties[category]) {
+                categorizedProperties[category] = {
+                    name: category,
+                    items: []
+                };
+            }
+            categorizedProperties[category].items.push(propertyInfo);
+        }
+
+        return _.values(categorizedProperties);
+    }.property('selectedVisualization'),
+    initializeVisualization: function () {
+        console.log("VISUALIZATION CONTROLLER - INITIALIZE VISUALIZATION ... ");
+        this.set('drawnVisualization', null);
+
+        var selectedVisualization = this.get('selectedVisualization');
+        console.log('SELECTED VISUALIZATION');
         console.dir(selectedVisualization);
+
+        // Reset configuration map
+        var configArray = [{}];
+        this.set('visualizationConfiguration', configArray);
+
+        if (!selectedVisualization) {
+            return;
+        }
 
         var mapping = {
             structureOptions: {},
@@ -31,77 +134,79 @@ App.VisualizationController = Ember.ArrayController.extend({
 
         mapping.structureOptions = customMapping.structureOptions;
         mapping.layoutOptions = customMapping.layoutOptions;
-        console.log('mapping.structureOptions');
+
+        console.log('MAPPING - STRUCTURE OPTIONS');
         console.dir(mapping.structureOptions);
 
-        console.log('mapping.layoutOptions');
+        console.log('MAPPING - LAYOUT OPTIONS');
         console.dir(mapping.layoutOptions);
 
         this.set('structureOptions', mapping.structureOptions);
         this.set('layoutOptions', mapping.layoutOptions);
+
+        // Ensures that bindings on drawnVisualizations are triggered only now
+        this.set('drawnVisualization', selectedVisualization);
     }.observes('selectedVisualization'),
-    drawVisualization: function() {
-        var config = this.get('visualizationConfiguration')[0];
-        console.log("Configuration changed");
-        console.dir(config);
-
-        var selectedVisualization = this.get('selectedVisualization');
-        console.log("selectedVisualization");
-        console.dir(selectedVisualization);
-
-        var datasource = selectedVisualization.get('datasource');
-        console.log("datasource");
-        console.dir(datasource);
-
-        var format = datasource.format;
-        config.datasourceLocation = datasource.location;
-
-        switch (format) {
-            case 'rdf':
-                config.dataModule = sparql_data_module;
-                break;
-            case 'csv':
-                config.dataModule = csv_data_module;
-                break;
-            default:
-                console.error("Unknown DS format: " + format);
-                return;
-        }
-        var name = selectedVisualization.get("name");
-        var visualization = visualizationRegistry.getVisualization(name);
-        console.log("Visualization " + name);
-        console.dir(visualization);
-        console.dir(config);
-        var self = this;
-
-        visualization.draw(config, "visualization").then(function() {
-            var svg = visualization.get_SVG();
-            self.set('visualizationSVG', svg);
-
-        });
-    }.observes('visualizationConfiguration.@each'),
-    setSuggestedVisualization: function() {
+    setSuggestedVisualization: function () {
         var topSuggestion = this.get('firstObject');
-        console.log("Setting top suggestion");
-        console.dir(topSuggestion);
         this.set('selectedVisualization', topSuggestion);
-    }.observes('model'),
+    }.observes('model.[]'),
     actions: {
-        exportPNG: function() {
+        exportPNG: function () {
             var visualization = visualizationRegistry.getVisualization(this.get('selectedVisualization').get("name"));
-            visualization.export_as_PNG().then(function(pngURL) {
+            visualization.export_as_PNG().then(function (pngURL) {
                 window.open(pngURL);
             });
         },
-        exportSVG: function() {
+        exportSVG: function () {
             var visualization = visualizationRegistry.getVisualization(this.get('selectedVisualization').get("name"));
             var svgURL = visualization.export_as_SVG();
             window.open(svgURL);
         },
-        save: function() {
+        export: function () {
+            var visualization = visualizationRegistry.getVisualization(this.get('selectedVisualization').get("visualizationName"));
+            if (this.get('selectedFormat') === 'PNG') {
+                visualization.export_as_PNG().then(function (pngURL) {
+                    window.open(pngURL);
+                });
+            } else {
+                var svgURL = visualization.export_as_SVG();
+                window.open(svgURL);
+            }
         },
-        chooseVisualization: function(visualization) {
+        publish: function () {
+            var visualization = visualizationRegistry.getVisualization(this.get('selectedVisualization').get("visualizationName"));
+            this.set('visualizationSVG', visualization.get_SVG());
+        },
+        save: function() {
+            console.log("SAVE VISUALIZATION");
+            // send actual visualization model to backend
+            var selectedVisualization = this.get('selectedVisualization');
+            console.dir(selectedVisualization);
+
+            var configurationName = this.get('configName');
+
+            // send current visualization configuration to backend
+            console.log("The value is " + selectedVisualization.get('configurationName'));
+            selectedVisualization.set('configurationName', configurationName);
+
+            selectedVisualization.save().then(function () {
+                console.log("SAVED SUCCESSFULLY");
+            }, function (errorText) {
+                console.log("ERROR DURING SAVING");
+                console.log(errorText);
+            });
+        },
+        chooseVisualization: function (visualization) {
             this.set('selectedVisualization', visualization);
+        },
+        select: function () {
+            console.log("CHANGE DATASELECTION");
+            var selectedVisualization = this.get('selectedVisualization');
+            var dataselectionID = selectedVisualization.get('dataselection').id;
+            var datasourceID = selectedVisualization.get('dataselection.datasource').id;
+
+            this.transitionToRoute('dataselection', dataselectionID, datasourceID);
         }
     }
 });
@@ -113,7 +218,7 @@ App.VisualizationController = Ember.ArrayController.extend({
 App.Store = DS.Store.extend({
     revision: 13,
     adapter: DS.RESTAdapter.extend({
-        host: 'http://'+window.location.hostname+':3002'
+        host: 'http://' + window.location.hostname + ':3002'
     })
 });
 
@@ -123,14 +228,38 @@ App.Store = DS.Store.extend({
 
 (function() {
 
+App.Dataselection = DS.Model.extend({
+    datasource: DS.attr(),//DS.belongsTo('datasource'),
+    propertyInfos: DS.attr()
+});
+
+
+})();
+
+(function() {
+
+App.Datasource = DS.Model.extend({
+    name: DS.attr("string"),
+    location: DS.attr("string"),
+    graph: DS.attr("string"),
+    format: DS.attr("string")
+});
+
+
+})();
+
+(function() {
+
 /*The visualization model represents the  initial visualization configuration retrieved from the backend. 
  *And describes the format used for storing the current visualization configuration in the backend.*/
 App.Visualization = DS.Model.extend({
-    name: DS.attr('string'),
+    visualizationName: DS.attr('string'),
+    configurationName: DS.attr('string'), //SAVE function
     structureOptions: DS.attr(),
     layoutOptions: DS.attr(),
-    datasource: DS.attr(),
-    thumbnail: DS.attr('string')
+    visualizationThumbnail: DS.attr('string'),
+    valid: DS.attr('boolean'),
+    dataselection: DS.belongsTo('dataselection')
 });
 
 
@@ -148,16 +277,45 @@ App.ApplicationRoute = Ember.Route.extend({
 
 (function() {
 
-App.VisualizationRoute = Ember.Route.extend({
-    // "params" contains the parameters for the visualization route.  
-    // The parameters are specified in the router.js.
-    // The backend needs the datasource id only for the suggestion algorithm.
-    model: function(params) { 
-        console.log("Requesting visualization model and recommendations from the backend for the data source " + params.name);
-        return this.store.find('visualization', {name: params.name, location: params.location, graph: params.graph, format:params.format}).then(function(recommendations) {
-            console.log("Recommendations:");
-            console.dir(recommendations);
-            return recommendations;
+App.DataselectionRoute = Ember.Route.extend({
+    model: function(params) {
+        console.log('DATASELECTION ROUTE', params.selection);
+        return Ember.$.getJSON('http://' + window.location.hostname + ':3002/dataselections/' + params.selection);      
+    }, 
+    controllerName: 'datasource',
+    setupController: function(controller, model) {
+        console.log('DATASELECTION ROUTE - SETTING UP THE DATASOURCE CONTROLLER');      
+        console.log('MODEL');
+        console.dir(model);
+
+        controller.set('model', model.dataselection.datasource);
+  
+        var dataSelection = controller.get('dataSelection'); 
+        var selection = _.flatten(dataSelection.pushObject(model.dataselection.propertyInfos)); 
+              
+        controller.set('dataSelection', selection);   
+        controller.set('previousSelection', selection);         
+
+    },
+    renderTemplate: function() {
+        this.render('datasource');
+    }
+});
+
+})();
+
+(function() {
+
+App.DatasourceRoute = Ember.Route.extend({
+    model: function(params) {
+        var ds = this.store.createRecord('datasource', {
+            name: decodeURIComponent(params.name),
+            location: decodeURIComponent(params.location),
+            graph: decodeURIComponent(params.graph),
+            format: decodeURIComponent(params.format)
+        });
+        return ds.save().then(function(data) {            
+            return data._data;
         });
     }
 });
@@ -166,29 +324,133 @@ App.VisualizationRoute = Ember.Route.extend({
 
 (function() {
 
-App.ConfigureVisualizationView = Ember.View.extend({
-    strOptionsConfVis: null, 
-    confVis: null,
-    dsConfVis: null,
-    templateName:'configureVisualization',
-    createTreeContent: function() {
-        console.log('configure visualization view');
-        var datasource = this.get('dsConfVis'); 
+App.VisualizationConfigRoute = Ember.Route.extend({
+    // "params" contains the parameters for the visualization route.  
+    // The parameters are specified in the router.js.
+    // The backend needs the datasource id only for the suggestion algorithm.
+    model: function (params) {
+         console.log("LOAD VISUALIZATION VISUALIZATIONS");
+         console.dir(params);
+        return this.store.find('visualization', {source_type: "visualizationConfiguration"}).then(function (visualizations) {
+            console.log("STORED VISUALIZATIONS");
+            console.dir(visualizations);
+            return visualizations;
+        });
+    }
+});
 
-        if (!datasource)
-            return {};
+})();
 
-        console.log("datasource");
-        console.dir(datasource);
+(function() {
 
-        var treedata = tree_data.create(datasource);
-        console.log("treedata: ");
-        console.dir(treedata);
-        return treedata;
-    }.property('datasource')
+App.VisualizationRoute = Ember.Route.extend({
+    // "params" contains the parameters for the visualization route.  
+    // The parameters are specified in the router.js.
+    // The backend needs the datasource id only for the suggestion algorithm.
+    model: function (params) {
+        console.log("Requesting visualization model and recommendations from the backend for {" + params.source_type + ", " + params.id + "}");
+        console.dir(params);
+        return this.store.find('visualization', {source_type: params.source_type, id: params.id}).then(function (visualizations) {
+            console.log("Visualizations:");
+            console.dir(visualizations);
+            return visualizations;
+        });
+    }
+});
+
+})();
+
+(function() {
+
+App.DrawVisualizationView = Ember.View.extend({
+    
+    willAnimateIn: function() {
+        this.$().css("opacity",0);
+    },
+    animateIn: function (done) {
+        this.$().fadeTo(500,1,done);
+    },
+    animateOut: function(done){
+        this.$().fadeTo(500,0,done);
+    },
+    parentViewDidChange: function(){
+        this.$().hide();
+        this.$().fadeIn(500);
+    },
+    eventManager: Ember.Object.create({
+        input: function(event,view){
+            this.triggerAction({
+                action: "willAnimateIn",
+                target: this
+            });
+        }
+    }),
+    drawVisualization: function () {
+        var visualization = this.get('visualization');
+        console.log("DRAW VISUALIZATION VIEW - DRAW ...");
+        console.dir(visualization);
+
+        if (!visualization) {
+            return;
+        }
+
+        var config = this.get('configurationArray')[0];
+        
+        console.log("VISUALIZATION CONFIGURATION");
+        console.dir(JSON.stringify(config));
+
+        if (!config) {
+            return;
+        }
+
+        var dataselection = visualization.get('dataselection');              
+        var datasource = dataselection.get('datasource');        
+        var format = datasource.format;
+        config.datasourceLocation = datasource.location;
+        config.datasourceGraph = datasource.graph;
+
+        switch (format) {
+            case 'rdf':
+                config.dataModule = sparql_data_module;
+                break;
+            case 'csv':
+                config.dataModule = csv_data_module;
+                break;
+            default:
+                console.error("Unknown DS format: " + format);
+                return;
+        }
+        
+        var name = visualization.get("visualizationName");
+        var visualization = visualizationRegistry.getVisualization(name);       
+        var self = this;
+
+        var element = this.get('element');
+
+        try {
+            visualization.draw(config, element.id).then(function () {
+                var svg = visualization.get_SVG();
+                self.set('visualizationSVG', svg);
+            });
+        } catch (ex) {
+            console.error("Error drawing visualization: ");
+            console.error(ex);
+        }
+    }.observes('configurationArray.@each').on('didInsertElement')
 });
 
 
+
+
+})();
+
+(function() {
+
+App.PropertiesListView = Ember.View.extend({
+    templateName: "propertiesList",
+    tagName: 'ul',
+    classNames: ['properties-list']
+});
 
 
 })();
@@ -201,11 +463,22 @@ App.SlideShowView = Ember.View.extend({
     classNames:['slider'],
     didInsertElement: function() {
         this._super();
-        $('.slider').slick({
+        
+        console.log("Inserted slideshow: ");
+        console.dir(this.get('slides'));
+        
+        this.$().slick({
             infinite: true,
             slidesToShow: 3,
             slidesToScroll: 1
         });   
+    },
+    refreshView: function() {
+        this.rerender();
+    }.observes('slides.[]'),
+    willDestroyElement: function() {
+        console.log("Removing slideshow");
+        this.$().unslick(); 
     }
 });
 
@@ -224,49 +497,51 @@ App.VisualizationOptionsView = Ember.ContainerView.extend({
         this.clear();
 
         var options = this.get('options');
-        var config = this.get('config');
+        var configArray = this.get('config');
 
-        if ((config === null) || (options === null)) {
+        if ((configArray === null) || (options === null)) {
             return;
         }
-        
-        console.log("Creating visualization configuration view...");
-        console.log('Structure options: ');
-        console.dir(options);
-        console.log('Visualization configuration: ');
 
-        var optionNames = Object.getOwnPropertyNames(options);
-        for (var i = 0; i < optionNames.length; i++) {
-            
-            var optionName = optionNames[i];          
-            console.log('Option name: ');
-            console.dir(optionName);
-            
-            var optionTemplate = options[optionName];
-            console.log('Option template: ');
-            console.dir(optionTemplate);
-            console.dir(optionTemplate.value);
-            
-            var view = Ember.View.extend({
-                tagName: "li",
-                templateName: "vistemplates/" +
-                        optionTemplate.template,
-                name: optionName,
-                label: optionTemplate.label,
-                content: optionTemplate.value,
-                metadata: optionTemplate.metadata.types,
-                contentObserver: function() {
-                    var content = this.get('content');                  
-                    var name = this.get('name');
-                    console.log("Changed option " + name + ":");
-                    console.dir(content);
+        console.log("VISUALIZATION OPTIONS VIEW - CREATING CONFIGURATION VIEWS ...");
 
-                    var configMap = config[0];
-                    configMap[name] = content;
-                    config.setObjects([configMap]);
-                }.observes('content.@each').on('init')
-            }).create();
-            this.pushObject(view);
+        // Ensures that config changes are only propagated when endPropertyChanges is called, i.e. after the for loop
+        configArray.beginPropertyChanges();
+
+        try {
+            var optionNames = Object.getOwnPropertyNames(options);
+            for (var i = 0; i < optionNames.length; i++) {
+
+                var optionName = optionNames[i];
+                var optionTemplate = options[optionName];
+
+                var view = Ember.View.extend({
+                    tagName: "li",
+                    templateName: "vistemplates/" +
+                            optionTemplate.template,
+                    name: optionName,
+                    label: optionTemplate.label,
+                    content: optionTemplate.value,
+                    metadata: optionTemplate.metadata ? optionTemplate.metadata.types : "",
+                    maxCardinality: optionTemplate.maxCardinality,
+                    contentObserver: function() {
+                        var content = this.get('content');
+                        var name = this.get('name');
+                        var configMap = configArray[0];
+                        configMap[name] = content;
+                        configArray.setObjects([configMap]);
+                        optionTemplate.value = content;
+                    }.observes('content.@each').on('init')
+                }).create();
+
+                this.pushObject(view);
+            }
+        } finally {
+            console.log('VISUALIZATION OPTIONS VIEW - CREATED CONFIGURATION ARRAY');
+            console.dir(configArray);
+            
+            // Inside finally block to make sure that this is executed even if the for loop crashes
+            configArray.endPropertyChanges();
         }
     }.observes('options').on('init')
 });
@@ -284,34 +559,80 @@ App.DimensionAreaComponent = Ember.Component.extend({
 
 (function() {
 
+App.DraggableItemComponent = Ember.Component.extend({
+    tagName: 'span',
+    classNames: ['draggable-item'],
+    attributeBindings: ['draggable'],
+    draggable: 'true',
+    dragStart: function (event) {
+        event.stopPropagation();
+        var data = this.get('data');
+        var jsonData = JSON.stringify(data);
+        event.dataTransfer.setData('text/plain', jsonData);
+        event.dataTransfer.effectAllowed = "copy";
+    },
+});
+
 App.DroppableAreaComponent = Ember.Component.extend({
-    dragOver: function(event) {
+    dragOver: function (event) {
         event.stopPropagation();
         event.preventDefault();
     },
-    drop: function(event) {
+    drop: function (event, ui) {
         event.stopPropagation();
         event.preventDefault();
         var droppableJSON = event.dataTransfer.getData('text/plain');
-        console.log('DROPPABLE');
-        console.dir(JSON.parse(droppableJSON));
-        var droppable = JSON.parse(droppableJSON);
+        console.log('DROPPED: ' + droppableJSON);
+
+        var droppable;
+        try {
+            droppable = JSON.parse(droppableJSON);
+        } catch (error) {
+            console.log(error);
+            return;
+        }
+
         var inArea = this.get('inArea');
-        console.log('inArea');
-        console.dir(inArea);
-        
+
+        if (this.isFull()) {
+            return;
+        }
+
         for (var i = 0; i < inArea.length; i++) {
-            if (inArea[i].id === droppable.id) {
+            var existingJSON = JSON.stringify(inArea[i]);
+            if (existingJSON === droppableJSON) {
                 return;
             }
         }
-        this.get('inArea').pushObject(droppable);
-    }
+        inArea.pushObject(droppable);
+    },
+    classNames: ['droppable-area'],
+    classNameBindings: ['full', 'active'],
+    active: false,
+    isFull: function () {
+        // var maxNumItems = this.get('maxNumItems')
+        // var inArea = this.get('inArea');
+        // if (typeof maxNumItems !== 'undefined' && inArea.length >= maxNumItems) {
+        //     return true;
+        // }
+        return false;
+    },
+    full: function () {
+        return this.isFull();
+    }.property('maxNumItems', 'inArea.@each'),
+    dragEnter: function (event) {
+        console.log(event.type);
+        this.set('active', true);
+    },
+    deactivate: function (event) {
+        console.log(event.type);
+        this.set('active', false);
+    }.on('dragLeave', 'dragStop', 'drop')
 });
 
 App.PropertyItemComponent = Ember.Component.extend({
-    classNames: ['area-item'],
-    remove: function() {
+    classNames: ['area-item', 'row'],
+    remove: function () {
         console.log('REMOVE');
         var collection = this.get('collection'); //collection = inArea
         var item = this.get('item');
@@ -329,54 +650,240 @@ App.PropertyItemComponent = Ember.Component.extend({
 
 (function() {
 
-// TREE VIEW
-App.TreeBranchComponent = Ember.Component.extend({
-    tagName: 'ul',
-    classNames: ['tree-branch'],
-    children: function() {
-        var node = this.get('node');
+App.DataTableComponent = Ember.Component.extend({
+    tagName: 'table',
+    list: [],
+    columns: [],
+    classNames: ['no-wrap'],
+    table: null,
+    setContent: function() {
+        console.log("TABLE COMPONENT - GENERATING PREVIEW");
 
-        if (node.getChildren) {
-            return node.getChildren(node);
+        var self = this;
+        var selection = this.get('preview');
+        var datasource = this.get('datasource');
+
+        if (selection.length > 0) {
+            var columns = table_data.getColumns(selection, datasource);
+
+            table_data.getContent(selection, datasource).then(function(content) {
+
+                var table = self.get('table');
+                if (table) {
+                    table.api().clear().destroy();
+                    $(self.get('element')).empty();
+                }
+
+                var table = $(self.get('element')).dataTable({
+                    responsive: {
+                        details: {
+                            type: 'inline'
+                        }
+                    },                 
+                    "data": content.slice(1),
+                    "columns": columns
+                });
+                self.set('table', table);
+            });
+
         } else {
-            return [];
+            var table = self.get('table');
+            if (table) {
+                table.api().clear().destroy();
+                $(self.get('element')).empty();
+            }
         }
-    }.property('node')
-});
-
-App.TreeNodeComponent = Ember.Component.extend({
-    tagName: 'li',
-    classNames: ['tree-node'],
-    init: function() {
-        this._super();
-        this.set('isExpanded', this.get('node.expanded') || false);
-    },
-    toggle: function() {
-        this.toggleProperty('isExpanded');
-    },
-    dragStart: function(event) {
-        console.log("DRAG START")
-        if (!this.get('node.draggable')) {
-            return;
-        }
-
-        event.stopPropagation();
-        var data = this.get('node.data');
-        
-        event.dataTransfer.setData('text/plain', JSON.stringify(data));
-        event.dataTransfer.effectAllowed = "copy";
-    }
+    }.observes('preview.[]').on('didInsertElement')
 });
 
 })();
 
 (function() {
 
+App.TreeSelectionComponent = Ember.Component.extend({
+    tagName: 'div',
+    tree: null,
+    setContent: function() {
+        console.log("TREE SELECTION COMPONENT - CREATING SELECTION TREE");
+        var content = this.get('treedata');
+        var selection = this.get('selection');
+        console.dir(JSON.stringify(selection));
+
+        //selection = []; todo needs to be reset
+        this.set('selection', selection);
+
+        var self = this;
+
+        $(this.get('element')).fancytree({
+            extensions: ["filter"],
+            source: content,
+            checkbox: true,
+            selectMode: 3,
+            filter: {
+                mode: "dimm",
+                autoApply: true
+            },
+            lazyLoad: function(event, data) {
+                console.log("TREE SELECTION COMPONENT - LOADING CHILDREN");
+                console.log("DATA");
+                console.dir(data);
+                var node = data.node;
+                var node_path = self.getNodePath(node);
+
+                data.result = data.node.data._children.loadChildren(node_path.slice().reverse());
+            },
+            select: function(event, data) {
+                console.log("TREE SELECTION COMPONENT - GENERATING PREVIEWS");
+                var tree = data.tree;
+                var node = data.node;
+                var branch_root = self.getBranchRoot(node);
+                var branch_root_title = branch_root.title;
+
+                console.log('NODE');
+                console.dir(node);
+//
+                var selected = tree.getSelectedNodes();
+
+                console.log('SELECTED NODES');
+                console.dir(selected);
+//
+                if (node.selected) {
+                    tree.filterBranches(function(node) {
+                        if (node.title === branch_root_title) {
+                            return true;
+                        } else {
+                            node.hideCheckbox = true;
+                            node.render(true);
+                        }
+                    });
+
+                    var selected = tree.getSelectedNodes();
+
+                    console.log('SELECTED NODES');
+                    console.dir(selected);
+
+                    for (var i = 0; i < selected.length; i++) {
+                        var node_ = selected[i];
+                        var node_path = self.getNodePath(node_).slice().reverse();
+                        var path_labels = self.getNodePath(node_).slice().reverse();
+                        var node_label = node_.title;
+                        var node_key = node_.key;
+                        var node_type = node_.data.type;
+                        var node_role = node_.data.role;
+
+                        var already_selected = _.some(selection, function(value) {
+                            return _.isEqual(value.parent, node_path);
+                        });
+
+                        if (!already_selected
+                                && (node_.hideCheckbox === false)
+                                && (node_type !== 'Class')) {
+
+                            selection.pushObject(
+                                    {
+                                        label: node_label,
+                                        key: node_key,
+                                        type: node_type,
+                                        role: node_role,
+                                        parent: path_labels
+                                    }
+                            );
+                        }
+                    }
+                } else {
+                    var selected = tree.getSelectedNodes();
+                    
+                    console.log('SELECTED NODES - ELSE');
+                    console.dir(selected);
+                    
+                    console.log('SELECTION');
+                    console.dir(selection);
+                    
+                    selection = _.filter(selection, function(item) {
+
+                        var is_selected = false;
+
+                        for (var i = 0; i < selected.length; i++) {
+                            var node_ = selected[i];
+                            var node_path = self.getNodePath(node_).slice().reverse();
+
+                            if (!is_selected) {
+                                is_selected = _.isEqual(item.parent, node_path);
+                            }
+                        }
+
+                        return is_selected;
+                    });
+
+                    if (selected.length === 0) {
+                        tree.clearFilter();
+                        tree.visit(function(node) {
+                            var type = node.data.type;
+                            node.hideCheckbox = self.hideCheckbox(type);
+                            node.render(true);
+                        });
+                    }
+                }
+
+                //console.log('DATA SELECTION');
+                //console.dir(selection);
+
+                self.set('selection', selection);
+            }
+        });
+    }.observes('treedata').on('didInsertElement'),
+    getNodePath: function(node) {
+        var node_path_with_labels = [];
+        node_path_with_labels.push({id: node.key, label: node.title});
+
+        while (node.parent !== null) {
+            node_path_with_labels.push({id: node.parent.key, label: node.parent.title});
+            node = node.parent;
+        }
+
+        node_path_with_labels.pop(); // root id is not relevant
+
+        return  node_path_with_labels;
+    },
+    getBranchRoot: function(node) {
+        while (node.parent.title !== "root") {
+            node = node.parent;
+        }
+        return node;
+    },
+    hideCheckbox: function(type) {
+        switch (type) {
+            case "Quantitative":
+            case "Interval":
+            case "Categorical":
+            case "Nominal":
+            case "Class":
+                return false;
+            case "Resource":
+            case "Nothing":
+                return true;
+        }
+        return null;
+    }
+});  
+
+})();
+
+(function() {
+
 // router
-App.Router.map(function() {   
+App.Router.map(function() {
     this.route("visualization", {
-        path: '/visualization/:name/:location/:graph/:format'
+        path: '/visualization/:source_type/:id'
     });
+    this.route("datasource", {
+        path: '/datasource/:name/:location/:graph/:format'
+    });
+    this.route("dataselection", {
+        path: '/dataselection/:selection/:datasource'
+    });
+    this.route("visualizationConfig");
+    this.route("configure");
 });
 
 })();

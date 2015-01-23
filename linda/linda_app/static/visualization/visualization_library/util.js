@@ -30,7 +30,7 @@ function rows(table) {
 
 var floatPattern = /^-?[0-9]+\.[0-9]+$/;
 var intPattern = /^-?[0-9]+$/;
-function toScalar(value, state) {
+function toScalar(value) {
     if (floatPattern.test(value)) {
         var float = parseFloat(value);
         if (isNaN(float)) {
@@ -50,7 +50,26 @@ function toScalar(value, state) {
         if (isNaN(date)) {
             return value;
         } else {
-            return new Date(date);
+            return new Date(date).toISOString();
         }
     }
+}
+
+function predictValueSOM(value) {
+    var jsType = typeof (value);
+    switch (jsType) {
+        case "number":
+            return "Quantitative";
+        case "object":
+            var asString = Object.prototype.toString.call(value)
+            switch (asString) {
+                case '[object Date]':
+                case '[invalid Date]':
+                    return 'Interval'
+                    break;
+            }
+            break;
+    }
+
+    return "Categorical";
 }

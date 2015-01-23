@@ -9,13 +9,32 @@
  * Released under the MIT license
  * https://github.com/mar10/fancytree/wiki/LicenseInfo
  *
- * @version 2.4.1
- * @date 2014-09-23T19:33
+ * @version 2.7.0
+ * @date 2014-12-21T15:57
  */
 
 ;(function($, window, document, undefined) {
 
 "use strict";
+
+// prevent duplicate loading
+// if ( $.ui.fancytree && $.ui.fancytree.version ) {
+//     $.ui.fancytree.warn("Fancytree: duplicate include");
+//     return;
+// }
+
+
+/*******************************************************************************
+ * Private functions and variables
+ */
+/*
+function _assert(cond, msg){
+	msg = msg || "";
+	if(!cond){
+		$.error("Assertion failed " + msg);
+	}
+}
+*/
 
 /*******************************************************************************
  * Private functions and variables
@@ -55,7 +74,7 @@ $.ui.fancytree.registerExtension({
 		// Force some required options
 		tree.widget.options.autoCollapse = true;
 //      tree.widget.options.autoActivate = true;
-		tree.widget.options.fx = false;
+		tree.widget.options.toggleEffect = false;
 		tree.widget.options.clickFolderMode = 1;
 
 		// Make sure that only active path is expanded when a node is activated:

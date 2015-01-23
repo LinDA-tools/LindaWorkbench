@@ -2,14 +2,21 @@
     <div id="header">
         <nav class="top-bar" data-topbar role="navigation">
             <ul class="title-area">
-               <li class="name">
-                    <h1>{{#link-to "index"}}Linked Data Visualization{{/link-to}}</h1>
+                <li class="name">
+                    <h1>{{#link-to "index" animations="main:fade"}}LinDA Visualization{{/link-to}}</h1>
                 </li>
-            </ul>           
+            </ul>
+            <section class="top-bar-section">
+                <!-- Right Nav Section -->
+                <ul class="right">
+                    <li>{{#link-to "visualizationConfig"}}<i  class="fi-upload" title="Load"> </i>{{/link-to}}</li>
+                    <li>{{#link-to "configure"}}<i  class="fi-widget" title="Configure"> </i>{{/link-to}}</li>
+                </ul>
+            </section>
         </nav>
     </div>
 
     <div class="row left-collapse">
-        {{outlet}}
+        {{outlet animationSequence="async"}}
     </div>
 </div>

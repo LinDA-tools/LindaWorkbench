@@ -56,7 +56,7 @@ jQuery.each( tests, function( strFlags, resultString ) {
 			}
 		});
 
-		jQuery.each( filters, function( filterLabel, filter ) {
+		jQuery.each( filters, function( filterLabel ) {
 
 			jQuery.each({
 				"string": strFlags,
@@ -91,6 +91,22 @@ jQuery.each( tests, function( strFlags, resultString ) {
 					strictEqual( output, "X", "Adding a callback after disabling" );
 					cblist.fire("A");
 					strictEqual( output, "X", "Firing after disabling" );
+
+					// #13517 - Emptying while firing
+					cblist = jQuery.Callbacks( flags );
+					cblist.add( cblist.empty );
+					cblist.add( function() {
+						ok( false, "not emptied" );
+					} );
+					cblist.fire();
+
+					// Disabling while firing
+					cblist = jQuery.Callbacks( flags );
+					cblist.add( cblist.disable );
+					cblist.add( function() {
+						ok( false, "not disabled" );
+					} );
+					cblist.fire();
 
 					// Basic binding and firing (context, arguments)
 					output = "X";
@@ -204,7 +220,7 @@ jQuery.each( tests, function( strFlags, resultString ) {
 
 					// Callbacks are not iterated
 					output = "";
-					function handler( tmp ) {
+					function handler() {
 						output += "X";
 					}
 					handler.method = function() {

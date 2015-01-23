@@ -1,19 +1,19 @@
 visualizationRegistry = {
     getVisualization: function(widgetName) {
         switch (widgetName) {           
-            case 'Column Chart':
+            case 'BarChart':
                 return columnchart;
-            case 'Line Chart':
+            case 'LineChart':
                 return linechart;
-            case 'Area Chart':
+            case 'AreaChart':
                 return areachart;
-            case 'Pie Chart':
+            case 'PieChart':
                 return piechart;
-            case 'Bubble Chart':
+            case 'BubbleChart':
                 return bubblechart;
-            case 'Scatter Chart':
+            case 'ScatterChart':
                 return scatterchart;
-            case 'Map Chart':
+            case 'MapChart':
                 return mapchart;
             case 'Map':
                 return map;

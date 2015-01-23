@@ -37,4 +37,4 @@ def url_replace(request, field, value):
 def datasource_visualize(datasource):
     endpoint = config.private_sparql_endpoint
     graph_uri = datasource.uri
-    return '/visualizations/#/visualization/' + datasource.name + '/' + urlquote(endpoint, safe='') + '/' + urlquote(graph_uri, safe='') + '/rdf'
+    return '/visualizations/#/datasource/' + datasource.name + '/' + urlquote(endpoint, safe='') + '/' + urlquote(graph_uri, safe='') + '/rdf'

@@ -43,5 +43,9 @@
         this._tooltipGroup = null;
         // Colors assigned to chart contents.  E.g. a series value.
         this._assignedColors = {};
+        // Classes assigned to series values
+        this._assignedClasses = {};
         // The next colour index to use, this value is cycled around for all default colours
         this._nextColor = 0;
+        // The next series class index to use, this value is cycled around for all default classes
+        this._nextClass = 0;

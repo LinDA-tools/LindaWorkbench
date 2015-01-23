@@ -1,111 +1,61 @@
 function templateMapping(editObject) {
     //the input object might be the result of the recommendation algorithm
     //or the JSON with changed template data, i.e. {layoutOptions:{height:500}}
-   console.log('Creating template mapping...');
-   
-   
-   var layoutOptions = null;
-   var structureOptions = null;
-   var resultMapping = {
-            layoutOptions: {},
-            structureOptions: {},
-            configuration: []
-        };
-    
-        //Assuming there is a baseofmappings {option: template}
-        var mapDB = {
-            "dimensions": "dimension-area",
-            "background_color": "tuning-bgc",
-            "hLabel":"textField",
-            "vLabel":"textField",
-            "gridlines":"tuning-check",
-            "tooltip":"tuning-check",
-            "horizontal":"tuning-check",
-            "ticks":"tuning-numinput",
-            "widthPx":"tuning-numinput",
-            "widthRatio":"tuning-numinput"
-        };
-        var chooseTemplate = function(value){
-            var choice;
-            switch(typeof(value)){
-                case "number":
-                    choice = "tuning-numinput";
-                    break;
-                case "string":
-                    choice = "textField";
-                    break;
-                case "boolean":
-                    choice = "tuning-check";
-                    break;
-                case "object":
-                    choice = "dimension-area";
-                    break;
-                default:
-                    choice = "dimension-area";
-                    break;
-            }
-            return choice;
-        };
+    console.log('CREATING TEMPLATE MAPPING ...');
 
+    var resultMapping = {
+        layoutOptions: {},
+        structureOptions: {}
+    };
+
+    if (editObject) {
         //retrieving the fields
-       // if (editObject.hasOwnProperty("layoutOptions")) {
-            layoutOptions = editObject.get("layoutOptions");
-        //}
+        var layoutOptions = editObject.get("layoutOptions");
+        var structureOptions = editObject.get("structureOptions");
 
-        //if (editObject.hasOwnProperty("structureOptions")) {
-            structureOptions = editObject.get("structureOptions");
-        //}
+        //invoking an appropriate template for a dimension parameter
+        resultMapping["layoutOptions"] = mapping(layoutOptions);
 
         //invoking an appropriate template for a tuning parameter
-        if (layoutOptions !== null) {
-            for (var prop in layoutOptions) {
-                if (layoutOptions.hasOwnProperty(prop)) {
-                    if (prop !== 'axis') {                     
-                        resultMapping.layoutOptions[prop]={
-                            template: chooseTemplate(layoutOptions[prop].value),
-                            value: layoutOptions[prop].value,
-                            label: layoutOptions[prop].label,
-                            metadata: layoutOptions[prop].metadata
-                        };
-                    } else {
-                        var axisOptions = layoutOptions[prop];
-                        for (var axisprop in axisOptions) {                           
-                            resultMapping.layoutOptions[axisprop]={
-                            template: chooseTemplate(axisOptions[axisprop].value),
-                            value: axisOptions[axisprop].value,
-                            label: axisOptions[axisprop].label,
-                            metadata: axisOptions[axisprop].metadata
-                            };
-                        }
-                    }
-                }
+        resultMapping["structureOptions"] = mapping(structureOptions);
+    }
+
+    return resultMapping;
+}
+
+function mapping(options) {
+    var result = {};
+
+    //Assuming there is a baseofmappings {option: template}
+    var mapDB = {
+        "dimension": "dimension-area",
+        "color": "tuning-bgc",
+        "string": "textField",
+        "boolean": "tuning-check",
+        "number": "tuning-numinput",
+        "nonNegativeInteger": "tuning-numinput",
+        "integer": "tuning-numinput"
+    };
+
+    if (options !== null) {
+        for (var prop in options) {
+            if (options.hasOwnProperty(prop)) {
+                var option = options[prop];
+                result[prop] = {
+                    template: mapDB[option.type],
+                    value: option.value,
+                    label: option.optionName,
+                    metadata: option.metadata,
+                    minCardinality: option.minCardinality,
+                    maxCardinality: option.maxCardinality
+                };
             }
         }
-    
-        var configurationObject = {};
-        //invoking an appropriate template for a dimension parameter
-        if (structureOptions !== null) {
-	        var dimensions = structureOptions['dimensions'];
-        
-	        /*building the configuration object
-	         * { xAxis : [],
-	         *   yAxis:  []
-	         * }  
-	         */
-	        for (var dimensionName in dimensions) {
-	            configurationObject[dimensionName]=dimensions[dimensionName].value;
+    }
 
-	            resultMapping.structureOptions[dimensionName] = dimensions[dimensionName];
-	            resultMapping.structureOptions[dimensionName].template = "dimension-area";
-	            
-	        }
-	        resultMapping.configuration.push(configurationObject);
-	    }
-            
-             console.log('Template mapping result');
-             console.dir(resultMapping);
-           
-    
-        return resultMapping;
+    console.log('TEMPLATE MAPPING RESULT');
+    console.dir(result);
 
-};
+    return result;
+}
+

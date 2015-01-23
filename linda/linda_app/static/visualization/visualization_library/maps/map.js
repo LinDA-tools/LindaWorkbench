@@ -1,23 +1,28 @@
-var map = function() { // map/openstreetmap module (js module pattern)
+var map = function () { // map/openstreetmap module (js module pattern)
 
     var map = null;
 
     function draw(configuration, visualisationContainer) {
         console.log("### INITIALIZE VISUALISATION - MAP");
-
+       
         if (map) {
-            map.remove();
+            map = map.remove();
+            map = null;
         }
 
         $('#' + visualisationContainer).empty();
 
+        var label = configuration['Label'];
+        var lat = configuration['Latitude'];
+        var long = configuration['Longitude'];
+        var indicator = configuration['Indicator'];
+
         if (!(configuration.dataModule && configuration.datasourceLocation
-                && configuration.label && configuration.lat
-                && configuration.long && configuration.indicator)) {
+                && label && lat && long && indicator)) {
             return $.Deferred().resolve().promise();
         }
 
-        if ((configuration.lat.length === 0) || (configuration.long.length === 0)) {
+        if ((lat.length === 0) || (long.length === 0)) {
             return $.Deferred().resolve().promise();
         }
 
@@ -29,10 +34,10 @@ var map = function() { // map/openstreetmap module (js module pattern)
         }).addTo(map);
 
         var dataModule = configuration.dataModule;
-        var labelPropertyInfo = configuration.label[0];
-        var latPropertyInfo = configuration.lat[0];
-        var longPropertyInfo = configuration.long[0];
-        var indicatorPropertyInfos = configuration.indicator;
+        var labelPropertyInfo = label[0];
+        var latPropertyInfo = lat[0];
+        var longPropertyInfo = long[0];
+        var indicatorPropertyInfos = indicator;
         var currColumn = 0;
         var latColumn = currColumn++;
         var longColumn = currColumn++;
@@ -42,7 +47,7 @@ var map = function() { // map/openstreetmap module (js module pattern)
             labelColumn = currColumn++;
         }
         var indicatorColumns = _.range(3, 3 + indicatorPropertyInfos.length);
-        var selection = {};
+
         var dimensions = [];
         var indicators = [];
         var group = [];
@@ -52,7 +57,6 @@ var map = function() { // map/openstreetmap module (js module pattern)
             dimensions.push(labelPropertyInfo);
         }
         for (var i = 0; i < indicatorPropertyInfos.length; i++) {
-            console.dir(indicatorPropertyInfos[i]);
             if (indicatorPropertyInfos[i].groupBy) {
                 group.push(indicatorPropertyInfos[i]);
             } else {
@@ -60,13 +64,16 @@ var map = function() { // map/openstreetmap module (js module pattern)
             }
         }
 
-        selection.dimension = dimensions;
-        selection.multidimension = indicators;
-        selection.group = group;
+        var selection = {
+            dimension: dimensions,
+            multidimension: indicators,
+            group: group
+        };
 
         var location = configuration.datasourceLocation;
+        var graph = configuration.datasourceGraph;
 
-        return dataModule.parse(location, selection).then(function(data) {
+        return dataModule.parse(location, graph, selection).then(function (data) {
             console.log("CONVERTED INPUT DATA FOR MAP VISUALIZATION");
             console.dir(data);
             var minLat = 90;
@@ -104,39 +111,46 @@ var map = function() { // map/openstreetmap module (js module pattern)
                 maxLong = Math.max(maxLong, long);
                 var label = labelColumn >= 0 ? row[labelColumn] : '';
                 console.log("LatLong: " + lat + ", " + long);
-                var markeroptions = {
-                    data: {},
-                    chartOptions: {},
-                    displayOptions: {},
-                    weight: 1,
-                    color: '#000000'
-                };
 
-                for (var j = 0; j < indicatorColumns.length; j++) {
-                    var indicatorColumn = indicatorColumns[j]; // spaltenindex
-                    var indicatorValue = row[indicatorColumn];
-                    var name = 'datapoint' + j;
-                    console.log("indicator [j]: " + indicatorColumn + " name: " + name + " value: " + indicatorValue);
-                    markeroptions.data[name] = indicatorValue;
-                    markeroptions.chartOptions[name] = {
-                        color: 'hsl(240,100%,55%)',
-                        fillColor: 'hsl(240,80%,55%)',
-                        minValue: 0,
-                        maxValue: maxIndicatorValues[j],
-                        maxHeight: 20,
-                        title: label,
-                        displayText: function(value) {
-                            return value.toFixed(2);
-                        }
+                var marker;
+                if (indicatorColumns.length > 0) {
+                    var markeroptions = {
+                        data: {},
+                        chartOptions: {},
+                        displayOptions: {},
+                        weight: 1,
+                        color: '#000000'
                     };
-                    markeroptions.displayOptions[name] = {
-                        color: new L.HSLHueFunction(new L.Point(0, minHue), new L.Point(100, maxHue), {outputSaturation: '100%', outputLuminosity: '25%'}),
-                        fillColor: new L.HSLHueFunction(new L.Point(0, minHue), new L.Point(100, maxHue), {outputSaturation: '100%', outputLuminosity: '50%'})
+                    for (var j = 0; j < indicatorColumns.length; j++) {
+                        var indicatorColumn = indicatorColumns[j]; // spaltenindex
+                        var indicatorValue = row[indicatorColumn];
+                        var name = 'datapoint' + j;
+                        console.log("indicator [j]: " + indicatorColumn + " name: " + name + " value: " + indicatorValue);
+                        markeroptions.data[name] = indicatorValue;
+                        markeroptions.chartOptions[name] = {
+                            color: 'hsl(240,100%,55%)',
+                            fillColor: 'hsl(240,80%,55%)',
+                            minValue: 0,
+                            maxValue: maxIndicatorValues[j],
+                            maxHeight: 20,
+                            title: label,
+                            displayText: function (value) {
+                                return value.toFixed(2);
+                            }
+                        };
+                        markeroptions.displayOptions[name] = {
+                            color: new L.HSLHueFunction(new L.Point(0, minHue), new L.Point(100, maxHue), {outputSaturation: '100%', outputLuminosity: '25%'}),
+                            fillColor: new L.HSLHueFunction(new L.Point(0, minHue), new L.Point(100, maxHue), {outputSaturation: '100%', outputLuminosity: '50%'})
+                        };
+                    }
+                    console.dir(markeroptions);
+                    marker = new L.BarChartMarker(new L.LatLng(lat, long), markeroptions);
+                } else {
+                    var markeroptions = {
+                        title: label
                     };
+                    marker = new L.Marker(new L.LatLng(lat, long), markeroptions);
                 }
-                console.dir(markeroptions);
-                var marker = new L.BarChartMarker(new L.LatLng(lat, long), markeroptions);
-                //var marker = L.marker({lat: lat, lng: long}, {title: label});
                 marker.addTo(map);
                 console.log("Point: [" + lat + ", " + long + ", " + label + "]");
             }
@@ -159,8 +173,8 @@ var map = function() { // map/openstreetmap module (js module pattern)
 
     function export_as_PNG() {
         var dfd = new jQuery.Deferred();
-        
-        leafletImage(map, function(err, canvas) {
+
+        leafletImage(map, function (err, canvas) {
             var pngURL = canvas.toDataURL();
             var downloadURL = pngURL.replace(/^data:image\/png/, 'data:application/octet-stream');
             dfd.resolve(downloadURL);
