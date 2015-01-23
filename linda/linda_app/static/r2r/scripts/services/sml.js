@@ -81,7 +81,6 @@
       } else {
         template = mapping.subjectTemplate;
         template = template.replace(/{[^}]*}/g, function(i) {
-          console.log(i);
           return ';$;' + '?' + (mapping.source === 'csv' ? columnToNum(table, unwrapColumn(i)) : unwrapColumn(i)) + ';$;';
         });
         template = template.split(';$;');
