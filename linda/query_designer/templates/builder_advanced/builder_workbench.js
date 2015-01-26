@@ -6,6 +6,7 @@
             instances: [],
             selection: undefined,
             property_selection: undefined,
+            property_page_size: 100,
 
             has_filters: function(filters) {
                 for(var i=0; i<filters.length; i++) {
@@ -107,7 +108,7 @@
                         $(".property-table").sortable({ //make properties sortable
                             items: ".property-row",
                             stop: self.update_orders
-                        }).disableSelection();
+                        });
 
                         if (default_properties) { //for each saved property
                             for (var k=0; k<default_properties.length; k++) {
@@ -300,7 +301,7 @@
             }
         };
 
-        /*Bring clicked instance front*/
+        		/*Bring clicked instance front*/
         $("body").on('mousedown','.class-instance', function(e) {
             builder_workbench.bring_to_front(this);
         });
@@ -342,7 +343,7 @@
             });
         });
 
-        /*Delete instances*/
+		/*Delete instances*/
         $("body").on('click', '.class-instance .delete', function() {
             var n = $(this).data("about");
             var id = "#class_instance_" + n;
@@ -422,6 +423,7 @@
 
         /*Order by*/
         $("body").on('change', '.property-row span:nth-of-type(4) select', function(e) {
+            console.log('ug');
             builder_workbench.instances[ $(this).parent().parent().data('i') ].selected_properties[ $(this).parent().parent().data('n') ].order_by = $(this).val();
             builder.reset();
         });
@@ -472,7 +474,7 @@
                 var i = $(this).parent().data('n');
                 var n = builder_workbench.get_uri_position(i); //uri
                 if (i == c.i) return;
-				
+
 				$(this).addClass('connecting');
                 arrows.add_arrow('#class_instance_' + c.i, c.n, '#class_instance_' + i, n, c.style);
             }
@@ -494,7 +496,7 @@
                 var i = $(this).parent().data('n');
                 var n = builder_workbench.get_uri_position(i); //uri
                 if (i == c.i) return;
-				
+
 				$(this).removeClass('connecting');
                 arrows.remove_arrow('#class_instance_' + c.i, c.n, '#class_instance_' + i, n);
             }
@@ -504,7 +506,7 @@
         $("body").on('click', '.property-row, .class-instance .title', function(e) {
             if ((e.which == 1) && (builder_workbench.connection_from)) {
 				$(this).removeClass('connecting');
-				
+
                 builder_workbench.connection_from = undefined;
                 builder.reset();
 
@@ -536,5 +538,6 @@
             builder_workbench.instances[i].selected_properties[n].show = $(this).is(':checked');
             builder.reset();
         });
+
 
 
