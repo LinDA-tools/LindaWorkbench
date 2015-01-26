@@ -75,7 +75,7 @@ angular.module('r2rDesignerApp').run(['$templateCache', function($templateCache)
     "      Publish <span class=\"caret\"></span>\n" +
     "    </button>\n" +
     "    <ul class=\"dropdown-menu\" role=\"menu\">\n" +
-    "      <li><a ng-click=\"publish(datasource)\">to Linda Workbench</a></li>\n" +
+    "      <li><a ng-click=\"publish(datasource)\">to LinDA Workbench</a></li>\n" +
     "    </ul>\n" +
     "  </div>\n" +
     "\n" +
@@ -114,25 +114,21 @@ angular.module('r2rDesignerApp').run(['$templateCache', function($templateCache)
     "  <div ng-show=\"table && table != ''\">\n" +
     "    <div ng-show=\"hasColumns()\">\n" +
     "      <div class=\"row\">\n" +
-    "        <div class=\"col-md-12\">\n" +
-    "          <div class=\"col-md-2\">\n" +
-    "            Columns:\n" +
-    "          </div>\n" +
-    "          <div class=\"col-md-10\">\n" +
-    "            <button ng-repeat=\"column in columns\" type=\"button\" class=\"btn btn-default btn-sm\" ng-class=\"{active: isSelected(column)}\" ng-click=\"insert(column)\">{{column}}</button>\n" +
-    "          </div>\n" +
+    "        <div class=\"col-md-2\">\n" +
+    "          Columns:\n" +
+    "        </div>\n" +
+    "        <div class=\"col-md-10\">\n" +
+    "          <button ng-repeat=\"column in columns\" type=\"button\" class=\"btn btn-default btn-sm\" ng-class=\"{active: isSelected(column)}\" ng-click=\"insert(column)\">{{column}}</button>\n" +
     "        </div>\n" +
     "      </div>\n" +
     "    </div>\n" +
     "\n" +
     "    <div class=\"row\">\n" +
-    "      <div class=\"col-md-12\">\n" +
-    "        <div class=\"col-md-2\">\n" +
-    "          Subject URI:\n" +
-    "        </div>\n" +
-    "        <div class=\"col-md-10\">\n" +
-    "          <textarea rows=\"1\" cols=\"60\" content=\"rdf.subjectTemplate\" cursor cursorpos=\"cursorpos\" ng-model=\"rdf.subjectTemplate\"></textarea>\n" +
-    "        </div>\n" +
+    "      <div class=\"col-md-2\">\n" +
+    "        Subject URI:\n" +
+    "      </div>\n" +
+    "      <div class=\"col-md-10\">\n" +
+    "        <textarea rows=\"1\" cols=\"60\" content=\"rdf.subjectTemplate\" cursor cursorpos=\"cursorpos\" ng-model=\"rdf.subjectTemplate\"></textarea>\n" +
     "      </div>\n" +
     "    </div>\n" +
     "\n" +
@@ -369,8 +365,12 @@ angular.module('r2rDesignerApp').run(['$templateCache', function($templateCache)
     "  <br />\n" +
     "\n" +
     "  <div class=\"btn-group\">\n" +
-    "    <button class=\"btn btn-primary dropdown-toggle\" ng-click=\"publish('sparqlify')\">as SPARQL Endpoint</a></li>\n" +
-    "      <li><a href=\"#\" ng-click=\"publish('openrdf')\">to OpenRDF</a></li>\n" +
+    "    <button class=\"btn btn-primary dropdown-toggle\" data-toggle=\"dropdown\" aria-expanded=\"false\">\n" +
+    "      Publish <span class=\"caret\"></span>\n" +
+    "    </button>\n" +
+    "    <ul class=\"dropdown-menu\" role=\"menu\">\n" +
+    "      <li><a ng-click=\"publish('sparql')\">as SPARQL Endpoint</a></li>\n" +
+    "      <li><a ng-click=\"publish('linda')\">to LinDA Workbench</a></li>\n" +
     "    </ul>\n" +
     "  </div>\n" +
     "\n" +
@@ -429,7 +429,7 @@ angular.module('r2rDesignerApp').run(['$templateCache', function($templateCache)
     "      <div class=\"col-md-3\" align=\"right\">\n" +
     "        <b><em>a</em></b>\n" +
     "      </div>\n" +
-    "      <div class=\"col-md-4\">\n" +
+    "      <div class=\"col-md-3\">\n" +
     "        <b>{{class.prefixedName[0]}}</b>\n" +
     "      </div>\n" +
     "    </div>\n" +
@@ -441,11 +441,11 @@ angular.module('r2rDesignerApp').run(['$templateCache', function($templateCache)
     "      <div class=\"col-md-3\" align=\"right\">\n" +
     "        <b><em>{{prop.prefixedName[0]}}</em></b>\n" +
     "      </div>\n" +
-    "      <div class=\"col-md-4\">\n" +
+    "      <div class=\"col-md-3\">\n" +
     "        <select class=\"form-control\" ng-model=\"rdf.propertyLiteralSelection[prop.prefixedName[0]]\" ng-options=\"selection for selection in propertyLiteralTypeOptions\"></select>\n" +
     "      </div>\n" +
-    "      <div class=\"col-md-4\">\n" +
-    "        <select class=\"form-control\" ng-model=\"rdf.propertyLiteralTypes[prop.prefixedName[0]]\" ng-options=\"type for type in propertyLiteralTypes\" ng-show=\"rdf.propertyLiteralSelection[prop.prefixedName[0]] == 'Typed Literal'\"></select>\n" +
+    "      <div class=\"col-md-3\">\n" +
+    "        <select class=\"form-control\" ng-model=\"rdf.propertyLiteralTypeSelection[prop.prefixedName[0]]\" ng-options=\"type for type in propertyLiteralTypes\" ng-show=\"rdf.propertyLiteralSelection[prop.prefixedName[0]] == 'Typed Literal'\"></select>\n" +
     "      </div>\n" +
     "    </div>\n" +
     "  </div>\n" +

@@ -81,7 +81,6 @@
       } else {
         template = mapping.subjectTemplate;
         template = template.replace(/{[^}]*}/g, function(i) {
-          console.log(i);
           return ';$;' + '?' + (mapping.source === 'csv' ? columnToNum(table, unwrapColumn(i)) : unwrapColumn(i)) + ';$;';
         });
         template = template.split(';$;');
@@ -111,7 +110,7 @@
       columns = _.filter(columns, function(i) {
         var property;
         property = mapping.properties[table][i].prefixedName[0];
-        return literals[property] || ((litearls[property] === 'Typed Literal') && types[property]);
+        return literals[property] || ((literals[property] === 'Typed Literal') && types[property]);
       });
       properties = _.map(columns, function(i) {
         var col, property;

@@ -27,7 +27,19 @@
         return w.location = url;
       });
     };
-    $scope.mapping = function(table) {
+    $scope.safe_tags_replace = function(str) {
+      var replaceTag, tagsToReplace;
+      tagsToReplace = {
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;'
+      };
+      replaceTag = function(tag) {
+        return tagsToReplace[tag] || tag;
+      };
+      return str.replace(/[&<>]/g, replaceTag);
+    };
+    $scope.mapping = function() {
       var mapping, w;
       mapping = {
         source: 'rdb',
@@ -40,7 +52,7 @@
         literals: $scope.rdf.propertyLiteralSelection,
         literalTypes: $scope.rdf.propertyLiteralTypeSelection
       };
-      $scope.currentMapping = $scope.sml.toSml(mapping, table);
+      $scope.currentMapping = $scope.sml.toSml(mapping);
       w = $window.open('');
       w.document.open();
       w.document.write('<pre>' + $scope.safe_tags_replace($scope.currentMapping) + '</pre>');
@@ -65,7 +77,7 @@
         $scope.publishing = false;
         $scope.published = true;
         return $scope.success = true;
-      }).error(function(data) {
+      }).error(function() {
         console.log('error: could not connect to server');
         $scope.publishing = false;
         $scope.published = true;
