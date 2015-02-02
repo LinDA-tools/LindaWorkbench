@@ -8,6 +8,8 @@
     <link rel="stylesheet" src="/static/css/query-builder.css" />
     <link rel="stylesheet" src="/static/css/bootstrap.min.css" />
 
+    <link data-turbolinks-track="true" href="/static/css/chosen.min.css" media="all" rel="stylesheet" />
+
     <link data-turbolinks-track="true" href="/static/query-builder/stylesheets/_variables.css?body=1" media="all" rel="stylesheet" />
     <link data-turbolinks-track="true" href="/static/query-builder/stylesheets/bootstrap.css?body=1" media="all" rel="stylesheet" />
     <link data-turbolinks-track="true" href="/static/query-builder/stylesheets/bootstrap.min.css?body=1" media="all" rel="stylesheet" />
@@ -24,12 +26,19 @@
     <h1 class="page-title">SparQL Editor{% if query %} - Edit Query #{{query.id}}{% endif %}</h1>
 
     <div>
-        <div class="dropdown clear-dataset">
+        <select id="datasource-select">
+            <option value="">Choose a data source</option>
+            {% for datasource in datasources %}
+                <option value="{{datasource.name}}">{{datasource.title}}</option>
+            {% endfor %}
+        </select>
+        <!--<div class="dropdown clear-dataset">
             <button class="btn btn-default dropdown-toggle clear-dataset col-md-12" type="button" id="dd_select_dataset"
                     data-toggle="dropdown">
                 Choose a Data Source&nbsp;
                 <span class="caret"></span>
             </button>
+
             <ul class="dropdown-menu col-md-12" role="menu" aria-labelledby="dd_select_dataset">
                 {% for datasource in datasources %}
                     <li role="presentation"><a role="menuitem" tabindex="-1"
@@ -37,7 +46,7 @@
                     </li>
                 {% endfor %}
             </ul>
-        </div>
+        </div>-->
         {% with hidden_value_id="hdn_qb_dataset" div_classes="done-dataset" div_id="div_select_dataset" remove_function="QueryBuilder.datasets.reset()" hidden_value_value="" %}
             {% include 'query-builder/selector.html' %}
         {% endwith %}
@@ -84,6 +93,23 @@
     <script data-turbolinks-track="true" src="/static/query-builder/javascripts/codemirror.js?body=1"></script>
     <script data-turbolinks-track="true" src="/static/query-builder/javascripts/gritter.js?body=1"></script>
     <script data-turbolinks-track="true" src="/static/query-builder/javascripts/application.js?body=1"></script>
+
+    <script src="/static/js/chosen.jquery.min.js"></script>
+    <script>
+        var datasource_endpoints = [];
+        {% for datasource in datasources %}
+            datasource_endpoints['{{datasource.name}}'] = '{{datasource|get_endpoint}}';
+        {% endfor %}
+
+        $("#datasource-select").chosen();
+        $("#datasource-select").on('change', function() {
+            var dt = $(this).val();
+
+            if (dt) {
+                select_dataset(dt, datasource_endpoints[dt]);
+            }
+        });
+    </script>
 
     <script>
         jQuery(function () {

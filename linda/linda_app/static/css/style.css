@@ -2575,7 +2575,17 @@ input, textarea {
     overflow-y: scroll;
 }
 
-/*TMP*/
-.glyphicon-menu-down:before {
-    content: "\e259";
+/*Chosen*/
+.chosen-container {
+    vertical-align: top;
+}
+
+.chosen-container .chosen-single {
+    background: #fff;
+    height: 30px;
+    padding-top: 2px;
+}
+
+.sparql .chosen-container {
+    width: 100% !important;
 }

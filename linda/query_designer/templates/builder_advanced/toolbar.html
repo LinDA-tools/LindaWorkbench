@@ -19,6 +19,8 @@
 
 {% if js %}
 <script>
+    $('#{{toolbar_id}} select').chosen();
+
         var toolbar_datasource_name = '';
 
         var {{toolbar_id}} = {
