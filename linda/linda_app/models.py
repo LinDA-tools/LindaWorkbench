@@ -9,7 +9,7 @@ from rdflib.util import guess_format
 import re
 from query_designer.models import Design
 from lists import *
-from athumb.fields import ImageWithThumbsField
+#from athumb.fields import ImageWithThumbsField
 from pattern.en import pluralize
 
 from settings import LINDA_HOME, LINDA_SERVER_IP
@@ -139,7 +139,7 @@ class Vocabulary(models.Model):
             return
 
         rdf_data = document.read()
-        g.parse(data=rdf_data, format='n3')
+        g.parse(data=rdf_data, format=guess_format(self.downloadUrl))
         g.bind("rdfs", RDFS)
         g.bind("owl", OWL)
 
