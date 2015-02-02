@@ -19,6 +19,8 @@
 
 {% if js %}
 <script>
+        var toolbar_datasource_name = '';
+
         var {{toolbar_id}} = {
             all_classes_properties: [],
 
@@ -74,6 +76,7 @@
         /*On select change load active classes in dataset*/
             $( "#{{toolbar_id}} > select" ).change(function() {
                 var name = $(this).val();
+                var that = this;
                 if (name == "") return;
 
                 $("#{{toolbar_id}} .active-classes").html('<span class="loading">Loading classes and properties...</span>');
@@ -84,7 +87,12 @@
                     url: ADVANCED_BUILDER_API_URI + "object_properties/" +  name + "/",
                     type: "GET",
                     success: function(data, textStatus, jqXHR) {
+                        if ($(that).val() != name) { //check if datasource has changed
+                            return;
+                        }
+
                         var bindings = data.results.bindings;
+
                         for (var i=0; i<bindings.length; i++) { //add all object properties
                             var property_uri = bindings[i].property.value;
                             var domain_uri = bindings[i].domain.value;
@@ -98,6 +106,10 @@
                             url: ADVANCED_BUILDER_API_URI + "active_classes/" +  name + "/",
                             type: "GET",
                             success: function(data, textStatus, jqXHR) {
+                                if ($(that).val() != name) { //check if datasource has changed
+                                    return;
+                                }
+
                                 var bindings = data.results.bindings;
 
                                 for (var i=0; i<bindings.length; i++) { //add all classes

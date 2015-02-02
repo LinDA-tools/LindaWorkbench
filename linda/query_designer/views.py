@@ -1,5 +1,6 @@
 from datetime import datetime
 import json
+from numbers import Number
 import urllib
 from django.http import Http404, HttpResponse
 from django.shortcuts import render
@@ -135,11 +136,19 @@ def active_class_properties(request, dt_name):
     # get the endpoint of the query
     endpoint = get_endpoint_from_dt_name(dt_name)
 
+    # get if pagination was set
+    if request.GET.get('page'):
+        p = int(request.GET['page'])
+        offset = (p - 1)*200
+        page_str = " OFFSET " + str(offset) + " LIMIT 200"
+    else:
+        page_str = ""
+
     # query to get all properties of a class with at least one instance
     if request.GET.get('order'):
-        query = "SELECT DISTINCT ?property (count(?x) AS ?cnt) WHERE {?x a <" + class_uri + ">. ?x ?property ?o } GROUP BY ?property ORDER BY DESC(?cnt)"
+        query = "SELECT DISTINCT ?property (count(?x) AS ?cnt) WHERE {?x a <" + class_uri + ">. ?x ?property ?o } GROUP BY ?property ORDER BY DESC(?cnt)" + page_str
     else:
-        query = "SELECT DISTINCT ?property WHERE {?x a <" + class_uri + ">. ?x ?property ?o }"
+        query = "SELECT DISTINCT ?property WHERE {?x a <" + class_uri + ">. ?x ?property ?o }" + page_str
 
     return sparql_query_json(endpoint, query)
 

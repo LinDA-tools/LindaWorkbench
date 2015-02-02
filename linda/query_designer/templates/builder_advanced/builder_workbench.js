@@ -6,7 +6,6 @@
             instances: [],
             selection: undefined,
             property_selection: undefined,
-            property_page_size: 100,
 
             has_filters: function(filters) {
                 for(var i=0; i<filters.length; i++) {
@@ -42,111 +41,74 @@
                 }});
                 this.bring_to_front(new_instance);
 
-                var instance_object = {id: new_id, uri: uri, dt_name: dt_name, properties: ['URI'], selected_properties: []}
+                var instance_object = {id: new_id, uri: uri, dt_name: dt_name, selected_properties: []}
                 this.instances.push(instance_object);
 
+
+                $(new_instance).find(".properties").html('<div class="property-table"><div class="header-row"><div></div><span>Show</span><span>Property</span><span>Optional</span><span>Order by</span><span>Filters</span><span>Foreign</span></div></div>');
+                $(new_instance).find(".properties").append('<div class="property-control"></div>');
+
+                //add property selector
+                instance_object.property_select = new property_select(instance_object);
+
                 var self = this;
-                $.ajax({  //make an ajax request to get all properties
-                    url: ADVANCED_BUILDER_API_URI + "active_class_properties/" +  dt_name + "?class_uri=" + encodeURIComponent(uri),
-                    type: "GET",
-                    success: function(data, textStatus, jqXHR)
-                    {
-                        if ((!builder_workbench.instances[new_id]) || (builder_workbench.instances[new_id].uri != uri)) { //the instance was deleted in the mean time
-                            return;
-                        }
+                var inst = self.instances[new_id];
 
-                        var bindings = data.results.bindings;
-                        //sort properties by label
-                        bindings.sort(function(a,b) {
-                            return uri_to_label(a.property.value).toLowerCase().localeCompare(uri_to_label(b.property.value).toLowerCase());
-                        });
-
-                        var select = $.parseHTML('<select class="property-select"></select>');
-                        for (var i=0; i<bindings.length; i++) {
-                            if (uri_to_label(bindings[i].property.value).length > 0){
-                                instance_object.properties.push(bindings[i].property.value);
-                                $(select).append('<option value="' +bindings[i].property.value+ '">' + uri_to_label(bindings[i].property.value)  + '</option>');
+                //check if uri exists in defaults or should be added manually
+                var has_URI = false;
+                if (default_properties) {
+                    for (var k=0; k<default_properties.length; k++) {
+                        if (typeof default_properties[k] == 'string') {
+                            if (default_properties[k] == 'URI') {
+                                has_URI = true;
+                                break;
                             }
                         }
-
-                        $(new_instance).find(".properties").html('<div class="property-table"><div class="header-row"><div></div><span>Show</span><span>Property</span><span>Optional</span><span>Order by</span><span>Filters</span><span>Foreign</span></div></div>');
-                        $(new_instance).find(".properties").append('<div class="property-control"></div>');
-                        var prop_control = $(new_instance).find(".properties .property-control");
-                        prop_control.append('Found ' + (instance_object.properties.length-1).toLocaleString() + ' properties. <span class="sort-frequency">Order by frequency</span><br />');
-
-                        try {
-                            prop_control.append(select);
+                        else if (default_properties[k].uri == 'URI') {
+                            has_URI = true;
+                            break;
                         }
-                        catch(err) {
-                            console.log(err);
-                        }
-
-                        prop_control.append('<span class="add-property" data-about="' + new_id + '">Add property</span></div>');
-                        var inst = self.instances[new_id];
-
-                        //check if uri exists in defaults or should be added manually
-                        var has_URI = false;
-                        if (default_properties) {
-                            for (var k=0; k<default_properties.length; k++) {
-                                if (typeof default_properties[k] == 'string') {
-                                    if (default_properties[k] == 'URI') {
-                                        has_URI = true;
-                                        break;
-                                    }
-                                }
-                                else if (default_properties[k].uri == 'URI') {
-                                    has_URI = true;
-                                    break;
-                                }
-                            }
-                        }
-
-                        if (!has_URI) {
-                            self.add_property(new_id, 0); //add URI by default
-                        }
-
-                        $(".property-table").sortable({ //make properties sortable
-                            items: ".property-row",
-                            stop: self.update_orders
-                        });
-
-                        if (default_properties) { //for each saved property
-                            for (var k=0; k<default_properties.length; k++) {
-                                if (typeof default_properties[k] == 'string') { //property uri as input
-                                    self.add_property(new_id, -1, default_properties[k]);
-                                } else { //property object as input
-                                    self.add_property(new_id, -1, default_properties[k].uri);;
-
-                                    inst.selected_properties[k] = jQuery.extend(true, {}, default_properties[k]); //clone the property object
-                                    var sel = "#class_instance_" + new_id + " .property-row:nth-of-type(" + (k+2) + ") ";
-                                    if (!inst.selected_properties[k].show) { //show
-                                        $(sel + "span:nth-of-type(1) input").prop('checked', false)
-                                    }
-                                    if (inst.selected_properties[k].optional) { //optional
-                                        $(sel + "span:nth-of-type(3) input").prop('checked', true)
-                                    }
-                                    if (inst.selected_properties[k].order_by) { //order by
-                                        $(sel + "span:nth-of-type(4) select").val(inst.selected_properties[k].order_by);
-                                    }
-
-                                    if (builder_workbench.has_filters(inst.selected_properties[k].filters)) { //add the filters tick
-                                        $(sel + "span:nth-of-type(5)").html('<span class="ui-icon ui-icon-check"></span>Edit');
-                                    }
-
-
-                                }
-                            }
-
-                            builder_workbench.reset_height($("#class_instance_" + new_id));
-                        }
-
-                        builder.reset();
-                        arrows.draw();
-                    },
-                    error: function (jqXHR, textStatus, errorThrown) {
-                        $("#class_instance_" + new_id + " .properties").html('<span class="error">Error loading active properties</span>');
                     }
+                }
+
+                if (!has_URI) {
+                    self.add_property(new_id, 'URI'); //add URI by default
+                }
+
+                $(".property-table").sortable({ //make properties sortable
+                    items: ".property-row",
+                    stop: self.update_orders
                 });
+
+                if (default_properties) {
+                    for (var k=0; k<default_properties.length; k++) {  //for each saved property
+                        if (typeof default_properties[k] == 'string') { //property uri as input
+                            self.add_property(new_id, default_properties[k]);
+                        } else { //property object as input
+                            self.add_property(new_id, default_properties[k].uri);;
+
+                            inst.selected_properties[k] = jQuery.extend(true, {}, default_properties[k]); //clone the property object
+                            var sel = "#class_instance_" + new_id + " .property-row:nth-of-type(" + (k+2) + ") ";
+                            if (!inst.selected_properties[k].show) { //show
+                                $(sel + "span:nth-of-type(1) input").prop('checked', false)
+                            }
+                            if (inst.selected_properties[k].optional) { //optional
+                                $(sel + "span:nth-of-type(3) input").prop('checked', true)
+                            }
+                            if (inst.selected_properties[k].order_by) { //order by
+                                $(sel + "span:nth-of-type(4) select").val(inst.selected_properties[k].order_by);
+                            }
+
+                            if (builder_workbench.has_filters(inst.selected_properties[k].filters)) { //add the filters tick
+                                $(sel + "span:nth-of-type(5)").html('<span class="ui-icon ui-icon-check"></span>Edit');
+                            }
+                        }
+                    }
+                }
+
+                builder_workbench.reset_height($("#class_instance_" + new_id));
+                builder.reset();
+                arrows.draw();
             },
 
             update_orders: function(e, ui) { //update properties, arrows & query after property reordering
@@ -211,13 +173,8 @@
                 $(obj).css("z-index", mx+1);
             },
 
-            add_property: function(i_num, p_num, p_uri) {
+            add_property: function(i_num, p_uri) {
                 var instance = this.instances[i_num];
-
-                if (!p_uri) { //both interfaces available
-                    p_uri = instance.properties[p_num];
-                }
-
                 var p_object = {uri: p_uri, n: instance.selected_properties.length, optional:false, show:true, order_by: undefined, filters: []};
 
                 instance.selected_properties.push(p_object);
@@ -301,47 +258,11 @@
             }
         };
 
-        		/*Bring clicked instance front*/
+        /*Bring clicked instance front*/
         $("body").on('mousedown','.class-instance', function(e) {
             builder_workbench.bring_to_front(this);
         });
 
-        /*Order properties by frequency*/
-        $("body").on('click', '.class-instance .sort-frequency', function() {
-            $(this).html("Ordering...");
-            $(this).removeClass("sort-frequency");
-            $(this).addClass("loading");
-
-            var ord = $(this);
-            var n = $(this).parent().parent().parent().data("n");
-            var select = $(this).parent().find("select");
-            var inst = builder_workbench.instances[n];
-
-            $.ajax({  //make an ajax request to get all properties ordered by usage
-                url: ADVANCED_BUILDER_API_URI + "active_class_properties/" +  inst.dt_name + "?order=true&class_uri=" + encodeURIComponent(inst.uri),
-                type: "GET",
-                success: function(data, textStatus, jqXHR) {
-                    $(select).empty(); //empty the existing select box
-                    var bindings = data.results.bindings;
-                    bindings.sort(function(a,b) { //sort by value, then by label
-                        var res = b.cnt.value - a.cnt.value;
-                        if (res != 0) {
-                            return res;
-                        }
-                        return uri_to_label(a.property.value).toLowerCase().localeCompare(uri_to_label(b.property.value).toLowerCase());
-                    });
-
-                    for (var i=0; i<bindings.length; i++) { //add all options - already in the correct order
-                        if (uri_to_label(bindings[i].property.value).length > 0){
-                            var num_human = Number(bindings[i].cnt.value).toLocaleString();
-                            $(select).append('<option value="' +bindings[i].property.value+ '">' + uri_to_label(bindings[i].property.value) + ' (' + (num_human)  + ')</option>');
-                        }
-                    }
-
-                    ord.remove();
-                }
-            });
-        });
 
 		/*Delete instances*/
         $("body").on('click', '.class-instance .delete', function() {
@@ -351,6 +272,8 @@
             $(id).remove(); //delete the instance container
 
             arrows.remove_instance(id); //remove arrows from and to this instance
+
+            builder_workbench.instances[n].property_select.stop();
 
             //rearrange remaining instances after the deleted
             for (var i=n+1; i<builder_workbench.instances.length; i++) {
@@ -401,23 +324,6 @@
             arrows.remove_property('#class_instance_' + i, n); //remove arrows from and to this property
             builder_workbench.instances[i].selected_properties.splice(n, 1); //also delete from selected properties array
 
-            builder.reset();
-        });
-
-        /*Adding properties*/
-        $("body").on('click', '.add-property', function() {
-            var n = $(this).data("about");
-            var p = -1;
-            var instance = builder_workbench.instances[n];
-
-            for (var i=0; i<instance.properties.length; i++) {
-                if ($("#class_instance_" + n + " .property-select").val() == instance.properties[i]) {
-                    p = i;
-                    break;
-                }
-            }
-
-            builder_workbench.add_property(n, p);
             builder.reset();
         });
 

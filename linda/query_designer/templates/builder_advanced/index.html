@@ -128,7 +128,7 @@
 
         {% include "builder_advanced/builder_workbench.js" %}
 
-        /*Drag & Dropping*/
+         /*Drag & Dropping*/
         $("#builder_workspace").mouseup(function(e) {
             if ((e.which == 1) && builder_workbench.selection) { //only for left click and when a class selection has been made
                 if (builder_workbench.selection.type == "class") {
@@ -207,6 +207,10 @@
     {% with js=True %}
         {% include "builder_advanced/filters.html" %}
     {% endwith %}
+
+    <script>
+        {% include "builder_advanced/property_select.js" %}
+    </script>
 
     <script>
         function save_design(designer) {
