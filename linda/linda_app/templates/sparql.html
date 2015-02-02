@@ -163,6 +163,10 @@
                 {% endif %}
             {% endfor %}
             select_dataset(dt_name, '{{query.endpoint}}');
+
+            // change value in the chosen plugn
+            $("#datasource-select").val(dt_name);
+            $('#datasource-select').trigger("chosen:updated");
         </script>
     {% endif %}
 
