@@ -23,7 +23,7 @@
                 </div>
             </td>
             <td>{{query.get_datasource}}</td>
-            <td class="description">{{query.description}}</td>
+            <td class="description"><img src="/static/images/pencil.png" class="edit-description"/><textarea class="disabled" disabled="disabled" data-id="{{query.id}}">{{query.description}}</textarea></td>
             <td class="sparql-query"><p>{{query.sparql|linebreaksbr}}</p></td>
             <td>{{query.createdOn}}</td>
         </tr>
@@ -39,6 +39,71 @@
                 "infoEmpty": "No datasources available",
                 "infoFiltered": "(filtered from _MAX_ total records)"
             }
+        });
+
+        $(".queries-table").on('click', '.edit-description', function (e) {
+            //get textarea, enable & focus
+            var t = $(this).parent().find('textarea');
+
+            t.prop('disabled', false);
+            t.removeClass('disabled');
+            t.addClass('enabled');
+            t.focus();
+
+            //e.stopPropagation();
+            //e.preventDefault();
+        });
+
+        /*ignore click on textarea to avoid open/close query row*/
+        $(".queries-table").on('click', '.description textarea.enabled', function (e) {
+            e.stopPropagation();
+            e.preventDefault();
+        });
+
+        /*change description -- textarea o as input*/
+        function change_description(o) {
+            //change cursor to wait
+            $(o).css('cursor', 'wait');
+
+            //get the new description
+            var desc = $(o).val();
+
+            $.ajax({ //make ajax request to update the description
+                url: "/query-builder/save/" + $(o).data('id')  + "/",
+                type: "POST",
+                data: {
+                csrfmiddlewaretoken: '{{ csrf_token }}',
+                description: desc,
+                design: 'DEFAULT'
+                },
+                success: function(data, textStatus, jqXHR) {
+                    $(o).css('cursor', 'auto');
+                    $(o).removeClass('enabled');
+                    $(o).addClass('disabled');
+                    $(o).prop('disabled', 'disabled');
+                    $(o).blur();
+                },
+                error: function (jqXHR, textStatus, errorThrown)
+                {
+                    $(o).css('cursor', 'auto');
+                    alert(textStatus + ': ' + errorThrown);
+                }
+            });
+        }
+
+        /*on enter save the textarea description*/
+        $(".queries-table").on('keypress', '.description textarea.enabled', function (e) {
+            if(e.keyCode == 13){ //key enter
+                change_description(this);
+
+                e.stopPropagation();
+                e.preventDefault();
+            }
+        });
+
+        /*on text area lose focus also save the description*/
+        $(".queries-table").on('focusout', '.description textarea.enabled', function (e) {
+            change_description(this);
         });
 
         {% with queries=queries %}

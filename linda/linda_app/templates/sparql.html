@@ -123,34 +123,12 @@
             $('#dd_select_dataset').html(dt_name);
             $('#hdn_qb_dataset').val(endpoint_uri);
         }
+    </script>
 
-            function save_query() {
-                $.ajax({
-                    {% if query %}
-                        url: "/query-builder/save/{{query.id}}/",
-                    {% else %}
-                        url: "/query-builder/save/",
-                    {% endif %}
-                    type: "POST",
-                    data: {
-                        endpoint: endpoint_uri,
-                        endpointName: dt_name,
-                        query: editor.getSession().getValue(),
-                        csrfmiddlewaretoken: '{{ csrf_token }}'
-                    },
-                    success: function(data, textStatus, jqXHR)
-                    {
-                        $("#alert_modal .modal-title").html('LinDA Queries');
-                        $("#alert_modal .modal-body").html('Query saved');
-                        $("#alert_modal").show();
-                    },
-                    error: function (jqXHR, textStatus, errorThrown)
-                    {
-                        alert(textStatus + ': ' + errorThrown);
-                    }
-                });
-            }
-
+    <script>
+        {% with query=query %}
+            {% include 'queries/save.js' %}
+        {% endwith %}
     </script>
 
     {% if query %}

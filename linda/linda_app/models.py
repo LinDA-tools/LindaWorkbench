@@ -427,8 +427,11 @@ def create_query_description(dtname, query):
     instances = []
 
     # add constraints
-    where_start = re.search('WHERE', query, re.IGNORECASE).end()
-    if where_start:
+    constraints_out = ''
+    where_start_o = re.search('WHERE', query, re.IGNORECASE)
+
+    if where_start_o:
+        where_start = where_start_o.end()
         where_end_f = re.search('LIMIT', query, re.IGNORECASE)  # where can end at a LIMIT
         if not where_end_f:
             where_end_f = re.search('ORDER BY', query, re.IGNORECASE)  # at an ORDER BY
@@ -445,7 +448,6 @@ def create_query_description(dtname, query):
         r = re.compile(r'(?:[^."]|"[^"]*")+')
         where_constraints = r.findall(where_str)  # split by . outside of "entities"
 
-        constraints_out = ''
         first_constraint = True
         for constraint in where_constraints:
             terms = constraint.split()

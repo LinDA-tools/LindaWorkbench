@@ -48,9 +48,11 @@ def terms(request):
     params = {}
     return render(request, 'terms.html', params)
 
+
 def getstarted(request):
     params = {}
     return render(request, 'getstarted.html', params)
+
 
 def sparql(request):
     params = {}
@@ -145,7 +147,8 @@ def site_search(request):
               'datasources': DatasourceDescription.objects.filter(name__icontains=q),
               'queries': Query.objects.filter(description__icontains=q),
               'analytics': Analytics.objects.filter(description__icontains=q),
-              'vocabularies_list': vocabularies_page.object_list, 'classes_list': classes_page.object_list, 'properties_list': properties_page.object_list,
+              'vocabularies_list': vocabularies_page.object_list, 'classes_list': classes_page.object_list,
+              'properties_list': properties_page.object_list,
               'vocabularies_page': vocabularies_page, 'classes_page': classes_page, 'properties_page': properties_page}
 
     return render(request, 'search/site-search.html', params)
@@ -529,7 +532,7 @@ def vocabulary_search(request):  # view for search in vocabularies - remembers s
     elif tp == "properties":
         sqs = SearchQuerySet().models(VocabularyProperty).filter(content=q)
     else:
-        raise Http404
+        return Http404
 
     # remove non existing objects (may have been deleted but are still indexed)
     obj_set = []
@@ -711,7 +714,8 @@ def datasourceCreate(request):
 
     if request.POST:  # request to create a public datasource or move to appropriate tool for a private one
 
-        if request.POST.get("type") == "private" and (request.POST.get("datatype") == "csv" or request.POST.get("datatype")== "rdb"):
+        if request.POST.get("type") == "private" and (
+                        request.POST.get("datatype") == "csv" or request.POST.get("datatype") == "rdb"):
             return redirect("/transformations/#/" + request.POST.get("datatype"))
         elif request.POST.get("type") == "private":
             return redirect("/datasource/create/" + request.POST.get("datatype"))
@@ -847,7 +851,7 @@ def datasourceReplaceRDF(request, dtname):
             data['format'] = request.POST.get('format')
 
         callReplace = requests.post(LINDA_HOME + "api/datasource/" + dtname + "/replace/", headers=headers,
-                                data=data)
+                                    data=data)
 
         j_obj = json.loads(callReplace.text)
         if j_obj['status'] == '200':
@@ -955,7 +959,7 @@ def execute_sparql(request):
     if response.status_code == 200:
         # avoid erroneous \U characters -- invalid json
         response_safe = response.content.replace('\U', '')
-        
+
         if response_safe.startswith("MALFORMED QUERY:"):
             return HttpResponse(response.content, status=500)
 
@@ -982,6 +986,7 @@ def get_qbuilder_call(request, link):
         data = requests.get(total_link)
 
     return HttpResponse(data, data.headers['content-type'])
+
 
 # middle-mans between LinDA query builder page and the RDF2Any server
 @csrf_exempt
@@ -1036,6 +1041,23 @@ def api_users(request):
         data = 'fail'
     mimetype = 'application/json'
     return HttpResponse(data, mimetype)
+
+
+# Return the default description of a sparql query
+def default_description(request):
+    # get query and datasource
+    datasource = request.GET.get('datasource', '')
+    query = request.GET.get('query', '')
+
+    if not query or not datasource:
+        return Http404
+
+    # create a description and save it to a json object
+    results = {'description': create_query_description(datasource, query)}
+    data = json.dumps(results)
+
+    # send the response
+    return HttpResponse(data, 'application/json')
 
 
 # Return a list with all created datasources
@@ -1097,9 +1119,9 @@ def api_datasource_create(request):
             if callAdd.text == "":
                 # create datasource description
                 DatasourceDescription.objects.create(title=request.POST.get("title"),
-                                                              name=sname,
-                                                              uri=get_configuration().sesame_url + "rdf-graphs/" + sname,
-                                                              createdOn=datetime.now(), updatedOn=datetime.now())
+                                                     name=sname,
+                                                     uri=get_configuration().sesame_url + "rdf-graphs/" + sname,
+                                                     createdOn=datetime.now(), updatedOn=datetime.now())
 
                 results['status'] = '200'
                 results['message'] = 'Datasource created succesfully.'
@@ -1285,7 +1307,8 @@ def datasource_sparql(request, dtname):  # Acts as a "fake" seperate sparql endp
 
     # get query results
     response = requests.get(
-        get_configuration().private_sparql_endpoint + "?Accept=" + urlquote("application/sparql-results+" + result_format) + "&query=" + query_enc)
+        get_configuration().private_sparql_endpoint + "?Accept=" + urlquote(
+            "application/sparql-results+" + result_format) + "&query=" + query_enc)
 
     # return the response
     return HttpResponse(response.text, response.headers['content-type'])
@@ -1306,59 +1329,58 @@ class QueryListView(ListView):
 def query_save(request):
     # get POST variables
     endpoint = request.POST.get("endpoint")
-    endpoint_name = request.POST.get("endpointName")
+    endpoint_name = request.POST.get("endpointName", datasource_from_endpoint(endpoint).title)
     query = request.POST.get("query")
+    description = request.POST.get("description", create_query_description(endpoint_name, query))
     design_json = request.POST.get("design")
 
-    if not endpoint_name:
-        endpoint_name = datasource_from_endpoint(endpoint).title
-
-    # load constraints as json object
-    description = create_query_description(endpoint_name, query)
-
+    # save the json design
     if design_json:
         design = Design.objects.create(data=design_json)
     else:
         design = None
 
     # create the query object
-    Query.objects.create(endpoint=endpoint, sparql=query,
-                         description=description, createdOn=datetime.now(), updatedOn=datetime.now(), design=design)
+    query = Query.objects.create(endpoint=endpoint, sparql=query,
+                                 description=description, createdOn=datetime.now(), updatedOn=datetime.now(),
+                                 design=design)
 
-    return HttpResponse('')  # return empty response
+    return HttpResponse(json.dumps({'id': query.id, 'description': query.description}), 'application/json')  # return query id
 
 
 # Update an existing query
 def query_update(request, pk):
+    # get query object
     obj_list = Query.objects.filter(pk=pk)
     if not obj_list:
         return Http404
-
-    endpoint = request.POST.get("endpoint")
-    endpoint_name = request.POST.get("endpointName")
-
-    if not endpoint_name:
-        endpoint_name = datasource_from_endpoint(endpoint).title
-
-    # get query object and update its properties
     q_obj = obj_list[0]
-    q_obj.sparql = request.POST.get("query")
+
+    # get changed fields
+    endpoint = request.POST.get("endpoint", q_obj.endpoint)
+    endpoint_name = request.POST.get("endpointName", datasource_from_endpoint(endpoint).title)
+    query = request.POST.get("query", q_obj.sparql)
+    description = request.POST.get("description", create_query_description(endpoint_name, query))
+
+    # update its properties
+    q_obj.sparql = query
     q_obj.endpoint = endpoint
     q_obj.endpoint_name = endpoint_name
     q_obj.updatedOn = datetime.now()
-    q_obj.description = create_query_description(q_obj.endpoint_name, q_obj.sparql)
+    q_obj.description = description
 
     # update (or create if it did not exist) the query design json
     design_json = request.POST.get("design")
-    if design_json:
-        if q_obj.design:
-            q_obj.design.data = design_json
-            q_obj.design.save()
+    if design_json != 'DEFAULT':  # use default to avoid updating the design
+        if design_json:
+            if q_obj.design:
+                q_obj.design.data = design_json
+                q_obj.design.save()
+            else:
+                q_obj.design = Design.objects.create(data=design_json)
         else:
-            q_obj.design = Design.objects.create(data=design_json)
-    else:
-        if q_obj.design:
-            q_obj.design.delete()
+            if q_obj.design:
+                q_obj.design.delete()
 
     # Save changes
     q_obj.save()

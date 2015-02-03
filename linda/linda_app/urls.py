@@ -137,6 +137,8 @@ urlpatterns = patterns('',
                        # API calls
                        url(r'^api/users/', login_required(views.api_users), name='users'),
 
+                       url(r'^api/queries/default-description', views.default_description, name='users'),
+
                        url(r'^api/datasources/', views.api_datasources_list, name='datasources-list'),
                        url(r'^api/datasource/create/', views.api_datasource_create, name='datasource-create'),
                        url(r'^api/datasource/(?P<dtname>[\w-]+)/replace/', views.api_datasource_replace,

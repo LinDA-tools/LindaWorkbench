@@ -1209,6 +1209,7 @@ form input[type="submit"] {
 .queries .sparql-query {
     width: 30%;
     font-family: "Consolas";
+    vertical-align: top;
 }
 
 .queries .q-builder-button, .queries .q-designer-button {
@@ -1883,6 +1884,34 @@ input, textarea {
     background: #eee;
 }
 
+.queries-table .description .edit-description {
+    width: 12px;
+    padding: 5px;
+    vertical-align: top;
+    margin-top: 10px;
+}
+
+.queries-table .description textarea {
+    resize: none;
+    width: calc(100% - 30px);
+    height: 100%;
+}
+
+.queries-table .description textarea:focus {
+    outline: none;
+    border: #ddd;
+}
+
+.queries-table .description textarea.disabled {
+    background: none;
+    border: none;
+}
+
+.queries-table .description textarea.enabled {
+    background: #eee;
+    border: #ddd;
+}
+
 .queries .modal-dialog, .builder-advanced .modal-dialog {
     margin-top: 60px;
 }
@@ -1892,9 +1921,14 @@ input, textarea {
     background: #D64541;
 }
 
-.builder-advanced .modal-header {
+.builder-advanced .modal-header, .sparql .modal-header, .qbuilder .modal-header {
     color: #fff;
     background: #FC5006;
+}
+
+.modal-body input {
+    width: 100%;
+    padding: 3px 5px;
 }
 
 .confirmation-modal .btn-primary {

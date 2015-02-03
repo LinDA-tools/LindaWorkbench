@@ -17,7 +17,7 @@
                     </div>
                     <div class="col-md-6 ">
                       <div class="btn-group pull-right">
-                        <button type="button" class="btn btn-warning" onclick="save_query()"><span class="glyphicon glyphicon-floppy-save"></span>&nbsp;Save query</button>
+                        <button type="button" class="btn btn-warning" onclick="{% if in_designer %}save_design(){% else %}save_query(){% endif %}"><span class="glyphicon glyphicon-floppy-save"></span>&nbsp;Save query</button>
                         <button type="button" class="btn btn-danger" onclick="show_sparql_download_modal()"><span class="glyphicon glyphicon-floppy-save"></span>&nbsp;Download</button>
                         <button type="button" class="btn btn-warning" onclick="SPARQL.result.print()"><span class="glyphicon glyphicon-print"></span>&nbsp;Print</button>
                       </div>
@@ -51,7 +51,7 @@
             <button type="button" class="btn btn-default btn-success" onclick="SPARQL.download.csv()"><span class="glyphicon glyphicon-align-justify"></span>&nbsp;CSV</button>
             <button type="button" class="btn btn-default btn-info" onclick="QueryBuilder.convert.json.initiate_download()"><span class="glyphicon glyphicon-road"></span>&nbsp;JSON</button>
             <button type="button" class="btn btn-default btn-warning" onclick="SPARQL.download.pdf()"><span class="glyphicon glyphicon-file"></span>&nbsp;PDF</button>
-            {%if in_query_builder_action %}
+            {% if in_query_builder_action %}
               <button class="btn btn-default btn-danger" onclick="QueryBuilder.convert.configured.initiate_download()"><span class="glyphicon glyphicon-glass"></span>&nbsp;Generic</button>
             {% endif %}
         </div>

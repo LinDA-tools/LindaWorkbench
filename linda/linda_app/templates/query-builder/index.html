@@ -268,31 +268,16 @@
     </script>
 
     <script>
+        {% with query=query %}
+            {% include 'queries/save.js' %}
+        {% endwith %}
+    </script>
+
+    <script>
         function select_dataset(dtn, endp) {
             dt_name = dtn;
             endpoint_uri = endp;
             QueryBuilder.datasets.select(endp, dtn);
-        }
-
-        function save_query() {
-            $.ajax({
-                url: "/query-builder/save/",
-                type: "POST",
-                data: {
-                    endpoint: endpoint_uri,
-                    endpointName: dt_name,
-                    query: SPARQL.get_query(),
-                    csrfmiddlewaretoken: '{{ csrf_token }}'
-                },
-                success: function(data, textStatus, jqXHR)
-                {
-                    document.location.href = '/queries/';
-                },
-                error: function (jqXHR, textStatus, errorThrown)
-                {
-                    alert(textStatus + ': ' + errorThrown);
-                }
-            });
         }
 
         jQuery(function () {
