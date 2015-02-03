@@ -12,7 +12,7 @@
 
                 var q_data = {
                     endpoint: endpoint_uri,
-                    query: encodeURIComponent(editor.getSession().getValue()),
+                    query: editor.getSession().getValue(),
                     csrfmiddlewaretoken: '{{ csrf_token }}',
                     description: desc
                 };
