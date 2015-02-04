@@ -26,7 +26,7 @@
                     <input id="id_translate" type="checkbox" name="translate" {% if translate %}checked="checked"{% endif %}/>
                 </div>
                 {% if not check_for_updates %}
-                    {% if user.is_superuser %}
+                    {% if user.is_superuser and type == "vocabularies" %}
                         <br />
                         <div class="right">
                             <a href="?update=True" class="button orange">Check for updates now</a>

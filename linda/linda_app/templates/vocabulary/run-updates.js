@@ -55,7 +55,10 @@ function increaseUpdateStep(text, status) {
             total_status = 'succesfully';
         }
         $(".vocabulary-updates .info").html('Vocabularies updated ' + total_status + ' [' + VocabCntNew + ' new, ' +
-                                            VocabCntUpdated + ' changed, ' + VocabCntDeleted + ' deleted' + str_errors + ']');
+                                            VocabCntUpdated + ' changed, ' + VocabCntDeleted + ' deleted' + str_errors + ']<br />Refreshing vocabularies...');
+        setTimeout(function(){ //refresh page
+           window.location.reload(1);
+        }, 5000);
     }
 }
 
