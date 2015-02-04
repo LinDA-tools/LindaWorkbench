@@ -23,7 +23,7 @@
                 </div>
             </td>
             <td>{{query.get_datasource}}</td>
-            <td class="description"><textarea class="disabled" disabled="disabled" data-id="{{query.id}}">{{query.description}}</textarea></td>
+            <td class="description"><p>{{query.description}}</p></td>
             <td class="sparql-query"><p>{{query.sparql|linebreaksbr}}</p></td>
             <td>{{query.createdOn}}</td>
         </tr>
@@ -64,11 +64,8 @@
                 design: 'DEFAULT'
                 },
                 success: function(data, textStatus, jqXHR) {
-                    $(o).css('cursor', 'auto');
-                    $(o).removeClass('enabled');
-                    $(o).addClass('disabled');
-                    $(o).prop('disabled', 'disabled');
-                    $(o).blur();
+                    var p = $(o).parent();
+                    $(p).html('<p>' + desc + '</p>');
                 },
                 error: function (jqXHR, textStatus, errorThrown)
                 {

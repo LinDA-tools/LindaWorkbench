@@ -36,11 +36,9 @@
                         url = "/analytics?q_id=" + q_id;
                     else
                     if (key == "Rename") {
-                        var t = $('#query_' + q_id).find('textarea');
-
-                        $(t).prop('disabled', false);
-                        $(t).removeClass('disabled');
-                        $(t).addClass('enabled');
+                        var description = $('#query_' + q_id + ' .description p').text();
+                        $('#query_' + q_id + ' .description').html('<textarea class="enabled" data-id="' + q_id  +'">' + description + '</textarea>');
+                        var t = $('#query_' + q_id + ' .description').find('textarea');
                         $(t).focus();
                     }
                     else
