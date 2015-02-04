@@ -23,7 +23,7 @@
                 </div>
             </td>
             <td>{{query.get_datasource}}</td>
-            <td class="description"><img src="/static/images/pencil.png" class="edit-description"/><textarea class="disabled" disabled="disabled" data-id="{{query.id}}">{{query.description}}</textarea></td>
+            <td class="description"><textarea class="disabled" disabled="disabled" data-id="{{query.id}}">{{query.description}}</textarea></td>
             <td class="sparql-query"><p>{{query.sparql|linebreaksbr}}</p></td>
             <td>{{query.createdOn}}</td>
         </tr>
@@ -39,19 +39,6 @@
                 "infoEmpty": "No datasources available",
                 "infoFiltered": "(filtered from _MAX_ total records)"
             }
-        });
-
-        $(".queries-table").on('click', '.edit-description', function (e) {
-            //get textarea, enable & focus
-            var t = $(this).parent().find('textarea');
-
-            t.prop('disabled', false);
-            t.removeClass('disabled');
-            t.addClass('enabled');
-            t.focus();
-
-            //e.stopPropagation();
-            //e.preventDefault();
         });
 
         /*ignore click on textarea to avoid open/close query row*/
@@ -106,7 +93,7 @@
             change_description(this);
         });
 
-        {% with queries=queries %}
+        {% with queries=queries option_rename=True %}
             {% include "queries/context-menu.html" %}
         {% endwith %}
     </script>

@@ -95,6 +95,7 @@
 .context-menu-item.icon-edit { background-image: url(/static/images/edit.png); }
 .context-menu-item.icon-delete { background-image: url(/static/images/remove.png); }
 .context-menu-item.icon-download { background-image: url(/static/images/download.png); }
+.context-menu-item.icon-pencil { background-image: url(/static/images/pencil.png); }
 
 /* vertically align inside labels */
 .context-menu-input > label > * { vertical-align: top; }

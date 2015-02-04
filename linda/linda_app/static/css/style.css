@@ -1878,17 +1878,11 @@ input, textarea {
 .dataTable th, .queries-table th,
 .dataTable td, .queries-table td {
     padding: 5px;
+    vertical-align: top;
 }
 
 .queries-table tr.selected {
     background: #eee;
-}
-
-.queries-table .description .edit-description {
-    width: 12px;
-    padding: 5px;
-    vertical-align: top;
-    margin-top: 10px;
 }
 
 .queries-table .description textarea {

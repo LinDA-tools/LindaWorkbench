@@ -35,6 +35,15 @@
                     if (key == "Analyze")
                         url = "/analytics?q_id=" + q_id;
                     else
+                    if (key == "Rename") {
+                        var t = $('#query_' + q_id).find('textarea');
+
+                        $(t).prop('disabled', false);
+                        $(t).removeClass('disabled');
+                        $(t).addClass('enabled');
+                        $(t).focus();
+                    }
+                    else
                     if (key == "Edit") {
                         if (options.$trigger.data('design') == true) {
                             url = "/query-designer/" + q_id + "/";
@@ -81,6 +90,9 @@
                     "Visualize": {name: "Visualize", icon: "visualize"},
                     "Analyze": {name: "Analyze", icon: "analyze"},
                     "sep1": "---------",
+                    {% if option_rename %}
+                        "Rename": {name: "Rename", icon: "pencil"},
+                    {% endif %}
                     "Edit": {name: "Run & Edit", icon: "edit"},
                     "Delete": {name: "Delete", icon: "delete"},
                 }
