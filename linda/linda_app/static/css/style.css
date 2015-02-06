@@ -434,7 +434,7 @@ header .site-title:hover {
     }
 
     .sparql #main-container > .main,
-    .builder-advanced #main-container > .main, {
+    .builder-advanced #main-container > .main {
         width: 100%;
     }
 }
