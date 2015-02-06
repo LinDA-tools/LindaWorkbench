@@ -415,6 +415,11 @@ header .site-title:hover {
     vertical-align: top;
 }
 
+.sparql #main-container > .main,
+.builder-advanced #main-container > .main {
+    width: calc(100% - 260px);
+}
+
 @media only screen and (max-width: 690px){
     #main-container {
         height: 100%;
@@ -428,7 +433,8 @@ header .site-title:hover {
         overflow: inherit;
     }
 
-    .sparql #main-container > .main {
+    .sparql #main-container > .main,
+    .builder-advanced #main-container > .main, {
         width: 100%;
     }
 }
