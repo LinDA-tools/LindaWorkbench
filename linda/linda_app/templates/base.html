@@ -47,12 +47,14 @@
     $("#menu-toggle").on('click', (function() {
         $("#menu").toggle(function(){
             $(window).trigger('resize');
-            if (!$("#menu").is( ":visible" ))
-                $("#main-container > .main").css('margin-left', '0');
+            if (!$("#menu").is( ":visible" )) {
+                $("#main-container > .main").addClass('full');
+            }
         });
 
-        if ($("#menu").is( ":visible" ))
-                $("#main-container > .main").css('margin-left', '260px');
+        if ($("#menu").is( ":visible" )) {
+                $("#main-container > .main").removeClass('full');
+        }
     }));
 </script>
 
