@@ -1,63 +1,66 @@
-<!doctype html>
-<html>
-    <head>
-        <meta charset="utf-8">
-        <title>LinDA | Visualizations</title>
+{% extends "base.html" %}
 
-        <link rel="stylesheet" href="/static/css/style.css">
- 
-        <link rel="stylesheet" href="/static/visualization/bower_components/leaflet/dist/leaflet.css">  
+{% block css %}
+    <link rel="stylesheet" href="/static/visualization/bower_components/leaflet/dist/leaflet.css">
 
-        <link rel="stylesheet" href="/static/visualization/bower_components/jquery-minicolors/jquery.minicolors.css"> 
-        <link rel="stylesheet" href="/static/visualization/styles/style.css">
-        <link rel="stylesheet" href="/static/visualization/styles/workbench.css">
-        <link rel="stylesheet" href="/static/visualization/bower_components/foundation-icon-fonts/foundation-icons.css" />   
-        <link rel="stylesheet" href="/static/visualization/bower_components/datatables/media/css/jquery.dataTables.css" /> 
-        <link rel="stylesheet" href="/static/visualization/bower_components/datatables-responsive/css/dataTables.responsive.css" /> 
-        <link rel="stylesheet" href="/static/visualization/bower_components/slick.js/slick/slick.css" />
-        <link rel="stylesheet" href="/static/visualization/bower_components/ember-animated-outlet/dist/ember-animated-outlet.css"/>
-        <link rel="stylesheet" href="/static/visualization/visualization_library/external_libraries/leaflet-dvf/css/dvf.css">
-        
-        <script src="/static/visualization/bower_components/jquery/jquery.js"></script> 
+    <link rel="stylesheet" href="/static/visualization/bower_components/jquery-minicolors/jquery.minicolors.css">
+    <link rel="stylesheet" href="/static/visualization/styles/style.css">
+    <link rel="stylesheet" href="/static/visualization/styles/workbench.css">
+    <link rel="stylesheet" href="/static/visualization/bower_components/foundation-icon-fonts/foundation-icons.css" />
+    <link rel="stylesheet" href="/static/visualization/bower_components/datatables/media/css/jquery.dataTables.css" />
+    <link rel="stylesheet" href="/static/visualization/bower_components/datatables-responsive/css/dataTables.responsive.css" />
+    <link rel="stylesheet" href="/static/visualization/bower_components/slick.js/slick/slick.css" />
+    <link rel="stylesheet" href="/static/visualization/bower_components/ember-animated-outlet/dist/ember-animated-outlet.css"/>
+    <link rel="stylesheet" href="/static/visualization/visualization_library/external_libraries/leaflet-dvf/css/dvf.css">
+{% endblock %}
+
+{% block content %}
+    <div class="main">
+        <div id="visualizer" class="visualizationTool"></div>
+    </div>
+{% endblock %}
+
+
+{% block scripts %}
         <script src="/static/visualization/bower_components/jquery/jquery-migrate.js"></script>
-        <script src="/static/visualization/bower_components/jquery-minicolors/jquery.minicolors.js"></script>          
-        <script src="/static/visualization/bower_components/underscore/underscore.js"></script>          
+        <script src="/static/visualization/bower_components/jquery-minicolors/jquery.minicolors.js"></script>
+        <script src="/static/visualization/bower_components/underscore/underscore.js"></script>
         <script src="/static/visualization/bower_components/leaflet/dist/leaflet-src.js"></script>
         <script src="/static/visualization/bower_components/handlebars/handlebars.js"></script>
-        
- 
-        <script src="/static/visualization/bower_components/datatables/media/js/jquery.dataTables.js"></script> 
-        <script src="/static/visualization/bower_components/datatables-responsive/js/dataTables.responsive.js"></script> 
-        
+
+
+        <script src="/static/visualization/bower_components/datatables/media/js/jquery.dataTables.js"></script>
+        <script src="/static/visualization/bower_components/datatables-responsive/js/dataTables.responsive.js"></script>
+
         <script src="/static/visualization/bower_components/canvg/dist/canvg.bundle.js"></script>
 
         <script src="/static/visualization/bower_components/d3/d3.js"></script>
-        <script src="/static/visualization/bower_components/dimple/dist/dimple.v2.1.0.js"></script> 
-		
+        <script src="/static/visualization/bower_components/dimple/dist/dimple.v2.1.0.js"></script>
+
         <script src="/static/visualization/bower_components/jqueryui/jquery-ui.js"></script>
-		
+
         <link rel="stylesheet" href="/static/visualization/bower_components/fancytree/dist/skin-xp/ui.fancytree.css">
         <script src="/static/visualization/bower_components/fancytree/dist/jquery.fancytree-all.js"></script>
-		
 
-        <script src="/static/visualization/bower_components/foundation/js/foundation.js"></script>    
-        <script src="/static/visualization/bower_components/foundation/js/foundation/foundation.equalizer.js"></script>           
+
+        <script src="/static/visualization/bower_components/foundation/js/foundation.js"></script>
+        <script src="/static/visualization/bower_components/foundation/js/foundation/foundation.equalizer.js"></script>
         <script src="/static/visualization/bower_components/foundation/js/vendor/modernizr.js"></script>
-        
-        
-        <script src="/static/visualization/bower_components/slick.js/slick/slick.js"></script>
-        <script src="/static/visualization/visualization_library/external_libraries/leaflet-dvf/leaflet-dvf.js"></script>  
-        <script src="/static/visualization/visualization_library/external_libraries/leaflet-dvf/leaflet-dvf.markers.js"></script>  
-        <script src="/static/visualization/visualization_library/external_libraries/leaflet-image/leaflet-image.js"></script>  
 
-        
+
+        <script src="/static/visualization/bower_components/slick.js/slick/slick.js"></script>
+        <script src="/static/visualization/visualization_library/external_libraries/leaflet-dvf/leaflet-dvf.js"></script>
+        <script src="/static/visualization/visualization_library/external_libraries/leaflet-dvf/leaflet-dvf.markers.js"></script>
+        <script src="/static/visualization/visualization_library/external_libraries/leaflet-image/leaflet-image.js"></script>
+
+
         <script src="/static/visualization/bower_components/ember/ember.js" ></script>
         <script src="/static/visualization/bower_components/ember-data/ember-data.js"></script>
-        
+
         <script src="/static/visualization/bower_components/ember-animated-outlet/dist/ember-animated-outlet.js"></script>
-        
-        <script src="/static/visualization/data_modules/csv_data_module.js"></script> 
-        <script src="/static/visualization/data_modules/sparql_data_module.js"></script> 
+
+        <script src="/static/visualization/data_modules/csv_data_module.js"></script>
+        <script src="/static/visualization/data_modules/sparql_data_module.js"></script>
         <script src="/static/visualization/data_modules/treeselection_data_module.js"></script>
         <script src="/static/visualization/data_modules/table_data_module.js"></script>
 
@@ -66,46 +69,18 @@
 
         <script src="/static/visualization/template_mapping/templateMapping.js"></script>
 
-        <script src="/static/visualization/visualization_library/util.js"></script>  
+        <script src="/static/visualization/visualization_library/util.js"></script>
         <script src="/static/visualization/visualization_library/charts/columnchart.js"></script>
         <script src="/static/visualization/visualization_library/charts/linechart.js"></script>
         <script src="/static/visualization/visualization_library/charts/areachart.js"></script>
         <script src="/static/visualization/visualization_library/charts/scatterchart.js"></script>
         <script src="/static/visualization/visualization_library/charts/bubblechart.js"></script>
-        <script src="/static/visualization/visualization_library/charts/piechart.js"></script>    
-        <script src="/static/visualization/visualization_library/visualizations.js"></script> 
-        <script src="/static/visualization/visualization_library/maps/map.js"></script>        
-        <script src="/static/visualization/visualization_library/exportVisualization.js"></script> 
+        <script src="/static/visualization/visualization_library/charts/piechart.js"></script>
+        <script src="/static/visualization/visualization_library/visualizations.js"></script>
+        <script src="/static/visualization/visualization_library/maps/map.js"></script>
+        <script src="/static/visualization/visualization_library/exportVisualization.js"></script>
 
         <script src="/static/visualization/bower_components/jquery-csv/src/jquery.csv.js"></script>
         <script src="/static/visualization/bower_components/ember-animate/ember-animate.js"></script>
 
-        <!--menu script-->
-        <script>
-            $(function() {
-                /* mobile menu script */
-                $( "#menu-select option" ).on('click', (function() {
-                    window.location = $(this).val();
-                }));
-
-                $( "#menu-select" ).on('input', (function() {
-                    window.location = $(this).val();
-                }));
-
-                $( "#menu-select" ).on('change', (function() {
-                    window.location = $(this).val();
-                }));
-
-                /* toggle menu */
-                $("#menu-toggle").on('click', (function() {
-                    $("#menu").toggle( "slide" );
-                }));
-            });
-        </script>
-    </head>
-    <body>
-        {% include 'util/header.html' %}
-        <div id="visualizer" class="visualizationTool"></div>
-        {% include 'util/footer.html' %}
-    </body>
-</html>
+{% endblock %}

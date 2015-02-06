@@ -22,37 +22,39 @@
 {% endblock %}
 
 {% block content %}
-    {% with toolbar_id="toolbar" html=True %}
-        {% include "builder_advanced/toolbar.html" %}
-    {% endwith %}
+    <div class="main">
+        {% with toolbar_id="toolbar" html=True %}
+            {% include "builder_advanced/toolbar.html" %}
+        {% endwith %}
 
-    <div id="builder_workspace">
-        <span>{% trans "Drag and drop items here to create a query"%}</span>
-        <canvas id="builder-canvas"></canvas>
-    </div>
-
-    <div id="tree_toolbar">
-        <span class="ui-icon tree-toolbar-close ui-icon-triangle-1-e"></span>
-        <div id="tree_toolbar_objects"></div>
-    </div>
-
-    <div class="row qb-equivalent-query-main" style="display:none;">
-        <div class="col-md-12">
-            {% include 'query-builder/sparql-query-editor.html' %}
+        <div id="builder_workspace">
+            <span>{% trans "Drag and drop items here to create a query"%}</span>
+            <canvas id="builder-canvas"></canvas>
         </div>
+
+        <div id="tree_toolbar">
+            <span class="ui-icon tree-toolbar-close ui-icon-triangle-1-e"></span>
+            <div id="tree_toolbar_objects"></div>
+        </div>
+
+        <div class="row qb-equivalent-query-main" style="display:none;">
+            <div class="col-md-12">
+                {% include 'query-builder/sparql-query-editor.html' %}
+            </div>
+        </div>
+
+        {% with in_designer=True in_query_builder_action=True %}
+            {% include 'query-builder/search-results.html' %}
+        {% endwith %}
+
+        {% include "query-builder/alert.html" %}
+
+        <input type="hidden" id="hdn_qb_dataset" value="">
+
+        {% with html=True %}
+            {% include "builder_advanced/filters.html" %}
+        {% endwith %}
     </div>
-
-    {% with in_designer=True in_query_builder_action=True %}
-        {% include 'query-builder/search-results.html' %}
-    {% endwith %}
-
-    {% include "query-builder/alert.html" %}
-
-    <input type="hidden" id="hdn_qb_dataset" value="">
-
-    {% with html=True %}
-        {% include "builder_advanced/filters.html" %}
-    {% endwith %}
 
 {% endblock %}
 

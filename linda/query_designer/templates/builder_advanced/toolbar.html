@@ -96,6 +96,10 @@
                         var bindings = data.results.bindings;
 
                         for (var i=0; i<bindings.length; i++) { //add all object properties
+                            if (!bindings[i].property || !bindings[i].domain || !bindings[i].range) {
+
+                                continue;
+                            }
                             var property_uri = bindings[i].property.value;
                             var domain_uri = bindings[i].domain.value;
                             var range_uri = bindings[i].range.value;
@@ -115,6 +119,10 @@
                                 var bindings = data.results.bindings;
 
                                 for (var i=0; i<bindings.length; i++) { //add all classes
+                                    if (!bindings[i].class) {
+                                        continue;
+                                    }
+
                                     var class_uri = bindings[i].class.value;
                                     {{toolbar_id}}.all_classes_properties.push({type: "class", uri: class_uri});
                                 }

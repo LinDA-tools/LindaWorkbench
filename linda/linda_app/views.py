@@ -22,7 +22,7 @@ from forms import *
 from rdflib import Graph
 from datetime import datetime
 
-from settings import LINDA_HOME
+from settings import LINDA_HOME, RDF_CHUNK_SIZE
 from passwords import MS_TRANSLATOR_UID, MS_TRANSLATOR_SECRET
 
 
@@ -800,17 +800,63 @@ def datasourceReplace(request, name):
         return render(request, 'datasource/form.html', params)
 
 
+def clear_chunk(c):
+    # detect where the last tripple ends
+    '''
+    i = 0
+
+    in_dquote = False
+    in_entity = False
+    ignore_next = False
+    last_dot = -1
+
+    for char in c:
+        if not ignore_next:
+            if char == '<' and (not in_dquote):
+                in_entity = True
+            elif char == '>' and (not in_dquote):
+                in_entity = False
+            elif char == '"':
+                in_dquote = not in_dquote
+            elif (char == '.') and (not in_dquote) and (not in_entity):
+                last_dot = i + 1
+
+        if char == '\\':
+            ignore_next = True
+        else:
+            ignore_next = False
+
+        i += 1
+
+    # seperate c1 & track the remainder
+    '''
+
+    last_dot = c.rfind('.\n') + 1
+    o = c[:last_dot]
+    rem = c[last_dot:]
+
+    return o, rem
+
+
 def datasourceCreateRDF(request):
     if request.POST:
         # Get the posted rdf data
+        current_chunk = ''
+        rem = ''
+
+        a = datetime.now().replace(microsecond=0)
         if "rdffile" in request.FILES:
-            rdf_content = request.FILES["rdffile"].read()
+            # get the first chunk
+            inp_file = request.FILES["rdffile"].file
+            current_chunk = inp_file.read(RDF_CHUNK_SIZE)
+
+            current_chunk, rem = clear_chunk(current_chunk)
         else:
-            rdf_content = request.POST.get("rdfdata")
+            current_chunk = request.POST.get("rdfdata")
 
         # Call the corresponding web service
         headers = {'accept': 'application/json'}
-        data = {"content": rdf_content, "title": request.POST.get("title")}
+        data = {"content": current_chunk, "title": request.POST.get("title")}
         if request.POST.get('format'):
             data['format'] = request.POST.get('format')
 
@@ -819,6 +865,39 @@ def datasourceCreateRDF(request):
 
         j_obj = json.loads(callAdd.text)
         if j_obj['status'] == '200':
+            # get new datasource name
+            dt_name = j_obj['name']
+
+            # check for additional chunks
+            i = 0
+            while True:
+                chunk = inp_file.read(RDF_CHUNK_SIZE)
+                if chunk == "":  # end of file
+                    break
+
+                i += 1
+                print i
+                # add the previous remainder & clear again
+                current_chunk, rem = clear_chunk(rem + chunk)
+                data = {"content": current_chunk}
+                if request.POST.get('format'):
+                    data['format'] = request.POST.get('format')
+
+                # request to update
+                callAppend = requests.post(LINDA_HOME + "api/datasource/" + dt_name + "/replace/?append=true", headers=headers,
+                                    data=data)
+
+            if rem:  # a statement has not been pushed
+                data = {"content": current_chunk}
+                if request.POST.get('format'):
+                    data['format'] = request.POST.get('format')
+                callAppend = requests.post(LINDA_HOME + "api/datasource/" + dt_name + "/replace/?append=true", headers=headers,
+                                    data=data)
+
+            b = datetime.now().replace(microsecond=0)
+            print request.POST.get("title") + ':'
+            print(b-a)
+
             return redirect("/datasources")
         else:
             params = {}
@@ -1099,7 +1178,7 @@ def api_datasource_create(request):
                 rdf_format = 'application/rdf+xml'  # rdf+xml by default
 
             data = request.POST.get("content").encode('utf-8')
-            if rdf_format == "text/plain":  # Fix OpenRDF bug on N-Tripples
+            '''if rdf_format == "text/plain":  # Fix OpenRDF bug on N-Tripples
                 g = Graph()
                 try:
                     result = g.parse(data=data, format="nt")
@@ -1109,7 +1188,7 @@ def api_datasource_create(request):
                     return HttpResponse(json.dumps(results), 'application/json')
 
                 rdf_format = 'application/rdf+xml'
-                data = result.serialize(format="rdf/xml")
+                data = result.serialize(format="rdf/xml")'''
 
             # make REST api call to add rdf data
             headers = {'accept': 'application/rdf+xml', 'content-type': rdf_format, 'charset': 'utf-8'}
@@ -1152,8 +1231,8 @@ def api_datasource_get(request, dtname):
         else:
             rdf_format = 'application/rdf+xml'  # rdf+xml by default
 
-        # make REST api call to update graph
-        headers = {'accept': rdf_format, 'content-type': 'application/rdf+xml'}
+        # make REST api call to get graph
+        headers = {'accept': rdf_format, 'content-type': rdf_format}
         callReplace = requests.get(get_configuration().sesame_url + 'rdf-graphs/' + dtname, headers=headers)
 
         results['status'] = '200'
@@ -1166,7 +1245,6 @@ def api_datasource_get(request, dtname):
     data = json.dumps(results)
     mimetype = 'application/json'
     return HttpResponse(data, mimetype)
-
 
 # Replace all data from datasource with new rdf data
 @csrf_exempt
@@ -1182,7 +1260,7 @@ def api_datasource_replace(request, dtname):
                 rdf_format = 'application/rdf+xml'  # rdf+xml by default
 
             data = request.POST.get("content").encode('utf-8')
-            if rdf_format == "text/plain":  # Fix OpenRDF bug on N-Tripples
+            '''if rdf_format == "text/plain":  # Fix OpenRDF bug on N-Tripples
                 g = Graph()
                 try:
                     result = g.parse(data=data, format="nt")
@@ -1192,24 +1270,30 @@ def api_datasource_replace(request, dtname):
                     return HttpResponse(json.dumps(results), 'application/json')
 
                 rdf_format = 'application/rdf+xml'
-                data = result.serialize(format="rdf/xml")
+                data = result.serialize(format="rdf/xml")'''
 
             # make REST api call to update graph
             headers = {'accept': 'application/rdf+xml', 'content-type': rdf_format}
-            callReplace = requests.put(get_configuration().sesame_url + 'rdf-graphs/' + dtname, headers=headers,
+
+            print request.GET.get('append', '')
+            if request.GET.get('append'):  # append data to the data source
+                call = requests.post(get_configuration().sesame_url + 'rdf-graphs/' + dtname, headers=headers,
+                                       data=data)
+            else:  # completely replace the data source
+                call = requests.put(get_configuration().sesame_url + 'rdf-graphs/' + dtname, headers=headers,
                                        data=data)
 
-            if callReplace.text == "":
+            if call.text == "":
                 # update datasource database object
                 source = DatasourceDescription.objects.filter(name=dtname)[0]
                 source.updatedOn = datetime.now()
                 source.save()
 
                 results['status'] = '200'
-                results['message'] = 'Datasource updated succesfully.' + callReplace.text
+                results['message'] = 'Datasource updated succesfully.' + call.text
             else:
-                results['status'] = callReplace.status_code
-                results['message'] = 'Error replacing rdf data: ' + callReplace.text
+                results['status'] = call.status_code
+                results['message'] = 'Error replacing rdf data: ' + call.text
 
         else:
             results['status'] = '404'

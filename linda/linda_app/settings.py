@@ -227,5 +227,8 @@ DEFAULT_FROM_EMAIL = 'lindaprojectfp7@gmail.com'
 # necessarily specified under Django 1.7
 TEST_RUNNER = 'django.test.runner.DiscoverRunner'
 
+# chunk size for uploading RDFs
+RDF_CHUNK_SIZE = 10000000
+
 
 

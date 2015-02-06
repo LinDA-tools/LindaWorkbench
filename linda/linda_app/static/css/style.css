@@ -167,14 +167,29 @@ header .site-title:hover {
     margin-left: 10px;
 }
 
-#menu {
+#main-container {
     background-color: #5C97BF;
+}
+
+#main-container > .main {
+    margin-left: 260px;
+    min-height: calc(100vh - 125px);
+    background-color: #fff;
+    overflow: hidden;
+}
+
+.builder-advanced #main-container > .main {
+    padding: 0;
+}
+
+#menu {
     display: inline-block;
     width: 260px;
     min-width: 260px;
     min-height: 800px;
     display: table-cell;
     vertical-align: top;
+    position: absolute;
 }
 
 #menu > ul {
