@@ -303,6 +303,10 @@ header .site-title:hover {
     }
 }
 
+.visualizationTool .columns {
+    box-sizing: border-box
+}
+
 /*Visualizations header & menu*/
 /*.ember-application > .ember-view  #header .title-area a {
     color: #FC5006 !important;
