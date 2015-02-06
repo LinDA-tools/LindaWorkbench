@@ -408,23 +408,29 @@ header .site-title:hover {
     height: calc(100vh - 109px);
 }
 
+#main-container > .main {
+    width: calc(100% - 280px);
+    padding: 10px 10px 50px 10px;
+    display: inline-block;
+    vertical-align: top;
+}
+
 @media only screen and (max-width: 690px){
     #main-container {
         height: 100%;
         display: block;
     }
-}
 
-:not(".main") .main {
-    width: calc(100% - 350px);
-    padding: 10px 10px 50px 10px;
-    display: inline-block;
-    vertical-align: top;
-    display: table-cell;
-}
+    #main-container > .main {
+        margin: 0 0 0 0;
+        display: block;
+        width: calc(100% - 20px);
+        overflow: inherit;
+    }
 
-.vocabulary-details .main {
-    width: 100%;
+    .sparql #main-container > .main {
+        width: 100%;
+    }
 }
 
 .page-title {
@@ -1043,10 +1049,6 @@ form input[type="submit"] {
         display: block;
         margin-left: 20px;
         margin-right: 20px;
-    }
-
-    .main content {
-        width: 100%;
     }
 
     .main aside1{
