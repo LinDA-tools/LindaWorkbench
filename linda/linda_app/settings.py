@@ -123,7 +123,7 @@ TEMPLATE_DIRS = (
 )
 
 # LinDA Server
-LINDA_SERVER_IP = 'http://107.170.70.175'
+LINDA_SERVER_IP = 'http://localhost'
 
 # LinDA url
 LINDA_HOME = 'http://localhost:8000/'
