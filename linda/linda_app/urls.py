@@ -131,9 +131,6 @@ urlpatterns = patterns('',
                        url(r'^queries', views.QueryListView.as_view(), name='saved-queries'),
                        url(r'^assets/jar-loading.gif$', RedirectView.as_view(url='/static/images/jar-loading.gif')),
 
-                       # Tools
-                       url(r'^rdb2rdf/', views.rdb2rdf, name='rdb2rdf'),
-
                        # API calls
                        url(r'^api/users/', login_required(views.api_users), name='users'),
 
