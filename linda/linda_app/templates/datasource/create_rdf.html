@@ -16,13 +16,11 @@
 
         <div>
             <label for="title">{% trans "Title"%}:</label>
-            <input type="text" name="title" id="id_title" value="{{title}}"/>
+            <input type="text" name="title" id="id_title" value="{{title}}" required="required"/>
         </div>
 
         <div>
-            <label for="rdffile">{% trans "Upload an RDF"%}:</label>
-            <div id="file-uploader" class="button green">{% trans "Choose file"%}</div>
-            <input id="id_file" type="file" class="hidden" name="rdffile" />
+            <label>Input format</label>
             <select id="format" name="format">
                 <option value="application/rdf+xml">RDF/XML</option>
                 <option value="text/rdf+n3">N3</option>
@@ -32,16 +30,24 @@
                 <option value="application/x-trig">TriG</option>
                 <option value="application/x-binary-rdf">SesameBinary RDF</option>
             </select>
+            <label for="newline">{% trans "Tripples end with newlines (will upload faster)" %}</label>
+            <input type="checkbox" id="newline" name="newline" value="{% if newlines %}true{% else %}false{% endif %}" />
         </div>
 
         <div>
+            <label for="id_file">{% trans "Upload an RDF"%}:</label>
+            <div id="file-uploader" class="button green">{% trans "Choose file"%}</div>
+            <input id="id_file" type="file" class="hidden" name="rdffile" />
+
+        </div>
+        <div>
             <label for="rdfdata">{% trans "or manually insert RDF data"%}:</label>
-            <textarea name="rdfdata">{{rdfdata}}</textarea>
+            <textarea id="rdfdata" name="rdfdata">{{rdfdata}}</textarea>
         </div>
 
         <div class="submit-box">
             <label for="datatype"></label>
-            <input type="submit" class="button blue create-datasource-submit" value='{% trans "Create datasource"%}'/>
+            <input id="datatype" type="submit" class="button blue create-datasource-submit" value='{% trans "Create datasource"%}'/>
         </div>
     </form>
 </div>

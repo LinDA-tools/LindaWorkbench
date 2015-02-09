@@ -10,9 +10,12 @@ function downloadWithName(uri, name) {
 }
 
 var datasource_visualize_URIs = [];
+var datasource_is_public = [];
+
 {% for datasource in datasources %}
     {% if not datasource.is_public %}
         datasource_visualize_URIs["{{datasource.name}}"] = "{{datasource|datasource_visualize}}";
+        datasource_is_public["{{datasource.name}}"] = {% if datasource.is_public %}true{% else %}false{% endif %};
     {% endif %}
 {% endfor %}
 
@@ -31,7 +34,11 @@ $(function(){ //private datasource context menu
             url = "/query-builder?dt_id=" + id;
         else
         if (key == "Edit")
-            url = "/datasource/" + id + "/replace/";
+            if (datasource_is_public[id]) {
+                url = "/datasource/" + id + "/replace/";
+            } else {
+                url = "/datasource/" + id + "/replace/rdf/";
+            }
         else
         if (key == "Delete")
             url = "/datasource/" + id + "/delete/";

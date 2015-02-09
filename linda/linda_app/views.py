@@ -800,63 +800,73 @@ def datasourceReplace(request, name):
         return render(request, 'datasource/form.html', params)
 
 
-def clear_chunk(c):
-    # detect where the last tripple ends
-    '''
-    i = 0
+def clear_chunk(c, newlines):
+    if newlines:
+        last_dot = c.rfind('.\n') + 1
+    else:
+        # detect where the last tripple ends
+        i = 0
 
-    in_dquote = False
-    in_entity = False
-    ignore_next = False
-    last_dot = -1
+        in_dquote = False
+        in_entity = False
+        ignore_next = False
+        last_dot = -1
 
-    for char in c:
-        if not ignore_next:
-            if char == '<' and (not in_dquote):
-                in_entity = True
-            elif char == '>' and (not in_dquote):
-                in_entity = False
-            elif char == '"':
-                in_dquote = not in_dquote
-            elif (char == '.') and (not in_dquote) and (not in_entity):
-                last_dot = i + 1
+        for char in c:
+            if not ignore_next:
+                if char == '<' and (not in_dquote):
+                    in_entity = True
+                elif char == '>' and (not in_dquote):
+                    in_entity = False
+                elif char == '"':
+                    in_dquote = not in_dquote
+                elif (char == '.') and (not in_dquote) and (not in_entity):
+                    last_dot = i + 1
 
-        if char == '\\':
-            ignore_next = True
-        else:
-            ignore_next = False
+            if char == '\\':
+                ignore_next = True
+            else:
+                ignore_next = False
 
-        i += 1
+            i += 1
 
     # seperate c1 & track the remainder
-    '''
+    if last_dot >= 0:
+        o = c[:last_dot]
+        rem = c[last_dot:]
 
-    last_dot = c.rfind('.\n') + 1
-    o = c[:last_dot]
-    rem = c[last_dot:]
-
-    return o, rem
-
+        return o, rem
+    else:  # segmentation failed
+        return c, ''
 
 def datasourceCreateRDF(request):
     if request.POST:
         # Get the posted rdf data
         current_chunk = ''
         rem = ''
+        newlines = request.POST.get('newlines', None)
+        title = request.POST.get("title", None)
+        if not title:
+            params = {}
+            params['form_error'] = 'Title is required'
+            params['rdfdata'] = request.POST.get("rdfdata")
+            params['newline'] = request.POST.get("newline")
+
+            return render(request, 'datasource/create_rdf.html', params)
 
         a = datetime.now().replace(microsecond=0)
         if "rdffile" in request.FILES:
             # get the first chunk
             inp_file = request.FILES["rdffile"].file
             current_chunk = inp_file.read(RDF_CHUNK_SIZE)
-
-            current_chunk, rem = clear_chunk(current_chunk)
+            current_chunk, rem = clear_chunk(current_chunk, newlines)
         else:
             current_chunk = request.POST.get("rdfdata")
+            inp_file = False
 
         # Call the corresponding web service
         headers = {'accept': 'application/json'}
-        data = {"content": current_chunk, "title": request.POST.get("title")}
+        data = {"content": current_chunk, "title": title}
         if request.POST.get('format'):
             data['format'] = request.POST.get('format')
 
@@ -868,9 +878,8 @@ def datasourceCreateRDF(request):
             # get new datasource name
             dt_name = j_obj['name']
 
-            # check for additional chunks
             i = 0
-            while True:
+            while inp_file:  # read all additional chunks
                 chunk = inp_file.read(RDF_CHUNK_SIZE)
                 if chunk == "":  # end of file
                     break
@@ -878,7 +887,7 @@ def datasourceCreateRDF(request):
                 i += 1
                 print i
                 # add the previous remainder & clear again
-                current_chunk, rem = clear_chunk(rem + chunk)
+                current_chunk, rem = clear_chunk(rem + chunk, newlines)
                 data = {"content": current_chunk}
                 if request.POST.get('format'):
                     data['format'] = request.POST.get('format')
@@ -895,7 +904,7 @@ def datasourceCreateRDF(request):
                                     data=data)
 
             b = datetime.now().replace(microsecond=0)
-            print request.POST.get("title") + ':'
+            print title + ':'
             print(b-a)
 
             return redirect("/datasources")
@@ -905,6 +914,7 @@ def datasourceCreateRDF(request):
             params['form_error'] = j_obj['message']
             params['title'] = request.POST.get("title")
             params['rdfdata'] = request.POST.get("rdfdata")
+            params['newline'] = request.POST.get("newline")
 
             return render(request, 'datasource/create_rdf.html', params)
     else:
@@ -950,9 +960,6 @@ def datasourceReplaceRDF(request, dtname):
         params = {}
         dt_object = DatasourceDescription.objects.filter(name=dtname)[0]
         params['title'] = dt_object.title
-        if not dt_object.is_public:
-            callDatasource = requests.get(LINDA_HOME + "api/datasource/" + dtname + "/")
-            params['rdfdata'] = json.loads(callDatasource.text)['content']
 
         return render(request, 'datasource/replace_rdf.html', params)
 
