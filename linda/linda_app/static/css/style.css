@@ -203,6 +203,7 @@ header .site-title:hover {
 #menu > ul > li > a {
     padding: 5px 20px 5px 5px;
     display: inline-block;
+    width: 100%;
 }
 
 #menu > ul > li > ul {
