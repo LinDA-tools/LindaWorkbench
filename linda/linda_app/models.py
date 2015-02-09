@@ -559,7 +559,7 @@ class Configuration(models.Model):
     # QueryBuilder URL
     query_builder_server = models.URLField(blank=False, null=False, default=LINDA_SERVER_IP + ':3100/')
     # Rdf2any Server
-    rdf2any_server = models.URLField(blank=False, null=False, default=LINDA_SERVER_IP + ':8081')
+    rdf2any_server = models.URLField(blank=False, null=False, default=LINDA_SERVER_IP + ':8081/')
     # R2R Server
     r2r_server = models.URLField(blank=False, null=False, default=LINDA_SERVER_IP + ':3000/')
 

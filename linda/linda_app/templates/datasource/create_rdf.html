@@ -30,8 +30,6 @@
                 <option value="application/x-trig">TriG</option>
                 <option value="application/x-binary-rdf">SesameBinary RDF</option>
             </select>
-            <label for="newline">{% trans "Tripples end with newlines (will upload faster)" %}</label>
-            <input type="checkbox" id="newline" name="newline" value="{% if newlines %}true{% else %}false{% endif %}" />
         </div>
 
         <div>
@@ -43,6 +41,11 @@
         <div>
             <label for="rdfdata">{% trans "or manually insert RDF data"%}:</label>
             <textarea id="rdfdata" name="rdfdata">{{rdfdata}}</textarea>
+        </div>
+
+        <div class="newline" style="display: none;">
+            <label for="newline">{% trans "Tripples end with newlines<br />(will upload faster)" %}</label>
+            <input type="checkbox" id="newline" name="newline" value="{% if newlines %}true{% else %}false{% endif %}" />
         </div>
 
         <div class="submit-box">
@@ -63,5 +66,15 @@
         $('#file-uploader').click(function(){
             $('#id_file').click();
         }).show();
+
+        $('#format').change(function() {
+            var v = $(this).val();
+
+            if ((v == "text/rdf+n3") || (v == "text/plain") || (v == "application/x-turtle")) {
+                $("div.newline").show();
+            } else {
+                $("div.newline").hide();
+            }
+        });
         </script>
 {% endblock %}

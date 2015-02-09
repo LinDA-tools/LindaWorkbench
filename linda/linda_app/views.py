@@ -839,6 +839,7 @@ def clear_chunk(c, newlines):
     else:  # segmentation failed
         return c, ''
 
+
 def datasourceCreateRDF(request):
     if request.POST:
         # Get the posted rdf data
@@ -927,19 +928,44 @@ def datasourceCreateRDF(request):
 
 def datasourceReplaceRDF(request, dtname):
     if request.POST:
+        title = request.POST.get("title", None)
+        if not title:
+            params = {}
+            params['form_error'] = 'Title is required'
+            params['rdfdata'] = request.POST.get("rdfdata")
+            params['newline'] = request.POST.get("newline")
+            params['append'] = request.POST.get("append")
+
+            return render(request, 'datasource/replace_rdf.html', params)
+
+        current_chunk = ''
+        rem = ''
+        newlines = request.POST.get('newlines', None)
+        append = request.POST.get('append', False)
+
+        import pdb;pdb.set_trace()
         # Get the posted rdf data
         if "rdffile" in request.FILES:
-            rdf_content = request.FILES["rdffile"].read()
+            inp_file = request.FILES["rdffile"].file
+            current_chunk = inp_file.read(RDF_CHUNK_SIZE)
+            current_chunk, rem = clear_chunk(current_chunk, newlines)
         else:
-            rdf_content = request.POST.get("rdfdata")
+            current_chunk = request.POST.get("rdfdata")
+            inp_file = False
+
+        # Check if appending or completely replacing
+        if append:
+            append_str = '?append=true'
+        else:
+            append_str = ''
 
         # Call the corresponding web service
         headers = {'accept': 'application/json'}
-        data = {"content": rdf_content, }
+        data = {"content": current_chunk, }
         if request.POST.get('format'):
             data['format'] = request.POST.get('format')
 
-        callReplace = requests.post(LINDA_HOME + "api/datasource/" + dtname + "/replace/", headers=headers,
+        callReplace = requests.post(LINDA_HOME + "api/datasource/" + dtname + "/replace/" + append_str, headers=headers,
                                     data=data)
 
         j_obj = json.loads(callReplace.text)
@@ -960,6 +986,7 @@ def datasourceReplaceRDF(request, dtname):
         params = {}
         dt_object = DatasourceDescription.objects.filter(name=dtname)[0]
         params['title'] = dt_object.title
+        params['append'] = True
 
         return render(request, 'datasource/replace_rdf.html', params)
 
@@ -1077,7 +1104,7 @@ def get_qbuilder_call(request, link):
 # middle-mans between LinDA query builder page and the RDF2Any server
 @csrf_exempt
 def get_rdf2any_call(request, link):
-    total_link = get_configuration().rdf2any_server + '/rdf2any/' + link
+    total_link = get_configuration().rdf2any_server + 'rdf2any/' + link
     if request.GET:
         total_link += "?"
     for param in request.GET:
@@ -1090,18 +1117,7 @@ def get_rdf2any_call(request, link):
         return HttpResponse(content=data.text, status=data.status_code)
 
 
-# Tools
-def rdb2rdf(request):
-    params = {}
-    params['datasources'] = {}
-    params['dbcolumns'] = {('name', 'Name'), ('id', 'ID')}
-    params['dbtables'] = {('_write_custom_query', 'Write a custom query'), ('product', 'Product')}
-
-    return render(request, 'rdb2rdf/rdb2rdf.html', params)
-
-
 # Api view
-
 
 # Get a list with all uses - used in autocomplete
 def api_users(request):

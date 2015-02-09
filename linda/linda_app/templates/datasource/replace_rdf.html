@@ -15,12 +15,17 @@
         {% endif %}
 
         <div>
-            <label for="title">{% trans "Title"%}:</label>
+            <label for="id_title">{% trans "Title"%}:</label>
             <input type="text" name="title" id="id_title" value="{{title}}" />
         </div>
 
+        <div class="append">
+            <label for="id_append">{% trans "Add to existing data" %}</label>
+            <input type="checkbox" id="id_append" name="append" {% if append %}checked="checked"{% endif %} />
+        </div>
+
         <div>
-            <label for="rdffile">{% trans "Upload an RDF"%}:</label>
+            <label for="id_file">{% trans "Upload an RDF"%}:</label>
             <div id="file-uploader" class="button green">{% trans "Choose file"%}</div>
             <input id="id_file" type="file" class="hidden" name="rdffile" />
             <select id="format" name="format">
@@ -34,13 +39,18 @@
         </div>
 
         <div>
-            <label for="rdfdata">{% trans "or manually insert RDF data"%}:</label>
-            <textarea name="rdfdata">{{rdfdata}}</textarea>
+            <label for="id_rdfdata">{% trans "or manually insert RDF data"%}:</label>
+            <textarea id="id_rdfdata" name="rdfdata">{{rdfdata}}</textarea>
+        </div>
+
+        <div class="newline" style="display: none;">
+            <label for="newline">{% trans "Tripples end with newlines<br />(will upload faster)" %}</label>
+            <input type="checkbox" id="newline" name="newline" value="{% if newlines %}true{% else %}false{% endif %}" />
         </div>
 
         <div class="submit-box">
-            <label for="datatype"></label>
-            <input type="submit" class="button blue create-datasource-submit" value='{% trans "Replace datasource"%}'/>
+            <label for="replace_submit"></label>
+            <input type="submit" id="replace_submit" class="button blue create-datasource-submit" value='{% if append %}{% trans "Update datasource" %}{% else %}{% trans "Replace datasource"%}{% endif %}'/>
         </div>
     </form>
 </div>
@@ -56,5 +66,25 @@
         $('#file-uploader').click(function(){
             $('#id_file').click();
         }).show();
+
+        $('#format').change(function() {
+            var v = $(this).val();
+
+            if ((v == "text/rdf+n3") || (v == "text/plain") || (v == "application/x-turtle")) {
+                $("div.newline").show();
+            } else {
+                $("div.newline").hide();
+            }
+        });
+
+        $('#id_append').change(function() {
+            var v = $(this).is(':checked');
+
+            if (v) {
+                $('#replace_submit').val('{% trans "Update datasource"%}');
+            } else {
+                $('#replace_submit').val('{% trans "Replace datasource"%}');
+            }
+        });
         </script>
 {% endblock %}
