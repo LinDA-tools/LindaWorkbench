@@ -1,15 +1,28 @@
 {% extends "base.html" %}
 
 {% load i18n %}
+{% load app_filters %}
 {% block title %}LinDA{% endblock %}
 {% block bodyclass %}homepage{% endblock %}
 
 {% block css %}
     <link rel="stylesheet" href="/static/css/jquery.contextMenu.css"/>
+    {% if installation_pending %}
+        <link rel="stylesheet" href="/static/installer/style.css"/>
+    {% else %}
+        <link rel="stylesheet" href="/static/installer/style.css"/>
+    {% endif %}
 {% endblock %}
 
 {% block content %}
 	<div class="main">
+
+        {% if installation_pending %}
+            {% include "installer/installer.html" %}
+        {% else %}
+            {% include "installer/installer.html" %}
+        {% endif %}
+
         <div class="welcome">
             <!--img class="welcome-video" src="/static/images/video-placeholder.jpg" /-->
             <iframe width="350" height="250" src="//www.youtube.com/embed/b988bbpmR00" frameborder="0" allowfullscreen></iframe>
@@ -86,4 +99,16 @@
             {% include "queries/pretty-list.html" %}
         {% endwith %}
     </script>
+
+    {% if installation_pending %}
+        <script>
+            var csrf_token = '{{csrf_token}}';
+        </script>
+        <script src="/static/installer/scripts.js"></script>
+    {% else %}
+        <script>
+            var csrf_token = '{{csrf_token}}';
+        </script>
+        <script src="/static/installer/scripts.js"></script>
+    {% endif %}
 {% endblock %}

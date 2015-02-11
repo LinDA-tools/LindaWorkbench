@@ -5,6 +5,7 @@ from django.views.generic import RedirectView
 
 from forms import AutocompleteModelSearchForm
 from haystack.views import SearchView, search_view_factory
+from linda_app.installer import views as installer_views
 
 import views
 
@@ -130,6 +131,9 @@ urlpatterns = patterns('',
                            name='query-builder'),
                        url(r'^queries', views.QueryListView.as_view(), name='saved-queries'),
                        url(r'^assets/jar-loading.gif$', RedirectView.as_view(url='/static/images/jar-loading.gif')),
+
+                       # Installer
+                       url(r'^api/installer/run/$', installer_views.run_installer, name='run-installer'),
 
                        # API calls
                        url(r'^api/users/', login_required(views.api_users), name='users'),

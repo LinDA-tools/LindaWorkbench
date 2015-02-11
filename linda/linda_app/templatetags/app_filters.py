@@ -1,6 +1,7 @@
 from django import template
 from django.utils.http import urlquote
 from linda_app.models import Vocabulary, VocabularyClass, VocabularyProperty, get_configuration
+from analytics.models import Algorithm, Category
 
 register = template.Library()
 
@@ -38,3 +39,8 @@ def datasource_visualize(datasource):
     endpoint = config.private_sparql_endpoint
     graph_uri = datasource.uri
     return '/visualizations/#/datasource/' + datasource.name + '/' + urlquote(endpoint, safe='') + '/' + urlquote(graph_uri, safe='') + '/rdf'
+
+@register.filter(name="installation_pending")
+# check if installation is pending
+def installation_pending():
+    return (not Category.objects.all()) and not (Algorithm.objects.all())

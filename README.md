@@ -71,7 +71,7 @@ Activate Tomcat by running its startup script:
 * a)Click Browse: Select The war/openrdf-sesame.war from the unzipped sesame sdk zip and click deploy
 * b)Click Browse: Select The war/openrdf-workbench.war from the unzipped sesame sdk zip and click deploy.
 
-* Go to the  OpenRDF Workbench page (http://localhost:8080/openrdf-workbench/repositories/NONE/repositories) and create a new repository InMemoryState, id, title : "linda".
+* Go to the  OpenRDF Workbench page (http://localhost:8080/openrdf-workbench/repositories/NONE/repositories) to make sure OpenRDF has been deployed successfully.
 
 ##Install MySQL
 ```

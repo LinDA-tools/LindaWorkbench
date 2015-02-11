@@ -549,19 +549,19 @@ class Query(models.Model):
 class Configuration(models.Model):
     # Vocabulary Repository
     # In local business installations it will be different than the LINDA_SERVER_IP
-    vocabulary_repository = models.URLField(blank=False, null=False, default=LINDA_SERVER_IP + ':8000/')
+    vocabulary_repository = models.URLField(blank=False, null=False, default='http://localhost:8000/')
     # LinDA repository in Sesame (OpenRDF) url, in order to access private data sources
     sesame_url = models.URLField(blank=False, null=False,
-                                 default=LINDA_SERVER_IP + ':8080/openrdf-sesame/repositories/linda/')
+                                 default='http://localhost:8080/openrdf-sesame/')
     # LinDA private resources SparQL endpoint
     private_sparql_endpoint = models.URLField(blank=False, null=False,
-                                              default=LINDA_SERVER_IP + ':8080/openrdf-sesame/repositories/linda')
+                                              default='http://localhost:8080/openrdf-sesame/repositories/linda')
     # QueryBuilder URL
-    query_builder_server = models.URLField(blank=False, null=False, default=LINDA_SERVER_IP + ':3100/')
+    query_builder_server = models.URLField(blank=False, null=False, default='http://localhost:3100/')
     # Rdf2any Server
-    rdf2any_server = models.URLField(blank=False, null=False, default=LINDA_SERVER_IP + ':8081/')
+    rdf2any_server = models.URLField(blank=False, null=False, default='http://localhost:8081/')
     # R2R Server
-    r2r_server = models.URLField(blank=False, null=False, default=LINDA_SERVER_IP + ':3000/')
+    r2r_server = models.URLField(blank=False, null=False, default='http://localhost:3000/')
 
 
 # returns the configuration object
