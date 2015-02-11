@@ -929,19 +929,21 @@ form input[type="submit"] {
 
 /* Edit vocabulary */
 
-.vocabulary-edit-form input[type="text"] {
+.vocabulary-edit-form input[type="text"], .vocabulary-edit-form input[type="number"], .vocabulary-edit-form input[type="url"], .vocabulary-edit-form textarea  {
 	border: 2px solid #DADFE1;
 	padding: 5px;
 	outline: none;
 	border-radius: 5px;
-	width: 250px;
+	width: 350px;
+    max-width: calc(100% - 20px);
 }
 
 .vocabulary-edit-form #id_title {
     color: #FC5006;
     outline: none;
     padding: 5px;
-    width: 250px;
+    width: 350px;
+    max-width: calc(100% - 20px);
     font-size: 22px;
 }
 
@@ -956,12 +958,9 @@ form input[type="submit"] {
     width: 100px;
 }
 
-.vocabulary-edit-form .description textarea {
-    width: 100%;
-    max-width: 100%;
+.vocabulary-edit-form textarea {
+    width: calc(100% - 20px);
     min-height: 150px;
-    border: none;
-    outline: none;
 }
 
 .action-buttons {
@@ -1438,6 +1437,10 @@ form input[type="submit"] {
 
 .vocabulary-edit-form  .description:hover:before {
     border-color: transparent #FC5006;
+}
+
+.vocabulary-edit-form > div {
+    margin-bottom: 10px;
 }
 
 @media only screen and (max-width: 759px) {

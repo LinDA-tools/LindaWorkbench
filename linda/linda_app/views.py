@@ -8,7 +8,7 @@ from django.utils.http import urlquote
 from django.core.validators import URLValidator
 from django.core.exceptions import ValidationError
 from django.views.decorators.csrf import csrf_exempt
-from django.views.generic import ListView, UpdateView, DetailView, DeleteView
+from django.views.generic import ListView, UpdateView, DetailView, DeleteView, CreateView
 
 import json
 from rdflib.plugins.parsers.ntriples import ParseError
@@ -316,10 +316,51 @@ class VocabularyPropertyDetailsView(DetailView):
     context_object_name = 'property'
 
 
+class VocabularyCreateView(CreateView):
+    form_class = VocabularyUpdateForm
+    model = Vocabulary
+    template_name = 'vocabulary/form.html'
+    context_object_name = 'vocabulary'
+
+    def get_context_data(self, **kwargs):
+        context = super(VocabularyCreateView, self).get_context_data(**kwargs)
+
+        # Load categories
+        context['categories'] = CATEGORIES
+        context['create'] = True
+
+        return context
+
+    def post(self, *args, **kwargs):
+        if not self.request.user.is_authenticated:
+            return HttpResponseForbidden
+
+        vocabulary_form = VocabularyUpdateForm(self.request.POST)
+
+        # validate form
+        if vocabulary_form.is_valid():
+            new_vocabulary = vocabulary_form.save(commit=False)
+
+            new_vocabulary.uploader = self.request.user
+            new_vocabulary.dateCreated = datetime.now()
+            new_vocabulary.dateModified = datetime.now()
+
+            new_vocabulary.save()
+
+            return redirect("/vocabulary/" + str(new_vocabulary.pk) + "/")
+        else:
+            return render(self.request, 'vocabulary/form.html', {
+                'vocabulary': None,
+                'form': vocabulary_form,
+                'categories': CATEGORIES,
+                'create': True
+            })
+
+
 class VocabularyUpdateView(UpdateView):
     form_class = VocabularyUpdateForm
     model = Vocabulary
-    template_name = 'vocabulary/edit.html'
+    template_name = 'vocabulary/form.html'
     context_object_name = 'vocabulary'
 
     def get_object(self):
@@ -351,9 +392,10 @@ class VocabularyUpdateView(UpdateView):
             vocabularyForm.save()
             return redirect("/vocabulary/" + kwargs.get('pk'))
         else:
-            return render(self.request, 'vocabulary/edit.html', {
+            return render(self.request, 'vocabulary/form.html', {
                 'vocabulary': oldVocabulary,
                 'form': vocabularyForm,
+                'categories': CATEGORIES,
             })
 
 

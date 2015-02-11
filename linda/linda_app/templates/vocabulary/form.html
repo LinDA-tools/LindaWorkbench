@@ -2,14 +2,14 @@
 {% load url from future %}
 {% load i18n thumbnail2 %}
 {% load app_filters %}
-{% block title %}{{vocabulary.title}} | LinDA{% endblock %}
+{% block title %}{% if create %}{% trans "Create a vocabulary"%}{% else %}{{vocabulary.title}}{% endif %} | LinDA{% endblock %}
 {% block bodyclass %}vocabulary{% endblock %}
 
 {% block content %}
 <div class="main">
-    <h1 class="page-title inline">{% trans "Edit vocabulary"%}</h1>
+    <h1 class="page-title inline">{% if create %}{% trans "Crete a vocabulary"%}{% else %}{% trans "Edit vocabulary"%}{% endif %}</h1>
 
-    <form class="vocabulary-edit-form" method="post" action="/vocabulary/{{vocabulary.id}}/edit/"
+    <form class="vocabulary-edit-form" method="post" action="{% if create %}/vocabulary/create/{% else %}/vocabulary/{{vocabulary.id}}/edit/{% endif %}"
           class="vocabulary-edit-form" enctype="multipart/form-data">{% csrf_token %}
 
         {% if form.non_field_errors %}
@@ -43,7 +43,7 @@
         </p>
 
         <div>
-            <label for="description">{% trans "LOD reference counter"%}:</label>
+            <label for="description">{% trans "Priority"%}:</label>
             {{form.lodRanking}}
             {% if form.lodRanking.errors %}
             <span class="error">{{ form.lodRanking.errors.as_text }}</span>
@@ -73,7 +73,7 @@
             {% endif %}
         </div>
         <div>
-            <label for="downloadUrl">{% trans "Download link"%}:</label>
+            <label for="downloadUrl">{% trans "Download link (link to the definition document)"%}:</label>
             {{form.downloadUrl}}
             {% if form.downloadUrl.errors %}
             <span class="error">{{ form.downloadUrl.errors.as_text }}</span>
@@ -100,8 +100,8 @@
             <div class="hidden">{{form.version}}</div>
         {% endif %}
         <div class="action-buttons">
-            <a href="/vocabulary/{{vocabulary.id}}" class="button blue right">{% trans "Cancel" %}</a>
-            <input type="submit" value='{% trans "Update vocabulary" %}' class="button red left"/>
+            <a href="{% if create %}/vocabularies/all/{% else %}/vocabulary/{{vocabulary.id}}{% endif %}" class="button blue right">{% trans "Cancel" %}</a>
+            <input type="submit" value='{% if create %}{% trans "Create vocabulary" %}{% else %}{% trans "Update vocabulary" %}{% endif %}' class="button green left"/>
         </div>
 
     </form>
