@@ -1,3 +1,4 @@
+from itertools import starmap
 from operator import attrgetter
 from django.core import serializers
 from django.core.paginator import Paginator, EmptyPage
@@ -1270,7 +1271,7 @@ def api_datasource_create(request):
 
     data = json.dumps(results)
     mimetype = 'application/json'
-    return HttpResponse(data, mimetype)
+    return HttpResponse(data, mimetype, status=results['status'])
 
 
 # Retrieve all data from datasource in specified format
@@ -1299,7 +1300,7 @@ def api_datasource_get(request, dtname):
 
     data = json.dumps(results)
     mimetype = 'application/json'
-    return HttpResponse(data, mimetype)
+    return HttpResponse(data, mimetype, status=results['status'])
 
 # Replace all data from datasource with new rdf data
 @csrf_exempt
@@ -1348,7 +1349,7 @@ def api_datasource_replace(request, dtname):
 
     data = json.dumps(results)
     mimetype = 'application/json'
-    return HttpResponse(data, mimetype)
+    return HttpResponse(data, mimetype, status=results['status'])
 
 
 # Delete an RDF datasource
@@ -1383,7 +1384,7 @@ def api_datasource_delete(request, dtname):
 
     data = json.dumps(results)
     mimetype = 'application/json'
-    return HttpResponse(data, mimetype)
+    return HttpResponse(data, mimetype, status=results['status'])
 
 
 # Get a query for a specific private datasource and execute it

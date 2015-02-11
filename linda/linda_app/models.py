@@ -565,6 +565,7 @@ class Configuration(models.Model):
     # Visualization backend
     visualization_backend = models.URLField(blank=False, null=False, default='http://localhost:3002/')
 
+
 # returns the configuration object
 # creates default configuration if it does not exist
 def get_configuration():
