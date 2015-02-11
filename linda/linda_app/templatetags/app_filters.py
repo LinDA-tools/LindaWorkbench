@@ -39,8 +39,3 @@ def datasource_visualize(datasource):
     endpoint = config.private_sparql_endpoint
     graph_uri = datasource.uri
     return '/visualizations/#/datasource/' + datasource.name + '/' + urlquote(endpoint, safe='') + '/' + urlquote(graph_uri, safe='') + '/rdf'
-
-@register.filter(name="installation_pending")
-# check if installation is pending
-def installation_pending():
-    return (not Category.objects.all()) and not (Algorithm.objects.all())

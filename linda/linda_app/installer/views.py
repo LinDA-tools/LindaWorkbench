@@ -5,9 +5,13 @@ from django.utils.http import urlquote
 import requests
 from analytics.models import Algorithm, Category
 from linda_app.models import get_configuration
-from linda_app.templatetags.app_filters import installation_pending
 
 __author__ = 'dimitris'
+
+
+# check if installation is pending
+def installation_pending():
+    return not Category.objects.all() and not Algorithm.objects.all()
 
 
 # install analytics components

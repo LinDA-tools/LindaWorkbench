@@ -22,12 +22,14 @@ from forms import *
 from rdflib import Graph
 from datetime import datetime
 
+from installer.views import installation_pending
 from settings import LINDA_HOME, RDF_CHUNK_SIZE
 from passwords import MS_TRANSLATOR_UID, MS_TRANSLATOR_SECRET
 
 
 def index(request):
     params = {}
+    params['installation_pending'] = installation_pending()
     params['recent_datasources'] = DatasourceDescription.objects.all().order_by('-updatedOn')[:3]
     params['recent_queries'] = Query.objects.all().order_by('-updatedOn')[:3]
     if request.user.is_authenticated:

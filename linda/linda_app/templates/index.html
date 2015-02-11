@@ -1,15 +1,12 @@
 {% extends "base.html" %}
 
 {% load i18n %}
-{% load app_filters %}
 {% block title %}LinDA{% endblock %}
 {% block bodyclass %}homepage{% endblock %}
 
 {% block css %}
     <link rel="stylesheet" href="/static/css/jquery.contextMenu.css"/>
     {% if installation_pending %}
-        <link rel="stylesheet" href="/static/installer/style.css"/>
-    {% else %}
         <link rel="stylesheet" href="/static/installer/style.css"/>
     {% endif %}
 {% endblock %}
@@ -18,8 +15,6 @@
 	<div class="main">
 
         {% if installation_pending %}
-            {% include "installer/installer.html" %}
-        {% else %}
             {% include "installer/installer.html" %}
         {% endif %}
 
@@ -101,11 +96,6 @@
     </script>
 
     {% if installation_pending %}
-        <script>
-            var csrf_token = '{{csrf_token}}';
-        </script>
-        <script src="/static/installer/scripts.js"></script>
-    {% else %}
         <script>
             var csrf_token = '{{csrf_token}}';
         </script>
