@@ -1,14 +1,12 @@
 from django.shortcuts import render
-from linda_app.models import DatasourceDescription
+from linda_app.models import DatasourceDescription, get_configuration
 from django.core.context_processors import csrf
 from django.http import HttpResponse
 from django.shortcuts import render_to_response
 from django.views.decorators.csrf import csrf_exempt
 import requests, urllib,re
 
-from linda_app.settings import LINDA_SERVER_IP
-
-VISUAL_SERVER = LINDA_SERVER_IP + ":3002/"
+VISUAL_SERVER = get_configuration().visualization_backend
 VISUAL_PROXY = "/visual/api"
 
 def visualizations(request):

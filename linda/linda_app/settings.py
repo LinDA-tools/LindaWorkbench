@@ -122,9 +122,6 @@ TEMPLATE_DIRS = (
     'linda_app\\templates',
 )
 
-# LinDA Server
-LINDA_SERVER_IP = 'http://localhost'
-
 # LinDA url
 LINDA_HOME = 'http://localhost:8000/'
 

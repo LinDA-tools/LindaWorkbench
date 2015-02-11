@@ -11,7 +11,6 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import ListView, UpdateView, DetailView, DeleteView, CreateView
 
 import json
-from rdflib.plugins.parsers.ntriples import ParseError
 import requests
 
 from microsofttranslator import Translator

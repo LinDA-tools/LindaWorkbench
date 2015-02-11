@@ -5,8 +5,6 @@ from django.views.decorators.csrf import csrf_exempt
 import requests
 from linda_app.models import get_configuration
 
-from linda_app.settings import LINDA_SERVER_IP
-
 R2R_PROXY = "/transformations"
 
 

@@ -2,17 +2,17 @@ from datetime import datetime
 import urllib
 from django.db import models
 from django.contrib.auth.models import User
-from django.db.models.signals import post_save, post_delete
+from django.db.models.signals import post_save
 from django.template.defaultfilters import slugify, random
 from rdflib import Graph, OWL, RDFS
 from rdflib.util import guess_format
-import re
 from query_designer.models import Design
+
+import re
 from lists import *
-#from athumb.fields import ImageWithThumbsField
 from pattern.en import pluralize
 
-from settings import LINDA_HOME, LINDA_SERVER_IP
+from settings import LINDA_HOME
 
 User.profile = property(lambda u: UserProfile.objects.get_or_create(user=u)[0])
 
@@ -556,13 +556,14 @@ class Configuration(models.Model):
     # LinDA private resources SparQL endpoint
     private_sparql_endpoint = models.URLField(blank=False, null=False,
                                               default='http://localhost:8080/openrdf-sesame/repositories/linda')
-    # QueryBuilder URL
+    # QueryBuilder Fronted
     query_builder_server = models.URLField(blank=False, null=False, default='http://localhost:3100/')
     # Rdf2any Server
     rdf2any_server = models.URLField(blank=False, null=False, default='http://localhost:8081/')
     # R2R Server
     r2r_server = models.URLField(blank=False, null=False, default='http://localhost:3000/')
-
+    # Visualization backend
+    visualization_backend = models.URLField(blank=False, null=False, default='http://localhost:3002/')
 
 # returns the configuration object
 # creates default configuration if it does not exist
