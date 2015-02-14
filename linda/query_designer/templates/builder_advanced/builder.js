@@ -7,6 +7,7 @@ var builder = {
     instance_names: [],
     endpoint: "",
     prefixes: [],
+    known_prefixes: [],
     is_editing: false,
 
     get_prefixes: function() {
@@ -61,6 +62,97 @@ var builder = {
         }
 
         return true;
+    },
+
+    get_root_uri: function(uri) {
+        var spl = uri.split('/');
+        var last_part = spl.pop();
+
+        if (last_part.indexOf('#') >= 0) {
+            last_part = last_part.substr(0, last_part.indexOf('#')+1);
+        } else {
+            last_part = '';
+        }
+
+        var result = '';
+        for (var i=0; i<spl.length; i++) {
+            result += spl[i] + '/';
+        }
+        result += last_part;
+
+        return result.substr(1);
+    },
+
+    detect_prefixes: function(q) {
+        var entity_pattern = /<http:\/\/[^>]*>/g; //regex to detect <http://[any char except >]*>
+        var res = q.match(entity_pattern);
+        console.log('ITER');
+        var cnt = [];
+        // foreach uri detect its root and calculate frequency of each root
+        while ((match = entity_pattern.exec(q)) != null) {
+            var root = this.get_root_uri(match[0]);
+
+            if (cnt[root] == undefined) {
+                cnt[root] = 1;
+            } else {
+                cnt[root]++;
+            }
+        }
+
+        //foreach root with frequency > 1
+        var prf_cnt = 0;
+        var roots = Object.keys(cnt);
+        roots.sort(function(a, b){
+          return b.length - a.length; //DESC sort of roots based on their length
+        });
+
+        for (var i=0; i<roots.length; i++) {
+            if ((cnt[ roots[i] ] > 1) || this.known_prefixes[roots[i]]) {
+                //foreach match of this root
+                var offset = 0;
+                var idx = 0;
+
+                while ( (idx = q.substr(offset).indexOf(roots[i])) >= 0) {
+                    idx += offset;
+
+                    //check that it is actually the prefix of the uri and not just a part
+                    var skip = false;
+                    var ent_close_pos = -1;
+                    for (var c=idx + roots[i].length + 1; c<q.length ;c++) {
+                        if (q[c] == '/') {
+                            skip = true;
+                            break;
+                        }
+                        else if (q[c] == '>') {
+                            ent_close_pos = c;
+                            break;
+                        }
+                    }
+
+                    if (skip) { // not a prefix
+                        offset++;
+                        continue;
+                    }
+
+                    //find the prefix & add it to prefixes
+                    var prf = '';
+                    if (this.known_prefixes[roots[i]]) {
+                        prf = this.known_prefixes[roots[i]];
+                    } else {
+                        prf_cnt++;
+                        prf = 'prf' + prf_cnt;
+                    }
+                    this.prefixes[prf] = '<' + roots[i] + '>';
+
+                    //replace the root uri with the prefix
+                    q = q.substr(0, idx-1) + prf + ':' + q.substr(idx+roots[i].length, (ent_close_pos - idx - roots[i].length ))+ q.substr(ent_close_pos+1);
+                    //update the point from which to start to search for root in the next iteration
+                    offset = idx + prf.length + 1;
+                }
+            }
+        }
+
+        return q;
     },
 
     get_filter: function(p_name, f) { //get a specific filter
@@ -309,6 +401,9 @@ var builder = {
             select_clause += ' ' + this.select_vars[i];
         }
 
+        //auto-detect prefixes
+        this.where_clause = this.detect_prefixes(this.where_clause);
+
         if (cnt_objects == 0) { //empty query
             this.query = '';
         } else { //the result is the SELECT ... WHERE ...
@@ -327,3 +422,14 @@ var builder = {
         $("#sparql_results_container").hide();
     }
 };
+
+//ajax call to initialize prefixes from the vocabulary repository
+$.ajax({  //make an ajax request to get property return type
+    url: '/api/vocabularies/versions/',
+    type: "GET",
+    success: function(data, textStatus, jqXHR) {
+        for (var i=0; i<data.length; i++) {
+            builder.known_prefixes[data[i].uri] = data[i].prefix;
+        }
+    }
+});
