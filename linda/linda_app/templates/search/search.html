@@ -14,7 +14,7 @@
                 {% if request.GET.definedBy %}
                     <input style="display:none;" type="number" name="definedBy" value="{{request.GET.definedBy}}"/>
                 {% endif %}
-                <input id="vocabulary-search-text" type="text" name="q" required="required" placeholder='{% trans "Search Vocabularies" %}' value="{% if q %}{{q}}{% endif %}"/>
+                <input id="vocabulary-search-text" type="text" name="q" required="required" placeholder='{% trans "Search" %}' value="{% if q %}{{q}}{% endif %}"/>
                 <input type="submit" value=""/>
                 {% if query or request.GET.definedBy %}
                     <a href="/{{type}}/all" class="button delete-button clear-search" title='Clear search'></a>

@@ -232,7 +232,6 @@ var builder = {
         var wh_c = '';
 
         for (var j=0; j<arrows.connections.length; j++) {
-             console.log('->' + arrows.connections[j].fp);
              if ((arrows.connections[j].f == '#class_instance_' + i) && (arrows.connections[j].fp == p)) {
                 var tn = arrows.connections[j].t.split('_')[2] //3rd part is the number #class_instance_1
                 if (w.instances[tn].selected_properties[arrows.connections[j].tp].uri == 'URI') { //foreign key to other entitiy
@@ -249,7 +248,7 @@ var builder = {
     /*Adds an instance to the query*/
     /*Continues recursively*/
     add_instance: function(w, instance_name, i, property_name, property_n) {
-        var wh_c = ' ';
+        var wh_c = '';
 
         var inst = w.instances[i];
         var i_name = instance_name;
@@ -262,12 +261,12 @@ var builder = {
         }
 
         //add class constraint -- local copy of total where clause
-        wh_c += '?' + i_name + ' a <' + inst.uri + '>.';
+        wh_c += '  ?' + i_name + ' a <' + inst.uri + '>.';
 
         //add properties to select clause
         for (var j=0; j<inst.selected_properties.length; j++) {
             var p = inst.selected_properties[j];
-            
+
             if (property_n == j) {
                 var p_name = property_name;
             } else {
@@ -296,10 +295,10 @@ var builder = {
             //connect property to class instances
             var constraint = '';
             if (p.uri != 'URI') {
-                constraint = '?' + i_name + ' <' + p.uri + '> ?' + p_name + '. \n';
-                constraint += this.get_foreign(w, i, p_name, j) + '\n'; //handle uri foreign keys
+                constraint = '    ?' + i_name + ' <' + p.uri + '> ?' + p_name + '.';
+                constraint += this.get_foreign(w, i, p_name, j); //handle uri foreign keys
             } else {
-                constraint = this.get_foreign(w, i, i_name, j) + '\n'; //handle property foreign keys
+                constraint = this.get_foreign(w, i, i_name, j); //handle property foreign keys
             }
 
             //add filters
@@ -347,7 +346,7 @@ var builder = {
                 constraint = 'OPTIONAL {' + constraint + '}\n';
             }
 
-            wh_c += constraint;
+            wh_c += constraint + '\n';
         }
 
         if (endpoint != this.endpoint) { //close SERVICE keyword
@@ -366,6 +365,7 @@ var builder = {
         this.where_clause = "WHERE ";
         this.order_clause = "";
         this.endpoint = "";
+        this.prefixes = [];
 
         //initialize base unique names to empty
         for (var i=0; i<w.instances.length; i++) {

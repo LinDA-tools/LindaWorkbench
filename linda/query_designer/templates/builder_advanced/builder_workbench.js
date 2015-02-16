@@ -211,6 +211,7 @@
                             p_object.type = data.type;
                             if (p_object.type.length != "") {
                                 $("#class_instance_" + i_num + " .property-row:nth-of-type(" + (p_object.n+2) + ") span:nth-of-type(2)").html(uri_to_label(p_object.uri) + ' (' + uri_to_label(p_object.type) + ')');
+                                arrows.draw();
                             }
                         },
                         error: function (jqXHR, textStatus, errorThrown)
