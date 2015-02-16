@@ -232,9 +232,14 @@ var builder = {
         var wh_c = '';
 
         for (var j=0; j<arrows.connections.length; j++) {
+             console.log('->' + arrows.connections[j].fp);
              if ((arrows.connections[j].f == '#class_instance_' + i) && (arrows.connections[j].fp == p)) {
                 var tn = arrows.connections[j].t.split('_')[2] //3rd part is the number #class_instance_1
-                wh_c += this.add_instance(w, p_name, tn);
+                if (w.instances[tn].selected_properties[arrows.connections[j].tp].uri == 'URI') { //foreign key to other entitiy
+                    wh_c += this.add_instance(w, p_name, tn);
+                } else { //foreign key to other entity's property
+                    wh_c += this.add_instance(w, p_name + '_' + uri_to_label(w.instances[tn].uri), tn, p_name, arrows.connections[j].tp);
+                }
              }
         }
 
@@ -243,7 +248,7 @@ var builder = {
 
     /*Adds an instance to the query*/
     /*Continues recursively*/
-    add_instance: function(w, instance_name, i) {
+    add_instance: function(w, instance_name, i, property_name, property_n) {
         var wh_c = ' ';
 
         var inst = w.instances[i];
@@ -262,7 +267,12 @@ var builder = {
         //add properties to select clause
         for (var j=0; j<inst.selected_properties.length; j++) {
             var p = inst.selected_properties[j];
-            var p_name = instance_name + '_' + this.uri_to_constraint(p.uri); //e.g ?city_leaderName
+            
+            if (property_n == j) {
+                var p_name = property_name;
+            } else {
+                var p_name = instance_name + '_' + this.uri_to_constraint(p.uri); //e.g ?city_leaderName
+            }
 
             //add chosen properties to select
             if (p.show) {
@@ -277,15 +287,19 @@ var builder = {
         //connect class instance to properties
         for (var j=0; j<inst.selected_properties.length; j++) {
             var p = inst.selected_properties[j];
-            var p_name = instance_name + '_' + this.uri_to_constraint(p.uri); //e.g ?city_leaderName
+            if (property_n == j) {
+                var p_name = property_name;
+            } else {
+                var p_name = instance_name + '_' + this.uri_to_constraint(p.uri); //e.g ?city_leaderName
+            }
 
             //connect property to class instances
             var constraint = '';
             if (p.uri != 'URI') {
                 constraint = '?' + i_name + ' <' + p.uri + '> ?' + p_name + '. \n';
-                constraint += this.get_foreign(w, i, p_name, j) + '\n'; //handle foreign keys
+                constraint += this.get_foreign(w, i, p_name, j) + '\n'; //handle uri foreign keys
             } else {
-                constraint = this.get_foreign(w, i, i_name, j) + '\n'; //handle foreign keys
+                constraint = this.get_foreign(w, i, i_name, j) + '\n'; //handle property foreign keys
             }
 
             //add filters

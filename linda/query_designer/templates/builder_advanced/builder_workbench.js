@@ -232,6 +232,7 @@
                 arrows.paths = data.paths; //restore connection paths
 
                 arrows.draw();
+                builder.reset();
             },
 
             to_json: function() { //export the design to a json object
