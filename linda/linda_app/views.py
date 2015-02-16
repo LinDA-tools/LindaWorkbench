@@ -1249,20 +1249,20 @@ def api_datasource_create(request):
 
             # make REST api call to add rdf data
             headers = {'accept': 'application/rdf+xml', 'content-type': rdf_format, 'charset': 'utf-8'}
-            callAdd = requests.post(get_configuration().private_sparql_endpoint + 'rdf-graphs/' + sname, headers=headers,
+            callAdd = requests.post(get_configuration().private_sparql_endpoint + '/rdf-graphs/' + sname, headers=headers,
                                     data=data)
 
             if callAdd.text == "":
                 # create datasource description
                 DatasourceDescription.objects.create(title=request.POST.get("title"),
                                                      name=sname,
-                                                     uri=get_configuration().private_sparql_endpoint + "rdf-graphs/" + sname,
+                                                     uri=get_configuration().private_sparql_endpoint + "/rdf-graphs/" + sname,
                                                      createdOn=datetime.now(), updatedOn=datetime.now())
 
                 results['status'] = '200'
                 results['message'] = 'Datasource created succesfully.'
                 results['name'] = sname
-                results['uri'] = get_configuration().private_sparql_endpoint + "rdf-graphs/" + sname
+                results['uri'] = get_configuration().private_sparql_endpoint + "/rdf-graphs/" + sname
             else:
                 results['status'] = callAdd.status_code
                 results['message'] = 'Error storing rdf data: ' + callAdd.text
@@ -1290,7 +1290,7 @@ def api_datasource_get(request, dtname):
 
         # make REST api call to get graph
         headers = {'accept': rdf_format, 'content-type': rdf_format}
-        callReplace = requests.get(get_configuration().private_sparql_endpoint + 'rdf-graphs/' + dtname, headers=headers)
+        callReplace = requests.get(get_configuration().private_sparql_endpoint + '/rdf-graphs/' + dtname, headers=headers)
 
         results['status'] = '200'
         results['message'] = "Datasource retrieved successfully"
@@ -1323,10 +1323,10 @@ def api_datasource_replace(request, dtname):
 
             print request.GET.get('append', '')
             if request.GET.get('append'):  # append data to the data source
-                call = requests.post(get_configuration().private_sparql_endpoint + 'rdf-graphs/' + dtname, headers=headers,
+                call = requests.post(get_configuration().private_sparql_endpoint + '/rdf-graphs/' + dtname, headers=headers,
                                        data=data)
             else:  # completely replace the data source
-                call = requests.put(get_configuration().private_sparql_endpoint + 'rdf-graphs/' + dtname, headers=headers,
+                call = requests.put(get_configuration().private_sparql_endpoint + '/rdf-graphs/' + dtname, headers=headers,
                                        data=data)
 
             if call.text == "":
@@ -1362,7 +1362,7 @@ def api_datasource_delete(request, dtname):
         # check if datasource exists
         if DatasourceDescription.objects.filter(name=dtname).exists():
             # make REST api call to delete graph
-            callDelete = requests.delete(get_configuration().private_sparql_endpoint + 'rdf-graphs/' + dtname)
+            callDelete = requests.delete(get_configuration().private_sparql_endpoint + '/rdf-graphs/' + dtname)
 
             if callDelete.text == "":
                 results['status'] = '200'
