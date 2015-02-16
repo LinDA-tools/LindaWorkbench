@@ -14,7 +14,7 @@ var builder = {
         var prefix_str = "";
         var keys = Object.keys(this.prefixes);
         for(var i=0; i<keys.length; i++) {
-            prefix_str += 'PREFIX ' + keys[i] + ':' + this.prefixes[ keys[i] ] + '\n';
+            prefix_str += 'PREFIX ' + keys[i] + ': ' + this.prefixes[ keys[i] ] + '\n';
         }
 
         if (prefix_str != "") {
@@ -83,10 +83,14 @@ var builder = {
         return result.substr(1);
     },
 
+    find_in_prefixes: function(v) {
+        for (var x in this.prefixes) {if (this.prefixes[x] == v) return x;} return undefined;
+    },
+
     detect_prefixes: function(q) {
         var entity_pattern = /<http:\/\/[^>]*>/g; //regex to detect <http://[any char except >]*>
         var res = q.match(entity_pattern);
-        console.log('ITER');
+
         var cnt = [];
         // foreach uri detect its root and calculate frequency of each root
         while ((match = entity_pattern.exec(q)) != null) {
@@ -134,15 +138,18 @@ var builder = {
                         continue;
                     }
 
-                    //find the prefix & add it to prefixes
-                    var prf = '';
-                    if (this.known_prefixes[roots[i]]) {
-                        prf = this.known_prefixes[roots[i]];
-                    } else {
-                        prf_cnt++;
-                        prf = 'prf' + prf_cnt;
+                    //find the prefix or add it to prefixes
+                    var prf = this.find_in_prefixes('<' + roots[i] + '>');
+
+                    if (prf == undefined) {
+                        if (this.known_prefixes[roots[i]]) {
+                            prf = this.known_prefixes[roots[i]];
+                        } else {
+                            prf_cnt++;
+                            prf = 'prf' + prf_cnt;
+                        }
+                        this.prefixes[prf] = '<' + roots[i] + '>';
                     }
-                    this.prefixes[prf] = '<' + roots[i] + '>';
 
                     //replace the root uri with the prefix
                     q = q.substr(0, idx-1) + prf + ':' + q.substr(idx+roots[i].length, (ent_close_pos - idx - roots[i].length ))+ q.substr(ent_close_pos+1);
@@ -234,107 +241,107 @@ var builder = {
         return wh_c;
     },
 
-        /*Adds an instance to the query*/
-        /*Continues recursively*/
-        add_instance: function(w, instance_name, i) {
-            var wh_c = ' ';
+    /*Adds an instance to the query*/
+    /*Continues recursively*/
+    add_instance: function(w, instance_name, i) {
+        var wh_c = ' ';
 
-            var inst = w.instances[i];
-            var i_name = instance_name;
+        var inst = w.instances[i];
+        var i_name = instance_name;
 
-            //check if resource comes from a remote endpoint
-            var endpoint = total_endpoints[ w.instances[i].dt_name ];
+        //check if resource comes from a remote endpoint
+        var endpoint = total_endpoints[ w.instances[i].dt_name ];
 
-            if (endpoint != this.endpoint) { //use SERVICE keyword
-                wh_c += '\nSERVICE <' + endpoint + '> {\n';
-            }
+        if (endpoint != this.endpoint) { //use SERVICE keyword
+            wh_c += '\nSERVICE <' + endpoint + '> {\n';
+        }
 
-            //add class constraint -- local copy of total where clause
-            wh_c += '?' + i_name + ' a <' + inst.uri + '>.';
+        //add class constraint -- local copy of total where clause
+        wh_c += '?' + i_name + ' a <' + inst.uri + '>.';
 
-            //add properties to select clause
-            for (var j=0; j<inst.selected_properties.length; j++) {
-                var p = inst.selected_properties[j];
-                var p_name = instance_name + '_' + this.uri_to_constraint(p.uri); //e.g ?city_leaderName
+        //add properties to select clause
+        for (var j=0; j<inst.selected_properties.length; j++) {
+            var p = inst.selected_properties[j];
+            var p_name = instance_name + '_' + this.uri_to_constraint(p.uri); //e.g ?city_leaderName
 
-                //add chosen properties to select
-                if (p.show) {
-                    if (p.uri == 'URI') {
-                        this.select_vars.push('?' + i_name);
-                    } else {
-                        this.select_vars.push('?' + p_name);
-                    }
-                }
-            }
-
-            //connect class instance to properties
-            for (var j=0; j<inst.selected_properties.length; j++) {
-                var p = inst.selected_properties[j];
-                var p_name = instance_name + '_' + this.uri_to_constraint(p.uri); //e.g ?city_leaderName
-
-                //connect property to class instances
-                var constraint = '';
-                if (p.uri != 'URI') {
-                    constraint = '?' + i_name + ' <' + p.uri + '> ?' + p_name + '. \n';
-                    constraint += this.get_foreign(w, i, p_name, j) + '\n'; //handle foreign keys
+            //add chosen properties to select
+            if (p.show) {
+                if (p.uri == 'URI') {
+                    this.select_vars.push('?' + i_name);
                 } else {
-                    constraint = this.get_foreign(w, i, i_name, j) + '\n'; //handle foreign keys
+                    this.select_vars.push('?' + p_name);
                 }
+            }
+        }
 
-                //add filters
-                if (p.filters) {
-                    if (p.uri != 'URI') {
-                        constraint += this.get_filters('?' + p_name, p);
-                    } else {
-                        constraint += this.get_filters('?' + i_name, p);
-                    }
-                }
+        //connect class instance to properties
+        for (var j=0; j<inst.selected_properties.length; j++) {
+            var p = inst.selected_properties[j];
+            var p_name = instance_name + '_' + this.uri_to_constraint(p.uri); //e.g ?city_leaderName
 
-                //check if order
-                if ((p.order_by) && (p.order_by.length > 0)) {
-
-                    if (this.order_clause == "") {
-                        this.order_clause = "ORDER BY";
-                    }
-
-                    var v_name = "";
-                    //this.order_clause += ' ' + p.order_by + "(?" + p_name + ')';
-                    if (p.uri != 'URI') {
-                         v_name = "?" + p_name;
-                    } else {
-                         v_name = "?" + i_name;
-                    }
-
-                    var new_order_clause = "";
-                    if ((p.order_by == "ASC") || (p.order_by == "DESC")) {
-                        new_order_clause = p.order_by + "(" + v_name + ')';
-                    }
-                    else if ((p.order_by == "NUMBER_ASC") || (p.order_by == "NUMBER_DESC")) {
-                        this.prefixes['xsd'] = "<http://www.w3.org/2001/XMLSchema#>";
-                        new_order_clause = p.order_by.split('_')[1] + "(xsd:decimal(" + v_name + '))';
-                    }
-                    else if ((p.order_by == "DATE_ASC") || (p.order_by == "DATE_DESC")) {
-                        this.prefixes['xsd'] = "<http://www.w3.org/2001/XMLSchema#>";
-                        new_order_clause = p.order_by.split('_')[1] + "(xsd:date(" + v_name + '))';
-                    }
-
-                    this.order_clause += ' ' + new_order_clause;
-                }
-
-                //mark optional properties
-                if (p.optional) {
-                    constraint = 'OPTIONAL {' + constraint + '}\n';
-                }
-
-                wh_c += constraint;
+            //connect property to class instances
+            var constraint = '';
+            if (p.uri != 'URI') {
+                constraint = '?' + i_name + ' <' + p.uri + '> ?' + p_name + '. \n';
+                constraint += this.get_foreign(w, i, p_name, j) + '\n'; //handle foreign keys
+            } else {
+                constraint = this.get_foreign(w, i, i_name, j) + '\n'; //handle foreign keys
             }
 
-            if (endpoint != this.endpoint) { //close SERVICE keyword
-                wh_c += '}. \n';
+            //add filters
+            if (p.filters) {
+                if (p.uri != 'URI') {
+                    constraint += this.get_filters('?' + p_name, p);
+                } else {
+                    constraint += this.get_filters('?' + i_name, p);
+                }
             }
 
-            return wh_c;
-        },
+            //check if order
+            if ((p.order_by) && (p.order_by.length > 0)) {
+
+                if (this.order_clause == "") {
+                    this.order_clause = "ORDER BY";
+                }
+
+                var v_name = "";
+                //this.order_clause += ' ' + p.order_by + "(?" + p_name + ')';
+                if (p.uri != 'URI') {
+                     v_name = "?" + p_name;
+                } else {
+                     v_name = "?" + i_name;
+                }
+
+                var new_order_clause = "";
+                if ((p.order_by == "ASC") || (p.order_by == "DESC")) {
+                    new_order_clause = p.order_by + "(" + v_name + ')';
+                }
+                else if ((p.order_by == "NUMBER_ASC") || (p.order_by == "NUMBER_DESC")) {
+                    this.prefixes['xsd'] = "<http://www.w3.org/2001/XMLSchema#>";
+                    new_order_clause = p.order_by.split('_')[1] + "(xsd:decimal(" + v_name + '))';
+                }
+                else if ((p.order_by == "DATE_ASC") || (p.order_by == "DATE_DESC")) {
+                    this.prefixes['xsd'] = "<http://www.w3.org/2001/XMLSchema#>";
+                    new_order_clause = p.order_by.split('_')[1] + "(xsd:date(" + v_name + '))';
+                }
+
+                this.order_clause += ' ' + new_order_clause;
+            }
+
+            //mark optional properties
+            if (p.optional) {
+                constraint = 'OPTIONAL {' + constraint + '}\n';
+            }
+
+            wh_c += constraint;
+        }
+
+        if (endpoint != this.endpoint) { //close SERVICE keyword
+            wh_c += '}. \n';
+        }
+
+        return wh_c;
+    },
 
     create: function() {
         var w = builder_workbench;
