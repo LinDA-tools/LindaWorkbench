@@ -4,6 +4,7 @@ from django.core import serializers
 from django.core.paginator import Paginator, EmptyPage
 from django.http import HttpResponse, HttpResponseNotFound, Http404, HttpResponseForbidden
 from django.shortcuts import redirect, render, get_object_or_404
+from django.test._doctest import _OutputRedirectingPdb
 from django.utils.http import urlquote
 
 from django.core.validators import URLValidator
@@ -904,7 +905,8 @@ def datasourceCreateRDF(request):
             # get the first chunk
             inp_file = request.FILES["rdffile"].file
             current_chunk = inp_file.read(RDF_CHUNK_SIZE)
-            current_chunk, rem = clear_chunk(current_chunk, newlines)
+            if len(current_chunk) == RDF_CHUNK_SIZE:
+                current_chunk, rem = clear_chunk(current_chunk, newlines)
         else:
             current_chunk = request.POST.get("rdfdata")
             inp_file = False
@@ -987,7 +989,6 @@ def datasourceReplaceRDF(request, dtname):
         newlines = request.POST.get('newlines', None)
         append = request.POST.get('append', False)
 
-        import pdb;pdb.set_trace()
         # Get the posted rdf data
         if "rdffile" in request.FILES:
             inp_file = request.FILES["rdffile"].file
