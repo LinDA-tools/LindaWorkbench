@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="US-ASCII"?>
+<rdf:RDF
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns:an="http://107.170.70.175:8000/openrdf-sesame/repositories/linda/rdf-graphs/analyticsontology#"
+    xmlns:foaf="http://xmlns.com/foaf/0.1/"
+    xmlns:sio="http://semanticscience.org/ontology/sio#"
+    xmlns:owl="http://www.w3.org/2002/07/owl#"
+    xmlns:prov="http://www.w3.org/ns/prov#"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+    xmlns:ds="http://107.170.70.175:8000/openrdf-sesame/repositories/linda/statements?context=:_analytics50V4Date23012015#"
+    xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">
+  <an:analytics_result_node rdf:about="http://107.170.70.175:8000/openrdf-sesame/repositories/linda/statements?context=:_analytics50V4Date23012015#/5">
+    <ds:predictedValue>31.728</ds:predictedValue>
+    <ds:forecastingDate>2006-06-01</ds:forecastingDate>
+    <prov:wasGeneratedBy>
+      <an:analytic_process rdf:about="http://107.170.70.175:8000/openrdf-sesame/repositories/linda/rdf-graphs/analyticsontology#analytic_process/50/3">
+        <ds:algorithm>Arima</ds:algorithm>
+        <owl:versionInfo>1.0.0</owl:versionInfo>
+        <rdfs:subClassOf rdf:resource="http://www.w3.org/ns/prov#Activity"/>
+        <rdfs:comment>Get time line prediction for temperatures that are published by the Bureau of Meteorology</rdfs:comment>
+        <rdfs:label>linda analytic process</rdfs:label>
+        <ds:hasTrainDataset rdf:resource="http://107.170.70.175:8000/sparql/?q_id=33"/>
+        <prov:atTime rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime"
+        >2015-01-23T15:52:41.31Z</prov:atTime>
+        <ds:performance>
+          <an:performance rdf:about="http://107.170.70.175:8000/openrdf-sesame/repositories/linda/rdf-graphs/analyticsontology#performance/50/3">
+            <ds:timeToCreateRDFOutPutInSecs>0.0</ds:timeToCreateRDFOutPutInSecs>
+            <ds:timeToRunAnalyticsProcessInSecs>5.854</ds:timeToRunAnalyticsProcessInSecs>
+            <ds:timeToGetDataInSecs>4.264</ds:timeToGetDataInSecs>
+            <ds:dataSizeOfAnalyzedDatainBytes>3932.0</ds:dataSizeOfAnalyzedDatainBytes>
+          </an:performance>
+        </ds:performance>
+        <ds:analyzedField rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+        >maxTemperatureMean</ds:analyzedField>
+        <prov:wasAssociatedWith>
+          <an:Software rdf:about="http://107.170.70.175:8000/openrdf-sesame/repositories/linda/rdf-graphs/analyticsontology#Software/LinDa_analytics_software">
+            <prov:actedOnBehalfOf>
+              <an:User rdf:about="http://107.170.70.175:8000/openrdf-sesame/repositories/linda/rdf-graphs/analyticsontology#User/root_analytics">
+                <foaf:accountName>root_analytics</foaf:accountName>
+                <foaf:holdsAccount>
+                  <foaf:OnlineAccount>
+                    <foaf:homepage>http://107.170.70.175:8000/</foaf:homepage>
+                  </foaf:OnlineAccount>
+                </foaf:holdsAccount>
+                <owl:equivalentClass rdf:resource="http://xmlns.com/foaf/0.1/Person"/>
+                <rdfs:label>linda user</rdfs:label>
+                <rdfs:subClassOf rdf:resource="http://www.w3.org/ns/prov#Agent"/>
+              </an:User>
+            </prov:actedOnBehalfOf>
+            <rdfs:label>analytics software</rdfs:label>
+            <rdfs:subClassOf rdf:resource="http://www.w3.org/ns/prov#Agent"/>
+          </an:Software>
+        </prov:wasAssociatedWith>
+      </an:analytic_process>
+    </prov:wasGeneratedBy>
+    <prov:wasDerivedFrom>
+      <rdf:Seq rdf:about="http://107.170.70.175:8000/openrdf-sesame/repositories/linda/rdf-graphs/analyticsontology#analytic_input_collection/50/3">
+        <rdf:li>
+          <an:analytic_input_node rdf:about="http://lab.environment.data.gov.au/data/acorn/climate/slice/station/001019/year/2003/month/01"/>
+        </rdf:li>
+        <rdf:li>
+          <an:analytic_input_node rdf:about="http://lab.environment.data.gov.au/data/acorn/climate/slice/station/001019/year/2003/month/02"/>
+        </rdf:li>
+        <rdf:li>
+          <an:analytic_input_node rdf:about="http://lab.environment.data.gov.au/data/acorn/climate/slice/station/001019/year/2003/month/03"/>
+        </rdf:li>
+        <rdf:li>
+          <an:analytic_input_node rdf:about="http://lab.environment.data.gov.au/data/acorn/climate/slice/station/001019/year/2003/month/04"/>
+        </rdf:li>
+        <rdf:li>
+          <an:analytic_input_node rdf:about="http://lab.environment.data.gov.au/data/acorn/climate/slice/station/001019/year/2003/month/05"/>
+        </rdf:li>
+        <rdf:li>
+          <an:analytic_input_node rdf:about="http://lab.environment.data.gov.au/data/acorn/climate/slice/station/001019/year/2003/month/06"/>
+        </rdf:li>
+        <rdf:li>
+          <an:analytic_input_node rdf:about="http://lab.environment.data.gov.au/data/acorn/climate/slice/station/001019/year/2003/month/07"/>
+        </rdf:li>
+        <rdf:li>
+          <an:analytic_input_node rdf:about="http://lab.environment.data.gov.au/data/acorn/climate/slice/station/001019/year/2003/month/08"/>
+        </rdf:li>
+        <rdf:li>
+          <an:analytic_input_node rdf:about="http://lab.environment.data.gov.au/data/acorn/climate/slice/station/001019/year/2003/month/09"/>
+        </rdf:li>
+        <rdf:li>
+          <an:analytic_input_node rdf:about="http://lab.environment.data.gov.au/data/acorn/climate/slice/station/001019/year/2003/month/10"/>
+        </rdf:li>
+        <rdf:li>
+          <an:analytic_input_node rdf:about="http://lab.environment.data.gov.au/data/acorn/climate/slice/station/001019/year/2003/month/11"/>
+        </rdf:li>
+        <rdf:li>
+          <an:analytic_input_node rdf:about="http://lab.environment.data.gov.au/data/acorn/climate/slice/station/001019/year/2003/month/12"/>
+        </rdf:li>
+        <rdf:li>
+          <an:analytic_input_node rdf:about="http://lab.environment.data.gov.au/data/acorn/climate/slice/station/001019/year/2004/month/01"/>
+        </rdf:li>
+        <rdf:li>
+          <an:analytic_input_node rdf:about="http://lab.environment.data.gov.au/data/acorn/climate/slice/station/001019/year/2004/month/02"/>
+        </rdf:li>
+        <rdf:li>
+          <an:analytic_input_node rdf:about="http://lab.environment.data.gov.au/data/acorn/climate/slice/station/001019/year/2004/month/03"/>
+        </rdf:li>
+        <rdf:li>
+          <an:analytic_input_node rdf:about="http://lab.environment.data.gov.au/data/acorn/climate/slice/station/001019/year/2004/month/04"/>
+        </rdf:li>
+        <rdf:li>
+          <an:analytic_input_node rdf:about="http://lab.environment.data.gov.au/data/acorn/climate/slice/station/001019/year/2004/month/05"/>
+        </rdf:li>
+        <rdf:li>
+          <an:analytic_input_node rdf:about="http://lab.environment.data.gov.au/data/acorn/climate/slice/station/001019/year/2004/month/06"/>
+        </rdf:li>
+        <rdf:li>
+          <an:analytic_input_node rdf:about="http://lab.environment.data.gov.au/data/acorn/climate/slice/station/001019/year/2004/month/07"/>
+        </rdf:li>
+        <rdf:li>
+          <an:analytic_input_node rdf:about="http://lab.environment.data.gov.au/data/acorn/climate/slice/station/001019/year/2004/month/08"/>
+        </rdf:li>
+        <rdf:li>
+          <an:analytic_input_node rdf:about="http://lab.environment.data.gov.au/data/acorn/climate/slice/station/001019/year/2004/month/09"/>
+        </rdf:li>
+        <rdf:li>
+          <an:analytic_input_node rdf:about="http://lab.environment.data.gov.au/data/acorn/climate/slice/station/001019/year/2004/month/10"/>
+        </rdf:li>
+        <rdf:li>
+          <an:analytic_input_node rdf:about="http://lab.environment.data.gov.au/data/acorn/climate/slice/station/001019/year/2004/month/11"/>
+        </rdf:li>
+        <rdf:li>
+          <an:analytic_input_node rdf:about="http://lab.environment.data.gov.au/data/acorn/climate/slice/station/001019/year/2004/month/12"/>
+        </rdf:li>
+        <rdf:li>
+          <an:analytic_input_node rdf:about="http://lab.environment.data.gov.au/data/acorn/climate/slice/station/001019/year/2005/month/01"/>
+        </rdf:li>
+        <rdf:li>
+          <an:analytic_input_node rdf:about="http://lab.environment.data.gov.au/data/acorn/climate/slice/station/001019/year/2005/month/02"/>
+        </rdf:li>
+        <rdf:li>
+          <an:analytic_input_node rdf:about="http://lab.environment.data.gov.au/data/acorn/climate/slice/station/001019/year/2005/month/03"/>
+        </rdf:li>
+        <rdf:li>
+          <an:analytic_input_node rdf:about="http://lab.environment.data.gov.au/data/acorn/climate/slice/station/001019/year/2005/month/04"/>
+        </rdf:li>
+        <rdf:li>
+          <an:analytic_input_node rdf:about="http://lab.environment.data.gov.au/data/acorn/climate/slice/station/001019/year/2005/month/05"/>
+        </rdf:li>
+        <rdf:li>
+          <an:analytic_input_node rdf:about="http://lab.environment.data.gov.au/data/acorn/climate/slice/station/001019/year/2005/month/06"/>
+        </rdf:li>
+        <rdf:li>
+          <an:analytic_input_node rdf:about="http://lab.environment.data.gov.au/data/acorn/climate/slice/station/001019/year/2005/month/07"/>
+        </rdf:li>
+        <rdf:li>
+          <an:analytic_input_node rdf:about="http://lab.environment.data.gov.au/data/acorn/climate/slice/station/001019/year/2005/month/08"/>
+        </rdf:li>
+        <rdf:li>
+          <an:analytic_input_node rdf:about="http://lab.environment.data.gov.au/data/acorn/climate/slice/station/001019/year/2005/month/09"/>
+        </rdf:li>
+        <rdf:li>
+          <an:analytic_input_node rdf:about="http://lab.environment.data.gov.au/data/acorn/climate/slice/station/001019/year/2005/month/10"/>
+        </rdf:li>
+        <rdf:li>
+          <an:analytic_input_node rdf:about="http://lab.environment.data.gov.au/data/acorn/climate/slice/station/001019/year/2005/month/11"/>
+        </rdf:li>
+        <rdf:li>
+          <an:analytic_input_node rdf:about="http://lab.environment.data.gov.au/data/acorn/climate/slice/station/001019/year/2005/month/12"/>
+        </rdf:li>
+      </rdf:Seq>
+    </prov:wasDerivedFrom>
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/ns/prov#Entity"/>
+  </an:analytics_result_node>
+  <an:analytics_result_node rdf:about="http://107.170.70.175:8000/openrdf-sesame/repositories/linda/statements?context=:_analytics50V4Date23012015#/1">
+    <ds:predictedValue>33.79</ds:predictedValue>
+    <ds:forecastingDate>2006-02-01</ds:forecastingDate>
+    <prov:wasGeneratedBy rdf:resource="http://107.170.70.175:8000/openrdf-sesame/repositories/linda/rdf-graphs/analyticsontology#analytic_process/50/3"/>
+    <prov:wasDerivedFrom rdf:resource="http://107.170.70.175:8000/openrdf-sesame/repositories/linda/rdf-graphs/analyticsontology#analytic_input_collection/50/3"/>
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/ns/prov#Entity"/>
+  </an:analytics_result_node>
+  <an:analytics_result_node rdf:about="http://107.170.70.175:8000/openrdf-sesame/repositories/linda/statements?context=:_analytics50V4Date23012015#/8">
+    <ds:predictedValue>34.746</ds:predictedValue>
+    <ds:forecastingDate>2006-09-01</ds:forecastingDate>
+    <prov:wasGeneratedBy rdf:resource="http://107.170.70.175:8000/openrdf-sesame/repositories/linda/rdf-graphs/analyticsontology#analytic_process/50/3"/>
+    <prov:wasDerivedFrom rdf:resource="http://107.170.70.175:8000/openrdf-sesame/repositories/linda/rdf-graphs/analyticsontology#analytic_input_collection/50/3"/>
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/ns/prov#Entity"/>
+  </an:analytics_result_node>
+  <an:analytics_result_node rdf:about="http://107.170.70.175:8000/openrdf-sesame/repositories/linda/statements?context=:_analytics50V4Date23012015#/6">
+    <ds:predictedValue>32.41</ds:predictedValue>
+    <ds:forecastingDate>2006-07-01</ds:forecastingDate>
+    <prov:wasGeneratedBy rdf:resource="http://107.170.70.175:8000/openrdf-sesame/repositories/linda/rdf-graphs/analyticsontology#analytic_process/50/3"/>
+    <prov:wasDerivedFrom rdf:resource="http://107.170.70.175:8000/openrdf-sesame/repositories/linda/rdf-graphs/analyticsontology#analytic_input_collection/50/3"/>
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/ns/prov#Entity"/>
+  </an:analytics_result_node>
+  <an:analytics_result_node rdf:about="http://107.170.70.175:8000/openrdf-sesame/repositories/linda/statements?context=:_analytics50V4Date23012015#/7">
+    <ds:predictedValue>33.954</ds:predictedValue>
+    <ds:forecastingDate>2006-08-01</ds:forecastingDate>
+    <prov:wasGeneratedBy rdf:resource="http://107.170.70.175:8000/openrdf-sesame/repositories/linda/rdf-graphs/analyticsontology#analytic_process/50/3"/>
+    <prov:wasDerivedFrom rdf:resource="http://107.170.70.175:8000/openrdf-sesame/repositories/linda/rdf-graphs/analyticsontology#analytic_input_collection/50/3"/>
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/ns/prov#Entity"/>
+  </an:analytics_result_node>
+  <an:analytics_result_node rdf:about="http://107.170.70.175:8000/openrdf-sesame/repositories/linda/statements?context=:_analytics50V4Date23012015#/2">
+    <ds:predictedValue>33.968</ds:predictedValue>
+    <ds:forecastingDate>2006-03-01</ds:forecastingDate>
+    <prov:wasGeneratedBy rdf:resource="http://107.170.70.175:8000/openrdf-sesame/repositories/linda/rdf-graphs/analyticsontology#analytic_process/50/3"/>
+    <prov:wasDerivedFrom rdf:resource="http://107.170.70.175:8000/openrdf-sesame/repositories/linda/rdf-graphs/analyticsontology#analytic_input_collection/50/3"/>
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/ns/prov#Entity"/>
+  </an:analytics_result_node>
+  <an:analytics_result_node rdf:about="http://107.170.70.175:8000/openrdf-sesame/repositories/linda/statements?context=:_analytics50V4Date23012015#/11">
+    <ds:predictedValue>37.019</ds:predictedValue>
+    <ds:forecastingDate>2006-12-01</ds:forecastingDate>
+    <prov:wasGeneratedBy rdf:resource="http://107.170.70.175:8000/openrdf-sesame/repositories/linda/rdf-graphs/analyticsontology#analytic_process/50/3"/>
+    <prov:wasDerivedFrom rdf:resource="http://107.170.70.175:8000/openrdf-sesame/repositories/linda/rdf-graphs/analyticsontology#analytic_input_collection/50/3"/>
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/ns/prov#Entity"/>
+  </an:analytics_result_node>
+  <an:analytics_result_node rdf:about="http://107.170.70.175:8000/openrdf-sesame/repositories/linda/statements?context=:_analytics50V4Date23012015#/3">
+    <ds:predictedValue>36.533</ds:predictedValue>
+    <ds:forecastingDate>2006-04-01</ds:forecastingDate>
+    <prov:wasGeneratedBy rdf:resource="http://107.170.70.175:8000/openrdf-sesame/repositories/linda/rdf-graphs/analyticsontology#analytic_process/50/3"/>
+    <prov:wasDerivedFrom rdf:resource="http://107.170.70.175:8000/openrdf-sesame/repositories/linda/rdf-graphs/analyticsontology#analytic_input_collection/50/3"/>
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/ns/prov#Entity"/>
+  </an:analytics_result_node>
+  <an:analytics_result_node rdf:about="http://107.170.70.175:8000/openrdf-sesame/repositories/linda/statements?context=:_analytics50V4Date23012015#/10">
+    <ds:predictedValue>38.087</ds:predictedValue>
+    <ds:forecastingDate>2006-11-01</ds:forecastingDate>
+    <prov:wasGeneratedBy rdf:resource="http://107.170.70.175:8000/openrdf-sesame/repositories/linda/rdf-graphs/analyticsontology#analytic_process/50/3"/>
+    <prov:wasDerivedFrom rdf:resource="http://107.170.70.175:8000/openrdf-sesame/repositories/linda/rdf-graphs/analyticsontology#analytic_input_collection/50/3"/>
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/ns/prov#Entity"/>
+  </an:analytics_result_node>
+  <an:analytics_result_node rdf:about="http://107.170.70.175:8000/openrdf-sesame/repositories/linda/statements?context=:_analytics50V4Date23012015#/4">
+    <ds:predictedValue>34.514</ds:predictedValue>
+    <ds:forecastingDate>2006-05-01</ds:forecastingDate>
+    <prov:wasGeneratedBy rdf:resource="http://107.170.70.175:8000/openrdf-sesame/repositories/linda/rdf-graphs/analyticsontology#analytic_process/50/3"/>
+    <prov:wasDerivedFrom rdf:resource="http://107.170.70.175:8000/openrdf-sesame/repositories/linda/rdf-graphs/analyticsontology#analytic_input_collection/50/3"/>
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/ns/prov#Entity"/>
+  </an:analytics_result_node>
+  <an:analytics_result_node rdf:about="http://107.170.70.175:8000/openrdf-sesame/repositories/linda/statements?context=:_analytics50V4Date23012015#/0">
+    <ds:predictedValue>35.44</ds:predictedValue>
+    <ds:forecastingDate>2006-01-01</ds:forecastingDate>
+    <prov:wasGeneratedBy rdf:resource="http://107.170.70.175:8000/openrdf-sesame/repositories/linda/rdf-graphs/analyticsontology#analytic_process/50/3"/>
+    <prov:wasDerivedFrom rdf:resource="http://107.170.70.175:8000/openrdf-sesame/repositories/linda/rdf-graphs/analyticsontology#analytic_input_collection/50/3"/>
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/ns/prov#Entity"/>
+  </an:analytics_result_node>
+  <an:analytics_result_node rdf:about="http://107.170.70.175:8000/openrdf-sesame/repositories/linda/statements?context=:_analytics50V4Date23012015#/9">
+    <ds:predictedValue>37.675</ds:predictedValue>
+    <ds:forecastingDate>2006-10-01</ds:forecastingDate>
+    <prov:wasGeneratedBy rdf:resource="http://107.170.70.175:8000/openrdf-sesame/repositories/linda/rdf-graphs/analyticsontology#analytic_process/50/3"/>
+    <prov:wasDerivedFrom rdf:resource="http://107.170.70.175:8000/openrdf-sesame/repositories/linda/rdf-graphs/analyticsontology#analytic_input_collection/50/3"/>
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/ns/prov#Entity"/>
+  </an:analytics_result_node>
+</rdf:RDF>

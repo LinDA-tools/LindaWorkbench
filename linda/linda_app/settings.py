@@ -126,7 +126,7 @@ TEMPLATE_DIRS = (
 LINDA_HOME = 'http://localhost:8000/'
 
 # apache-tomcat url
-LINDA_APACHE_ANALYTICS = 'http://localhost/LindaAnalytics/'
+LINDA_APACHE_ANALYTICS = '/static/LindaAnalytics/'
 
 INSTALLED_APPS = (
     'linda_app',

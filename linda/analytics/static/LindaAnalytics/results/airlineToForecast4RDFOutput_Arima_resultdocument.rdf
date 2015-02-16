@@ -1,0 +1,118 @@
+<rdf:RDF
+    xmlns:ds="http://localhost:8080/openrdf-sesame/repositories/linda/statements?context=:_analytics39V5Date22122014#"
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns:foaf="http://xmlns.com/foaf/0.1/"
+    xmlns:sio="http://semanticscience.org/ontology/sio#"
+    xmlns:owl="http://www.w3.org/2002/07/owl#"
+    xmlns:prov="http://www.w3.org/ns/prov#"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+    xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+    xmlns:an="http://localhost:8080/openrdf-sesame/repositories/linda/rdf-graphs/analyticsontology#">
+  <an:analytics_result_node rdf:about="http://localhost:8080/openrdf-sesame/repositories/linda/statements?context=:_analytics39V5Date22122014#/9">
+    <ds:predictedValue>450.567</ds:predictedValue>
+    <ds:forecastingDate>1961-10-01</ds:forecastingDate>
+    <prov:wasGeneratedBy>
+      <an:analytic_process rdf:about="http://localhost:8080/openrdf-sesame/repositories/linda/rdf-graphs/analyticsontology#analytic_process/39/4">
+        <rdfs:comment>airlines forecasting</rdfs:comment>
+        <rdfs:label>linda analytic process</rdfs:label>
+        <prov:wasAssociatedWith>
+          <an:Software rdf:about="http://localhost:8080/openrdf-sesame/repositories/linda/rdf-graphs/analyticsontology#Software/LinDa_analytics_software">
+            <prov:actedOnBehalfOf>
+              <an:User rdf:about="http://localhost:8080/openrdf-sesame/repositories/linda/rdf-graphs/analyticsontology#User/eleni">
+                <foaf:accountName>eleni</foaf:accountName>
+                <foaf:holdsAccount>
+                  <foaf:OnlineAccount>
+                    <foaf:homepage>http://localhost:8000/</foaf:homepage>
+                  </foaf:OnlineAccount>
+                </foaf:holdsAccount>
+                <owl:equivalentClass rdf:resource="http://xmlns.com/foaf/0.1/Person"/>
+                <rdfs:label>linda user</rdfs:label>
+                <rdfs:subClassOf rdf:resource="http://www.w3.org/ns/prov#Agent"/>
+              </an:User>
+            </prov:actedOnBehalfOf>
+            <rdfs:label>analytics software</rdfs:label>
+            <rdfs:subClassOf rdf:resource="http://www.w3.org/ns/prov#Agent"/>
+          </an:Software>
+        </prov:wasAssociatedWith>
+        <rdfs:subClassOf rdf:resource="http://www.w3.org/ns/prov#Activity"/>
+        <ds:analyzedField rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+        >Date</ds:analyzedField>
+        <owl:versionInfo>1.0.0</owl:versionInfo>
+      </an:analytic_process>
+    </prov:wasGeneratedBy>
+    <prov:wasDerivedFrom>
+      <an:analytic_input_node rdf:about="http://health.data.ny.gov/resource/hbu9-xsrx/"/>
+    </prov:wasDerivedFrom>
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/ns/prov#Entity"/>
+  </an:analytics_result_node>
+  <an:analytics_result_node rdf:about="http://localhost:8080/openrdf-sesame/repositories/linda/statements?context=:_analytics39V5Date22122014#/0">
+    <ds:predictedValue>444.875</ds:predictedValue>
+    <ds:forecastingDate>1961-01-01</ds:forecastingDate>
+    <prov:wasGeneratedBy rdf:resource="http://localhost:8080/openrdf-sesame/repositories/linda/rdf-graphs/analyticsontology#analytic_process/39/4"/>
+    <prov:wasDerivedFrom rdf:resource="http://health.data.ny.gov/resource/hbu9-xsrx/"/>
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/ns/prov#Entity"/>
+  </an:analytics_result_node>
+  <an:analytics_result_node rdf:about="http://localhost:8080/openrdf-sesame/repositories/linda/statements?context=:_analytics39V5Date22122014#/1">
+    <ds:predictedValue>448.822</ds:predictedValue>
+    <ds:forecastingDate>1961-02-01</ds:forecastingDate>
+    <prov:wasGeneratedBy rdf:resource="http://localhost:8080/openrdf-sesame/repositories/linda/rdf-graphs/analyticsontology#analytic_process/39/4"/>
+    <prov:wasDerivedFrom rdf:resource="http://health.data.ny.gov/resource/hbu9-xsrx/"/>
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/ns/prov#Entity"/>
+  </an:analytics_result_node>
+  <an:analytics_result_node rdf:about="http://localhost:8080/openrdf-sesame/repositories/linda/statements?context=:_analytics39V5Date22122014#/3">
+    <ds:predictedValue>450.403</ds:predictedValue>
+    <ds:forecastingDate>1961-04-01</ds:forecastingDate>
+    <prov:wasGeneratedBy rdf:resource="http://localhost:8080/openrdf-sesame/repositories/linda/rdf-graphs/analyticsontology#analytic_process/39/4"/>
+    <prov:wasDerivedFrom rdf:resource="http://health.data.ny.gov/resource/hbu9-xsrx/"/>
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/ns/prov#Entity"/>
+  </an:analytics_result_node>
+  <an:analytics_result_node rdf:about="http://localhost:8080/openrdf-sesame/repositories/linda/statements?context=:_analytics39V5Date22122014#/2">
+    <ds:predictedValue>450.032</ds:predictedValue>
+    <ds:forecastingDate>1961-03-01</ds:forecastingDate>
+    <prov:wasGeneratedBy rdf:resource="http://localhost:8080/openrdf-sesame/repositories/linda/rdf-graphs/analyticsontology#analytic_process/39/4"/>
+    <prov:wasDerivedFrom rdf:resource="http://health.data.ny.gov/resource/hbu9-xsrx/"/>
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/ns/prov#Entity"/>
+  </an:analytics_result_node>
+  <an:analytics_result_node rdf:about="http://localhost:8080/openrdf-sesame/repositories/linda/statements?context=:_analytics39V5Date22122014#/4">
+    <ds:predictedValue>450.516</ds:predictedValue>
+    <ds:forecastingDate>1961-05-01</ds:forecastingDate>
+    <prov:wasGeneratedBy rdf:resource="http://localhost:8080/openrdf-sesame/repositories/linda/rdf-graphs/analyticsontology#analytic_process/39/4"/>
+    <prov:wasDerivedFrom rdf:resource="http://health.data.ny.gov/resource/hbu9-xsrx/"/>
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/ns/prov#Entity"/>
+  </an:analytics_result_node>
+  <an:analytics_result_node rdf:about="http://localhost:8080/openrdf-sesame/repositories/linda/statements?context=:_analytics39V5Date22122014#/10">
+    <ds:predictedValue>450.567</ds:predictedValue>
+    <ds:forecastingDate>1961-11-01</ds:forecastingDate>
+    <prov:wasGeneratedBy rdf:resource="http://localhost:8080/openrdf-sesame/repositories/linda/rdf-graphs/analyticsontology#analytic_process/39/4"/>
+    <prov:wasDerivedFrom rdf:resource="http://health.data.ny.gov/resource/hbu9-xsrx/"/>
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/ns/prov#Entity"/>
+  </an:analytics_result_node>
+  <an:analytics_result_node rdf:about="http://localhost:8080/openrdf-sesame/repositories/linda/statements?context=:_analytics39V5Date22122014#/7">
+    <ds:predictedValue>450.565</ds:predictedValue>
+    <ds:forecastingDate>1961-08-01</ds:forecastingDate>
+    <prov:wasGeneratedBy rdf:resource="http://localhost:8080/openrdf-sesame/repositories/linda/rdf-graphs/analyticsontology#analytic_process/39/4"/>
+    <prov:wasDerivedFrom rdf:resource="http://health.data.ny.gov/resource/hbu9-xsrx/"/>
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/ns/prov#Entity"/>
+  </an:analytics_result_node>
+  <an:analytics_result_node rdf:about="http://localhost:8080/openrdf-sesame/repositories/linda/statements?context=:_analytics39V5Date22122014#/6">
+    <ds:predictedValue>450.562</ds:predictedValue>
+    <ds:forecastingDate>1961-07-01</ds:forecastingDate>
+    <prov:wasGeneratedBy rdf:resource="http://localhost:8080/openrdf-sesame/repositories/linda/rdf-graphs/analyticsontology#analytic_process/39/4"/>
+    <prov:wasDerivedFrom rdf:resource="http://health.data.ny.gov/resource/hbu9-xsrx/"/>
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/ns/prov#Entity"/>
+  </an:analytics_result_node>
+  <an:analytics_result_node rdf:about="http://localhost:8080/openrdf-sesame/repositories/linda/statements?context=:_analytics39V5Date22122014#/5">
+    <ds:predictedValue>450.551</ds:predictedValue>
+    <ds:forecastingDate>1961-06-01</ds:forecastingDate>
+    <prov:wasGeneratedBy rdf:resource="http://localhost:8080/openrdf-sesame/repositories/linda/rdf-graphs/analyticsontology#analytic_process/39/4"/>
+    <prov:wasDerivedFrom rdf:resource="http://health.data.ny.gov/resource/hbu9-xsrx/"/>
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/ns/prov#Entity"/>
+  </an:analytics_result_node>
+  <an:analytics_result_node rdf:about="http://localhost:8080/openrdf-sesame/repositories/linda/statements?context=:_analytics39V5Date22122014#/8">
+    <ds:predictedValue>450.566</ds:predictedValue>
+    <ds:forecastingDate>1961-09-01</ds:forecastingDate>
+    <prov:wasGeneratedBy rdf:resource="http://localhost:8080/openrdf-sesame/repositories/linda/rdf-graphs/analyticsontology#analytic_process/39/4"/>
+    <prov:wasDerivedFrom rdf:resource="http://health.data.ny.gov/resource/hbu9-xsrx/"/>
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/ns/prov#Entity"/>
+  </an:analytics_result_node>
+</rdf:RDF>

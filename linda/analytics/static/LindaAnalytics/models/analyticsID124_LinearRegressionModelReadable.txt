@@ -1,0 +1,9 @@
+
+Linear Regression Model
+
+distillate_cents_gallon =
+
+      3.2615 * residual_barrel +
+     -0.509  * coal_ton +
+      4.8733 * natural_gas_mcf +
+      0.4057

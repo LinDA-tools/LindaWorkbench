@@ -1,0 +1,23 @@
+J48 pruned tree
+------------------
+
+DataEntry_a05 <= 0.0409: b (67.0)
+DataEntry_a05 > 0.0409
+|   DataEntry_a03 <= 0.10135: b (18.0)
+|   DataEntry_a03 > 0.10135
+|   |   DataEntry_a08 <= -0.93597: b (15.0/1.0)
+|   |   DataEntry_a08 > -0.93597
+|   |   |   DataEntry_a06 <= -0.22703
+|   |   |   |   DataEntry_a04 <= 0.67784
+|   |   |   |   |   DataEntry_a07 <= 0.99009: b (3.0/1.0)
+|   |   |   |   |   DataEntry_a07 > 0.99009: g (3.0)
+|   |   |   |   DataEntry_a04 > 0.67784: b (8.0)
+|   |   |   DataEntry_a06 > -0.22703
+|   |   |   |   DataEntry_a04 <= -0.05
+|   |   |   |   |   DataEntry_a08 <= 0.525: g (47.0/6.0)
+|   |   |   |   |   DataEntry_a08 > 0.525: b (6.0)
+|   |   |   |   DataEntry_a04 > -0.05: g (184.0/5.0)
+
+Number of Leaves  : 	9
+
+Size of the tree : 	17

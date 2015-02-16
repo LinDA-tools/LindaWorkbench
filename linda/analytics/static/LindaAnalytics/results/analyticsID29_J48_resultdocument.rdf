@@ -1,0 +1,831 @@
+<rdf:RDF
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns:foaf="http://xmlns.com/foaf/0.1/"
+    xmlns:sio="http://semanticscience.org/ontology/sio#"
+    xmlns:ds="http://localhost:8080/openrdf-sesame/repositories/linda/statements?context=:_analytics29V12Date22122014#"
+    xmlns:owl="http://www.w3.org/2002/07/owl#"
+    xmlns:prov="http://www.w3.org/ns/prov#"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+    xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+    xmlns:an="http://localhost:8080/openrdf-sesame/repositories/linda/rdf-graphs/analyticsontology#">
+  <an:analytics_result_node rdf:about="http://localhost:8080/openrdf-sesame/repositories/linda/statements?context=:_analytics29V12Date22122014#/63">
+    <ds:predictedValue>b</ds:predictedValue>
+    <prov:wasGeneratedBy>
+      <an:analytic_process rdf:about="http://localhost:8080/openrdf-sesame/repositories/linda/rdf-graphs/analyticsontology#analytic_process/29/11">
+        <rdfs:comment>adsfasdf</rdfs:comment>
+        <rdfs:label>linda analytic process</rdfs:label>
+        <prov:wasAssociatedWith>
+          <an:Software rdf:about="http://localhost:8080/openrdf-sesame/repositories/linda/rdf-graphs/analyticsontology#Software/LinDa_analytics_software">
+            <prov:actedOnBehalfOf>
+              <an:User rdf:about="http://localhost:8080/openrdf-sesame/repositories/linda/rdf-graphs/analyticsontology#User/eleni">
+                <foaf:accountName>eleni</foaf:accountName>
+                <foaf:holdsAccount>
+                  <foaf:OnlineAccount>
+                    <foaf:homepage>http://localhost:8000/</foaf:homepage>
+                  </foaf:OnlineAccount>
+                </foaf:holdsAccount>
+                <owl:equivalentClass rdf:resource="http://xmlns.com/foaf/0.1/Person"/>
+                <rdfs:label>linda user</rdfs:label>
+                <rdfs:subClassOf rdf:resource="http://www.w3.org/ns/prov#Agent"/>
+              </an:User>
+            </prov:actedOnBehalfOf>
+            <rdfs:label>analytics software</rdfs:label>
+            <rdfs:subClassOf rdf:resource="http://www.w3.org/ns/prov#Agent"/>
+          </an:Software>
+        </prov:wasAssociatedWith>
+        <rdfs:subClassOf rdf:resource="http://www.w3.org/ns/prov#Activity"/>
+        <ds:analyzedField rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+        >class</ds:analyzedField>
+        <owl:versionInfo>1.0.0</owl:versionInfo>
+      </an:analytic_process>
+    </prov:wasGeneratedBy>
+    <prov:wasDerivedFrom>
+      <an:analytic_input_node rdf:about="http://linda-project.eu/ionosfereDatasource/00065"/>
+    </prov:wasDerivedFrom>
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/ns/prov#Entity"/>
+  </an:analytics_result_node>
+  <an:analytics_result_node rdf:about="http://localhost:8080/openrdf-sesame/repositories/linda/statements?context=:_analytics29V12Date22122014#/94">
+    <ds:predictedValue>g</ds:predictedValue>
+    <prov:wasGeneratedBy rdf:resource="http://localhost:8080/openrdf-sesame/repositories/linda/rdf-graphs/analyticsontology#analytic_process/29/11"/>
+    <prov:wasDerivedFrom>
+      <an:analytic_input_node rdf:about="http://linda-project.eu/ionosfereDatasource/00096"/>
+    </prov:wasDerivedFrom>
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/ns/prov#Entity"/>
+  </an:analytics_result_node>
+  <an:analytics_result_node rdf:about="http://localhost:8080/openrdf-sesame/repositories/linda/statements?context=:_analytics29V12Date22122014#/84">
+    <ds:predictedValue>g</ds:predictedValue>
+    <prov:wasGeneratedBy rdf:resource="http://localhost:8080/openrdf-sesame/repositories/linda/rdf-graphs/analyticsontology#analytic_process/29/11"/>
+    <prov:wasDerivedFrom>
+      <an:analytic_input_node rdf:about="http://linda-project.eu/ionosfereDatasource/00086"/>
+    </prov:wasDerivedFrom>
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/ns/prov#Entity"/>
+  </an:analytics_result_node>
+  <an:analytics_result_node rdf:about="http://localhost:8080/openrdf-sesame/repositories/linda/statements?context=:_analytics29V12Date22122014#/15">
+    <ds:predictedValue>b</ds:predictedValue>
+    <prov:wasGeneratedBy rdf:resource="http://localhost:8080/openrdf-sesame/repositories/linda/rdf-graphs/analyticsontology#analytic_process/29/11"/>
+    <prov:wasDerivedFrom>
+      <an:analytic_input_node rdf:about="http://linda-project.eu/ionosfereDatasource/00017"/>
+    </prov:wasDerivedFrom>
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/ns/prov#Entity"/>
+  </an:analytics_result_node>
+  <an:analytics_result_node rdf:about="http://localhost:8080/openrdf-sesame/repositories/linda/statements?context=:_analytics29V12Date22122014#/73">
+    <ds:predictedValue>b</ds:predictedValue>
+    <prov:wasGeneratedBy rdf:resource="http://localhost:8080/openrdf-sesame/repositories/linda/rdf-graphs/analyticsontology#analytic_process/29/11"/>
+    <prov:wasDerivedFrom>
+      <an:analytic_input_node rdf:about="http://linda-project.eu/ionosfereDatasource/00075"/>
+    </prov:wasDerivedFrom>
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/ns/prov#Entity"/>
+  </an:analytics_result_node>
+  <an:analytics_result_node rdf:about="http://localhost:8080/openrdf-sesame/repositories/linda/statements?context=:_analytics29V12Date22122014#/35">
+    <ds:predictedValue>b</ds:predictedValue>
+    <prov:wasGeneratedBy rdf:resource="http://localhost:8080/openrdf-sesame/repositories/linda/rdf-graphs/analyticsontology#analytic_process/29/11"/>
+    <prov:wasDerivedFrom>
+      <an:analytic_input_node rdf:about="http://linda-project.eu/ionosfereDatasource/00037"/>
+    </prov:wasDerivedFrom>
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/ns/prov#Entity"/>
+  </an:analytics_result_node>
+  <an:analytics_result_node rdf:about="http://localhost:8080/openrdf-sesame/repositories/linda/statements?context=:_analytics29V12Date22122014#/53">
+    <ds:predictedValue>b</ds:predictedValue>
+    <prov:wasGeneratedBy rdf:resource="http://localhost:8080/openrdf-sesame/repositories/linda/rdf-graphs/analyticsontology#analytic_process/29/11"/>
+    <prov:wasDerivedFrom>
+      <an:analytic_input_node rdf:about="http://linda-project.eu/ionosfereDatasource/00055"/>
+    </prov:wasDerivedFrom>
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/ns/prov#Entity"/>
+  </an:analytics_result_node>
+  <an:analytics_result_node rdf:about="http://localhost:8080/openrdf-sesame/repositories/linda/statements?context=:_analytics29V12Date22122014#/5">
+    <ds:predictedValue>b</ds:predictedValue>
+    <prov:wasGeneratedBy rdf:resource="http://localhost:8080/openrdf-sesame/repositories/linda/rdf-graphs/analyticsontology#analytic_process/29/11"/>
+    <prov:wasDerivedFrom>
+      <an:analytic_input_node rdf:about="http://linda-project.eu/ionosfereDatasource/00007"/>
+    </prov:wasDerivedFrom>
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/ns/prov#Entity"/>
+  </an:analytics_result_node>
+  <an:analytics_result_node rdf:about="http://localhost:8080/openrdf-sesame/repositories/linda/statements?context=:_analytics29V12Date22122014#/43">
+    <ds:predictedValue>b</ds:predictedValue>
+    <prov:wasGeneratedBy rdf:resource="http://localhost:8080/openrdf-sesame/repositories/linda/rdf-graphs/analyticsontology#analytic_process/29/11"/>
+    <prov:wasDerivedFrom>
+      <an:analytic_input_node rdf:about="http://linda-project.eu/ionosfereDatasource/00045"/>
+    </prov:wasDerivedFrom>
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/ns/prov#Entity"/>
+  </an:analytics_result_node>
+  <an:analytics_result_node rdf:about="http://localhost:8080/openrdf-sesame/repositories/linda/statements?context=:_analytics29V12Date22122014#/21">
+    <ds:predictedValue>b</ds:predictedValue>
+    <prov:wasGeneratedBy rdf:resource="http://localhost:8080/openrdf-sesame/repositories/linda/rdf-graphs/analyticsontology#analytic_process/29/11"/>
+    <prov:wasDerivedFrom>
+      <an:analytic_input_node rdf:about="http://linda-project.eu/ionosfereDatasource/00023"/>
+    </prov:wasDerivedFrom>
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/ns/prov#Entity"/>
+  </an:analytics_result_node>
+  <an:analytics_result_node rdf:about="http://localhost:8080/openrdf-sesame/repositories/linda/statements?context=:_analytics29V12Date22122014#/64">
+    <ds:predictedValue>g</ds:predictedValue>
+    <prov:wasGeneratedBy rdf:resource="http://localhost:8080/openrdf-sesame/repositories/linda/rdf-graphs/analyticsontology#analytic_process/29/11"/>
+    <prov:wasDerivedFrom>
+      <an:analytic_input_node rdf:about="http://linda-project.eu/ionosfereDatasource/00066"/>
+    </prov:wasDerivedFrom>
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/ns/prov#Entity"/>
+  </an:analytics_result_node>
+  <an:analytics_result_node rdf:about="http://localhost:8080/openrdf-sesame/repositories/linda/statements?context=:_analytics29V12Date22122014#/93">
+    <ds:predictedValue>b</ds:predictedValue>
+    <prov:wasGeneratedBy rdf:resource="http://localhost:8080/openrdf-sesame/repositories/linda/rdf-graphs/analyticsontology#analytic_process/29/11"/>
+    <prov:wasDerivedFrom>
+      <an:analytic_input_node rdf:about="http://linda-project.eu/ionosfereDatasource/00095"/>
+    </prov:wasDerivedFrom>
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/ns/prov#Entity"/>
+  </an:analytics_result_node>
+  <an:analytics_result_node rdf:about="http://localhost:8080/openrdf-sesame/repositories/linda/statements?context=:_analytics29V12Date22122014#/83">
+    <ds:predictedValue>b</ds:predictedValue>
+    <prov:wasGeneratedBy rdf:resource="http://localhost:8080/openrdf-sesame/repositories/linda/rdf-graphs/analyticsontology#analytic_process/29/11"/>
+    <prov:wasDerivedFrom>
+      <an:analytic_input_node rdf:about="http://linda-project.eu/ionosfereDatasource/00085"/>
+    </prov:wasDerivedFrom>
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/ns/prov#Entity"/>
+  </an:analytics_result_node>
+  <an:analytics_result_node rdf:about="http://localhost:8080/openrdf-sesame/repositories/linda/statements?context=:_analytics29V12Date22122014#/74">
+    <ds:predictedValue>g</ds:predictedValue>
+    <prov:wasGeneratedBy rdf:resource="http://localhost:8080/openrdf-sesame/repositories/linda/rdf-graphs/analyticsontology#analytic_process/29/11"/>
+    <prov:wasDerivedFrom>
+      <an:analytic_input_node rdf:about="http://linda-project.eu/ionosfereDatasource/00076"/>
+    </prov:wasDerivedFrom>
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/ns/prov#Entity"/>
+  </an:analytics_result_node>
+  <an:analytics_result_node rdf:about="http://localhost:8080/openrdf-sesame/repositories/linda/statements?context=:_analytics29V12Date22122014#/16">
+    <ds:predictedValue>g</ds:predictedValue>
+    <prov:wasGeneratedBy rdf:resource="http://localhost:8080/openrdf-sesame/repositories/linda/rdf-graphs/analyticsontology#analytic_process/29/11"/>
+    <prov:wasDerivedFrom>
+      <an:analytic_input_node rdf:about="http://linda-project.eu/ionosfereDatasource/00018"/>
+    </prov:wasDerivedFrom>
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/ns/prov#Entity"/>
+  </an:analytics_result_node>
+  <an:analytics_result_node rdf:about="http://localhost:8080/openrdf-sesame/repositories/linda/statements?context=:_analytics29V12Date22122014#/36">
+    <ds:predictedValue>g</ds:predictedValue>
+    <prov:wasGeneratedBy rdf:resource="http://localhost:8080/openrdf-sesame/repositories/linda/rdf-graphs/analyticsontology#analytic_process/29/11"/>
+    <prov:wasDerivedFrom>
+      <an:analytic_input_node rdf:about="http://linda-project.eu/ionosfereDatasource/00038"/>
+    </prov:wasDerivedFrom>
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/ns/prov#Entity"/>
+  </an:analytics_result_node>
+  <an:analytics_result_node rdf:about="http://localhost:8080/openrdf-sesame/repositories/linda/statements?context=:_analytics29V12Date22122014#/6">
+    <ds:predictedValue>g</ds:predictedValue>
+    <prov:wasGeneratedBy rdf:resource="http://localhost:8080/openrdf-sesame/repositories/linda/rdf-graphs/analyticsontology#analytic_process/29/11"/>
+    <prov:wasDerivedFrom>
+      <an:analytic_input_node rdf:about="http://linda-project.eu/ionosfereDatasource/00008"/>
+    </prov:wasDerivedFrom>
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/ns/prov#Entity"/>
+  </an:analytics_result_node>
+  <an:analytics_result_node rdf:about="http://localhost:8080/openrdf-sesame/repositories/linda/statements?context=:_analytics29V12Date22122014#/44">
+    <ds:predictedValue>g</ds:predictedValue>
+    <prov:wasGeneratedBy rdf:resource="http://localhost:8080/openrdf-sesame/repositories/linda/rdf-graphs/analyticsontology#analytic_process/29/11"/>
+    <prov:wasDerivedFrom>
+      <an:analytic_input_node rdf:about="http://linda-project.eu/ionosfereDatasource/00046"/>
+    </prov:wasDerivedFrom>
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/ns/prov#Entity"/>
+  </an:analytics_result_node>
+  <an:analytics_result_node rdf:about="http://localhost:8080/openrdf-sesame/repositories/linda/statements?context=:_analytics29V12Date22122014#/54">
+    <ds:predictedValue>g</ds:predictedValue>
+    <prov:wasGeneratedBy rdf:resource="http://localhost:8080/openrdf-sesame/repositories/linda/rdf-graphs/analyticsontology#analytic_process/29/11"/>
+    <prov:wasDerivedFrom>
+      <an:analytic_input_node rdf:about="http://linda-project.eu/ionosfereDatasource/00056"/>
+    </prov:wasDerivedFrom>
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/ns/prov#Entity"/>
+  </an:analytics_result_node>
+  <an:analytics_result_node rdf:about="http://localhost:8080/openrdf-sesame/repositories/linda/statements?context=:_analytics29V12Date22122014#/22">
+    <ds:predictedValue>g</ds:predictedValue>
+    <prov:wasGeneratedBy rdf:resource="http://localhost:8080/openrdf-sesame/repositories/linda/rdf-graphs/analyticsontology#analytic_process/29/11"/>
+    <prov:wasDerivedFrom>
+      <an:analytic_input_node rdf:about="http://linda-project.eu/ionosfereDatasource/00024"/>
+    </prov:wasDerivedFrom>
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/ns/prov#Entity"/>
+  </an:analytics_result_node>
+  <an:analytics_result_node rdf:about="http://localhost:8080/openrdf-sesame/repositories/linda/statements?context=:_analytics29V12Date22122014#/96">
+    <ds:predictedValue>g</ds:predictedValue>
+    <prov:wasGeneratedBy rdf:resource="http://localhost:8080/openrdf-sesame/repositories/linda/rdf-graphs/analyticsontology#analytic_process/29/11"/>
+    <prov:wasDerivedFrom>
+      <an:analytic_input_node rdf:about="http://linda-project.eu/ionosfereDatasource/00098"/>
+    </prov:wasDerivedFrom>
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/ns/prov#Entity"/>
+  </an:analytics_result_node>
+  <an:analytics_result_node rdf:about="http://localhost:8080/openrdf-sesame/repositories/linda/statements?context=:_analytics29V12Date22122014#/61">
+    <ds:predictedValue>b</ds:predictedValue>
+    <prov:wasGeneratedBy rdf:resource="http://localhost:8080/openrdf-sesame/repositories/linda/rdf-graphs/analyticsontology#analytic_process/29/11"/>
+    <prov:wasDerivedFrom>
+      <an:analytic_input_node rdf:about="http://linda-project.eu/ionosfereDatasource/00063"/>
+    </prov:wasDerivedFrom>
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/ns/prov#Entity"/>
+  </an:analytics_result_node>
+  <an:analytics_result_node rdf:about="http://localhost:8080/openrdf-sesame/repositories/linda/statements?context=:_analytics29V12Date22122014#/82">
+    <ds:predictedValue>g</ds:predictedValue>
+    <prov:wasGeneratedBy rdf:resource="http://localhost:8080/openrdf-sesame/repositories/linda/rdf-graphs/analyticsontology#analytic_process/29/11"/>
+    <prov:wasDerivedFrom>
+      <an:analytic_input_node rdf:about="http://linda-project.eu/ionosfereDatasource/00084"/>
+    </prov:wasDerivedFrom>
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/ns/prov#Entity"/>
+  </an:analytics_result_node>
+  <an:analytics_result_node rdf:about="http://localhost:8080/openrdf-sesame/repositories/linda/statements?context=:_analytics29V12Date22122014#/75">
+    <ds:predictedValue>b</ds:predictedValue>
+    <prov:wasGeneratedBy rdf:resource="http://localhost:8080/openrdf-sesame/repositories/linda/rdf-graphs/analyticsontology#analytic_process/29/11"/>
+    <prov:wasDerivedFrom>
+      <an:analytic_input_node rdf:about="http://linda-project.eu/ionosfereDatasource/00077"/>
+    </prov:wasDerivedFrom>
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/ns/prov#Entity"/>
+  </an:analytics_result_node>
+  <an:analytics_result_node rdf:about="http://localhost:8080/openrdf-sesame/repositories/linda/statements?context=:_analytics29V12Date22122014#/13">
+    <ds:predictedValue>b</ds:predictedValue>
+    <prov:wasGeneratedBy rdf:resource="http://localhost:8080/openrdf-sesame/repositories/linda/rdf-graphs/analyticsontology#analytic_process/29/11"/>
+    <prov:wasDerivedFrom>
+      <an:analytic_input_node rdf:about="http://linda-project.eu/ionosfereDatasource/00015"/>
+    </prov:wasDerivedFrom>
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/ns/prov#Entity"/>
+  </an:analytics_result_node>
+  <an:analytics_result_node rdf:about="http://localhost:8080/openrdf-sesame/repositories/linda/statements?context=:_analytics29V12Date22122014#/3">
+    <ds:predictedValue>b</ds:predictedValue>
+    <prov:wasGeneratedBy rdf:resource="http://localhost:8080/openrdf-sesame/repositories/linda/rdf-graphs/analyticsontology#analytic_process/29/11"/>
+    <prov:wasDerivedFrom>
+      <an:analytic_input_node rdf:about="http://linda-project.eu/ionosfereDatasource/00005"/>
+    </prov:wasDerivedFrom>
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/ns/prov#Entity"/>
+  </an:analytics_result_node>
+  <an:analytics_result_node rdf:about="http://localhost:8080/openrdf-sesame/repositories/linda/statements?context=:_analytics29V12Date22122014#/33">
+    <ds:predictedValue>g</ds:predictedValue>
+    <prov:wasGeneratedBy rdf:resource="http://localhost:8080/openrdf-sesame/repositories/linda/rdf-graphs/analyticsontology#analytic_process/29/11"/>
+    <prov:wasDerivedFrom>
+      <an:analytic_input_node rdf:about="http://linda-project.eu/ionosfereDatasource/00035"/>
+    </prov:wasDerivedFrom>
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/ns/prov#Entity"/>
+  </an:analytics_result_node>
+  <an:analytics_result_node rdf:about="http://localhost:8080/openrdf-sesame/repositories/linda/statements?context=:_analytics29V12Date22122014#/23">
+    <ds:predictedValue>b</ds:predictedValue>
+    <prov:wasGeneratedBy rdf:resource="http://localhost:8080/openrdf-sesame/repositories/linda/rdf-graphs/analyticsontology#analytic_process/29/11"/>
+    <prov:wasDerivedFrom>
+      <an:analytic_input_node rdf:about="http://linda-project.eu/ionosfereDatasource/00025"/>
+    </prov:wasDerivedFrom>
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/ns/prov#Entity"/>
+  </an:analytics_result_node>
+  <an:analytics_result_node rdf:about="http://localhost:8080/openrdf-sesame/repositories/linda/statements?context=:_analytics29V12Date22122014#/41">
+    <ds:predictedValue>b</ds:predictedValue>
+    <prov:wasGeneratedBy rdf:resource="http://localhost:8080/openrdf-sesame/repositories/linda/rdf-graphs/analyticsontology#analytic_process/29/11"/>
+    <prov:wasDerivedFrom>
+      <an:analytic_input_node rdf:about="http://linda-project.eu/ionosfereDatasource/00043"/>
+    </prov:wasDerivedFrom>
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/ns/prov#Entity"/>
+  </an:analytics_result_node>
+  <an:analytics_result_node rdf:about="http://localhost:8080/openrdf-sesame/repositories/linda/statements?context=:_analytics29V12Date22122014#/55">
+    <ds:predictedValue>b</ds:predictedValue>
+    <prov:wasGeneratedBy rdf:resource="http://localhost:8080/openrdf-sesame/repositories/linda/rdf-graphs/analyticsontology#analytic_process/29/11"/>
+    <prov:wasDerivedFrom>
+      <an:analytic_input_node rdf:about="http://linda-project.eu/ionosfereDatasource/00057"/>
+    </prov:wasDerivedFrom>
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/ns/prov#Entity"/>
+  </an:analytics_result_node>
+  <an:analytics_result_node rdf:about="http://localhost:8080/openrdf-sesame/repositories/linda/statements?context=:_analytics29V12Date22122014#/95">
+    <ds:predictedValue>b</ds:predictedValue>
+    <prov:wasGeneratedBy rdf:resource="http://localhost:8080/openrdf-sesame/repositories/linda/rdf-graphs/analyticsontology#analytic_process/29/11"/>
+    <prov:wasDerivedFrom>
+      <an:analytic_input_node rdf:about="http://linda-project.eu/ionosfereDatasource/00097"/>
+    </prov:wasDerivedFrom>
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/ns/prov#Entity"/>
+  </an:analytics_result_node>
+  <an:analytics_result_node rdf:about="http://localhost:8080/openrdf-sesame/repositories/linda/statements?context=:_analytics29V12Date22122014#/62">
+    <ds:predictedValue>g</ds:predictedValue>
+    <prov:wasGeneratedBy rdf:resource="http://localhost:8080/openrdf-sesame/repositories/linda/rdf-graphs/analyticsontology#analytic_process/29/11"/>
+    <prov:wasDerivedFrom>
+      <an:analytic_input_node rdf:about="http://linda-project.eu/ionosfereDatasource/00064"/>
+    </prov:wasDerivedFrom>
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/ns/prov#Entity"/>
+  </an:analytics_result_node>
+  <an:analytics_result_node rdf:about="http://localhost:8080/openrdf-sesame/repositories/linda/statements?context=:_analytics29V12Date22122014#/76">
+    <ds:predictedValue>g</ds:predictedValue>
+    <prov:wasGeneratedBy rdf:resource="http://localhost:8080/openrdf-sesame/repositories/linda/rdf-graphs/analyticsontology#analytic_process/29/11"/>
+    <prov:wasDerivedFrom>
+      <an:analytic_input_node rdf:about="http://linda-project.eu/ionosfereDatasource/00078"/>
+    </prov:wasDerivedFrom>
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/ns/prov#Entity"/>
+  </an:analytics_result_node>
+  <an:analytics_result_node rdf:about="http://localhost:8080/openrdf-sesame/repositories/linda/statements?context=:_analytics29V12Date22122014#/14">
+    <ds:predictedValue>g</ds:predictedValue>
+    <prov:wasGeneratedBy rdf:resource="http://localhost:8080/openrdf-sesame/repositories/linda/rdf-graphs/analyticsontology#analytic_process/29/11"/>
+    <prov:wasDerivedFrom>
+      <an:analytic_input_node rdf:about="http://linda-project.eu/ionosfereDatasource/00016"/>
+    </prov:wasDerivedFrom>
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/ns/prov#Entity"/>
+  </an:analytics_result_node>
+  <an:analytics_result_node rdf:about="http://localhost:8080/openrdf-sesame/repositories/linda/statements?context=:_analytics29V12Date22122014#/81">
+    <ds:predictedValue>b</ds:predictedValue>
+    <prov:wasGeneratedBy rdf:resource="http://localhost:8080/openrdf-sesame/repositories/linda/rdf-graphs/analyticsontology#analytic_process/29/11"/>
+    <prov:wasDerivedFrom>
+      <an:analytic_input_node rdf:about="http://linda-project.eu/ionosfereDatasource/00083"/>
+    </prov:wasDerivedFrom>
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/ns/prov#Entity"/>
+  </an:analytics_result_node>
+  <an:analytics_result_node rdf:about="http://localhost:8080/openrdf-sesame/repositories/linda/statements?context=:_analytics29V12Date22122014#/4">
+    <ds:predictedValue>g</ds:predictedValue>
+    <prov:wasGeneratedBy rdf:resource="http://localhost:8080/openrdf-sesame/repositories/linda/rdf-graphs/analyticsontology#analytic_process/29/11"/>
+    <prov:wasDerivedFrom>
+      <an:analytic_input_node rdf:about="http://linda-project.eu/ionosfereDatasource/00006"/>
+    </prov:wasDerivedFrom>
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/ns/prov#Entity"/>
+  </an:analytics_result_node>
+  <an:analytics_result_node rdf:about="http://localhost:8080/openrdf-sesame/repositories/linda/statements?context=:_analytics29V12Date22122014#/34">
+    <ds:predictedValue>g</ds:predictedValue>
+    <prov:wasGeneratedBy rdf:resource="http://localhost:8080/openrdf-sesame/repositories/linda/rdf-graphs/analyticsontology#analytic_process/29/11"/>
+    <prov:wasDerivedFrom>
+      <an:analytic_input_node rdf:about="http://linda-project.eu/ionosfereDatasource/00036"/>
+    </prov:wasDerivedFrom>
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/ns/prov#Entity"/>
+  </an:analytics_result_node>
+  <an:analytics_result_node rdf:about="http://localhost:8080/openrdf-sesame/repositories/linda/statements?context=:_analytics29V12Date22122014#/24">
+    <ds:predictedValue>g</ds:predictedValue>
+    <prov:wasGeneratedBy rdf:resource="http://localhost:8080/openrdf-sesame/repositories/linda/rdf-graphs/analyticsontology#analytic_process/29/11"/>
+    <prov:wasDerivedFrom>
+      <an:analytic_input_node rdf:about="http://linda-project.eu/ionosfereDatasource/00026"/>
+    </prov:wasDerivedFrom>
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/ns/prov#Entity"/>
+  </an:analytics_result_node>
+  <an:analytics_result_node rdf:about="http://localhost:8080/openrdf-sesame/repositories/linda/statements?context=:_analytics29V12Date22122014#/56">
+    <ds:predictedValue>g</ds:predictedValue>
+    <prov:wasGeneratedBy rdf:resource="http://localhost:8080/openrdf-sesame/repositories/linda/rdf-graphs/analyticsontology#analytic_process/29/11"/>
+    <prov:wasDerivedFrom>
+      <an:analytic_input_node rdf:about="http://linda-project.eu/ionosfereDatasource/00058"/>
+    </prov:wasDerivedFrom>
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/ns/prov#Entity"/>
+  </an:analytics_result_node>
+  <an:analytics_result_node rdf:about="http://localhost:8080/openrdf-sesame/repositories/linda/statements?context=:_analytics29V12Date22122014#/42">
+    <ds:predictedValue>g</ds:predictedValue>
+    <prov:wasGeneratedBy rdf:resource="http://localhost:8080/openrdf-sesame/repositories/linda/rdf-graphs/analyticsontology#analytic_process/29/11"/>
+    <prov:wasDerivedFrom>
+      <an:analytic_input_node rdf:about="http://linda-project.eu/ionosfereDatasource/00044"/>
+    </prov:wasDerivedFrom>
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/ns/prov#Entity"/>
+  </an:analytics_result_node>
+  <an:analytics_result_node rdf:about="http://localhost:8080/openrdf-sesame/repositories/linda/statements?context=:_analytics29V12Date22122014#/11">
+    <ds:predictedValue>b</ds:predictedValue>
+    <prov:wasGeneratedBy rdf:resource="http://localhost:8080/openrdf-sesame/repositories/linda/rdf-graphs/analyticsontology#analytic_process/29/11"/>
+    <prov:wasDerivedFrom>
+      <an:analytic_input_node rdf:about="http://linda-project.eu/ionosfereDatasource/00013"/>
+    </prov:wasDerivedFrom>
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/ns/prov#Entity"/>
+  </an:analytics_result_node>
+  <an:analytics_result_node rdf:about="http://localhost:8080/openrdf-sesame/repositories/linda/statements?context=:_analytics29V12Date22122014#/67">
+    <ds:predictedValue>b</ds:predictedValue>
+    <prov:wasGeneratedBy rdf:resource="http://localhost:8080/openrdf-sesame/repositories/linda/rdf-graphs/analyticsontology#analytic_process/29/11"/>
+    <prov:wasDerivedFrom>
+      <an:analytic_input_node rdf:about="http://linda-project.eu/ionosfereDatasource/00069"/>
+    </prov:wasDerivedFrom>
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/ns/prov#Entity"/>
+  </an:analytics_result_node>
+  <an:analytics_result_node rdf:about="http://localhost:8080/openrdf-sesame/repositories/linda/statements?context=:_analytics29V12Date22122014#/80">
+    <ds:predictedValue>g</ds:predictedValue>
+    <prov:wasGeneratedBy rdf:resource="http://localhost:8080/openrdf-sesame/repositories/linda/rdf-graphs/analyticsontology#analytic_process/29/11"/>
+    <prov:wasDerivedFrom>
+      <an:analytic_input_node rdf:about="http://linda-project.eu/ionosfereDatasource/00082"/>
+    </prov:wasDerivedFrom>
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/ns/prov#Entity"/>
+  </an:analytics_result_node>
+  <an:analytics_result_node rdf:about="http://localhost:8080/openrdf-sesame/repositories/linda/statements?context=:_analytics29V12Date22122014#/90">
+    <ds:predictedValue>g</ds:predictedValue>
+    <prov:wasGeneratedBy rdf:resource="http://localhost:8080/openrdf-sesame/repositories/linda/rdf-graphs/analyticsontology#analytic_process/29/11"/>
+    <prov:wasDerivedFrom>
+      <an:analytic_input_node rdf:about="http://linda-project.eu/ionosfereDatasource/00092"/>
+    </prov:wasDerivedFrom>
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/ns/prov#Entity"/>
+  </an:analytics_result_node>
+  <an:analytics_result_node rdf:about="http://localhost:8080/openrdf-sesame/repositories/linda/statements?context=:_analytics29V12Date22122014#/77">
+    <ds:predictedValue>b</ds:predictedValue>
+    <prov:wasGeneratedBy rdf:resource="http://localhost:8080/openrdf-sesame/repositories/linda/rdf-graphs/analyticsontology#analytic_process/29/11"/>
+    <prov:wasDerivedFrom>
+      <an:analytic_input_node rdf:about="http://linda-project.eu/ionosfereDatasource/00079"/>
+    </prov:wasDerivedFrom>
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/ns/prov#Entity"/>
+  </an:analytics_result_node>
+  <an:analytics_result_node rdf:about="http://localhost:8080/openrdf-sesame/repositories/linda/statements?context=:_analytics29V12Date22122014#/25">
+    <ds:predictedValue>g</ds:predictedValue>
+    <prov:wasGeneratedBy rdf:resource="http://localhost:8080/openrdf-sesame/repositories/linda/rdf-graphs/analyticsontology#analytic_process/29/11"/>
+    <prov:wasDerivedFrom>
+      <an:analytic_input_node rdf:about="http://linda-project.eu/ionosfereDatasource/00027"/>
+    </prov:wasDerivedFrom>
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/ns/prov#Entity"/>
+  </an:analytics_result_node>
+  <an:analytics_result_node rdf:about="http://localhost:8080/openrdf-sesame/repositories/linda/statements?context=:_analytics29V12Date22122014#/9">
+    <ds:predictedValue>b</ds:predictedValue>
+    <prov:wasGeneratedBy rdf:resource="http://localhost:8080/openrdf-sesame/repositories/linda/rdf-graphs/analyticsontology#analytic_process/29/11"/>
+    <prov:wasDerivedFrom>
+      <an:analytic_input_node rdf:about="http://linda-project.eu/ionosfereDatasource/00011"/>
+    </prov:wasDerivedFrom>
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/ns/prov#Entity"/>
+  </an:analytics_result_node>
+  <an:analytics_result_node rdf:about="http://localhost:8080/openrdf-sesame/repositories/linda/statements?context=:_analytics29V12Date22122014#/39">
+    <ds:predictedValue>g</ds:predictedValue>
+    <prov:wasGeneratedBy rdf:resource="http://localhost:8080/openrdf-sesame/repositories/linda/rdf-graphs/analyticsontology#analytic_process/29/11"/>
+    <prov:wasDerivedFrom>
+      <an:analytic_input_node rdf:about="http://linda-project.eu/ionosfereDatasource/00041"/>
+    </prov:wasDerivedFrom>
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/ns/prov#Entity"/>
+  </an:analytics_result_node>
+  <an:analytics_result_node rdf:about="http://localhost:8080/openrdf-sesame/repositories/linda/statements?context=:_analytics29V12Date22122014#/12">
+    <ds:predictedValue>g</ds:predictedValue>
+    <prov:wasGeneratedBy rdf:resource="http://localhost:8080/openrdf-sesame/repositories/linda/rdf-graphs/analyticsontology#analytic_process/29/11"/>
+    <prov:wasDerivedFrom>
+      <an:analytic_input_node rdf:about="http://linda-project.eu/ionosfereDatasource/00014"/>
+    </prov:wasDerivedFrom>
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/ns/prov#Entity"/>
+  </an:analytics_result_node>
+  <an:analytics_result_node rdf:about="http://localhost:8080/openrdf-sesame/repositories/linda/statements?context=:_analytics29V12Date22122014#/68">
+    <ds:predictedValue>g</ds:predictedValue>
+    <prov:wasGeneratedBy rdf:resource="http://localhost:8080/openrdf-sesame/repositories/linda/rdf-graphs/analyticsontology#analytic_process/29/11"/>
+    <prov:wasDerivedFrom>
+      <an:analytic_input_node rdf:about="http://linda-project.eu/ionosfereDatasource/00070"/>
+    </prov:wasDerivedFrom>
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/ns/prov#Entity"/>
+  </an:analytics_result_node>
+  <an:analytics_result_node rdf:about="http://localhost:8080/openrdf-sesame/repositories/linda/statements?context=:_analytics29V12Date22122014#/78">
+    <ds:predictedValue>g</ds:predictedValue>
+    <prov:wasGeneratedBy rdf:resource="http://localhost:8080/openrdf-sesame/repositories/linda/rdf-graphs/analyticsontology#analytic_process/29/11"/>
+    <prov:wasDerivedFrom>
+      <an:analytic_input_node rdf:about="http://linda-project.eu/ionosfereDatasource/00080"/>
+    </prov:wasDerivedFrom>
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/ns/prov#Entity"/>
+  </an:analytics_result_node>
+  <an:analytics_result_node rdf:about="http://localhost:8080/openrdf-sesame/repositories/linda/statements?context=:_analytics29V12Date22122014#/40">
+    <ds:predictedValue>g</ds:predictedValue>
+    <prov:wasGeneratedBy rdf:resource="http://localhost:8080/openrdf-sesame/repositories/linda/rdf-graphs/analyticsontology#analytic_process/29/11"/>
+    <prov:wasDerivedFrom>
+      <an:analytic_input_node rdf:about="http://linda-project.eu/ionosfereDatasource/00042"/>
+    </prov:wasDerivedFrom>
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/ns/prov#Entity"/>
+  </an:analytics_result_node>
+  <an:analytics_result_node rdf:about="http://localhost:8080/openrdf-sesame/repositories/linda/statements?context=:_analytics29V12Date22122014#/26">
+    <ds:predictedValue>g</ds:predictedValue>
+    <prov:wasGeneratedBy rdf:resource="http://localhost:8080/openrdf-sesame/repositories/linda/rdf-graphs/analyticsontology#analytic_process/29/11"/>
+    <prov:wasDerivedFrom>
+      <an:analytic_input_node rdf:about="http://linda-project.eu/ionosfereDatasource/00028"/>
+    </prov:wasDerivedFrom>
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/ns/prov#Entity"/>
+  </an:analytics_result_node>
+  <an:analytics_result_node rdf:about="http://localhost:8080/openrdf-sesame/repositories/linda/statements?context=:_analytics29V12Date22122014#/50">
+    <ds:predictedValue>g</ds:predictedValue>
+    <prov:wasGeneratedBy rdf:resource="http://localhost:8080/openrdf-sesame/repositories/linda/rdf-graphs/analyticsontology#analytic_process/29/11"/>
+    <prov:wasDerivedFrom>
+      <an:analytic_input_node rdf:about="http://linda-project.eu/ionosfereDatasource/00052"/>
+    </prov:wasDerivedFrom>
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/ns/prov#Entity"/>
+  </an:analytics_result_node>
+  <an:analytics_result_node rdf:about="http://localhost:8080/openrdf-sesame/repositories/linda/statements?context=:_analytics29V12Date22122014#/65">
+    <ds:predictedValue>b</ds:predictedValue>
+    <prov:wasGeneratedBy rdf:resource="http://localhost:8080/openrdf-sesame/repositories/linda/rdf-graphs/analyticsontology#analytic_process/29/11"/>
+    <prov:wasDerivedFrom>
+      <an:analytic_input_node rdf:about="http://linda-project.eu/ionosfereDatasource/00067"/>
+    </prov:wasDerivedFrom>
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/ns/prov#Entity"/>
+  </an:analytics_result_node>
+  <an:analytics_result_node rdf:about="http://localhost:8080/openrdf-sesame/repositories/linda/statements?context=:_analytics29V12Date22122014#/92">
+    <ds:predictedValue>g</ds:predictedValue>
+    <prov:wasGeneratedBy rdf:resource="http://localhost:8080/openrdf-sesame/repositories/linda/rdf-graphs/analyticsontology#analytic_process/29/11"/>
+    <prov:wasDerivedFrom>
+      <an:analytic_input_node rdf:about="http://linda-project.eu/ionosfereDatasource/00094"/>
+    </prov:wasDerivedFrom>
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/ns/prov#Entity"/>
+  </an:analytics_result_node>
+  <an:analytics_result_node rdf:about="http://localhost:8080/openrdf-sesame/repositories/linda/statements?context=:_analytics29V12Date22122014#/79">
+    <ds:predictedValue>b</ds:predictedValue>
+    <prov:wasGeneratedBy rdf:resource="http://localhost:8080/openrdf-sesame/repositories/linda/rdf-graphs/analyticsontology#analytic_process/29/11"/>
+    <prov:wasDerivedFrom>
+      <an:analytic_input_node rdf:about="http://linda-project.eu/ionosfereDatasource/00081"/>
+    </prov:wasDerivedFrom>
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/ns/prov#Entity"/>
+  </an:analytics_result_node>
+  <an:analytics_result_node rdf:about="http://localhost:8080/openrdf-sesame/repositories/linda/statements?context=:_analytics29V12Date22122014#/27">
+    <ds:predictedValue>b</ds:predictedValue>
+    <prov:wasGeneratedBy rdf:resource="http://localhost:8080/openrdf-sesame/repositories/linda/rdf-graphs/analyticsontology#analytic_process/29/11"/>
+    <prov:wasDerivedFrom>
+      <an:analytic_input_node rdf:about="http://linda-project.eu/ionosfereDatasource/00029"/>
+    </prov:wasDerivedFrom>
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/ns/prov#Entity"/>
+  </an:analytics_result_node>
+  <an:analytics_result_node rdf:about="http://localhost:8080/openrdf-sesame/repositories/linda/statements?context=:_analytics29V12Date22122014#/37">
+    <ds:predictedValue>b</ds:predictedValue>
+    <prov:wasGeneratedBy rdf:resource="http://localhost:8080/openrdf-sesame/repositories/linda/rdf-graphs/analyticsontology#analytic_process/29/11"/>
+    <prov:wasDerivedFrom>
+      <an:analytic_input_node rdf:about="http://linda-project.eu/ionosfereDatasource/00039"/>
+    </prov:wasDerivedFrom>
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/ns/prov#Entity"/>
+  </an:analytics_result_node>
+  <an:analytics_result_node rdf:about="http://localhost:8080/openrdf-sesame/repositories/linda/statements?context=:_analytics29V12Date22122014#/51">
+    <ds:predictedValue>b</ds:predictedValue>
+    <prov:wasGeneratedBy rdf:resource="http://localhost:8080/openrdf-sesame/repositories/linda/rdf-graphs/analyticsontology#analytic_process/29/11"/>
+    <prov:wasDerivedFrom>
+      <an:analytic_input_node rdf:about="http://linda-project.eu/ionosfereDatasource/00053"/>
+    </prov:wasDerivedFrom>
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/ns/prov#Entity"/>
+  </an:analytics_result_node>
+  <an:analytics_result_node rdf:about="http://localhost:8080/openrdf-sesame/repositories/linda/statements?context=:_analytics29V12Date22122014#/7">
+    <ds:predictedValue>b</ds:predictedValue>
+    <prov:wasGeneratedBy rdf:resource="http://localhost:8080/openrdf-sesame/repositories/linda/rdf-graphs/analyticsontology#analytic_process/29/11"/>
+    <prov:wasDerivedFrom>
+      <an:analytic_input_node rdf:about="http://linda-project.eu/ionosfereDatasource/00009"/>
+    </prov:wasDerivedFrom>
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/ns/prov#Entity"/>
+  </an:analytics_result_node>
+  <an:analytics_result_node rdf:about="http://localhost:8080/openrdf-sesame/repositories/linda/statements?context=:_analytics29V12Date22122014#/66">
+    <ds:predictedValue>g</ds:predictedValue>
+    <prov:wasGeneratedBy rdf:resource="http://localhost:8080/openrdf-sesame/repositories/linda/rdf-graphs/analyticsontology#analytic_process/29/11"/>
+    <prov:wasDerivedFrom>
+      <an:analytic_input_node rdf:about="http://linda-project.eu/ionosfereDatasource/00068"/>
+    </prov:wasDerivedFrom>
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/ns/prov#Entity"/>
+  </an:analytics_result_node>
+  <an:analytics_result_node rdf:about="http://localhost:8080/openrdf-sesame/repositories/linda/statements?context=:_analytics29V12Date22122014#/10">
+    <ds:predictedValue>g</ds:predictedValue>
+    <prov:wasGeneratedBy rdf:resource="http://localhost:8080/openrdf-sesame/repositories/linda/rdf-graphs/analyticsontology#analytic_process/29/11"/>
+    <prov:wasDerivedFrom>
+      <an:analytic_input_node rdf:about="http://linda-project.eu/ionosfereDatasource/00012"/>
+    </prov:wasDerivedFrom>
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/ns/prov#Entity"/>
+  </an:analytics_result_node>
+  <an:analytics_result_node rdf:about="http://localhost:8080/openrdf-sesame/repositories/linda/statements?context=:_analytics29V12Date22122014#/29">
+    <ds:predictedValue>b</ds:predictedValue>
+    <prov:wasGeneratedBy rdf:resource="http://localhost:8080/openrdf-sesame/repositories/linda/rdf-graphs/analyticsontology#analytic_process/29/11"/>
+    <prov:wasDerivedFrom>
+      <an:analytic_input_node rdf:about="http://linda-project.eu/ionosfereDatasource/00031"/>
+    </prov:wasDerivedFrom>
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/ns/prov#Entity"/>
+  </an:analytics_result_node>
+  <an:analytics_result_node rdf:about="http://localhost:8080/openrdf-sesame/repositories/linda/statements?context=:_analytics29V12Date22122014#/91">
+    <ds:predictedValue>b</ds:predictedValue>
+    <prov:wasGeneratedBy rdf:resource="http://localhost:8080/openrdf-sesame/repositories/linda/rdf-graphs/analyticsontology#analytic_process/29/11"/>
+    <prov:wasDerivedFrom>
+      <an:analytic_input_node rdf:about="http://linda-project.eu/ionosfereDatasource/00093"/>
+    </prov:wasDerivedFrom>
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/ns/prov#Entity"/>
+  </an:analytics_result_node>
+  <an:analytics_result_node rdf:about="http://localhost:8080/openrdf-sesame/repositories/linda/statements?context=:_analytics29V12Date22122014#/28">
+    <ds:predictedValue>g</ds:predictedValue>
+    <prov:wasGeneratedBy rdf:resource="http://localhost:8080/openrdf-sesame/repositories/linda/rdf-graphs/analyticsontology#analytic_process/29/11"/>
+    <prov:wasDerivedFrom>
+      <an:analytic_input_node rdf:about="http://linda-project.eu/ionosfereDatasource/00030"/>
+    </prov:wasDerivedFrom>
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/ns/prov#Entity"/>
+  </an:analytics_result_node>
+  <an:analytics_result_node rdf:about="http://localhost:8080/openrdf-sesame/repositories/linda/statements?context=:_analytics29V12Date22122014#/38">
+    <ds:predictedValue>g</ds:predictedValue>
+    <prov:wasGeneratedBy rdf:resource="http://localhost:8080/openrdf-sesame/repositories/linda/rdf-graphs/analyticsontology#analytic_process/29/11"/>
+    <prov:wasDerivedFrom>
+      <an:analytic_input_node rdf:about="http://linda-project.eu/ionosfereDatasource/00040"/>
+    </prov:wasDerivedFrom>
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/ns/prov#Entity"/>
+  </an:analytics_result_node>
+  <an:analytics_result_node rdf:about="http://localhost:8080/openrdf-sesame/repositories/linda/statements?context=:_analytics29V12Date22122014#/52">
+    <ds:predictedValue>g</ds:predictedValue>
+    <prov:wasGeneratedBy rdf:resource="http://localhost:8080/openrdf-sesame/repositories/linda/rdf-graphs/analyticsontology#analytic_process/29/11"/>
+    <prov:wasDerivedFrom>
+      <an:analytic_input_node rdf:about="http://linda-project.eu/ionosfereDatasource/00054"/>
+    </prov:wasDerivedFrom>
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/ns/prov#Entity"/>
+  </an:analytics_result_node>
+  <an:analytics_result_node rdf:about="http://localhost:8080/openrdf-sesame/repositories/linda/statements?context=:_analytics29V12Date22122014#/8">
+    <ds:predictedValue>g</ds:predictedValue>
+    <prov:wasGeneratedBy rdf:resource="http://localhost:8080/openrdf-sesame/repositories/linda/rdf-graphs/analyticsontology#analytic_process/29/11"/>
+    <prov:wasDerivedFrom>
+      <an:analytic_input_node rdf:about="http://linda-project.eu/ionosfereDatasource/00010"/>
+    </prov:wasDerivedFrom>
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/ns/prov#Entity"/>
+  </an:analytics_result_node>
+  <an:analytics_result_node rdf:about="http://localhost:8080/openrdf-sesame/repositories/linda/statements?context=:_analytics29V12Date22122014#/49">
+    <ds:predictedValue>b</ds:predictedValue>
+    <prov:wasGeneratedBy rdf:resource="http://localhost:8080/openrdf-sesame/repositories/linda/rdf-graphs/analyticsontology#analytic_process/29/11"/>
+    <prov:wasDerivedFrom>
+      <an:analytic_input_node rdf:about="http://linda-project.eu/ionosfereDatasource/00051"/>
+    </prov:wasDerivedFrom>
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/ns/prov#Entity"/>
+  </an:analytics_result_node>
+  <an:analytics_result_node rdf:about="http://localhost:8080/openrdf-sesame/repositories/linda/statements?context=:_analytics29V12Date22122014#/89">
+    <ds:predictedValue>b</ds:predictedValue>
+    <prov:wasGeneratedBy rdf:resource="http://localhost:8080/openrdf-sesame/repositories/linda/rdf-graphs/analyticsontology#analytic_process/29/11"/>
+    <prov:wasDerivedFrom>
+      <an:analytic_input_node rdf:about="http://linda-project.eu/ionosfereDatasource/00091"/>
+    </prov:wasDerivedFrom>
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/ns/prov#Entity"/>
+  </an:analytics_result_node>
+  <an:analytics_result_node rdf:about="http://localhost:8080/openrdf-sesame/repositories/linda/statements?context=:_analytics29V12Date22122014#/69">
+    <ds:predictedValue>g</ds:predictedValue>
+    <prov:wasGeneratedBy rdf:resource="http://localhost:8080/openrdf-sesame/repositories/linda/rdf-graphs/analyticsontology#analytic_process/29/11"/>
+    <prov:wasDerivedFrom>
+      <an:analytic_input_node rdf:about="http://linda-project.eu/ionosfereDatasource/00071"/>
+    </prov:wasDerivedFrom>
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/ns/prov#Entity"/>
+  </an:analytics_result_node>
+  <an:analytics_result_node rdf:about="http://localhost:8080/openrdf-sesame/repositories/linda/statements?context=:_analytics29V12Date22122014#/1">
+    <ds:predictedValue>g</ds:predictedValue>
+    <prov:wasGeneratedBy rdf:resource="http://localhost:8080/openrdf-sesame/repositories/linda/rdf-graphs/analyticsontology#analytic_process/29/11"/>
+    <prov:wasDerivedFrom>
+      <an:analytic_input_node rdf:about="http://linda-project.eu/ionosfereDatasource/00003"/>
+    </prov:wasDerivedFrom>
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/ns/prov#Entity"/>
+  </an:analytics_result_node>
+  <an:analytics_result_node rdf:about="http://localhost:8080/openrdf-sesame/repositories/linda/statements?context=:_analytics29V12Date22122014#/58">
+    <ds:predictedValue>g</ds:predictedValue>
+    <prov:wasGeneratedBy rdf:resource="http://localhost:8080/openrdf-sesame/repositories/linda/rdf-graphs/analyticsontology#analytic_process/29/11"/>
+    <prov:wasDerivedFrom>
+      <an:analytic_input_node rdf:about="http://linda-project.eu/ionosfereDatasource/00060"/>
+    </prov:wasDerivedFrom>
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/ns/prov#Entity"/>
+  </an:analytics_result_node>
+  <an:analytics_result_node rdf:about="http://localhost:8080/openrdf-sesame/repositories/linda/statements?context=:_analytics29V12Date22122014#/48">
+    <ds:predictedValue>g</ds:predictedValue>
+    <prov:wasGeneratedBy rdf:resource="http://localhost:8080/openrdf-sesame/repositories/linda/rdf-graphs/analyticsontology#analytic_process/29/11"/>
+    <prov:wasDerivedFrom>
+      <an:analytic_input_node rdf:about="http://linda-project.eu/ionosfereDatasource/00050"/>
+    </prov:wasDerivedFrom>
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/ns/prov#Entity"/>
+  </an:analytics_result_node>
+  <an:analytics_result_node rdf:about="http://localhost:8080/openrdf-sesame/repositories/linda/statements?context=:_analytics29V12Date22122014#/32">
+    <ds:predictedValue>g</ds:predictedValue>
+    <prov:wasGeneratedBy rdf:resource="http://localhost:8080/openrdf-sesame/repositories/linda/rdf-graphs/analyticsontology#analytic_process/29/11"/>
+    <prov:wasDerivedFrom>
+      <an:analytic_input_node rdf:about="http://linda-project.eu/ionosfereDatasource/00034"/>
+    </prov:wasDerivedFrom>
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/ns/prov#Entity"/>
+  </an:analytics_result_node>
+  <an:analytics_result_node rdf:about="http://localhost:8080/openrdf-sesame/repositories/linda/statements?context=:_analytics29V12Date22122014#/98">
+    <ds:predictedValue>b</ds:predictedValue>
+    <prov:wasGeneratedBy rdf:resource="http://localhost:8080/openrdf-sesame/repositories/linda/rdf-graphs/analyticsontology#analytic_process/29/11"/>
+    <prov:wasDerivedFrom>
+      <an:analytic_input_node rdf:about="http://linda-project.eu/ionosfereDatasource/00100"/>
+    </prov:wasDerivedFrom>
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/ns/prov#Entity"/>
+  </an:analytics_result_node>
+  <an:analytics_result_node rdf:about="http://localhost:8080/openrdf-sesame/repositories/linda/statements?context=:_analytics29V12Date22122014#/88">
+    <ds:predictedValue>g</ds:predictedValue>
+    <prov:wasGeneratedBy rdf:resource="http://localhost:8080/openrdf-sesame/repositories/linda/rdf-graphs/analyticsontology#analytic_process/29/11"/>
+    <prov:wasDerivedFrom>
+      <an:analytic_input_node rdf:about="http://linda-project.eu/ionosfereDatasource/00090"/>
+    </prov:wasDerivedFrom>
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/ns/prov#Entity"/>
+  </an:analytics_result_node>
+  <an:analytics_result_node rdf:about="http://localhost:8080/openrdf-sesame/repositories/linda/statements?context=:_analytics29V12Date22122014#/2">
+    <ds:predictedValue>g</ds:predictedValue>
+    <prov:wasGeneratedBy rdf:resource="http://localhost:8080/openrdf-sesame/repositories/linda/rdf-graphs/analyticsontology#analytic_process/29/11"/>
+    <prov:wasDerivedFrom>
+      <an:analytic_input_node rdf:about="http://linda-project.eu/ionosfereDatasource/00004"/>
+    </prov:wasDerivedFrom>
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/ns/prov#Entity"/>
+  </an:analytics_result_node>
+  <an:analytics_result_node rdf:about="http://localhost:8080/openrdf-sesame/repositories/linda/statements?context=:_analytics29V12Date22122014#/31">
+    <ds:predictedValue>b</ds:predictedValue>
+    <prov:wasGeneratedBy rdf:resource="http://localhost:8080/openrdf-sesame/repositories/linda/rdf-graphs/analyticsontology#analytic_process/29/11"/>
+    <prov:wasDerivedFrom>
+      <an:analytic_input_node rdf:about="http://linda-project.eu/ionosfereDatasource/00033"/>
+    </prov:wasDerivedFrom>
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/ns/prov#Entity"/>
+  </an:analytics_result_node>
+  <an:analytics_result_node rdf:about="http://localhost:8080/openrdf-sesame/repositories/linda/statements?context=:_analytics29V12Date22122014#/57">
+    <ds:predictedValue>b</ds:predictedValue>
+    <prov:wasGeneratedBy rdf:resource="http://localhost:8080/openrdf-sesame/repositories/linda/rdf-graphs/analyticsontology#analytic_process/29/11"/>
+    <prov:wasDerivedFrom>
+      <an:analytic_input_node rdf:about="http://linda-project.eu/ionosfereDatasource/00059"/>
+    </prov:wasDerivedFrom>
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/ns/prov#Entity"/>
+  </an:analytics_result_node>
+  <an:analytics_result_node rdf:about="http://localhost:8080/openrdf-sesame/repositories/linda/statements?context=:_analytics29V12Date22122014#/47">
+    <ds:predictedValue>b</ds:predictedValue>
+    <prov:wasGeneratedBy rdf:resource="http://localhost:8080/openrdf-sesame/repositories/linda/rdf-graphs/analyticsontology#analytic_process/29/11"/>
+    <prov:wasDerivedFrom>
+      <an:analytic_input_node rdf:about="http://linda-project.eu/ionosfereDatasource/00049"/>
+    </prov:wasDerivedFrom>
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/ns/prov#Entity"/>
+  </an:analytics_result_node>
+  <an:analytics_result_node rdf:about="http://localhost:8080/openrdf-sesame/repositories/linda/statements?context=:_analytics29V12Date22122014#/70">
+    <ds:predictedValue>g</ds:predictedValue>
+    <prov:wasGeneratedBy rdf:resource="http://localhost:8080/openrdf-sesame/repositories/linda/rdf-graphs/analyticsontology#analytic_process/29/11"/>
+    <prov:wasDerivedFrom>
+      <an:analytic_input_node rdf:about="http://linda-project.eu/ionosfereDatasource/00072"/>
+    </prov:wasDerivedFrom>
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/ns/prov#Entity"/>
+  </an:analytics_result_node>
+  <an:analytics_result_node rdf:about="http://localhost:8080/openrdf-sesame/repositories/linda/statements?context=:_analytics29V12Date22122014#/60">
+    <ds:predictedValue>g</ds:predictedValue>
+    <prov:wasGeneratedBy rdf:resource="http://localhost:8080/openrdf-sesame/repositories/linda/rdf-graphs/analyticsontology#analytic_process/29/11"/>
+    <prov:wasDerivedFrom>
+      <an:analytic_input_node rdf:about="http://linda-project.eu/ionosfereDatasource/00062"/>
+    </prov:wasDerivedFrom>
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/ns/prov#Entity"/>
+  </an:analytics_result_node>
+  <an:analytics_result_node rdf:about="http://localhost:8080/openrdf-sesame/repositories/linda/statements?context=:_analytics29V12Date22122014#/97">
+    <ds:predictedValue>g</ds:predictedValue>
+    <prov:wasGeneratedBy rdf:resource="http://localhost:8080/openrdf-sesame/repositories/linda/rdf-graphs/analyticsontology#analytic_process/29/11"/>
+    <prov:wasDerivedFrom>
+      <an:analytic_input_node rdf:about="http://linda-project.eu/ionosfereDatasource/00099"/>
+    </prov:wasDerivedFrom>
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/ns/prov#Entity"/>
+  </an:analytics_result_node>
+  <an:analytics_result_node rdf:about="http://localhost:8080/openrdf-sesame/repositories/linda/statements?context=:_analytics29V12Date22122014#/87">
+    <ds:predictedValue>b</ds:predictedValue>
+    <prov:wasGeneratedBy rdf:resource="http://localhost:8080/openrdf-sesame/repositories/linda/rdf-graphs/analyticsontology#analytic_process/29/11"/>
+    <prov:wasDerivedFrom>
+      <an:analytic_input_node rdf:about="http://linda-project.eu/ionosfereDatasource/00089"/>
+    </prov:wasDerivedFrom>
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/ns/prov#Entity"/>
+  </an:analytics_result_node>
+  <an:analytics_result_node rdf:about="http://localhost:8080/openrdf-sesame/repositories/linda/statements?context=:_analytics29V12Date22122014#/30">
+    <ds:predictedValue>g</ds:predictedValue>
+    <prov:wasGeneratedBy rdf:resource="http://localhost:8080/openrdf-sesame/repositories/linda/rdf-graphs/analyticsontology#analytic_process/29/11"/>
+    <prov:wasDerivedFrom>
+      <an:analytic_input_node rdf:about="http://linda-project.eu/ionosfereDatasource/00032"/>
+    </prov:wasDerivedFrom>
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/ns/prov#Entity"/>
+  </an:analytics_result_node>
+  <an:analytics_result_node rdf:about="http://localhost:8080/openrdf-sesame/repositories/linda/statements?context=:_analytics29V12Date22122014#/20">
+    <ds:predictedValue>g</ds:predictedValue>
+    <prov:wasGeneratedBy rdf:resource="http://localhost:8080/openrdf-sesame/repositories/linda/rdf-graphs/analyticsontology#analytic_process/29/11"/>
+    <prov:wasDerivedFrom>
+      <an:analytic_input_node rdf:about="http://linda-project.eu/ionosfereDatasource/00022"/>
+    </prov:wasDerivedFrom>
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/ns/prov#Entity"/>
+  </an:analytics_result_node>
+  <an:analytics_result_node rdf:about="http://localhost:8080/openrdf-sesame/repositories/linda/statements?context=:_analytics29V12Date22122014#/46">
+    <ds:predictedValue>g</ds:predictedValue>
+    <prov:wasGeneratedBy rdf:resource="http://localhost:8080/openrdf-sesame/repositories/linda/rdf-graphs/analyticsontology#analytic_process/29/11"/>
+    <prov:wasDerivedFrom>
+      <an:analytic_input_node rdf:about="http://linda-project.eu/ionosfereDatasource/00048"/>
+    </prov:wasDerivedFrom>
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/ns/prov#Entity"/>
+  </an:analytics_result_node>
+  <an:analytics_result_node rdf:about="http://localhost:8080/openrdf-sesame/repositories/linda/statements?context=:_analytics29V12Date22122014#/18">
+    <ds:predictedValue>g</ds:predictedValue>
+    <prov:wasGeneratedBy rdf:resource="http://localhost:8080/openrdf-sesame/repositories/linda/rdf-graphs/analyticsontology#analytic_process/29/11"/>
+    <prov:wasDerivedFrom>
+      <an:analytic_input_node rdf:about="http://linda-project.eu/ionosfereDatasource/00020"/>
+    </prov:wasDerivedFrom>
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/ns/prov#Entity"/>
+  </an:analytics_result_node>
+  <an:analytics_result_node rdf:about="http://localhost:8080/openrdf-sesame/repositories/linda/statements?context=:_analytics29V12Date22122014#/17">
+    <ds:predictedValue>b</ds:predictedValue>
+    <prov:wasGeneratedBy rdf:resource="http://localhost:8080/openrdf-sesame/repositories/linda/rdf-graphs/analyticsontology#analytic_process/29/11"/>
+    <prov:wasDerivedFrom>
+      <an:analytic_input_node rdf:about="http://linda-project.eu/ionosfereDatasource/00019"/>
+    </prov:wasDerivedFrom>
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/ns/prov#Entity"/>
+  </an:analytics_result_node>
+  <an:analytics_result_node rdf:about="http://localhost:8080/openrdf-sesame/repositories/linda/statements?context=:_analytics29V12Date22122014#/71">
+    <ds:predictedValue>b</ds:predictedValue>
+    <prov:wasGeneratedBy rdf:resource="http://localhost:8080/openrdf-sesame/repositories/linda/rdf-graphs/analyticsontology#analytic_process/29/11"/>
+    <prov:wasDerivedFrom>
+      <an:analytic_input_node rdf:about="http://linda-project.eu/ionosfereDatasource/00073"/>
+    </prov:wasDerivedFrom>
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/ns/prov#Entity"/>
+  </an:analytics_result_node>
+  <an:analytics_result_node rdf:about="http://localhost:8080/openrdf-sesame/repositories/linda/statements?context=:_analytics29V12Date22122014#/86">
+    <ds:predictedValue>g</ds:predictedValue>
+    <prov:wasGeneratedBy rdf:resource="http://localhost:8080/openrdf-sesame/repositories/linda/rdf-graphs/analyticsontology#analytic_process/29/11"/>
+    <prov:wasDerivedFrom>
+      <an:analytic_input_node rdf:about="http://linda-project.eu/ionosfereDatasource/00088"/>
+    </prov:wasDerivedFrom>
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/ns/prov#Entity"/>
+  </an:analytics_result_node>
+  <an:analytics_result_node rdf:about="http://localhost:8080/openrdf-sesame/repositories/linda/statements?context=:_analytics29V12Date22122014#/59">
+    <ds:predictedValue>b</ds:predictedValue>
+    <prov:wasGeneratedBy rdf:resource="http://localhost:8080/openrdf-sesame/repositories/linda/rdf-graphs/analyticsontology#analytic_process/29/11"/>
+    <prov:wasDerivedFrom>
+      <an:analytic_input_node rdf:about="http://linda-project.eu/ionosfereDatasource/00061"/>
+    </prov:wasDerivedFrom>
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/ns/prov#Entity"/>
+  </an:analytics_result_node>
+  <an:analytics_result_node rdf:about="http://localhost:8080/openrdf-sesame/repositories/linda/statements?context=:_analytics29V12Date22122014#/19">
+    <ds:predictedValue>b</ds:predictedValue>
+    <prov:wasGeneratedBy rdf:resource="http://localhost:8080/openrdf-sesame/repositories/linda/rdf-graphs/analyticsontology#analytic_process/29/11"/>
+    <prov:wasDerivedFrom>
+      <an:analytic_input_node rdf:about="http://linda-project.eu/ionosfereDatasource/00021"/>
+    </prov:wasDerivedFrom>
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/ns/prov#Entity"/>
+  </an:analytics_result_node>
+  <an:analytics_result_node rdf:about="http://localhost:8080/openrdf-sesame/repositories/linda/statements?context=:_analytics29V12Date22122014#/45">
+    <ds:predictedValue>b</ds:predictedValue>
+    <prov:wasGeneratedBy rdf:resource="http://localhost:8080/openrdf-sesame/repositories/linda/rdf-graphs/analyticsontology#analytic_process/29/11"/>
+    <prov:wasDerivedFrom>
+      <an:analytic_input_node rdf:about="http://linda-project.eu/ionosfereDatasource/00047"/>
+    </prov:wasDerivedFrom>
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/ns/prov#Entity"/>
+  </an:analytics_result_node>
+  <an:analytics_result_node rdf:about="http://localhost:8080/openrdf-sesame/repositories/linda/statements?context=:_analytics29V12Date22122014#/72">
+    <ds:predictedValue>g</ds:predictedValue>
+    <prov:wasGeneratedBy rdf:resource="http://localhost:8080/openrdf-sesame/repositories/linda/rdf-graphs/analyticsontology#analytic_process/29/11"/>
+    <prov:wasDerivedFrom>
+      <an:analytic_input_node rdf:about="http://linda-project.eu/ionosfereDatasource/00074"/>
+    </prov:wasDerivedFrom>
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/ns/prov#Entity"/>
+  </an:analytics_result_node>
+  <an:analytics_result_node rdf:about="http://localhost:8080/openrdf-sesame/repositories/linda/statements?context=:_analytics29V12Date22122014#/85">
+    <ds:predictedValue>b</ds:predictedValue>
+    <prov:wasGeneratedBy rdf:resource="http://localhost:8080/openrdf-sesame/repositories/linda/rdf-graphs/analyticsontology#analytic_process/29/11"/>
+    <prov:wasDerivedFrom>
+      <an:analytic_input_node rdf:about="http://linda-project.eu/ionosfereDatasource/00087"/>
+    </prov:wasDerivedFrom>
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/ns/prov#Entity"/>
+  </an:analytics_result_node>
+  <an:analytics_result_node rdf:about="http://localhost:8080/openrdf-sesame/repositories/linda/statements?context=:_analytics29V12Date22122014#/99">
+    <ds:predictedValue>g</ds:predictedValue>
+    <prov:wasGeneratedBy rdf:resource="http://localhost:8080/openrdf-sesame/repositories/linda/rdf-graphs/analyticsontology#analytic_process/29/11"/>
+    <prov:wasDerivedFrom>
+      <an:analytic_input_node rdf:about="http://linda-project.eu/ionosfereDatasource/00101"/>
+    </prov:wasDerivedFrom>
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/ns/prov#Entity"/>
+  </an:analytics_result_node>
+</rdf:RDF>
