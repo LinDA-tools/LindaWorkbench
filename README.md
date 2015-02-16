@@ -128,6 +128,9 @@ In order to be able to deploy the workbench locally, in the directory linda/lind
   #Microsoft Translate credentials
   MS_TRANSLATOR_UID = '{{Microsoft translator user id}}'
   MS_TRANSLATOR_SECRET = '{{Microsoft translator secret key}}'
+  
+  #Email password
+  EMAIL_HOST_PASSWORD = '{{LinDA Email password or application token}}'
   ```
 To get Microsoft Translate credentials check here (http://www.bing.com/dev/en-us/translator)
 In the settings.py in the  linda/linda_app/ check the MySQL database settings.
