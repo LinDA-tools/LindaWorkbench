@@ -1549,7 +1549,8 @@ def vocabulary_repo_api_call(request, link):
 def get_vocabulary_versions(request):
     resp_data = []
     for vocabulary in Vocabulary.objects.all():  # collect all vocabulary IDs and versions
-        resp_data.append({'slug': vocabulary.title_slug(), 'id': vocabulary.pk, 'version': vocabulary.version})
+        resp_data.append({'slug': vocabulary.title_slug(), 'id': vocabulary.pk, 'version': vocabulary.version,
+                          'uri': vocabulary.preferredNamespaceUri, 'prefix': vocabulary.preferredNamespacePrefix})
 
     data = json.dumps(resp_data)
     mimetype = 'application/json'

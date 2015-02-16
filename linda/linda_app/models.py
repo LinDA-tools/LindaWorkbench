@@ -111,6 +111,10 @@ class Vocabulary(models.Model):
     # Versioning
     version = models.CharField(max_length=128, blank=False, null=False, default="1.0")
 
+    def __init__(self, *args, **kwargs):
+        self.prevent_default_make = kwargs.pop('prevent_default_make', False)
+        super(Vocabulary, self).__init__(*args, **kwargs)
+
     def title_slug(self):
         return slugify(self.title)
 
@@ -257,7 +261,8 @@ class Vocabulary(models.Model):
 
 # Update classes and vocabularies on new vocabulary save
 def on_vocabulary_save(sender, instance, created, **kwargs):
-    instance.make_classes_properties()
+    if not instance.prevent_default_make:  # use an attribute to allow overriding the default action
+        instance.make_classes_properties()
 
 
 post_save.connect(on_vocabulary_save, sender=Vocabulary)

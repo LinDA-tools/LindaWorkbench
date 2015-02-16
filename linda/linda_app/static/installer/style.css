@@ -1,3 +1,8 @@
+.installed_component_list {
+	list-style-type: square;
+	padding-left: 40px;
+}
+
 #installer-load {
   width:100%;
   padding-top: 15px;
