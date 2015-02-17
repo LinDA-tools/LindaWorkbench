@@ -749,7 +749,7 @@ def datasources(request):
 
 
 def datasourceCreate(request):
-    params = {'types': {('public', 'Public'), ('private', 'Private')},
+    params = {'types': {('public', 'Remote'), ('private', 'Local')},
               'datatypes': {('csv', 'CSV file'), ('rdb', 'Database (relational)'), ('xls', 'Excel file'),
                             ('rdf', 'RDF file')},
               'action': "create"}
@@ -776,7 +776,7 @@ def datasourceCreate(request):
             # Try to verify that the endpoint uri exists
             validate = URLValidator()
             try:
-                validate('http://www.somelink.com/to/my.pdf')
+                validate(request.POST.get("endpoint"))
             except ValidationError, e:
                 params["error"] = "Invalid sparql enpoint (url does not exist) - " + e
                 return render(request, 'datasource/form.html', params)

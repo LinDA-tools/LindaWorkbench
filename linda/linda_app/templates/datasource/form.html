@@ -18,24 +18,24 @@
         <div>
             <label for="type">{% trans "Type"%}:</label>
 
-            {% with field=typeSelect id="type" options=types %}
+            {% with field=typeSelect id="type" options=types default="Choose data source location" %}
                 {% include 'util/prettydropdown.html' %}
             {% endwith %}
 
         </div>
 
-        <div class="endpoint-container">
+        <div class="endpoint-container" style="display: none;">
             <label for="title">{% trans "Title"%}:</label>
             <input type="text" name="title" {%if datasource%}value="{{datasource.title}}"{% endif %}/>
 
-            <label for="endpoint">{% trans "Public endpoint uri"%}:</label>
+            <label for="endpoint">{% trans "Endpoint uri"%}:</label>
             <input type="url" name="endpoint" placeholder="http://www.example.com/sparql" {%if datasource and datasource.is_public%}value="{{datasource.uri}}"{% endif %}/>
         </div>
 
         <div class="datatype-container" style="display: none;">
             <label for="datatype">{% trans "Data type"%}:</label>
 
-            {% with field=datatypeSelect id="datatype" options=datatypes default="Select a datasource type"%}
+            {% with field=datatypeSelect id="datatype" options=datatypes default="Select a data source type"%}
                 {% include 'util/prettydropdown.html' %}
             {% endwith %}
 
@@ -50,7 +50,7 @@
 {% endblock %}
 
 {% block scripts %}
-    {% with field=typeSelect id="type" %}
+    {% with field=typeSelect id="type" teaser=True %}
         {% include 'util/prettydropdown_js.html' %}
     {% endwith %}
 

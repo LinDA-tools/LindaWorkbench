@@ -17,10 +17,10 @@
         <tr id="{{datasource.name}}" class="datasource {% if datasource.is_public %}public{% else %}private{% endif %}">
             <td><img src="/static/images/rdf.png" width="15px"/> {{datasource.title}}</td>
             {% if datasource.is_public %}
-            <td>{% trans "Public" %}</td>
+            <td>{% trans "Remote" %}</td>
             <td>{{datasource.uri}}</td>
             {% else %}
-            <td>{% trans "Private" %}</td>
+            <td>{% trans "Local" %}</td>
             <td></td>
             {% endif %}
             <td>{{datasource.createdOn}}</td>

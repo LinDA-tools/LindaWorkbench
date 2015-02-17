@@ -92,6 +92,7 @@
 
 .context-menu-item.icon-visualize { background-image: url(/static/images/visualize.png); }
 .context-menu-item.icon-analyze { background-image: url(/static/images/analyze.png); }
+.context-menu-item.icon-explore {background-image: url("/static/images/search.png"); }
 .context-menu-item.icon-edit { background-image: url(/static/images/edit.png); }
 .context-menu-item.icon-delete { background-image: url(/static/images/remove.png); }
 .context-menu-item.icon-download { background-image: url(/static/images/download.png); }
