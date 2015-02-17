@@ -1374,10 +1374,6 @@ form input[type="submit"] {
         display: table;
         min-height: calc(100vh - 60px);
     }
-
-    .vocabulary-details .vocabulary, .vocabulary-details aside {
-        display: table-cell;
-    }
 }
 
 .vocabulary .upload-info {
