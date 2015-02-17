@@ -15,7 +15,14 @@
         <tbody>
         {% for datasource in datasources %}
         <tr id="{{datasource.name}}" class="datasource {% if datasource.is_public %}public{% else %}private{% endif %}">
-            <td><img src="/static/images/rdf.png" width="15px"/> {{datasource.title}}</td>
+            <td>
+                {% if datasource.is_public %}
+                    <img src="/static/images/public-endpoint.png" />
+                {% else %}
+                    <img src="/static/images/rdf.png"/>
+                {% endif %}
+                {{datasource.title}}
+            </td>
             {% if datasource.is_public %}
             <td>{% trans "Remote" %}</td>
             <td>{{datasource.uri}}</td>

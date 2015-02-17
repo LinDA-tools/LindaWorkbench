@@ -18,7 +18,7 @@
         <div>
             <label for="type">{% trans "Type"%}:</label>
 
-            {% with field=typeSelect id="type" options=types default="Choose data source location" %}
+            {% with field=typeSelect id="type" options=types default="Choose location" %}
                 {% include 'util/prettydropdown.html' %}
             {% endwith %}
 
