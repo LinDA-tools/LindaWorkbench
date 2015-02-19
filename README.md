@@ -81,7 +81,7 @@ Activate Tomcat by running its startup script:
 Create a new empty Database "linda"
 ```
   mysql -u root -p
-  CREATE database linda;
+  CREATE DATABASE `linda` CHARACTER SET utf8 COLLATE utf8_general_ci;
   quit
 ```
 
