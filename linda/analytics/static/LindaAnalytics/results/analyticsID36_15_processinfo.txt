@@ -1,9 +1,0 @@
-library(ape)
-loaded_data.dists <- as.matrix(dist(cbind(loaded_data$long, loaded_data$lat)))
-diag(loaded_data.dists.inv) <- 0
-loaded_data.dists.inv[1:5, 1:5]
-morans_result<-Moran.I(loaded_data$percent_rate, loaded_data.dists.inv)
-----------------MORAN's RESULT-------------
-if Moran's I $p.value is greater than 0.4 
- then there is a significant spatial autocorrelation in your data 
- and you should take into account in next analytic processes
