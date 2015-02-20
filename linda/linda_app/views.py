@@ -801,48 +801,39 @@ def datasourceReplace(request, name):
 
     datasource = DatasourceDescription.objects.filter(name=name)[0]
 
-    params = {}
-    params['action'] = "replace"
-    params['datasource'] = datasource
-    params['types'] = {('private', 'Private'), ('public', 'Public')}
-    params['datatypes'] = {('csv', 'CSV file'), ('db', 'Database (relational)'), ('xls', 'Excel file'),
-                           ('rdf', 'RDF file')}
+    if not datasource.is_public:
+        return redirect("/datasource/" + name + "/replace/" + request.POST.get("datatype"))
 
-    params['typeSelect'] = forms.Select(choices=params['types']).render('type', '', attrs={"id": 'id_type', })
-    params['datatypeSelect'] = forms.Select(choices=params['datatypes']).render('datatype', '',
-                                                                                attrs={"id": 'id_datatype', })
+    params = {'datasource': datasource}
 
     if request.POST:
-        if request.POST.get("type") == "private":
-            return redirect("/datasource/" + name + "/replace/" + request.POST.get("datatype"))
-        else:
-            datasource.is_public = True
+        datasource.is_public = True
 
-            if not request.POST.get("title"):  # title is obligatory
-                params["error"] = "A datasource title must be specified"
-                return render(request, 'datasource/form.html', params)
+        if not request.POST.get("title"):  # title is obligatory
+            params["error"] = "A datasource title must be specified"
+            return render(request, 'datasource/replace_remote.html', params)
 
-            datasource.title = request.POST.get("title")
-            datasource.name = slugify(datasource.title)
+        datasource.title = request.POST.get("title")
+        datasource.name = slugify(datasource.title)
 
-            if not request.POST.get("endpoint"):  # endpoint is obligatory
-                params["error"] = "A public sparql enpoint must be specified"
-                return render(request, 'datasource/form.html', params)
+        if not request.POST.get("endpoint"):  # endpoint is obligatory
+            params["error"] = "A public sparql enpoint must be specified"
+            return render(request, 'datasource/replace_remote.html', params)
 
-            # Try to verify that the endpoint uri exists
-            validate = URLValidator()
-            try:
-                validate('http://www.somelink.com/to/my.pdf')
-            except ValidationError, e:
-                params["error"] = "Invalid sparql enpoint (url does not exist) - " + e
-                return render(request, 'datasource/form.html', params)
+        # Try to verify that the endpoint uri exists
+        validate = URLValidator()
+        try:
+            validate('http://www.somelink.com/to/my.pdf')
+        except ValidationError, e:
+            params["error"] = "Invalid sparql enpoint (url does not exist) - " + e
+            return render(request, 'datasource/replace_remote.html', params)
 
-            datasource.uri = request.POST.get("endpoint")
-            datasource.save()  # save changed object to the database
+        datasource.uri = request.POST.get("endpoint")
+        datasource.save()  # save changed object to the database
 
-            return redirect("/datasources/")
+        return redirect("/datasources/")
     else:
-        return render(request, 'datasource/form.html', params)
+        return render(request, 'datasource/replace_remote.html', params)
 
 
 def clear_chunk(c, newlines):

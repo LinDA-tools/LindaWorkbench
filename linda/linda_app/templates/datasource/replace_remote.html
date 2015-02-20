@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% load url from future %}
+{% load i18n thumbnail2 %}
+{% load app_filters %}
+{% block title %}{% if action == "create"%}Create a new datasource{% else %}Replace an existing datasource{% endif%} | LinDA{% endblock %}
+{% block bodyclass %}datasource-create{% endblock %}
+
+{% block content %}
+<div class="main">
+    <h1 class="page-title inline">{% trans "Replace a remote data source" %}</h1>
+
+    <form class="form datasource-create-form" method="post" action="." enctype="multipart/form-data">{% csrf_token %}
+
+        {% if error %}
+            <p class="error">{{error}}</p>
+        {% endif %}
+
+        <div class="endpoint-container">
+            <label for="title">{% trans "Title"%}:</label>
+            <input type="text" name="title" {%if datasource%}value="{{datasource.title}}"{% endif %}/>
+            <br/>
+            <label for="endpoint">{% trans "Endpoint uri"%}:</label>
+            <input type="url" name="endpoint" placeholder="http://www.example.com/sparql" {%if datasource and datasource.is_public%}value="{{datasource.uri}}"{% endif %}/>
+        </div>
+
+        <div class="submit-box">
+            <input type="submit" class="button blue create-datasource-submit" value='{% trans "Replace" %}'/>
+        </div>
+    </form>
+</div>
+{% endblock %}
