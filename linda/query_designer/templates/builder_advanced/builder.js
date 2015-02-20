@@ -225,7 +225,7 @@ var builder = {
 
         if (n == 0) return '';
 
-        return 'FILTER (' + result + ')\n';
+        return '\n    FILTER (' + result + ')\n';
     },
 
     get_foreign: function(w, i, p_name, p) {
@@ -343,7 +343,7 @@ var builder = {
 
             //mark optional properties
             if (p.optional) {
-                constraint = 'OPTIONAL {' + constraint + '}\n';
+                constraint = 'OPTIONAL {\n' + constraint + '}\n';
             }
 
             wh_c += constraint + '\n';
