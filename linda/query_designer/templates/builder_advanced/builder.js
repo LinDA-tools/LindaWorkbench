@@ -1,14 +1,16 @@
 var builder = {
     query: "",
     select_vars: [],
-    where_clause: "WHERE ",
+    where_clause: "",
     order_clause: "",
     error: "",
     instance_names: [],
+    property_names: new Array([]),
     endpoint: "",
     prefixes: [],
     known_prefixes: [],
     is_editing: false,
+    pattern: '',
 
     get_prefixes: function() {
         var prefix_str = "";
@@ -228,6 +230,8 @@ var builder = {
         return '\n    FILTER (' + result + ')\n';
     },
 
+    //forges foreign key relationships
+    //might return a filter to ensure the creation of a foreign key
     get_foreign: function(w, i, p_name, p) {
         var wh_c = '';
 
@@ -235,9 +239,14 @@ var builder = {
              if ((arrows.connections[j].f == '#class_instance_' + i) && (arrows.connections[j].fp == p)) {
                 var tn = arrows.connections[j].t.split('_')[2] //3rd part is the number #class_instance_1
                 if (w.instances[tn].selected_properties[arrows.connections[j].tp].uri == 'URI') { //foreign key to other entitiy
-                    wh_c += this.add_instance(w, p_name, tn);
+                    wh_c += "\n  FILTER (?" + p_name + " = ?" + this.instance_names[tn] + ")";
+                    //wh_c += this.add_instance(w, p_name, tn);
                 } else { //foreign key to other entity's property
-                    wh_c += this.add_instance(w, p_name + '_' + uri_to_label(w.instances[tn].uri), tn, p_name, arrows.connections[j].tp);
+                    if (this.property_names[tn] == undefined) {
+                        this.property_names[tn] = [];
+                    }
+                    this.property_names[tn][arrows.connections[j].tp] = p_name;
+                    //wh_c += this.add_instance(w, p_name + '_' + uri_to_label(w.instances[tn].uri), tn, p_name, arrows.connections[j].tp);
                 }
              }
         }
@@ -247,11 +256,11 @@ var builder = {
 
     /*Adds an instance to the query*/
     /*Continues recursively*/
-    add_instance: function(w, instance_name, i, property_name, property_n) {
+    add_instance: function(w, i) {
         var wh_c = '';
 
         var inst = w.instances[i];
-        var i_name = instance_name;
+        var i_name = this.instance_names[i];
 
         //check if resource comes from a remote endpoint
         var endpoint = total_endpoints[ w.instances[i].dt_name ];
@@ -267,10 +276,10 @@ var builder = {
         for (var j=0; j<inst.selected_properties.length; j++) {
             var p = inst.selected_properties[j];
 
-            if (property_n == j) {
-                var p_name = property_name;
+            if ((this.property_names[i] != undefined) && (this.property_names[i][j] != undefined)) {
+                var p_name = this.property_names[i][j];
             } else {
-                var p_name = instance_name + '_' + this.uri_to_constraint(p.uri); //e.g ?city_leaderName
+                var p_name = i_name + '_' + this.uri_to_constraint(p.uri); //e.g ?city_leaderName
             }
 
             //add chosen properties to select
@@ -286,10 +295,10 @@ var builder = {
         //connect class instance to properties
         for (var j=0; j<inst.selected_properties.length; j++) {
             var p = inst.selected_properties[j];
-            if (property_n == j) {
-                var p_name = property_name;
+            if ((this.property_names[i] != undefined) && (this.property_names[i][j] != undefined)) {
+                var p_name = this.property_names[i][j];
             } else {
-                var p_name = instance_name + '_' + this.uri_to_constraint(p.uri); //e.g ?city_leaderName
+                var p_name = i_name + '_' + this.uri_to_constraint(p.uri); //e.g ?city_leaderName
             }
 
             //connect property to class instances
@@ -318,7 +327,6 @@ var builder = {
                 }
 
                 var v_name = "";
-                //this.order_clause += ' ' + p.order_by + "(?" + p_name + ')';
                 if (p.uri != 'URI') {
                      v_name = "?" + p_name;
                 } else {
@@ -349,11 +357,34 @@ var builder = {
             wh_c += constraint + '\n';
         }
 
+        wh_c += '\n';
         if (endpoint != this.endpoint) { //close SERVICE keyword
             wh_c += '}. \n';
         }
 
         return wh_c;
+    },
+
+    //create subquery X
+    //ch = undefined for None subquery
+    create_subquery: function(ch) {
+        var w = builder_workbench;
+
+        var result = '';
+        for (var i=0; i<w.instances.length; i++) { //foreach instance
+            if (w.instances[i] == undefined) continue;
+
+            if (w.instances[i].subquery === ch) { //if it belongs in the same subquery
+                this.cnt_objects++;
+                if (this.endpoint == "") {
+                    this.endpoint = total_endpoints[ w.instances[i].dt_name ];
+                }
+
+                result += this.add_instance(w, i);
+            }
+        }
+
+        return result;
     },
 
     create: function() {
@@ -383,7 +414,7 @@ var builder = {
             for (var j=i+1; j<w.instances.length; j++) {  //search if there are class instances with the same label
                 if (w.instances[j] == undefined) continue;
 
-                if (this.get_constraint_name(w.instances[j].uri, true) == label) {
+                if ((this.get_constraint_name(w.instances[j].uri, true) == label) && (w.instances[j].subquery === w.instances[i].subquery)) {
                     if (i_names[i] == "") {
                         i_names[i] = label + '1';
                     }
@@ -398,22 +429,35 @@ var builder = {
             }
         }
 
-        var cnt_objects = 0;
+        this.cnt_objects = 0;
         //create the query string
-        this.where_clause += "{\n";
-        for (var i=0; i<w.instances.length; i++) {
-            if (w.instances[i] == undefined) continue;
+        var pt = this.pattern;
 
-            if (this.is_initial(w, i)) {
-                cnt_objects++;
-                if (this.endpoint == "") {
-                    this.endpoint = total_endpoints[ w.instances[i].dt_name ];
+        //none sub-queries instances
+        this.where_clause = "WHERE {\n" + this.create_subquery(undefined);
+
+        if (pt.length > 0) { //apply the pattern
+            var pt = this.pattern;
+            pt = pt.replace('(', '{');
+            pt = pt.replace(')', '}');
+
+            for (var pos=0; pos<pt.length; pos++) {
+                if ((pt[pos] == '{') || (pt[pos] == '}')) {
+                    this.where_clause += pt[pos];
                 }
-
-                this.where_clause += this.add_instance(w, i_names[i], i);
+                else if (pt[pos] == '+') {
+                    this.where_clause += 'UNION ';
+                }
+                else if (pt[pos] == '-') {
+                    this.where_clause += 'MINUS ';
+                }
+                else {
+                    this.where_clause += "{ # sub-graph " + pt[pos] +"\n" + this.create_subquery(pt[pos]) + "}\n";
+                }
             }
         }
-        this.where_clause += "}";
+
+        this.where_clause += "}\n"
 
         //construct the select clause -- only keep unique values
         this.select_vars = $.unique(this.select_vars);
@@ -425,7 +469,7 @@ var builder = {
         //auto-detect prefixes
         this.where_clause = this.detect_prefixes(this.where_clause);
 
-        if (cnt_objects == 0) { //empty query
+        if (this.cnt_objects == 0) { //empty query
             this.query = '';
         } else { //the result is the SELECT ... WHERE ...
             this.query = this.get_prefixes() + select_clause + '\n' + this.where_clause + this.order_clause;
@@ -435,10 +479,13 @@ var builder = {
     },
 
     reset: function() {
+        this.pattern = $("#builder_pattern > input").val().toUpperCase();
         this.create();
+
         this.is_editing = true;
         editor.setValue(this.query);
         this.is_editing = false;
+
         $("#hdn_qb_dataset").val(this.endpoint);
         $("#sparql_results_container").hide();
     }

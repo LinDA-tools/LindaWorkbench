@@ -42,6 +42,15 @@ function property_select(instance) {
                 if (!that.page) { //initial page of select
                     that.set_page(1);
                 }
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.log(textStatus + ': ' + errorThrown);
+                if (builder_workbench.instances[that.c.id].property_select.properties.length == 0) {
+                    $("#class_instance_" + that.c.id + " .dropdown-toggle-properties > span").removeClass("loading");
+                    $("#class_instance_" + that.c.id + " .dropdown-toggle-properties > span").addClass("error");
+                    $("#class_instance_" + that.c.id + " .dropdown-toggle-properties > span").html('X');
+                    $("#class_instance_" + that.c.id + " .property-control .properties-found").html('Could not load properties');
+                }
             }
         });
     }
@@ -111,14 +120,17 @@ function property_select(instance) {
 
 /* On toggle press */
 $('body').on('click', '.property-control .dropdown-toggle-properties', function(e) {
-    $('.class-instance:not(#class_instance_' + $(this).closest(".class-instance").data('n') + ') .property-dropdown').hide();
-    $(this).parent().find(".property-dropdown").toggle();
-    var that = this;
+    var n = $(this).closest(".class-instance").data('n');
+    if (builder_workbench.instances[n].property_select.properties.length > 0) { //properties have loaded
+        $('.class-instance:not(#class_instance_' + $(this).closest(".class-instance").data('n') + ') .property-dropdown').hide();
+        $(this).parent().find(".property-dropdown").toggle();
+        var that = this;
 
-    setTimeout( function() {$(that).parent().find("input").focus()}, 100);
+        setTimeout( function() {$(that).parent().find("input").focus()}, 100);
 
-    e.preventDefault();
-    e.stopPropagation();
+        e.preventDefault();
+        e.stopPropagation();
+    }
 });
 
 /* Don't hide the select on same input */
@@ -175,7 +187,10 @@ $("body").on('click', '.property-control .property-dropdown .property', function
     builder.reset();
 
     $(this).closest(".property-dropdown").toggle();
+
+    //reset search
     $(this).closest(".property-dropdown").parent().find("input").val('');
+    builder_workbench.instances[n].property_select.set_page(1);
 
     e.preventDefault();
     e.stopPropagation();

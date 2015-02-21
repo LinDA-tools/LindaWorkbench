@@ -39,7 +39,9 @@
 
         <div class="row qb-equivalent-query-main" style="display:none;">
             <div class="col-md-12">
-                {% include 'query-builder/sparql-query-editor.html' %}
+                {% with designer=True %}
+                    {% include 'query-builder/sparql-query-editor.html' %}
+                {% endwith %}
             </div>
         </div>
 
@@ -214,6 +216,10 @@
 
     <script>
         {% include "builder_advanced/property_select.js" %}
+    </script>
+
+    <script>
+        {% include "builder_advanced/subqueries.js" %}
     </script>
 
     <script>

@@ -33,9 +33,9 @@
             /*Adds an instance of a class*/
             add_instance: function(dt_name, uri, x,y, default_properties) {
                 var new_id = this.instances.length;
-                var new_instance = $.parseHTML('<div id="class_instance_' + new_id + '" class="class-instance" data-n="' + new_id + '"style="left: ' + x + 'px; top: ' + y + 'px;"><div class="title"><h3>' + uri_to_label(uri) + '</h3><span class="uri">&lt;' + uri + '&gt;</span><span class="delete" data-about="' + new_id + '">x</span><span class="dataset">' + dt_name + '</span></div><div class="properties"><span class="loading">Loading properties...</span></div></div>');
+                var new_instance = $.parseHTML('<div id="class_instance_' + new_id + '" class="class-instance" data-n="' + new_id + '"style="left: ' + x + 'px; top: ' + y + 'px;"><div class="title"><h3>' + uri_to_label(uri) + '</h3><span class="subquery-select empty"></span><span class="uri">&lt;' + uri + '&gt;</span><span class="delete" data-about="' + new_id + '">x</span><span class="dataset">' + dt_name + '</span></div><div class="properties"><span class="loading">Loading properties...</span></div></div>');
                 $("#builder_workspace").append(new_instance);
-                $(new_instance).draggable({handle: '.title', cursor: 'move', drag: function() {
+                $(new_instance).draggable({cancel : '.subquery-select', handle: '.title', cursor: 'move', drag: function() {
                     builder_workbench.reset_height($(this));
                     arrows.draw();
                 }});
@@ -227,10 +227,13 @@
                     var inst = data.instances[i];
 
                     this.add_instance(inst.dt_name, inst.uri, inst.position.x, inst.position.y, inst.selected_properties);
+                    sub_Q.set_subquery(i, data.instances[i].subquery);
                 }
 
                 arrows.connections = data.connections; //restore the connections
                 arrows.paths = data.paths; //restore connection paths
+
+                $("#builder_pattern input").val(data.pattern);
 
                 arrows.draw();
                 builder.reset();
@@ -240,7 +243,8 @@
                 data = {
                     instances: [],
                     connections: arrows.connections,
-                    paths: arrows.paths
+                    paths: arrows.paths,
+                    pattern: $("#builder_pattern input").val().toUpperCase()
                 };
 
                 for(var i=0; i<this.instances.length; i++) { //foreach instance
@@ -252,7 +256,8 @@
                             y: $("#class_instance_" + i).offset().top - $("#builder_workspace").offset().top,
                         },
 
-                        selected_properties: this.instances[i].selected_properties
+                        selected_properties: this.instances[i].selected_properties,
+                        subquery: this.instances[i].subquery
                     };
                 }
 
@@ -300,10 +305,12 @@
 
                 //update connections
                 arrows.rename_instance("#class_instance_" + i, "#class_instance_" + (i-1));
+
+                //update sub-queries
+                sub_Q.rename_instance(i, i-1);
             }
 
             builder_workbench.instances.splice(n, 1); //also delete from instance array
-
             builder.reset();
         });
 

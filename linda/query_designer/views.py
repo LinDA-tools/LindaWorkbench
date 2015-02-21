@@ -65,9 +65,11 @@ def sparql_query_json(endpoint, query):
     query_enc = urlquote(query, safe='')
 
     # get query results and turn them into json
+    # with &output=json we support non-standard endpoints like IMDB & World Factbook
     response = requests.get(
         endpoint + "?Accept=" + urlquote(
-            "application/sparql-results+json") + "&query=" + query_enc + "&format=json")
+            "application/sparql-results+json") + "&query=" + query_enc + "&format=json&output=json")
+
 
     if response.status_code == 200:
         # return the response
