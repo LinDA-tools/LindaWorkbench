@@ -231,27 +231,20 @@ var builder = {
     },
 
     //forges foreign key relationships
-    //might return a filter to ensure the creation of a foreign key
-    get_foreign: function(w, i, p_name, p) {
-        var wh_c = '';
-
+    create_foreign: function(w, i, p_name, p) {
         for (var j=0; j<arrows.connections.length; j++) {
              if ((arrows.connections[j].f == '#class_instance_' + i) && (arrows.connections[j].fp == p)) {
                 var tn = arrows.connections[j].t.split('_')[2] //3rd part is the number #class_instance_1
-                if (w.instances[tn].selected_properties[arrows.connections[j].tp].uri == 'URI') { //foreign key to other entitiy
-                    wh_c += "\n  FILTER (?" + p_name + " = ?" + this.instance_names[tn] + ")";
-                    //wh_c += this.add_instance(w, p_name, tn);
+                if (w.instances[tn].selected_properties[arrows.connections[j].tp].uri == 'URI') { //foreign key to other entity
+                    this.instance_names[tn] = p_name;
                 } else { //foreign key to other entity's property
                     if (this.property_names[tn] == undefined) {
                         this.property_names[tn] = [];
                     }
                     this.property_names[tn][arrows.connections[j].tp] = p_name;
-                    //wh_c += this.add_instance(w, p_name + '_' + uri_to_label(w.instances[tn].uri), tn, p_name, arrows.connections[j].tp);
                 }
              }
         }
-
-        return wh_c;
     },
 
     /*Adds an instance to the query*/
@@ -305,9 +298,9 @@ var builder = {
             var constraint = '';
             if (p.uri != 'URI') {
                 constraint = '    ?' + i_name + ' <' + p.uri + '> ?' + p_name + '.';
-                constraint += this.get_foreign(w, i, p_name, j); //handle uri foreign keys
+                this.create_foreign(w, i, p_name, j); //handle uri foreign keys
             } else {
-                constraint = this.get_foreign(w, i, i_name, j); //handle property foreign keys
+                this.create_foreign(w, i, i_name, j); //handle property foreign keys
             }
 
             //add filters
