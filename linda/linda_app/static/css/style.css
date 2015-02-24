@@ -2183,13 +2183,21 @@ input, textarea {
     background: #eee;
 }
 
+.toolbar > * {
+    vertical-align: top;
+}
+
 .toolbar .active-classes {
     display: inline;
     padding: 10px;
 }
 
+.toolbar .active-classes .classes-container {
+    display: inline;
+}
+
 .toolbar .active-classes .button {
-    margin: 5px;
+    margin: 0 5px 5px 5px;
     background: #b2b2b2;
     border-radius: 2px;
 }

@@ -43,6 +43,7 @@ def load_design(request, pk):
 
     return render(request, "builder_advanced/index.html", params)
 
+
 # API calls
 
 
@@ -70,7 +71,6 @@ def sparql_query_json(endpoint, query):
         endpoint + "?Accept=" + urlquote(
             "application/sparql-results+json") + "&query=" + query_enc + "&format=json&output=json")
 
-
     if response.status_code == 200:
         # return the response
         return HttpResponse(response.text, "application/json")
@@ -83,8 +83,13 @@ def active_classes(request, dt_name):
     # get the endpoint of the query
     endpoint = get_endpoint_from_dt_name(dt_name)
 
+    # get page
+    p = request.GET.get('p', '0')
+
     # query to get all classes with at least one instance
-    query = "SELECT DISTINCT ?class WHERE { ?s a ?class }"
+    classes_query_paginate_by = 10000
+    query = "SELECT DISTINCT ?class WHERE { ?s a ?class } LIMIT " + str(classes_query_paginate_by) + " OFFSET " + str(
+        (int(p) - 1) * classes_query_paginate_by)
 
     return sparql_query_json(endpoint, query)
 
@@ -142,7 +147,7 @@ def active_class_properties(request, dt_name):
     # get if pagination was set
     if request.GET.get('page'):
         p = int(request.GET['page'])
-        offset = (p - 1)*200
+        offset = (p - 1) * 200
         page_str = " OFFSET " + str(offset) + " LIMIT 200"
     else:
         page_str = ""

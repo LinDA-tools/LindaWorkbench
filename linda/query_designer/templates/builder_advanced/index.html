@@ -23,9 +23,7 @@
 
 {% block content %}
     <div class="main">
-        {% with toolbar_id="toolbar" html=True %}
-            {% include "builder_advanced/toolbar.html" %}
-        {% endwith %}
+        {% include "builder_advanced/toolbar.html" %}
 
         <div id="builder_workspace">
             <span>{% trans "Drag and drop items here to create a query"%}</span>
@@ -75,9 +73,8 @@
 
     <script src="/static/js/chosen.jquery.min.js"></script>
 
+    <script src="/static/query_designer/arrows.js"></script>
     <script>
-        {% include "builder_advanced/arrows.js" %}
-
         $().ready(function() {
             $("#builder-canvas").attr({'width':$("#builder_workspace").width(), 'height':$("#builder_workspace").height()});
             arrows.set_canvas("builder-canvas");
@@ -132,8 +129,11 @@
             }
         }
 
-        {% include "builder_advanced/builder_workbench.js" %}
+        </script>
 
+        <script src="/static/query_designer/builder_workbench.js"></script>
+
+        <script>
          /*Drag & Dropping*/
         $("#builder_workspace").mouseup(function(e) {
             if ((e.which == 1) && builder_workbench.selection) { //only for left click and when a class selection has been made
@@ -206,21 +206,10 @@
         });
     </script>
 
-    {% with toolbar_id="toolbar" js=True %}
-        {% include "builder_advanced/toolbar.html" %}
-    {% endwith %}
-
-    {% with js=True %}
-        {% include "builder_advanced/filters.html" %}
-    {% endwith %}
-
-    <script>
-        {% include "builder_advanced/property_select.js" %}
-    </script>
-
-    <script>
-        {% include "builder_advanced/subqueries.js" %}
-    </script>
+    <script src="/static/query_designer/toolbar.js"></script>
+    <script src="/static/query_designer/filters.js"></script>
+    <script src="/static/query_designer/property_select.js"></script>
+    <script src="/static/query_designer/subqueries.js"></script>
 
     <script>
         {% with query=query %}
@@ -260,10 +249,7 @@
         }
     </script>
 
-    <script>
-        {% include "builder_advanced/builder.js" %}
-    </script>
-
+    <script src="/static/query_designer/builder.js"></script>
 
     <script>
         rdf2any_server = "{{RDF2ANY_SERVER}}";
