@@ -236,14 +236,83 @@ var builder = {
              if ((arrows.connections[j].f == '#class_instance_' + i) && (arrows.connections[j].fp == p)) {
                 var tn = arrows.connections[j].t.split('_')[2] //3rd part is the number #class_instance_1
                 if (w.instances[tn].selected_properties[arrows.connections[j].tp].uri == 'URI') { //foreign key to other entity
-                    this.instance_names[tn] = p_name;
-                } else { //foreign key to other entity's property
-                    if (this.property_names[tn] == undefined) {
-                        this.property_names[tn] = [];
+                    if (w.instances[i].selected_properties[p].uri == 'URI') {
+                        this.instance_names[tn] = this.instance_names[i];
+                    } else {
+                        this.property_names[i][p] = this.instance_names[tn];
                     }
+                } else { //foreign key to other entity's property
                     this.property_names[tn][arrows.connections[j].tp] = p_name;
                 }
+
+                this.find_property_names(w, tn);
              }
+        }
+    },
+
+    //finds instance & property names
+    prepare_query: function(w) {
+        var i_names = this.instance_names;
+
+        //initialize base unique names to empty
+        for (var i=0; i<w.instances.length; i++) {
+            i_names[i] = "";
+        }
+
+        //set base unique names
+        for (var i=0; i<w.instances.length; i++) {
+            if (w.instances[i] == undefined) continue;
+            if (i_names[i] != "") continue;
+
+            var label = this.get_constraint_name(w.instances[i].uri, true); //get the constraint name
+
+            var cnt = 1; //label is found once
+            for (var j=i+1; j<w.instances.length; j++) {  //search if there are class instances with the same label
+                if (w.instances[j] == undefined) continue;
+
+                if ((this.get_constraint_name(w.instances[j].uri, true) == label) && (w.instances[j].subquery === w.instances[i].subquery)) {
+                    if (i_names[i] == "") {
+                        i_names[i] = label + '1';
+                    }
+
+                    cnt++;
+                    i_names[j] = label + cnt;
+                }
+            }
+
+            if (i_names[i] == "") {
+                i_names[i] = label;
+            }
+        }
+
+        //find property names
+        for (var i=0; i<w.instances.length; i++) {
+            this.property_names[i] = [];
+        }
+
+        for (var i=0; i<w.instances.length; i++) {
+            if (this.is_initial(w, i)) {
+                this.find_property_names(w, i);
+            }
+        }
+    },
+
+    //find the names of the properties & forge foreign keys
+    find_property_names: function(w, i) {
+        var inst = w.instances[i];
+        var i_name = this.instance_names[i];
+
+        for (var j=0; j<inst.selected_properties.length; j++) {
+            var p = inst.selected_properties[j];
+            if (this.property_names[i][j] === undefined) {
+                this.property_names[i][j] = i_name + '_' + this.uri_to_constraint(p.uri); //e.g ?city_leaderName
+
+                if (p.uri != 'URI') {
+                    this.create_foreign(w, i, this.property_names[i][j], j); //handle uri foreign keys
+                } else {
+                    this.create_foreign(w, i, this.instance_names[i], j); //handle property foreign keys
+                }
+            }
         }
     },
 
@@ -268,12 +337,7 @@ var builder = {
         //add properties to select clause
         for (var j=0; j<inst.selected_properties.length; j++) {
             var p = inst.selected_properties[j];
-
-            if ((this.property_names[i] != undefined) && (this.property_names[i][j] != undefined)) {
-                var p_name = this.property_names[i][j];
-            } else {
-                var p_name = i_name + '_' + this.uri_to_constraint(p.uri); //e.g ?city_leaderName
-            }
+            var p_name = this.property_names[i][j];
 
             //add chosen properties to select
             if (p.show) {
@@ -288,19 +352,12 @@ var builder = {
         //connect class instance to properties
         for (var j=0; j<inst.selected_properties.length; j++) {
             var p = inst.selected_properties[j];
-            if ((this.property_names[i] != undefined) && (this.property_names[i][j] != undefined)) {
-                var p_name = this.property_names[i][j];
-            } else {
-                var p_name = i_name + '_' + this.uri_to_constraint(p.uri); //e.g ?city_leaderName
-            }
+            var p_name = this.property_names[i][j];
 
             //connect property to class instances
             var constraint = '';
             if (p.uri != 'URI') {
                 constraint = '    ?' + i_name + ' <' + p.uri + '> ?' + p_name + '.';
-                this.create_foreign(w, i, p_name, j); //handle uri foreign keys
-            } else {
-                this.create_foreign(w, i, i_name, j); //handle property foreign keys
             }
 
             //add filters
@@ -382,7 +439,6 @@ var builder = {
 
     create: function() {
         var w = builder_workbench;
-        var i_names = this.instance_names;
 
         this.error = "";
         this.select_vars = [];
@@ -391,40 +447,11 @@ var builder = {
         this.endpoint = "";
         this.prefixes = [];
 
-        //initialize base unique names to empty
-        for (var i=0; i<w.instances.length; i++) {
-            i_names[i] = "";
-        }
-
-        //set base unique names
-        for (var i=0; i<w.instances.length; i++) {
-            if (w.instances[i] == undefined) continue;
-            if (i_names[i] != "") continue;
-
-            var label = this.get_constraint_name(w.instances[i].uri, true); //get the constraint name
-
-            var cnt = 1; //label is found once
-            for (var j=i+1; j<w.instances.length; j++) {  //search if there are class instances with the same label
-                if (w.instances[j] == undefined) continue;
-
-                if ((this.get_constraint_name(w.instances[j].uri, true) == label) && (w.instances[j].subquery === w.instances[i].subquery)) {
-                    if (i_names[i] == "") {
-                        i_names[i] = label + '1';
-                    }
-
-                    cnt++;
-                    i_names[j] = label + cnt;
-                }
-            }
-
-            if (i_names[i] == "") {
-                i_names[i] = label;
-            }
-        }
-
         this.cnt_objects = 0;
         //create the query string
         var pt = this.pattern;
+
+        this.prepare_query(w);
 
         //none sub-queries instances
         this.where_clause = "WHERE {\n" + this.create_subquery(undefined);

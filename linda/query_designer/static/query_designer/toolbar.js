@@ -326,31 +326,6 @@ $("#tree_toolbar").on('click', '.arrow.closed.unset', function(e) {
                 TreeObjects[id] = encodeURIComponent(class_uri);
             }
 
-            /*Don't show properties for time
-            $.ajax({ //make request for properties
-                url: ADVANCED_BUILDER_API_URI + "active_class_properties/" +  $( "#toolbar > select" ).val() + "?order=true&class_uri=" + parent_uri,
-                type: "GET",
-
-                success: function(data, textStatus, jqXHR) {
-                    var bindings = data.results.bindings;
-
-                    for (var i=0; i<bindings.length; i++) { //add all properties
-                        var property_uri = bindings[i].property.value;
-                        var instance_cnt = bindings[i].cnt.value;
-
-                        var id = parent_id + '_property_' + i;
-                        var text = uri_to_label(property_uri) + ' (' + Number(instance_cnt).toLocaleString() + ')';
-                        $(container).append('<div id="' + id + '"><span class="property">' + text + '</span></div>');
-                        TreeObjects[id] = encodeURIComponent(property_uri);
-                    }
-
-                    arrow.removeClass('loading');
-                },
-                error: function (jqXHR, textStatus, errorThrown) {
-                    console.log(textStatus + ': ' + errorThrown);
-                }
-            });*/
-
             arrow.removeClass('loading');
             if (nOfSubclasses == 0) {
                 arrow.addClass('ui-icon-minus');
