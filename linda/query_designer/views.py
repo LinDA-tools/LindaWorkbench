@@ -83,13 +83,23 @@ def active_classes(request, dt_name):
     # get the endpoint of the query
     endpoint = get_endpoint_from_dt_name(dt_name)
 
-    # get page
-    p = request.GET.get('p', '0')
+    # editor classes
+    if request.GET.get('q'):
+        q = request.GET.get('q')
+        if request.GET.get('prefix'):
+            regex = request.GET.get('prefix') + '(.)*' + q + '(.)*'
+        else:
+            regex = '^http://(/)*(.)*' + q + '(.)*'
 
-    # query to get all classes with at least one instance
-    classes_query_paginate_by = 10000
-    query = "SELECT DISTINCT ?class WHERE { ?s a ?class } LIMIT " + str(classes_query_paginate_by) + " OFFSET " + str(
-        (int(p) - 1) * classes_query_paginate_by)
+        query = 'select distinct ?Concept where {[] a ?Concept. FILTER regex(str(?Concept), "' + regex + '" , "i")} LIMIT 20'
+    else:
+        # get page
+        p = request.GET.get('p', '0')
+
+        # query to get all classes with at least one instance
+        classes_query_paginate_by = 10000
+        query = "SELECT DISTINCT ?class WHERE { ?s a ?class } LIMIT " + str(classes_query_paginate_by) + " OFFSET " + str(
+            (int(p) - 1) * classes_query_paginate_by)
 
     return sparql_query_json(endpoint, query)
 
@@ -157,6 +167,24 @@ def active_class_properties(request, dt_name):
         query = "SELECT DISTINCT ?property (count(?x) AS ?cnt) WHERE {?x a <" + class_uri + ">. ?x ?property ?o } GROUP BY ?property ORDER BY DESC(?cnt)" + page_str
     else:
         query = "SELECT DISTINCT ?property WHERE {?x a <" + class_uri + ">. ?x ?property ?o }" + page_str
+
+    return sparql_query_json(endpoint, query)
+
+
+# Get all properties in a data source
+def active_properties(request, dt_name):
+    # get the query string
+    q = request.GET.get('q', '')
+
+    # get the endpoint of the query
+    endpoint = get_endpoint_from_dt_name(dt_name)
+
+    if request.GET.get('prefix'):
+        regex = request.GET.get('prefix') + '(.)*' + q + '(.)*'
+    else:
+        regex = '^http://(/)*(.)*' + q + '(.)*'
+
+    query = 'SELECT DISTINCT ?property WHERE {?x ?property ?o FILTER regex(str(?property), "' + regex + '" , "i")} LIMIT 20'
 
     return sparql_query_json(endpoint, query)
 

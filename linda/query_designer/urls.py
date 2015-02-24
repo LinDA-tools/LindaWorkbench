@@ -23,4 +23,5 @@ urlpatterns = patterns('',
                        url(r'^api/active_class_properties/(?P<dt_name>[\w-]+)/$',
                            views.active_class_properties),
                        url(r'^api/get_property_type/(?P<dt_name>[\w-]+)/$', views.get_property_type),
+                       url(r'^api/active_properties/(?P<dt_name>[\w-]+)/$', views.active_properties),
 )
