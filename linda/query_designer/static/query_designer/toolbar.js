@@ -7,10 +7,6 @@ var toolbar = {
     labels: [],
     classes_query_paginate_by: 10000,
 
-    sort_f: function(a, b) {
-        return uri_to_label(a.uri).length - uri_to_label(b.uri).length;
-    },
-
     clear: function() {
         this.all_classes_properties = [];
         this.labels = [];
@@ -45,13 +41,9 @@ var toolbar = {
                         toolbar.show_classes(val, undefined, true);
                     }, 10);
                 } else { //sort results in the end
-                    $("#toolbar").css('cursor', 'wait');
-                    setTimeout(function() {
-                        this.labels = [];
-                        toolbar.all_classes_properties.sort(toolbar.sort_f);
-                        toolbar.show_classes($( '#toolbar > input[type="search"]' ).val());
-                        $("#toolbar").css('cursor', 'default');
-                    }, 10);
+                    if (toolbar.order_worker) {
+                        toolbar.order_worker.postMessage(toolbar.all_classes_properties);
+                    }
                 }
 
             },
@@ -341,6 +333,17 @@ $("#tree_toolbar").on('click', '.arrow.closed.unset', function(e) {
         }
     });
 });
+
+//create a worker to
+if (window.Worker) {
+    toolbar.order_worker = new Worker("/static/query_designer/util/on_worker_message.js");
+    toolbar.order_worker.onmessage = function(e) {
+        toolbar.all_classes_properties = e.data;
+        toolbar.labels.length = 0;
+        toolbar.show_classes($( '#toolbar > input[type="search"]' ).val());
+        $("#toolbar").css('cursor', 'default');
+    };
+}
 
 /*On class start drag*/
 $("body").on('mousedown','#tree_toolbar .class', function(e) {
