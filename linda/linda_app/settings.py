@@ -153,6 +153,7 @@ INSTALLED_APPS = (
     'r2r',
     'visualisation',
     'query_designer',
+    'transformation',
 
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',

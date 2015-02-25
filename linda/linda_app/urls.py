@@ -32,6 +32,9 @@ urlpatterns = patterns('',
                        url(r'^analytics/', include('analytics.urls', namespace="analytics")),
 
                        # Transformations
+                       url(r'^transformation/', include('transformation.urls')),
+
+                       # Transformations
                        url(r'^transformations/', include('r2r.urls')),
 
                        # Query Designer
