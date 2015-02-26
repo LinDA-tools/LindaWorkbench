@@ -59,7 +59,7 @@ USE_TZ = True
 
 # Absolute filesystem path to the directory that will hold user-uploaded files.
 # Example: "/home/media/media.lawrence.com/media/"
-MEDIA_ROOT = '/var/www/html/LindaAnalytics/'
+MEDIA_ROOT = '/usr/share/nginx/html/LindaAnalytics/'
 
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash.
@@ -128,7 +128,7 @@ TEMPLATE_DIRS = (
 LINDA_HOME = 'http://localhost:8000/'
 
 # apache-tomcat url
-LINDA_APACHE_ANALYTICS = '/static/LindaAnalytics/'
+LINDA_APACHE_ANALYTICS = 'http://linda.epu.ntua.gr/LindaAnalytics/'
 
 INSTALLED_APPS = (
     'linda_app',
