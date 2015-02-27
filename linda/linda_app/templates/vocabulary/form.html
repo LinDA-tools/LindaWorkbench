@@ -7,7 +7,7 @@
 
 {% block content %}
 <div class="main">
-    <h1 class="page-title inline">{% if create %}{% trans "Crete a vocabulary"%}{% else %}{% trans "Edit vocabulary"%}{% endif %}</h1>
+    <h1 class="page-title inline">{% if create %}{% trans "Create a vocabulary"%}{% else %}{% trans "Edit vocabulary"%}{% endif %}</h1>
 
     <form class="vocabulary-edit-form" method="post" action="{% if create %}/vocabulary/create/{% else %}/vocabulary/{{vocabulary.id}}/edit/{% endif %}"
           class="vocabulary-edit-form" enctype="multipart/form-data">{% csrf_token %}
