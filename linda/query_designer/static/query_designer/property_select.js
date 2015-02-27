@@ -226,7 +226,18 @@ $("body").on('keyup','.property-control input', function(e) {
         if (pattern.test(v)) { // is URI
             var n = $(this).closest(".class-instance").data('n');
             p_select = builder_workbench.instances[n].property_select;
-            p_select.properties.push({'uri': v});
+
+            //add to properties if it was not found
+            var found = false;
+            for (var i=0; i<p_select.properties.length; i++) {
+                if (p_select.properties[i].uri == v) {
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) {
+                p_select.properties.push({'uri': v});
+            }
 
             builder_workbench.add_property(n, v);
             builder.reset();
