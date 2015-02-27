@@ -31,10 +31,8 @@ uri_to_label = function(uri) {
 }
 
 onmessage = function(e) {
-    console.log(e.data[0]);
     e.data.sort(function(a, b) {
         return uri_to_label(a.uri).length - uri_to_label(b.uri).length;
     });
-    console.log(e.data[0]);
     postMessage(e.data);
 }

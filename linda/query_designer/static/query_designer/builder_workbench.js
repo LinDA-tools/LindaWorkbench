@@ -117,6 +117,8 @@
                 var new_n = $(ui.item[0]).index() -1;
 
                 //reorder in property selection
+                builder_workbench.instances[i].selected_properties[old_n].n = new_n;
+                builder_workbench.instances[i].selected_properties[new_n].n = old_n;
                 builder_workbench.instances[i].selected_properties.move(old_n, new_n);
 
                 //reorder property in arrows
@@ -338,7 +340,6 @@
 
         /*Order by*/
         $("body").on('change', '.property-row span:nth-of-type(4) select', function(e) {
-            console.log('ug');
             builder_workbench.instances[ $(this).parent().parent().data('i') ].selected_properties[ $(this).parent().parent().data('n') ].order_by = $(this).val();
             builder.reset();
         });

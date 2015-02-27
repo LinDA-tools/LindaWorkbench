@@ -57,8 +57,12 @@ function show_filters() {
     if (builder_workbench.property_selection) {
         var p = builder_workbench.property_selection;
         var cnt = 0;
-        $("#all-filters").html('');
 
+        //set dialog title
+        $(".ui-dialog-title").html(uri_to_label(builder_workbench.instances[builder_workbench.property_selection_of_instance].uri) + '.' + uri_to_label(p.uri));
+
+        //show current filters
+        $("#all-filters").html('');
         for (var i=0; i<p.filters.length; i++) {
             if (p.filters[i] == undefined) continue;
 
