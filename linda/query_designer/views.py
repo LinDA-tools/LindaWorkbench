@@ -163,10 +163,10 @@ def active_class_properties(request, dt_name):
         page_str = ""
 
     # query to get all properties of a class with at least one instance
-    if request.GET.get('order'):
+    if request.GET.get('order') == "true":
         query = "SELECT DISTINCT ?property (count(?x) AS ?cnt) WHERE {?x a <" + class_uri + ">. ?x ?property ?o } GROUP BY ?property ORDER BY DESC(?cnt)" + page_str
     else:
-        query = "SELECT DISTINCT ?property WHERE {?x a <" + class_uri + ">. ?x ?property ?o }" + page_str
+        query = "SELECT ?property WHERE {?x a <" + class_uri + ">. ?x ?property ?o }" + page_str
 
     return sparql_query_json(endpoint, query)
 

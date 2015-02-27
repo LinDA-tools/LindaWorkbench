@@ -8,33 +8,76 @@ function property_select(instance) {
     this.SELECT_SIZE = 25;
     this.offset = 0;
 
-    this.load = function(p) { // load the current page of properties
+    this.load_property_page = function(p, order, push) {
         var that = this;
         var c = this.c;
 
-        if (this.to_stop) {
-            return;
-        }
-
         $.ajax({  //make an ajax request to get properties
-            url: ADVANCED_BUILDER_API_URI + "active_class_properties/" +  c.dt_name + "?class_uri=" + encodeURIComponent(c.uri) + '&order=true&page=' + p,
+            url: ADVANCED_BUILDER_API_URI + "active_class_properties/" +  c.dt_name + "?class_uri=" + encodeURIComponent(c.uri) + '&order=' + order.toString() + '&page=' + p,
             type: "GET",
             success: function(data, textStatus, jqXHR) {
                 if (!c || that.to_stop) { //the instance was deleted in the mean time
                     return;
                 }
 
+                if (push === undefined) {
+                    push = true;
+                }
+                if ((p == 1) && (that.started_loading)) { //another load effort already started loading
+                    push = false;
+                }
                 that.started_loading = true;
 
                 var bindings = data.results.bindings;
+                var prev_properties_length = that.properties.length;
                 for (var i=0; i<bindings.length; i++) { //add the properties
-                    that.properties.push({'uri': bindings[i].property.value, 'frequence': Number(bindings[i].cnt.value).toLocaleString()});
+                    if (push) { //add the property
+                        var o = {'uri': bindings[i].property.value};
+                        if (order) { //if order add frequence
+                            o.frequence = Number(bindings[i].cnt.value).toLocaleString();
+                        } else {
+                            //if order = false, we must check for distinct values by hand
+                            var already_exists = false;
+                            for (var j=0; j<that.properties.length; j++) {
+                                if (that.properties[j].uri == o.uri) {
+                                    already_exists = true;
+                                    break;
+                                }
+                            }
+
+                            if (already_exists) {
+                                continue;
+                            }
+                        }
+
+                        that.properties.push(o);
+                    } else { //just update property frequency
+                        for (var j=0; j<that.properties.length; j++) {
+                            if (that.properties[j].uri == bindings[i].property.value) {
+                                that.properties[j].frequence = Number(bindings[i].cnt.value).toLocaleString()
+                                 break;
+                            }
+                        }
+                    }
                 }
 
-                $("#class_instance_" + that.c.id + " .property-control .properties-found").html(Number(that.properties.length).toLocaleString() + ' properties found');
+                if (push) {
+                    if (that.properties.length == prev_properties_length) { //number of properties not increased
+                        that.repeating_pages += 1;
+                        console.log(that.repeating_pages);
+                        if (that.repeating_pages == 20) { //after 20 pages without new properties, stop
+                            that.finished_loading = true;
+                            return;
+                        }
+                    } else {  //number of properties has changes
+                        that.repeating_pages = 0;
+                        $("#class_instance_" + that.c.id + " .property-control .properties-found").html(Number(that.properties.length).toLocaleString() + ' properties found');
+                        that.show();
+                    }
+                }
 
                 if (bindings.length == that.PROPERTY_PAGE_LIMIT) { //load next page
-                    that.load(p+1);
+                    that.load_property_page(p+1, order, push);
                 } else {
                     that.finished_loading = true;
                 }
@@ -53,6 +96,26 @@ function property_select(instance) {
                 }
             }
         });
+    },
+
+    this.load = function() { // load the current page of properties
+        var that = this;
+
+        if (this.to_stop) {
+            return;
+        }
+
+        this.repeating_pages = 0;
+        this.load_property_page(1, true);
+
+        //set a timeout so after 10 seconds degraded loading starts
+        setTimeout(function() {
+            if (that.started_loading) {
+                return;
+            }
+
+            that.load_property_page(1, false);
+        }, 10000);
     }
 
     this.stop = function() {
@@ -84,7 +147,16 @@ function property_select(instance) {
 
                 if ((total > offset) && (total <= offset + limit)) {
                     var data_str = 'data-uri="' + this.properties[i].uri + '"';
-                    $("#class_instance_" + this.c.id + " .property-control .property-dropdown .properties-list").append('<div class="property" ' + data_str + '>' + label + ' (' + this.properties[i].frequence + ')</div>');
+
+                    //create the property html object
+                    var property_div = '<div class="property" ' + data_str + '>' + label;
+                    if (typeof(this.properties[i].frequence) != "undefined") {
+                        property_div += ' (' + this.properties[i].frequence + ')';
+                    }
+                    property_div += '</div>';
+
+                    //append the property to the select
+                    $("#class_instance_" + this.c.id + " .property-control .property-dropdown .properties-list").append(property_div);
                     added++;
                 }
 
@@ -112,7 +184,7 @@ function property_select(instance) {
         this.show();
     };
 
-    this.load(1); //start loading properties
+    this.load(); //start loading properties
 
     $("#class_instance_" + this.c.id + " .property-control").html('<input type="search" autocomplete="false" placeholder="search"/><div class="dropdown-toggle-properties"><span class="loading"></span></div><span class="properties-found">Loading properties</span>');
     $("#class_instance_" + this.c.id + " .property-control").append('<div class="property-dropdown"><div class="button up"></div><div class="properties-list"></div><div class="button down"></button></div>');
@@ -139,6 +211,37 @@ $("body").on('click','.property-control input', function(e) {
 
     e.preventDefault();
     e.stopPropagation();
+});
+
+$("body").on('keyup','.property-control input', function(e) {
+    if (e.keyCode == 13) {
+        var pattern = new RegExp('^(https?:\\/\\/)?'+ // protocol
+          '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+ // domain name
+          '((\\d{1,3}\\.){3}\\d{1,3}))'+ // OR ip (v4) address
+          '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*'+ // port and path
+          '(\\?[;&a-z\\d%_.~+=-]*)?'+ // query string
+          '(\\#[-a-z\\d_]*)?$','i');
+
+        var v = $(this).val();
+        if (pattern.test(v)) { // is URI
+            var n = $(this).closest(".class-instance").data('n');
+            p_select = builder_workbench.instances[n].property_select;
+            p_select.properties.push({'uri': v});
+
+            builder_workbench.add_property(n, v);
+            builder.reset();
+
+            $(this).parent().find(".property-dropdown").hide();
+            $(this).closest(".class-instance").find(".property-control .properties-found").html(Number(p_select.properties.length).toLocaleString() + ' properties found');
+
+            //reset search
+            $(this).val('');
+            builder_workbench.instances[n].property_select.set_page(1);
+
+            e.preventDefault();
+            e.stopPropagation();
+        }
+    }
 });
 
 /* hide the select otherwise */
