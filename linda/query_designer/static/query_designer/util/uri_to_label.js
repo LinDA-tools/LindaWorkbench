@@ -19,7 +19,7 @@ uri_to_label = function(uri) {
 
     label = label
         // insert a space before all caps
-        .replace(/([A-Z])/g, ' $1')
+        .replace(/([a-z])([A-Z])/g, '$1 $2')
         // uppercase the first character
         .replace(/^./, function(str){ return str.toUpperCase(); });
 

@@ -1252,6 +1252,8 @@ form input[type="submit"] {
 .queries .q-builder-button, .queries .q-designer-button {
     padding: 20px;
     font-size: 22px;
+    margin-bottom: 10px;
+    min-width: 571px;
 }
 
 .queries .q-builder-button span, .queries .q-designer-button span {
@@ -2724,6 +2726,10 @@ input, textarea {
 /*Chosen*/
 .chosen-container {
     vertical-align: top;
+}
+
+.toolbar .chosen-container {
+    max-width: 250px;
 }
 
 .chosen-container .chosen-single {
