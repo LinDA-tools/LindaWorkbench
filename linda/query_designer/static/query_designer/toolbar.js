@@ -236,6 +236,7 @@ $("body").on('mouseup','.toolbar', function(e) {
 /*Load root classes*/
 $( "#toolbar > select" ).change(function() {
     var name = $(this).val();
+    var that = this;
     if (name == "") return;
 
     TreeObjects = [];
@@ -246,6 +247,9 @@ $( "#toolbar > select" ).change(function() {
         type: "GET",
 
         success: function(data, textStatus, jqXHR) {
+            if ($(that).val() != name) { //changed
+                return;
+            }
             var bindings = data.results.bindings;
 
             for (var i=0; i<bindings.length; i++) { //add all classes
