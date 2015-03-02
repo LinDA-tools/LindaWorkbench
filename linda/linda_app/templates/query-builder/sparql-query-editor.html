@@ -53,6 +53,14 @@
 		            <!--<button  type="button" class="btn btn-lg btn-warning" onclick="show_sparql_download_modal()">&nbsp;&nbsp;&nbsp;&nbsp;<span class="glyphicon glyphicon-floppy-save"></span>&nbsp;&nbsp;&nbsp;&nbsp;</button>-->
 	        	</div>
 	        </div>
+				<div class="col-md-6 pull right">
+                      <div class="btn-group pull-right">
+                        <button type="button" class="btn btn-warning" onclick="{% if in_designer %}save_design(){% else %}save_query(){% endif %}"><span class="glyphicon glyphicon-floppy-save"></span>&nbsp;Save query</button>
+                        <button type="button" class="btn btn-danger" onclick="show_sparql_download_modal()"><span class="glyphicon glyphicon-save"></span>&nbsp;Download</button>
+                        <button type="button" class="btn btn-warning" onclick="SPARQL.result.print()"><span class="glyphicon glyphicon-print"></span>&nbsp;Print</button>
+                      </div>
+                    </div>
+				</div>
 	        {% if mode == "builder" %}
 		        <div class="col-md-3">
 		        	<div class="form-group">
@@ -61,11 +69,6 @@
 					      <input type="text" class="form-control" id="txt_sparql_query_limit" placeholder="Limit" value="200">
 					    </div>
 					</div>
-		        </div>
-	        {% endif %}
-	        {% if mode == "sparql" and not query %}
-		        <div class="col-md-3 pull-right">
-		        	<button onclick="generate_sample_query('1')" type="button" class="btn btn-lg btn-info pull-right">Sample Query</button>
 		        </div>
 	        {% endif %}
 
