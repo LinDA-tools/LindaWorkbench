@@ -538,7 +538,7 @@ class Query(models.Model):
         return self.description
 
     def csv_link(self):
-        return 'rdf2any/v1.0/convert/csv-converter.csv?dataset=' + self.endpoint + '&query=' \
+        return '/rdf2any/v1.0/convert/csv-converter.csv?dataset=' + self.endpoint + '&query=' \
                + urllib.quote_plus(self.sparql)   
 
     def get_datasource(self):
