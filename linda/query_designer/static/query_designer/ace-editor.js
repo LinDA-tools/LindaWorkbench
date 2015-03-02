@@ -110,7 +110,6 @@ jQuery(function () {
 	}
 	langTools.addCompleter(SparQLCompleter);
 
-	console.log(builder_workbench);
 	if (typeof(builder_workbench) !== 'undefined') {
 		editor.getSession().on('change', function() {
 			if ((!builder.is_editing) && (editor.getSession().getValue() != builder.query)) { // changed by human
