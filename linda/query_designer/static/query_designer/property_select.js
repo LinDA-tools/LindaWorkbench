@@ -64,7 +64,7 @@ function property_select(instance) {
                 if (push) {
                     if (that.properties.length == prev_properties_length) { //number of properties not increased
                         that.repeating_pages += 1;
-                        console.log(that.repeating_pages);
+
                         if (that.repeating_pages == 20) { //after 20 pages without new properties, stop
                             that.finished_loading = true;
                             return;
