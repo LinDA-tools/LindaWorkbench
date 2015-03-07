@@ -6,46 +6,89 @@ var toolbar = {
     all_classes_properties: [],
     labels: [],
     classes_query_paginate_by: 10000,
+    n_of_empty: 0,
+    page_step: 1,
 
     clear: function() {
         this.all_classes_properties = [];
         this.labels = [];
     },
 
-    load_classes: function(that, name, p) {
+    load_classes: function(that, name, p, distinct) {
+        var url = ADVANCED_BUILDER_API_URI + "active_classes/" +  name + "?p=" + p;
+        if (distinct) {
+            url += '&distinct=true';
+        }
+
         $.ajax({ //make request for classes
-            url: ADVANCED_BUILDER_API_URI + "active_classes/" +  name + "?p=" + p,
+            url: url,
             type: "GET",
             success: function(data, textStatus, jqXHR) {
-                if ($(that).val() != name) { //check if datasource has changed
+                if ($(that).val() != name) { //check if data source has changed
                     return;
                 }
-                var bindings = data.results.bindings;
 
+                if (p==1) {
+                    if (toolbar.started_loading) { //loading has already started
+                        return;
+                    }
+
+                    toolbar.started_loading = true;
+                    toolbar.page_step = 1;
+                    toolbar.n_of_empty = 0;
+                }
+
+                var bindings = data.results.bindings;
+                var n_of_added = 0;
                 for (var i=0; i<bindings.length; i++) { //add all classes
                     if (!bindings[i].class) {
                         continue;
                     }
 
                     var class_uri = bindings[i].class.value;
-                    toolbar.all_classes_properties.push({type: "class", uri: class_uri});
+                    var already_exists = false;
+                    if (!distinct) {
+                        for (var j=0; j<toolbar.all_classes_properties.length; j++) {
+                            if (toolbar.all_classes_properties[j].uri == class_uri) {
+                                already_exists = true;
+                                break;
+                            }
+                        }
+                    }
+
+                    if (!already_exists) {
+                        toolbar.all_classes_properties.push({type: "class", uri: class_uri});
+                        n_of_added++;
+                    }
+                }
+
+                if (n_of_added == 0) {
+                    toolbar.n_of_empty++;
+                } else {
+                    toolbar.n_of_empty = 0;
+                }
+                if (toolbar.n_of_empty == 5) {
+                    toolbar.n_of_empty = 0;
+                    toolbar.page_step *= 2;
                 }
 
                 if (bindings.length == toolbar.classes_query_paginate_by) { //continue gathering classes
-                    toolbar.load_classes(that, name, p+1);
-                    setTimeout(function() {
-                        var val = $( '#toolbar > input[type="search"]' ).val();
-                        if (val === undefined) {
-                            val = "";
-                        }
-                        toolbar.show_classes(val, undefined, true);
-                    }, 10);
+                    toolbar.load_classes(that, name, p+toolbar.page_step, distinct);
                 } else { //sort results in the end
+                    toolbar.finished_loading = true;
                     if (toolbar.order_worker) {
                         toolbar.order_worker.postMessage(toolbar.all_classes_properties);
                     }
                 }
 
+                //show changes
+                setTimeout(function() {
+                    var val = $( '#toolbar > input[type="search"]' ).val();
+                    if (val === undefined) {
+                        val = "";
+                    }
+                    toolbar.show_classes(val, undefined, true);
+                }, 10);
             },
             error: function (jqXHR, textStatus, errorThrown) {
                 console.log(textStatus + ': ' + errorThrown);
@@ -138,8 +181,15 @@ var toolbar = {
             } else {
                 $("#toolbar .active-classes").append('<span class="info">' + info_str + '</span>');
             }
+
+            if (toolbar.finished_loading) {
+                $("#toolbar .active-classes .info").removeClass('loading');
+            } else {
+                $("#toolbar .active-classes .info").addClass('loading');
+            }
         }
 
+        //store the state to change pages faster
         this.prev_state = {
             total: total,
             added: added,
@@ -156,6 +206,8 @@ var toolbar = {
     $( "#toolbar > select" ).change(function() {
         var name = $(this).val();
         var that = this;
+        toolbar.started_loading = false;
+        toolbar.finished_loading = false;
         if (name == "") return;
 
         $("#toolbar .active-classes").html('<span class="loading">Loading classes and properties...</span>');
@@ -184,13 +236,23 @@ var toolbar = {
                         type: "property", uri: property_uri, domain: domain_uri, range: range_uri
                     });
                 }
-
-                toolbar.load_classes(that, name, 1);
             },
             error: function (jqXHR, textStatus, errorThrown) {
                 $("#toolbar .active-classes").html('<span class="error">Error while connecting to server</span>');
             }
         });
+
+        //load first page of classes
+        toolbar.load_classes(that, name, 1, true);
+
+        //set a timeout so after 10 seconds loading starts without distinct
+        setTimeout(function() {
+            if (toolbar.started_loading) {
+                return;
+            }
+
+            toolbar.load_classes(that, name, 1, false);
+        }, 10000);
     });
 
 /*On search text change*/
@@ -241,6 +303,7 @@ $( "#toolbar > select" ).change(function() {
 
     TreeObjects = [];
     $('#tree_toolbar_objects').empty();
+    toolbar.prev_state = undefined;
 
     $.ajax({ //make request for classes
         url: ADVANCED_BUILDER_API_URI + "active_root_classes/" +  name + "/",

@@ -96,9 +96,15 @@ def active_classes(request, dt_name):
         # get page
         p = request.GET.get('p', '0')
 
+        # check if searching distinct
+        if request.GET.get('distinct'):
+            distinct = "DISTINCT"
+        else:
+            distinct = ""
+
         # query to get all classes with at least one instance
         classes_query_paginate_by = 10000
-        query = "SELECT DISTINCT ?class WHERE { ?s a ?class } LIMIT " + str(classes_query_paginate_by) + " OFFSET " + str(
+        query = "SELECT " + distinct + " ?class WHERE { ?s a ?class } LIMIT " + str(classes_query_paginate_by) + " OFFSET " + str(
             (int(p) - 1) * classes_query_paginate_by)
 
     return sparql_query_json(endpoint, query)

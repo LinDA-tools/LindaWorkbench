@@ -72,9 +72,9 @@ function property_select(instance) {
                     } else {  //number of properties has changes
                         that.repeating_pages = 0;
                         $("#class_instance_" + that.c.id + " .property-control .properties-found").html(Number(that.properties.length).toLocaleString() + ' properties found');
-                        that.show();
                     }
                 }
+                that.show();
 
                 if (bindings.length == that.PROPERTY_PAGE_LIMIT) { //load next page
                     that.load_property_page(p+1, order, push);
