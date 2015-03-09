@@ -263,6 +263,7 @@ $("body").on('click', function() {
 /* On filter */
 $("body").on('input','.property-control input', function() {
     var n = $(this).parent().parent().parent().data('n');
+    console.log(n);
     builder_workbench.instances[n].property_select.set_page(1);
     $(this).parent().find('.property-dropdown').show();
 });

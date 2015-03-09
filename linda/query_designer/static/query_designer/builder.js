@@ -10,7 +10,6 @@ var builder = {
     prefixes: [],
     known_prefixes: [],
     is_editing: false,
-    pattern: '',
 
     get_prefixes: function() {
         var prefix_str = "";
@@ -305,11 +304,13 @@ var builder = {
         for (var j=0; j<inst.selected_properties.length; j++) {
             var p = inst.selected_properties[j];
             if (this.property_names[i][j] === undefined) {
-                this.property_names[i][j] = i_name + '_' + this.uri_to_constraint(p.uri); //e.g ?city_leaderName
+                p.name = i_name + '_' + this.uri_to_constraint(p.uri); //e.g ?city_leaderName
+                this.property_names[i][j] = p.name;
 
                 if (p.uri != 'URI') {
                     this.create_foreign(w, i, this.property_names[i][j], j); //handle uri foreign keys
                 } else {
+                    p.name = i_name;
                     this.create_foreign(w, i, this.instance_names[i], j); //handle property foreign keys
                 }
             }
@@ -441,23 +442,28 @@ var builder = {
         var w = builder_workbench;
 
         this.error = "";
-        this.select_vars = [];
         this.where_clause = "WHERE ";
         this.order_clause = "";
         this.endpoint = "";
         this.prefixes = [];
 
         this.cnt_objects = 0;
-        //create the query string
-        var pt = this.pattern;
 
+        //load variables from options
+        this.select_vars = this.options.variables;
+        if (this.select_vars === undefined) {
+            this.select_vars = [];
+        }
+
+        //create the query string
         this.prepare_query(w);
 
         //none sub-queries instances
         this.where_clause = "WHERE {\n" + this.create_subquery(undefined);
 
-        if (pt.length > 0) { //apply the pattern
-            var pt = this.pattern;
+        //apply the pattern
+        var pt = this.options.pattern;
+        if (pt.length > 0) { //if the pattern is not empty
             pt = pt.replace('(', '{');
             pt = pt.replace(')', '}');
 
@@ -482,6 +488,9 @@ var builder = {
         //construct the select clause -- only keep unique values
         this.select_vars = $.unique(this.select_vars);
         var select_clause = "SELECT";
+        if (this.options.distinct) {
+            select_clause += " DISTINCT";
+        }
         for (var i=0; i<this.select_vars.length; i++) {
             select_clause += ' ' + this.select_vars[i];
         }
@@ -493,13 +502,17 @@ var builder = {
             this.query = '';
         } else { //the result is the SELECT ... WHERE ...
             this.query = this.get_prefixes() + select_clause + '\n' + this.where_clause + this.order_clause;
+
+            //limit
+            if (typeof(this.options.limit) != "undefined") {
+                this.query += "\nLIMIT " + this.options.limit;
+            }
         }
 
         return this.query;
     },
 
     reset: function() {
-        this.pattern = $("#builder_pattern > input").val().toUpperCase();
         this.create();
 
         this.is_editing = true;
@@ -510,6 +523,8 @@ var builder = {
         $("#sparql_results_container").hide();
     }
 };
+//create builder options object
+builder.options = new BuilderOptions(builder);
 
 //ajax call to initialize prefixes from the vocabulary repository
 $.ajax({  //make an ajax request to get property return type

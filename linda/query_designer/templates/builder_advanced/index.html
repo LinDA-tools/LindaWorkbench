@@ -51,9 +51,9 @@
 
         <input type="hidden" id="hdn_qb_dataset" value="">
 
-        {% with html=True %}
-            {% include "builder_advanced/filters.html" %}
-        {% endwith %}
+        {% include "builder_advanced/filters.html" %}
+        {% include "builder_advanced/options.html" %}
+
     </div>
 
 {% endblock %}
@@ -218,6 +218,7 @@
         }
     </script>
 
+    <script src="/static/query_designer/builder_options.js"></script>
     <script src="/static/query_designer/builder.js"></script>
 
     <script>

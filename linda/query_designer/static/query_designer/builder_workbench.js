@@ -143,6 +143,13 @@
                     }
                 }
 
+                //update options variable order
+                if (old_n < new_n) {
+                    builder.options.reorder('?' + builder_workbench.instances[i].selected_properties[new_n].name, '?' + builder_workbench.instances[i].selected_properties[new_n-1].name, true);
+                } else {
+                    builder.options.reorder('?' + builder_workbench.instances[i].selected_properties[new_n].name, '?' + builder_workbench.instances[i].selected_properties[new_n+1].name, false);
+                }
+
                 //update the query
                 builder.reset();
             },
@@ -235,7 +242,10 @@
                 arrows.connections = data.connections; //restore the connections
                 arrows.paths = data.paths; //restore connection paths
 
-                $("#builder_pattern input").val(data.pattern);
+                builder.options.pattern = data.pattern;
+                builder.options.distinct = data.distinct;
+                builder.options.limit = data.limit;
+                builder.options.variables = data.variables;
 
                 arrows.draw();
                 builder.reset();
@@ -246,7 +256,10 @@
                     instances: [],
                     connections: arrows.connections,
                     paths: arrows.paths,
-                    pattern: $("#builder_pattern input").val().toUpperCase()
+                    pattern: builder.options.pattern,
+                    distinct: builder.options.distinct,
+                    limit: builder.options.limit,
+                    variables: builder.options.variables
                 };
 
                 for(var i=0; i<this.instances.length; i++) { //foreach instance

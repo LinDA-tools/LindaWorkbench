@@ -3,6 +3,7 @@ $(function() {
         autoOpen: false,
         width: 600
     });
+    $("#property-filters").show();
 
     //initially hide all categories
     $(".filter-type").hide();
@@ -59,7 +60,7 @@ function show_filters() {
         var cnt = 0;
 
         //set dialog title
-        $(".ui-dialog-title").html(uri_to_label(builder_workbench.instances[builder_workbench.property_selection_of_instance].uri) + '.' + uri_to_label(p.uri));
+        $("#ui-id-1").html(uri_to_label(builder_workbench.instances[builder_workbench.property_selection_of_instance].uri) + '.' + uri_to_label(p.uri));
 
         //show current filters
         $("#all-filters").html('');
