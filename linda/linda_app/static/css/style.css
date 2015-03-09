@@ -2259,13 +2259,26 @@ input, textarea {
     padding: 5px;
 }
 
-#builder_pattern {
-    text-align: right;
-}
-
-#builder_pattern > input {
+#query_pattern {
     width: 240px;
     text-transform: uppercase;
+}
+
+#query_pattern, #query_limit {
+    width: 300px;
+    margin-top: 5px;
+}
+
+#query_variables {
+    display: inline;
+}
+
+#query_variables .variable {
+    margin-right: 5px;
+    margin-bottom: 5px;
+    border-radius: 2px;
+    padding: 2px 5px;
+    background: #aaa;
 }
 
 #builder_workspace.accepting-instance {
@@ -2592,6 +2605,10 @@ input, textarea {
     background: #FC5006;
 }
 
+#property-filters {
+    display: none;
+}
+
 #all-filters {
     border-bottom: 1px dotted #aaa;
     padding-bottom: 10px;
@@ -2642,6 +2659,18 @@ input, textarea {
 
 .filter-object:hover .filter-remove {
     color: #eee;
+}
+
+#show-query-options {
+    margin-right: 10px;
+}
+
+#builder-options {
+    display: none;
+}
+
+#builder-options label {
+    width: 150px;
 }
 
 .class-instance .property-control .sort-frequency {
