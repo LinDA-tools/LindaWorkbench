@@ -450,10 +450,7 @@ var builder = {
         this.cnt_objects = 0;
 
         //load variables from options
-        this.select_vars = this.options.variables;
-        if (this.select_vars === undefined) {
-            this.select_vars = [];
-        }
+        this.select_vars = [];
 
         //create the query string
         this.prepare_query(w);
@@ -485,8 +482,8 @@ var builder = {
 
         this.where_clause += "}\n"
 
-        //construct the select clause -- only keep unique values
-        this.select_vars = $.unique(this.select_vars);
+        //construct the select clause -- only keep unique values and order according to options
+        this.options.order_select();
         var select_clause = "SELECT";
         if (this.options.distinct) {
             select_clause += " DISTINCT";

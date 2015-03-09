@@ -9,6 +9,7 @@ function BuilderOptions(b) {
         period: undefined
     };
 
+    //change order
     this.reorder = function(new_var, old_var, is_before) {
         var v = this.variables;
 
@@ -24,6 +25,31 @@ function BuilderOptions(b) {
 
         v.splice(v.indexOf(old_var) + offset, 0, new_var);
     };
+
+    //order the select variables
+    this.order_select = function() {
+        var result = [];
+
+        //remove duplicates from select
+        this.builder.select_vars = $.unique(this.builder.select_vars);
+
+        //insert all variables in the suggestion if they where found in the select
+        if (typeof(this.variables) != "undefined") {
+            for (var i=0; i<this.variables.length; i++) {
+                if (this.builder.select_vars.indexOf(this.variables[i]) >= 0) {
+                    result.push(this.variables[i]);
+                }
+            }
+        }
+        
+        //additionally insert all from select
+        for (var i=0; i<this.builder.select_vars.length; i++) {
+            result.push(this.builder.select_vars[i]);
+        }
+
+        //remove duplicates & save
+        this.select_vars = $.unique(result);
+    }
 }
 
 $(function() {
