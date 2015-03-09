@@ -243,6 +243,9 @@
                 arrows.paths = data.paths; //restore connection paths
 
                 builder.options.pattern = data.pattern;
+                if (typeof(builder.options.pattern) == "undefined") {
+                    builder.options.pattern = "";
+                }
                 builder.options.distinct = data.distinct;
                 builder.options.limit = data.limit;
                 builder.options.variables = data.variables;
