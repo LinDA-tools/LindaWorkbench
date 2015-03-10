@@ -41,7 +41,7 @@ function BuilderOptions(b) {
                 }
             }
         }
-        
+
         //additionally insert all from select
         for (var i=0; i<this.builder.select_vars.length; i++) {
             result.push(this.builder.select_vars[i]);

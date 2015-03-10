@@ -2757,7 +2757,8 @@ input, textarea {
     vertical-align: top;
 }
 
-.toolbar .chosen-container {
+.toolbar .chosen-container,
+.toolbar select {
     max-width: 250px;
 }
 

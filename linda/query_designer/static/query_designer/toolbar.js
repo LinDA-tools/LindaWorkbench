@@ -62,22 +62,43 @@ var toolbar = {
                     }
                 }
 
-                if (n_of_added == 0) {
-                    toolbar.n_of_empty++;
-                } else {
+                //if we came from a jump & we found classes, we must move back to make sure we didn't miss anything
+                if ((n_of_added > 0) && (toolbar.page_step > 1)) {
+                    toolbar.page_step = Math.ceil(toolbar.page_step / 4);
+                    console.log('new step -- ' + toolbar.page_step);
                     toolbar.n_of_empty = 0;
-                }
-                if (toolbar.n_of_empty == 5) {
-                    toolbar.n_of_empty = 0;
-                    toolbar.page_step *= 2;
-                }
+                    var prv = p - toolbar.page_step*2;
 
-                if (bindings.length == toolbar.classes_query_paginate_by) { //continue gathering classes
-                    toolbar.load_classes(that, name, p+toolbar.page_step, distinct);
-                } else { //sort results in the end
-                    toolbar.finished_loading = true;
-                    if (toolbar.order_worker) {
-                        toolbar.order_worker.postMessage(toolbar.all_classes_properties);
+                    toolbar.load_classes(that, name, prv, distinct);
+                }
+                else {
+                    //gain speed if we are not finding new classes
+                    if (n_of_added == 0) {
+                        toolbar.n_of_empty++;
+
+                        if (toolbar.n_of_empty == 5) {
+                            toolbar.n_of_empty = 0;
+                            toolbar.page_step *= 2;
+                        }
+                    } else {
+                        toolbar.n_of_empty = 0;
+                        toolbar.page_step = 1;
+                    }
+
+                    if (bindings.length == toolbar.classes_query_paginate_by) { //continue gathering classes
+                        toolbar.load_classes(that, name, p+toolbar.page_step, distinct);
+                    } else { //sort results in the end
+                        if (toolbar.page_step > 1) { //out of limits - we have to go back
+                            var prv = p-toolbar.page_step + 1;
+                            toolbar.page_step /= 2;
+                            toolbar.n_of_empty = 1;
+                            toolbar.load_classes(that, name, prv, distinct);
+                        } else { //we've really finished
+                            toolbar.finished_loading = true;
+                            if (toolbar.order_worker) {
+                                toolbar.order_worker.postMessage(toolbar.all_classes_properties);
+                            }
+                        }
                     }
                 }
 
