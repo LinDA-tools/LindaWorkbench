@@ -215,3 +215,42 @@ def get_property_type(request, dt_name):
 
     # return the response
     return HttpResponse(data, "application/json")
+
+
+# Get the return type of a property
+def get_properties_with_domain(request, dt_name):
+    # get class uri
+    if not request.GET.get('class_uri'):
+        raise Http404
+
+    class_uri = urllib.unquote(request.GET.get('class_uri'))
+
+    # find properties and create json response
+    # resembles a SparQL response json to ease the client's job
+    r = {"results": {
+        "bindings": []}
+    }
+
+    for p in VocabularyProperty.objects.filter(domain=class_uri):
+        r["results"]["bindings"].append({"property": {"value": p.uri}})
+    data = json.dumps(r)
+
+    # return the response
+    return HttpResponse(data, "application/json")
+
+
+# Get number of class instances
+def class_info(request, dt_name):
+    # get class searched
+    if not request.GET.get('class_uri'):
+        raise Http404
+
+    class_uri = urllib.unquote(request.GET.get('class_uri'))
+
+    # get the endpoint of the query
+    endpoint = get_endpoint_from_dt_name(dt_name)
+
+    # query to get all classes with at least one instance
+    query = "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nSELECT (count(?x) AS ?cnt) ?label WHERE {?x a <" + class_uri + ">. OPTIONAL {<" + class_uri + "> rdfs:label ?label FILTER ((lang(?label) = \"\"  || langMatches(lang(?label), \"en\")))}} GROUP BY ?label"
+    print query
+    return sparql_query_json(endpoint, query)

@@ -65,7 +65,6 @@ var toolbar = {
                 //if we came from a jump & we found classes, we must move back to make sure we didn't miss anything
                 if ((n_of_added > 0) && (toolbar.page_step > 1)) {
                     toolbar.page_step = Math.ceil(toolbar.page_step / 4);
-                    console.log('new step -- ' + toolbar.page_step);
                     toolbar.n_of_empty = 0;
                     var prv = p - toolbar.page_step*2;
 

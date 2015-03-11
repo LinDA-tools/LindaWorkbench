@@ -12,8 +12,15 @@ function property_select(instance) {
         var that = this;
         var c = this.c;
 
+        var url;
+        if (p == 0) { //vocabulary properties
+            url = ADVANCED_BUILDER_API_URI + "get_properties_with_domain/" +  c.dt_name + "?class_uri=" + encodeURIComponent(c.uri)
+        } else { //search in the endpoint
+            url = ADVANCED_BUILDER_API_URI + "active_class_properties/" +  c.dt_name + "?class_uri=" + encodeURIComponent(c.uri) + '&order=' + order.toString() + '&page=' + p;
+        }
+
         $.ajax({  //make an ajax request to get properties
-            url: ADVANCED_BUILDER_API_URI + "active_class_properties/" +  c.dt_name + "?class_uri=" + encodeURIComponent(c.uri) + '&order=' + order.toString() + '&page=' + p,
+            url: url,
             type: "GET",
             success: function(data, textStatus, jqXHR) {
                 if (!c || that.to_stop) { //the instance was deleted in the mean time
@@ -26,7 +33,10 @@ function property_select(instance) {
                 if ((p == 1) && (that.started_loading)) { //another load effort already started loading
                     push = false;
                 }
-                that.started_loading = true;
+
+                if (p > 0) {
+                    that.started_loading = true;
+                }
 
                 var bindings = data.results.bindings;
                 var prev_properties_length = that.properties.length;
@@ -61,29 +71,32 @@ function property_select(instance) {
                     }
                 }
 
-                if (push) {
-                    if (that.properties.length == prev_properties_length) { //number of properties not increased
-                        that.repeating_pages += 1;
+                if (p > 0) { //page zero is the vocabulary repository properties
+                    if (push) {
+                        if (that.properties.length == prev_properties_length) { //number of properties not increased
+                            that.repeating_pages += 1;
 
-                        if (that.repeating_pages == 20) { //after 20 pages without new properties, stop
-                            that.finished_loading = true;
-                            return;
+                            if (that.repeating_pages == 20) { //after 20 pages without new properties, stop
+                                that.finished_loading = true;
+                                return;
+                            }
+                        } else {  //number of properties has changes
+                            that.repeating_pages = 0;
+                            $("#class_instance_" + that.c.id + " .property-control .properties-found").html(Number(that.properties.length).toLocaleString() + ' properties found');
                         }
-                    } else {  //number of properties has changes
-                        that.repeating_pages = 0;
-                        $("#class_instance_" + that.c.id + " .property-control .properties-found").html(Number(that.properties.length).toLocaleString() + ' properties found');
                     }
-                }
-                that.show();
 
-                if (bindings.length == that.PROPERTY_PAGE_LIMIT) { //load next page
-                    that.load_property_page(p+1, order, push);
-                } else {
-                    that.finished_loading = true;
-                }
+                    that.show();
 
-                if (!that.page) { //initial page of select
-                    that.set_page(1);
+                    if (bindings.length == that.PROPERTY_PAGE_LIMIT) { //load next page
+                        that.load_property_page(p+1, order, push);
+                    } else {
+                        that.finished_loading = true;
+                    }
+
+                    if (!that.page) { //initial page of select
+                        that.set_page(1);
+                    }
                 }
             },
             error: function (jqXHR, textStatus, errorThrown) {
@@ -114,6 +127,7 @@ function property_select(instance) {
                 return;
             }
 
+            that.load_property_page(0, false);
             that.load_property_page(1, false);
         }, 10000);
     }
@@ -263,7 +277,6 @@ $("body").on('click', function() {
 /* On filter */
 $("body").on('input','.property-control input', function() {
     var n = $(this).parent().parent().parent().data('n');
-    console.log(n);
     builder_workbench.instances[n].property_select.set_page(1);
     $(this).parent().find('.property-dropdown').show();
 });
