@@ -2500,6 +2500,10 @@ input, textarea {
     background: #5C97BF;
 }
 
+#builder_workspace .class-instance .property-control .property-dropdown .property.uncertain {
+    color: #aaa;
+}
+
 #builder_workspace .class-instance .properties {
     min-height: 100px;
     background: #fff;

@@ -42,7 +42,9 @@ function property_select(instance) {
                 var prev_properties_length = that.properties.length;
                 for (var i=0; i<bindings.length; i++) { //add the properties
                     if (push) { //add the property
-                        var o = {'uri': bindings[i].property.value};
+                        //properties found from the vocabulary are not certain to exist in the data source
+                        var o = {'uri': bindings[i].property.value, 'uncertain': (p == 0)};
+
                         if (order) { //if order add frequence
                             o.frequence = Number(bindings[i].cnt.value).toLocaleString();
                         } else {
@@ -50,6 +52,7 @@ function property_select(instance) {
                             var already_exists = false;
                             for (var j=0; j<that.properties.length; j++) {
                                 if (that.properties[j].uri == o.uri) {
+                                    that.properties[j].uncertain = false;
                                     already_exists = true;
                                     break;
                                 }
@@ -163,7 +166,13 @@ function property_select(instance) {
                     var data_str = 'data-uri="' + this.properties[i].uri + '"';
 
                     //create the property html object
-                    var property_div = '<div class="property" ' + data_str + '>' + label;
+                    var class_str = 'class="property';
+                    if (this.properties[i].uncertain === true) {
+                        class_str += ' uncertain';
+                    }
+                    class_str += '"';
+
+                    var property_div = '<div ' + class_str + ' ' + data_str + '>' + label;
                     if (typeof(this.properties[i].frequence) != "undefined") {
                         property_div += ' (' + this.properties[i].frequence + ')';
                     }
