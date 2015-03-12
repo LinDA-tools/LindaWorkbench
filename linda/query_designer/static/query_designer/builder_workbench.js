@@ -55,20 +55,12 @@
 
                 //get number of class instances
                 $.ajax({ //make request for classes
-                    url: ADVANCED_BUILDER_API_URI + "class_info/" +  dt_name + "?class_uri=" + uri,
+                    url: ADVANCED_BUILDER_API_URI + "class_info/" +  dt_name + "?class_uri=" + encodeURIComponent(uri),
                     type: "GET",
                     success: function(data, textStatus, jqXHR) {
                         if (data.results.bindings.length > 0) {
                             var n = data.results.bindings[0].cnt.value;
-                            if (data.results.bindings[0].label != undefined) {
-                                var l = ' ' + data.results.bindings[0].label.value.toLowerCase();
-                                if (n != 1) {
-                                    l += "s";
-                                }
-                            } else {
-                                var l = "";
-                            }
-                            $("#class_instance_" + new_id + " .title h3").append('<span class="n-of-instances">[' + Number(n).toLocaleString() + l + ']</span>');
+                            $("#class_instance_" + new_id + " .title h3").append('<span class="n-of-instances">[' + Number(n).toLocaleString() + ']</span>');
                         }
                     }
                 });

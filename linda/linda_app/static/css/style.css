@@ -2339,8 +2339,11 @@ input, textarea {
 
 #builder_workspace span.n-of-instances {
     font-size: 50%;
-    color: #F9BF3B;
+    color: #fff;
     margin-left: 10px;
+    vertical-align: top;
+    margin-top: 10px;
+    display: inline-block;
 }
 
 #builder_workspace .class-instance .subquery-selector {
