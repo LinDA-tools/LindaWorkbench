@@ -167,10 +167,6 @@ header .site-title:hover {
     margin-left: 10px;
 }
 
-#main-container {
-    background-color: #5C97BF;
-}
-
 #main-container > .main {
     margin-left: 260px;
     min-height: calc(100vh - 125px);
@@ -187,6 +183,7 @@ header .site-title:hover {
     width: 260px;
     min-width: 260px;
     min-height: 800px;
+    background-color: #5C97BF;
     display: table-cell;
     vertical-align: top;
     position: absolute;
@@ -407,6 +404,7 @@ header .site-title:hover {
     table-layout: fixed;
     width: 100%;
     height: calc(100vh - 109px);
+    min-height: 800px;
 }
 
 #main-container > .main {
