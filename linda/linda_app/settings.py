@@ -154,6 +154,7 @@ INSTALLED_APPS = (
     'visualisation',
     'query_designer',
     'transformation',
+    'endpoint_monitor',
 
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
@@ -229,6 +230,5 @@ TEST_RUNNER = 'django.test.runner.DiscoverRunner'
 
 # chunk size for uploading RDFs
 RDF_CHUNK_SIZE = 10000000
-
 
 

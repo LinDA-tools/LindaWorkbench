@@ -40,6 +40,9 @@ urlpatterns = patterns('',
                        # Query Designer
                        url(r'^query-designer/', include('query_designer.urls')),
 
+                       # Endpoint Monitor
+                       url(r'^endpoint-monitor/', include('endpoint_monitor.urls')),
+
                        # Authentication
                        url(r'^admin/', include(admin.site.urls)),
 

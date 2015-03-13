@@ -1,12 +1,7 @@
 __author__ = 'dimitris'
 
-"""
-URLS for the Advanced Builder
-"""
-
-from django.conf.urls import patterns, include, url
+from django.conf.urls import patterns, url
 from query_designer import views
-
 
 urlpatterns = patterns('',
                        # Basic pages

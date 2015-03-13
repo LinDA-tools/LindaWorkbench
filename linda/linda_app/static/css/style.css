@@ -168,8 +168,6 @@ header .site-title:hover {
 }
 
 #main-container > .main {
-    margin-left: 260px;
-    min-height: calc(100vh - 125px);
     background-color: #fff;
     overflow: hidden;
 }
@@ -179,14 +177,10 @@ header .site-title:hover {
 }
 
 #menu {
-    display: inline-block;
     width: 260px;
     min-width: 260px;
-    min-height: 800px;
     background-color: #5C97BF;
-    display: table-cell;
     vertical-align: top;
-    position: absolute;
 }
 
 #menu > ul {
@@ -400,10 +394,8 @@ header .site-title:hover {
 
 /* Main Area */
 #main-container {
-    display: table;
-    table-layout: fixed;
+    display: flex;
     width: 100%;
-    height: calc(100vh - 109px);
     min-height: 800px;
 }
 
