@@ -4,6 +4,7 @@
     <div class="main">
         <div class="response-time" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
         <div class="response-time-avg" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+        <div class="uptime" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
     </div>
 {% endblock %}
 
@@ -23,6 +24,7 @@
 
     <script>
     var metrics = [];
+    var metrics_up = [];
     var dt_name;
     var exec_time, resp_time;
 
@@ -30,6 +32,7 @@
         dt_name = '{{test.datasource.name}}';
         if (metrics[dt_name] === undefined) {
             metrics[dt_name] = [];
+            metrics_up[dt_name] = [];
         }
 
         exec_time = Date.UTC({{test.execution_time.year}}, {{test.execution_time.month}} - 1,  {{test.execution_time.day}});
@@ -37,8 +40,10 @@
 
         {% if test.up %}
             resp_time = {{test.response_time}}/1000.0;
+            metrics_up[dt_name].push(1);
         {% else %}
             resp_time = null;
+            metrics_up[dt_name].push(0);
         {% endif %}
 
         metrics[dt_name].push([exec_time, resp_time]);
@@ -46,13 +51,22 @@
 
     //get all keys in the array
     var names = getKeys(metrics);
+
+    //get datasource titles
+    var titles = [];
+    {% for datasource in datasources %}
+        titles['{{datasource.name}}'] = '{{datasource.title}}';
+    {% endfor %}
+
+    //calculate data
     var series = [];
     var series_avg = [];
+    var series_uptime = [];
     var colors = [];
     for (var i=0; i<names.length; i++) {
-        series[i] = {name: names[i], data: []};
+        series[i] = {name: titles[names[i]], data: []};
         colors[i] = "#"+((1<<24)*Math.random()|0).toString(16);
-        var sum = 0, n_of_samples = 0;
+        var sum = 0, n_of_samples = 0, sum_up = 0;
 
         for (var j=0; j<metrics[names[i]].length; j++) {
             var v = metrics[names[i]][j];
@@ -61,17 +75,23 @@
                 sum += v[1];
                 n_of_samples++;
             }
+            sum_up += metrics_up[names[i]][j];
         }
 
         //calculate the average response time of each endpoint
-        series_avg[i] = {name : names[i]};
+        series_avg[i] = {name : titles[names[i]]};
         if (n_of_samples > 0) {
             series_avg[i].data = [Math.round(sum/n_of_samples*100)/100.0];
         } else {
             series_avg[i].data = null;
         }
+
+        //calculate the uptime of each endpoint
+        series_uptime[i] = {name : titles[names[i]]};
+        series_uptime[i].data = [Math.round((sum_up*100.0) /  metrics_up[names[i]].length *100)/100.0];
     }
 
+    //show the graphs
     $(function () {
         //response time over time chart
         $('.response-time').highcharts({
@@ -133,11 +153,45 @@
             },
             colors: colors,
             tooltip: {
-                headerFormat: ''
+                headerFormat: '',
+                valueSuffix: ' sec'
             },
             series: series_avg
         });
 
+        //uptime chart
+        $('.uptime').highcharts({
+            chart: {
+                type: 'bar'
+            },
+            title: {
+                text: "Up-time of remote endpoints"
+            },
+            xAxis: {
+                title: {
+                    text: "Endpoint"
+                },
+                labels: {
+                    enabled:false,//default is true
+                }
+            },
+            yAxis: {
+                title: {
+                    text: "Time responsive (%)"
+                }
+            },
+            plotOptions: {
+                bar: {
+                    minPointLength:5,
+                }
+            },
+            colors: colors,
+            tooltip: {
+                headerFormat: '',
+                valueSuffix: ' %'
+            },
+            series: series_uptime
+        });
     });
     </script>
 {% endblock %}

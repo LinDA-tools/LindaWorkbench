@@ -1891,6 +1891,14 @@ input, textarea {
     width: 15px;
 }
 
+.datasources-table > tbody > tr .sparql-version {
+    margin-left: 20px;
+    background: #aaa;
+    padding: 2px 5px;
+    color: #fff;
+    border-radius: 2px;
+}
+
 .dataTable {
     border-bottom: 1px solid #ddd !important;
 }

@@ -51,4 +51,6 @@ def monitor_datasources():
 
 # show statistics
 def statistics(request):
-    return render(request, 'endpoint_monitor/statistics.html', {"tests": EndpointTest.objects.all()})
+    return render(request, 'endpoint_monitor/statistics.html',
+                  {"tests": EndpointTest.objects.all(),
+                   "datasources": DatasourceDescription.objects.filter(is_public=True)})

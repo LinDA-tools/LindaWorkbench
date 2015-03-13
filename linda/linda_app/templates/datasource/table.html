@@ -22,9 +22,14 @@
                     <img src="/static/images/rdf.png"/>
                 {% endif %}
                 {{datasource.title}}
+
             </td>
             {% if datasource.is_public %}
-            <td>{% trans "Remote" %}</td>
+            <td>{% trans "Remote" %}
+                {% if datasource.is_public %}
+                    <span class="sparql-version">SPARQL {{datasource|sparql_version}}</span>
+                {% endif %}
+            </td>
             <td>{{datasource.uri}}</td>
             {% else %}
             <td>{% trans "Local" %}</td>

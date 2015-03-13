@@ -1,5 +1,6 @@
 from django import template
 from django.utils.http import urlquote
+from endpoint_monitor.models import EndpointTest
 from linda_app.models import Vocabulary, VocabularyClass, VocabularyProperty, get_configuration
 from analytics.models import Algorithm, Category
 
@@ -39,3 +40,17 @@ def datasource_visualize(datasource):
     endpoint = config.private_sparql_endpoint
     graph_uri = datasource.uri
     return '/visualizations/#/datasource/' + datasource.name + '/' + urlquote(endpoint, safe='') + '/' + urlquote(graph_uri, safe='') + '/rdf'
+
+@register.filter
+def sparql_version(datasource):
+    if datasource.is_public:
+        tests = EndpointTest.objects.filter(datasource=datasource, up=True).order_by('-id')
+        if tests:
+            if tests[0].supports_minus:
+                return "1.1"
+            else:
+                return "1.0"
+        else:
+            return ""
+    else:
+        return "1.1"
