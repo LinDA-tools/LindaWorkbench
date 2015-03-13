@@ -62,10 +62,8 @@
     var series = [];
     var series_avg = [];
     var series_uptime = [];
-    var colors = [];
     for (var i=0; i<names.length; i++) {
         series[i] = {name: titles[names[i]], data: []};
-        colors[i] = "#"+((1<<24)*Math.random()|0).toString(16);
         var sum = 0, n_of_samples = 0, sum_up = 0;
 
         for (var j=0; j<metrics[names[i]].length; j++) {
@@ -118,7 +116,6 @@
                 headerFormat: '<b>{series.name}</b><br>',
                 pointFormat: '{point.x:%e. %b}: {point.y:.2f} sec'
             },
-            colors: colors,
             plotOptions: {
                 spline: {
                     marker: {
@@ -151,7 +148,6 @@
                     text: "Time (sec)"
                 }
             },
-            colors: colors,
             tooltip: {
                 headerFormat: '',
                 valueSuffix: ' sec'
@@ -187,7 +183,6 @@
                     minPointLength:5,
                 }
             },
-            colors: colors,
             tooltip: {
                 headerFormat: '',
                 valueSuffix: ' %'
