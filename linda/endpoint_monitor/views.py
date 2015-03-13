@@ -31,7 +31,7 @@ def monitor_datasources():
             if up:
                 # measure response time
                 delta = datetime.datetime.now() - start
-                response_time = int(delta.total_seconds() * 1000) # milliseconds
+                response_time = int(delta.total_seconds() * 1000)  # milliseconds
 
                 # test if the MINUS feature is supported
                 supports_minus = sparql_query(datasource.uri, "SELECT ?s ?p ?o WHERE {?s ?p ?o MINUS {<http://test.com/TestClass> ?p ?o} } LIMIT 100")

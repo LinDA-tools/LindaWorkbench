@@ -48,8 +48,10 @@
     var names = getKeys(metrics);
     var series = [];
     var series_avg = [];
+    var colors = [];
     for (var i=0; i<names.length; i++) {
         series[i] = {name: names[i], data: []};
+        colors[i] = "#"+((1<<24)*Math.random()|0).toString(16);
         var sum = 0, n_of_samples = 0;
 
         for (var j=0; j<metrics[names[i]].length; j++) {
@@ -62,15 +64,16 @@
         }
 
         //calculate the average response time of each endpoint
+        series_avg[i] = {name : names[i]};
         if (n_of_samples > 0) {
-            series_avg[i] = Math.round(sum/n_of_samples*100)/100.0;
+            series_avg[i].data = [Math.round(sum/n_of_samples*100)/100.0];
         } else {
-            series_avg[i] = null;
+            series_avg[i].data = null;
         }
     }
 
     $(function () {
-        //add response time over time chart
+        //response time over time chart
         $('.response-time').highcharts({
             chart: {
                 type: 'spline',
@@ -95,7 +98,7 @@
                 headerFormat: '<b>{series.name}</b><br>',
                 pointFormat: '{point.x:%e. %b}: {point.y:.2f} sec'
             },
-
+            colors: colors,
             plotOptions: {
                 spline: {
                     marker: {
@@ -107,6 +110,7 @@
             series: series
         });
 
+        //average response time chart
         $('.response-time-avg').highcharts({
             chart: {
                 type: 'bar'
@@ -115,15 +119,23 @@
                 text: "Average response time"
             },
             xAxis: {
-                categories: names,
                 title: {
-                    text: null
+                    text: "Endpoint"
+                },
+                labels: {
+                    enabled:false,//default is true
                 }
             },
-            series: [{
-                name : 'Average response time',
-                data : series_avg
-            }]
+            yAxis: {
+                title: {
+                    text: "Time (sec)"
+                }
+            },
+            colors: colors,
+            tooltip: {
+                headerFormat: ''
+            },
+            series: series_avg
         });
 
     });
