@@ -70,7 +70,6 @@ App.DroppableAreaComponent = Ember.Component.extend({
 });
 
 App.PropertyItemComponent = Ember.Component.extend({
-    classNames: ['area-item', 'row'],
     remove: function () {
         console.log('REMOVE');
         var collection = this.get('collection'); //collection = inArea

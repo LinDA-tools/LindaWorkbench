@@ -6,7 +6,7 @@ App = Ember.Application.create({
     onerror: function(error) {
         console.dir(error);
     },
-    rootElement: '#visualizer'
+	rootElement: '#visualizer'
 });
 Ember.RSVP.on('error', function(error) {
   Ember.Logger.assert(false, error);
@@ -19,7 +19,8 @@ Ember.run.backburner.DEBUG = true;
 (function() {
 
 App.DatasourceController = Ember.ObjectController.extend({
-    treeContent: function () {
+    isToggled: true,
+    treeContent: function() {
         console.log('DATASOURCE CONTROLLER');
         // console.log(this.get('model'));
 
@@ -44,22 +45,30 @@ App.DatasourceController = Ember.ObjectController.extend({
     previousSelection: [],
     dataSelection: [],
     selectedDatasource: null,
-    resetSelection: function () {
+    resetSelection: function() {
         this.get('dataSelection').length = 0;
     }.observes('model'),
     actions: {
-        visualize: function () {
+        visualize: function() {
             var self = this;
             var selection = this.get('dataSelection');
             var datasource = this.get('selectedDatasource');
             var selected = treeselection_data.getDataSelection(selection, datasource);
             var dataselection = this.store.createRecord('dataselection', selected);
-
-            dataselection.save().then(function (responseDataselection) {
+console.log('VISUALIZE');
+            dataselection.save().then(function(responseDataselection) {
                 console.log("SAVED DATA SELECTION. TRANSITION TO VISUALIZATION ROUTE .....");
                 console.dir(responseDataselection);
                 self.transitionToRoute('visualization', 'dataselection', responseDataselection.id);
             });
+        },
+        toggle: function() {
+            var toggled = this.get('isToggled');
+            if (toggled) {
+                this.set('isToggled', false);
+            } else {
+                this.set('isToggled', true);
+            }
         }
     }
 });
@@ -79,6 +88,7 @@ App.VisualizationConfigController = Ember.ArrayController.extend({
 (function() {
 
 App.VisualizationController = Ember.ArrayController.extend({
+    isToggled: true,
     layoutOptions: {},
     structureOptions: {},
     slideShowContainer: Ember.ContainerView.create(),
@@ -88,7 +98,7 @@ App.VisualizationController = Ember.ArrayController.extend({
     exportFormats: ['SVG', 'PNG'],
     selectedFormat: 'PNG',
     configName: "",
-    categorizedProperties: function () {
+    categorizedProperties: function() {
         var categorizedProperties = {};
         var selectedVisualization = this.get('selectedVisualization');
         var dataselection = selectedVisualization.get('dataselection');
@@ -97,10 +107,12 @@ App.VisualizationController = Ember.ArrayController.extend({
         for (var i = 0; i < propertyInfos.length; i++) {
             var propertyInfo = propertyInfos[i];
             var category = propertyInfo.type;
+            var dtype = propertyInfo.datatype;
 
             if (!categorizedProperties[category]) {
                 categorizedProperties[category] = {
                     name: category,
+                    datatype:dtype,
                     items: []
                 };
             }
@@ -109,7 +121,7 @@ App.VisualizationController = Ember.ArrayController.extend({
 
         return _.values(categorizedProperties);
     }.property('selectedVisualization'),
-    initializeVisualization: function () {
+    initializeVisualization: function() {
         console.log("VISUALIZATION CONTROLLER - INITIALIZE VISUALIZATION ... ");
         this.set('drawnVisualization', null);
 
@@ -147,26 +159,26 @@ App.VisualizationController = Ember.ArrayController.extend({
         // Ensures that bindings on drawnVisualizations are triggered only now
         this.set('drawnVisualization', selectedVisualization);
     }.observes('selectedVisualization'),
-    setSuggestedVisualization: function () {
+    setSuggestedVisualization: function() {
         var topSuggestion = this.get('firstObject');
         this.set('selectedVisualization', topSuggestion);
     }.observes('model.[]'),
     actions: {
-        exportPNG: function () {
+        exportPNG: function() {
             var visualization = visualizationRegistry.getVisualization(this.get('selectedVisualization').get("name"));
-            visualization.export_as_PNG().then(function (pngURL) {
+            visualization.export_as_PNG().then(function(pngURL) {
                 window.open(pngURL);
             });
         },
-        exportSVG: function () {
+        exportSVG: function() {
             var visualization = visualizationRegistry.getVisualization(this.get('selectedVisualization').get("name"));
             var svgURL = visualization.export_as_SVG();
             window.open(svgURL);
         },
-        export: function () {
+        export: function() {
             var visualization = visualizationRegistry.getVisualization(this.get('selectedVisualization').get("visualizationName"));
             if (this.get('selectedFormat') === 'PNG') {
-                visualization.export_as_PNG().then(function (pngURL) {
+                visualization.export_as_PNG().then(function(pngURL) {
                     window.open(pngURL);
                 });
             } else {
@@ -174,7 +186,7 @@ App.VisualizationController = Ember.ArrayController.extend({
                 window.open(svgURL);
             }
         },
-        publish: function () {
+        publish: function() {
             var visualization = visualizationRegistry.getVisualization(this.get('selectedVisualization').get("visualizationName"));
             this.set('visualizationSVG', visualization.get_SVG());
         },
@@ -190,23 +202,31 @@ App.VisualizationController = Ember.ArrayController.extend({
             console.log("The value is " + selectedVisualization.get('configurationName'));
             selectedVisualization.set('configurationName', configurationName);
 
-            selectedVisualization.save().then(function () {
+            selectedVisualization.save().then(function() {
                 console.log("SAVED SUCCESSFULLY");
-            }, function (errorText) {
+            }, function(errorText) {
                 console.log("ERROR DURING SAVING");
                 console.log(errorText);
             });
         },
-        chooseVisualization: function (visualization) {
+        chooseVisualization: function(visualization) {
             this.set('selectedVisualization', visualization);
         },
-        select: function () {
+        select: function() {
             console.log("CHANGE DATASELECTION");
             var selectedVisualization = this.get('selectedVisualization');
             var dataselectionID = selectedVisualization.get('dataselection').id;
             var datasourceID = selectedVisualization.get('dataselection.datasource').id;
 
             this.transitionToRoute('dataselection', dataselectionID, datasourceID);
+        },
+        toggle: function() {
+            var toggled = this.get('isToggled');
+            if (toggled) {
+                this.set('isToggled', false);
+            } else {
+                this.set('isToggled', true);
+            }
         }
     }
 });
@@ -271,6 +291,19 @@ App.Visualization = DS.Model.extend({
 App.ApplicationRoute = Ember.Route.extend({
 });
 
+
+
+})();
+
+(function() {
+
+App.ApplicationRoute = Ember.Route.extend({
+    // admittedly, this should be in IndexRoute and not in the
+    // top level ApplicationRoute; we're in transition... :-)
+    model: function () {
+        return ['red', 'yellow', 'blue'];
+    }
+});
 
 
 })();
@@ -363,22 +396,21 @@ App.VisualizationRoute = Ember.Route.extend({
 (function() {
 
 App.DrawVisualizationView = Ember.View.extend({
-    
-    willAnimateIn: function() {
-        this.$().css("opacity",0);
+    willAnimateIn: function () {
+        this.$().css("opacity", 0);
     },
     animateIn: function (done) {
-        this.$().fadeTo(500,1,done);
+        this.$().fadeTo(500, 1, done);
     },
-    animateOut: function(done){
-        this.$().fadeTo(500,0,done);
+    animateOut: function (done) {
+        this.$().fadeTo(500, 0, done);
     },
-    parentViewDidChange: function(){
+    parentViewDidChange: function () {
         this.$().hide();
         this.$().fadeIn(500);
     },
     eventManager: Ember.Object.create({
-        input: function(event,view){
+        input: function (event, view) {
             this.triggerAction({
                 action: "willAnimateIn",
                 target: this
@@ -395,7 +427,7 @@ App.DrawVisualizationView = Ember.View.extend({
         }
 
         var config = this.get('configurationArray')[0];
-        
+
         console.log("VISUALIZATION CONFIGURATION");
         console.dir(JSON.stringify(config));
 
@@ -403,8 +435,8 @@ App.DrawVisualizationView = Ember.View.extend({
             return;
         }
 
-        var dataselection = visualization.get('dataselection');              
-        var datasource = dataselection.get('datasource');        
+        var dataselection = visualization.get('dataselection');
+        var datasource = dataselection.get('datasource');
         var format = datasource.format;
         config.datasourceLocation = datasource.location;
         config.datasourceGraph = datasource.graph;
@@ -420,9 +452,9 @@ App.DrawVisualizationView = Ember.View.extend({
                 console.error("Unknown DS format: " + format);
                 return;
         }
-        
+
         var name = visualization.get("visualizationName");
-        var visualization = visualizationRegistry.getVisualization(name);       
+        var visualization = visualizationRegistry.getVisualization(name);
         var self = this;
 
         var element = this.get('element');
@@ -434,9 +466,12 @@ App.DrawVisualizationView = Ember.View.extend({
             });
         } catch (ex) {
             console.error("Error drawing visualization: ");
-            console.error(ex);
+            console.log(ex);
         }
-    }.observes('configurationArray.@each').on('didInsertElement')
+    }.observes('configurationArray.@each').on('didInsertElement'),
+    redraw: function () {
+        this.rerender();
+    }.observes('visualization')
 });
 
 
@@ -631,7 +666,6 @@ App.DroppableAreaComponent = Ember.Component.extend({
 });
 
 App.PropertyItemComponent = Ember.Component.extend({
-    classNames: ['area-item', 'row'],
     remove: function () {
         console.log('REMOVE');
         var collection = this.get('collection'); //collection = inArea
@@ -715,10 +749,35 @@ App.TreeSelectionComponent = Ember.Component.extend({
         var self = this;
 
         $(this.get('element')).fancytree({
-            extensions: ["filter"],
+            extensions: ["filter", "glyph", "edit", "wide"],
             source: content,
             checkbox: true,
+            icons:false,
             selectMode: 3,
+            glyph: {
+                map: {
+                    //doc: "glyphicon glyphicon-file",
+                    //docOpen: "glyphicon glyphicon-file",
+                    checkbox: "glyphicon glyphicon-unchecked",
+                    checkboxSelected: "glyphicon glyphicon-check",
+                    checkboxUnknown: "glyphicon glyphicon-share",
+                    error: "glyphicon glyphicon-warning-sign",
+                    expanderClosed: "glyphicon glyphicon-plus-sign",
+                    expanderLazy: "glyphicon glyphicon-plus-sign",
+                    // expanderLazy: "glyphicon glyphicon-expand",
+                    expanderOpen: "glyphicon glyphicon-minus-sign",
+                    // expanderOpen: "glyphicon glyphicon-collapse-down",
+                    //folder: "glyphicon glyphicon-folder-close",
+                    //folderOpen: "glyphicon glyphicon-folder-open",
+                    loading: "glyphicon glyphicon-refresh"
+                            // loading: "icon-spinner icon-spin"
+                }
+            },
+            wide: {
+                iconWidth: "0.3em", // Adjust this if @fancy-icon-width != "16px"
+                iconSpacing: "0.5em", // Adjust this if @fancy-icon-spacing != "3px"
+                levelOfs: "1.5em"     // Adjust this if ul padding != "16px"
+            },
             filter: {
                 mode: "dimm",
                 autoApply: true
@@ -770,6 +829,7 @@ App.TreeSelectionComponent = Ember.Component.extend({
                         var node_key = node_.key;
                         var node_type = node_.data.type;
                         var node_role = node_.data.role;
+                        var node_datatype = node_.data.datatype;
 
                         var already_selected = _.some(selection, function(value) {
                             return _.isEqual(value.parent, node_path);
@@ -785,20 +845,21 @@ App.TreeSelectionComponent = Ember.Component.extend({
                                         key: node_key,
                                         type: node_type,
                                         role: node_role,
-                                        parent: path_labels
+                                        parent: path_labels,
+                                        datatype:node_datatype
                                     }
                             );
                         }
                     }
                 } else {
                     var selected = tree.getSelectedNodes();
-                    
+
                     console.log('SELECTED NODES - ELSE');
                     console.dir(selected);
-                    
+
                     console.log('SELECTION');
                     console.dir(selection);
-                    
+
                     selection = _.filter(selection, function(item) {
 
                         var is_selected = false;

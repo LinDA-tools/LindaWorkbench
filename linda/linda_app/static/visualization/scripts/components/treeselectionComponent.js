@@ -13,10 +13,35 @@ App.TreeSelectionComponent = Ember.Component.extend({
         var self = this;
 
         $(this.get('element')).fancytree({
-            extensions: ["filter"],
+            extensions: ["filter", "glyph", "edit", "wide"],
             source: content,
             checkbox: true,
+            icons:false,
             selectMode: 3,
+            glyph: {
+                map: {
+                    //doc: "glyphicon glyphicon-file",
+                    //docOpen: "glyphicon glyphicon-file",
+                    checkbox: "glyphicon glyphicon-unchecked",
+                    checkboxSelected: "glyphicon glyphicon-check",
+                    checkboxUnknown: "glyphicon glyphicon-share",
+                    error: "glyphicon glyphicon-warning-sign",
+                    expanderClosed: "glyphicon glyphicon-plus-sign",
+                    expanderLazy: "glyphicon glyphicon-plus-sign",
+                    // expanderLazy: "glyphicon glyphicon-expand",
+                    expanderOpen: "glyphicon glyphicon-minus-sign",
+                    // expanderOpen: "glyphicon glyphicon-collapse-down",
+                    //folder: "glyphicon glyphicon-folder-close",
+                    //folderOpen: "glyphicon glyphicon-folder-open",
+                    loading: "glyphicon glyphicon-refresh"
+                            // loading: "icon-spinner icon-spin"
+                }
+            },
+            wide: {
+                iconWidth: "0.3em", // Adjust this if @fancy-icon-width != "16px"
+                iconSpacing: "0.5em", // Adjust this if @fancy-icon-spacing != "3px"
+                levelOfs: "1.5em"     // Adjust this if ul padding != "16px"
+            },
             filter: {
                 mode: "dimm",
                 autoApply: true
@@ -68,6 +93,7 @@ App.TreeSelectionComponent = Ember.Component.extend({
                         var node_key = node_.key;
                         var node_type = node_.data.type;
                         var node_role = node_.data.role;
+                        var node_datatype = node_.data.datatype;
 
                         var already_selected = _.some(selection, function(value) {
                             return _.isEqual(value.parent, node_path);
@@ -83,20 +109,21 @@ App.TreeSelectionComponent = Ember.Component.extend({
                                         key: node_key,
                                         type: node_type,
                                         role: node_role,
-                                        parent: path_labels
+                                        parent: path_labels,
+                                        datatype:node_datatype
                                     }
                             );
                         }
                     }
                 } else {
                     var selected = tree.getSelectedNodes();
-                    
+
                     console.log('SELECTED NODES - ELSE');
                     console.dir(selected);
-                    
+
                     console.log('SELECTION');
                     console.dir(selection);
-                    
+
                     selection = _.filter(selection, function(item) {
 
                         var is_selected = false;

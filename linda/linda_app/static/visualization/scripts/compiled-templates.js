@@ -6,22 +6,10 @@ helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
 function program1(depth0,data) {
   
   
-  data.buffer.push("LinDA Visualization");
+  data.buffer.push("\n                    <a class=\"navbar-brand\" href=\"#\">\n                        <img src=\"/static/images/logo_.png\"/> <span> LinDA Visualization</span>\n                    </a>\n                    ");
   }
 
-function program3(depth0,data) {
-  
-  
-  data.buffer.push("<i  class=\"fi-upload\" title=\"Load\"> </i>");
-  }
-
-function program5(depth0,data) {
-  
-  
-  data.buffer.push("<i  class=\"fi-widget\" title=\"Configure\"> </i>");
-  }
-
-  data.buffer.push("<div class=\"container\">\n    <div id=\"header\">\n        <nav class=\"top-bar\" data-topbar role=\"navigation\">\n            <ul class=\"title-area\">\n                <li class=\"name\">\n                    <h1>");
+  data.buffer.push("<div class=\"container\">\n    <div id=\"header\">\n        <nav class=\"navbar navbar-default\" >\n            <div class=\"container-fluid\"> \n                <div class=\"navbar-header\">\n\n                    ");
   hashContexts = {'animations': depth0};
   hashTypes = {'animations': "STRING"};
   options = {hash:{
@@ -29,19 +17,7 @@ function program5(depth0,data) {
   },inverse:self.noop,fn:self.program(1, program1, data),contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
   stack2 = ((stack1 = helpers['link-to'] || depth0['link-to']),stack1 ? stack1.call(depth0, "index", options) : helperMissing.call(depth0, "link-to", "index", options));
   if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
-  data.buffer.push("</h1>\n                </li>\n            </ul>\n            <section class=\"top-bar-section\">\n                <!-- Right Nav Section -->\n                <ul class=\"right\">\n                    <li>");
-  hashTypes = {};
-  hashContexts = {};
-  options = {hash:{},inverse:self.noop,fn:self.program(3, program3, data),contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
-  stack2 = ((stack1 = helpers['link-to'] || depth0['link-to']),stack1 ? stack1.call(depth0, "visualizationConfig", options) : helperMissing.call(depth0, "link-to", "visualizationConfig", options));
-  if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
-  data.buffer.push("</li>\n                    <li>");
-  hashTypes = {};
-  hashContexts = {};
-  options = {hash:{},inverse:self.noop,fn:self.program(5, program5, data),contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
-  stack2 = ((stack1 = helpers['link-to'] || depth0['link-to']),stack1 ? stack1.call(depth0, "configure", options) : helperMissing.call(depth0, "link-to", "configure", options));
-  if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
-  data.buffer.push("</li>\n                </ul>\n            </section>\n        </nav>\n    </div>\n\n    <div class=\"row left-collapse\">\n        ");
+  data.buffer.push("\n\n                </div>\n                <div class=\"collapse navbar-collapse\">  \n                   \n                    <div class=\"btn-group pull-right\" role=\"group\" aria-label=\"...\">\n                        <button type=\"button\" class=\"btn btn-default navbar-btn\">\n                            <span class=\"glyphicon glyphicon-cog\" aria-hidden=\"true\"></span>\n                        </button>\n                        <button type=\"button\" class=\"btn btn-default navbar-btn\">\n                            <span class=\"glyphicon glyphicon-open-file\" aria-hidden=\"true\"></span>\n                        </button>\n                    </div>\n\n                </div>               \n            </div>\n        </nav>\n    </div>\n    <div>\n        ");
   hashContexts = {'animationSequence': depth0};
   hashTypes = {'animationSequence': "STRING"};
   options = {hash:{
@@ -82,33 +58,25 @@ helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
 Ember.TEMPLATES["components/property-item"] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
 this.compilerInfo = [4,'>= 1.0.0'];
 helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
-  var buffer = '', stack1, hashTypes, hashContexts, escapeExpression=this.escapeExpression, self=this;
+  var buffer = '', stack1, hashContexts, hashTypes, options, helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression;
 
-function program1(depth0,data) {
-  
-  var buffer = '', hashTypes, hashContexts;
-  data.buffer.push("\n            <span class=\"categorized-property-parent\">");
-  hashTypes = {};
-  hashContexts = {};
-  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "p.label", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
-  data.buffer.push(" &raquo;</span>\n        ");
-  return buffer;
-  }
 
-  data.buffer.push("<div class=\"large-10 medium-10 columns area-item-label truncate\">\n    <div class=\"categorized-property-parents\">\n        ");
-  hashTypes = {};
-  hashContexts = {};
-  stack1 = helpers.each.call(depth0, "p", "in", "item.parent", {hash:{},inverse:self.noop,fn:self.program(1, program1, data),contexts:[depth0,depth0,depth0],types:["ID","ID","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
-  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
-  data.buffer.push("\n    </div>\n    <div class=\"categorized-property-name\">\n        ");
+  data.buffer.push("<div class=\"area-item-label\">\n     <div ");
+  hashContexts = {'class': depth0};
+  hashTypes = {'class': "STRING"};
+  options = {hash:{
+    'class': ("item.datatype")
+  },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  data.buffer.push(escapeExpression(((stack1 = helpers['bind-attr'] || depth0['bind-attr']),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "bind-attr", options))));
+  data.buffer.push(">      \n       ");
   hashTypes = {};
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "item.label", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
-  data.buffer.push("\n    </div>\n</div>\n<div class=\"large-2 medium-2 columns area-item-remove\">\n    <a ");
+  data.buffer.push(" <a class=\"area-item-remove\" ");
   hashTypes = {};
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers.action.call(depth0, "remove", "item", {hash:{},contexts:[depth0,depth0],types:["STRING","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
-  data.buffer.push("> x </a>\n</div>\n");
+  data.buffer.push("> X </a> \n    </div>\n</div>\n\n");
   return buffer;
   
 });
@@ -123,37 +91,31 @@ helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
   
 });
 
-Ember.TEMPLATES["configureVisualization"] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
-this.compilerInfo = [4,'>= 1.0.0'];
-helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
-  var buffer = '', hashContexts, hashTypes, escapeExpression=this.escapeExpression;
-
-
-  data.buffer.push("<div class=\"row left-collapse\">\n    <div class=\"large-7 medium-6 columns properties-list-content\">\n        ");
-  hashContexts = {'categories': depth0};
-  hashTypes = {'categories': "ID"};
-  data.buffer.push(escapeExpression(helpers.view.call(depth0, "App.PropertiesListView", {hash:{
-    'categories': ("view.categorizedProperties")
-  },contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
-  data.buffer.push("\n    </div>\n    <div class=\"large-5 medium-6 columns dimensions\">\n        <div>\n            ");
-  hashContexts = {'options': depth0,'config': depth0};
-  hashTypes = {'options': "ID",'config': "ID"};
-  data.buffer.push(escapeExpression(helpers.view.call(depth0, "App.VisualizationOptionsView", {hash:{
-    'options': ("view.strOptionsConfVis"),
-    'config': ("view.confVis")
-  },contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
-  data.buffer.push("\n        </div>\n    </div>\n</div>\n");
-  return buffer;
-  
-});
-
 Ember.TEMPLATES["datasource"] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
 this.compilerInfo = [4,'>= 1.0.0'];
 helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
-  var buffer = '', stack1, hashContexts, hashTypes, options, helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression;
+  var buffer = '', stack1, stack2, hashContexts, hashTypes, options, helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression, self=this;
 
+function program1(depth0,data) {
+  
+  
+  data.buffer.push("\n                    <span class=\"glyphicon glyphicon-resize-full\" aria-hidden=\"true\"></span> \n                    ");
+  }
 
-  data.buffer.push("<div class=\"row box\">\n    <div class=\"large-5 medium-3 columns\">\n        <!-- Data Selection -->        \n        <div class=\"row inner_box dsdefault\">\n            <div class=\"inner_title_box\">\n                <h7>Explore and Select Data</h7>\n            </div>\n            <div>\n                ");
+function program3(depth0,data) {
+  
+  
+  data.buffer.push("\n                    <span class=\"glyphicon glyphicon-resize-small\" aria-hidden=\"true\"></span> \n                    ");
+  }
+
+  data.buffer.push("<div class=\"row\" id=\"ds_container\">\n    <div ");
+  hashContexts = {'class': depth0};
+  hashTypes = {'class': "STRING"};
+  options = {hash:{
+    'class': ("isToggled:col-md-5:col-md-0")
+  },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  data.buffer.push(escapeExpression(((stack1 = helpers['bind-attr'] || depth0['bind-attr']),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "bind-attr", options))));
+  data.buffer.push(">\n        <!-- Data Selection -->\n        <div class=\"panel panel-default\">\n            <div class=\"panel-heading\">\n                <h1 class=\"panel-title pull-left\">Explore and Select Data</h1>\n            </div>\n            <div class=\"panel-body\">\n                ");
   hashContexts = {'treedata': depth0,'selection': depth0};
   hashTypes = {'treedata': "ID",'selection': "ID"};
   options = {hash:{
@@ -161,11 +123,23 @@ helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
     'selection': ("controller.dataSelection")
   },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
   data.buffer.push(escapeExpression(((stack1 = helpers['tree-selection'] || depth0['tree-selection']),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "tree-selection", options))));
-  data.buffer.push(" \n            </div>\n        </div>                                                            \n    </div>           \n    <div class=\"large-7 medium-9 columns\">       \n        <div class=\"inner_box dsdefault\">\n            <!-- Data Selection Preview -->\n            <div class=\"inner_title_box\">\n                <h7>Preview Data Selection</h7> <span class=\"visualize\"><a ");
+  data.buffer.push("  \n            </div>\n            <div class=\"panel-footer clearfix\">\n            </div>\n        </div>                                                      \n    </div>           \n    <div ");
+  hashContexts = {'class': depth0};
+  hashTypes = {'class': "STRING"};
+  options = {hash:{
+    'class': ("isToggled:col-md-7:col-md-12")
+  },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  data.buffer.push(escapeExpression(((stack1 = helpers['bind-attr'] || depth0['bind-attr']),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "bind-attr", options))));
+  data.buffer.push(">\n        <!-- Data Selection Preview -->\n        <div class=\"panel panel-default\">\n            <div class=\"panel-heading\">\n                <h1 class=\"panel-title pull-left\">Preview Data Selection</h1>\n\n                <button type=\"button\" class=\"btn btn-default btn-xs pull-right\" ");
   hashTypes = {};
   hashContexts = {};
-  data.buffer.push(escapeExpression(helpers.action.call(depth0, "visualize", {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
-  data.buffer.push(">Visualize</a></span>\n            </div>\n            <div>  \n                ");
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "toggle", {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push(">\n                    ");
+  hashTypes = {};
+  hashContexts = {};
+  stack2 = helpers['if'].call(depth0, "isToggled", {hash:{},inverse:self.program(3, program3, data),fn:self.program(1, program1, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
+  data.buffer.push("\n                </button>\n\n            </div>\n            <div class=\"panel-body\">\n                ");
   hashContexts = {'preview': depth0,'datasource': depth0};
   hashTypes = {'preview': "ID",'datasource': "ID"};
   options = {hash:{
@@ -173,7 +147,11 @@ helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
     'datasource': ("controller.selectedDatasource")
   },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
   data.buffer.push(escapeExpression(((stack1 = helpers['data-table'] || depth0['data-table']),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "data-table", options))));
-  data.buffer.push(" \n            </div>          \n        </div>   \n    </div>\n</div>  ");
+  data.buffer.push(" \n            </div>\n            <div class=\"panel-footer clearfix\">\n                <button type=\"button\" class=\"btn btn-default pull-right\" ");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "visualize", {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push(">\n                    <span class=\"glyphicon glyphicon-stats\" aria-hidden=\"true\"></span>   Visualize\n                </button>\n            </div>\n        </div>     \n    </div>\n</div>");
   return buffer;
   
 });
@@ -184,18 +162,19 @@ helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
   var buffer = '', hashContexts, hashTypes, escapeExpression=this.escapeExpression;
 
 
-  data.buffer.push("<div>\n    <div class=\"consumption-title\">\n        <h7> Export Chart </h7>\n    </div>\n    <div class=\"consumption-content\">\n        Export as ");
-  hashContexts = {'content': depth0,'value': depth0};
-  hashTypes = {'content': "ID",'value': "ID"};
+  data.buffer.push("<div>\n    <div class=\"consumption-title\">\n        <span> Export as </span>  ");
+  hashContexts = {'content': depth0,'value': depth0,'class': depth0};
+  hashTypes = {'content': "ID",'value': "ID",'class': "STRING"};
   data.buffer.push(escapeExpression(helpers.view.call(depth0, "Ember.Select", {hash:{
     'content': ("controller.exportFormats"),
-    'value': ("controller.selectedFormat")
+    'value': ("controller.selectedFormat"),
+    'class': ("btn btn-default dropdown-toggle")
   },contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
-  data.buffer.push(" <a ");
+  data.buffer.push(" \n        <button type=\"button\" class=\"btn btn-default btn-xs\" ");
   hashTypes = {};
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers.action.call(depth0, "export", {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
-  data.buffer.push(" class=\"postfix\"> <i class=\"fi-page-export consumption-icons\"></i></a>                  \n    </div>\n</div>\n   \n");
+  data.buffer.push(">\n            <span class=\"glyphicon glyphicon-export\" aria-hidden=\"true\"></span>  Export\n        </button>\n    </div>  \n</div>\n\n");
   return buffer;
   
 });
@@ -325,125 +304,137 @@ function program39(depth0,data) {
   data.buffer.push("\n            19. Health Data.gov - Hospital Inpatient Discharges by Facility (statistical dataset; RDF format)\n            ");
   }
 
-  data.buffer.push("<div class=\"box\" style=\"height:600px;\">\n    <h6>Visualizations</h6>\n    <ul>\n        <li>  \n            ");
+function program41(depth0,data) {
+  
+  
+  data.buffer.push("\n            20. TS1 (statistical dataset; RDF format)\n            ");
+  }
+
+  data.buffer.push("<div class=\"box\" style=\"height:600px;\">\n    <h4>Example Datasets:</h4>\n    <ul>\n        <li>\n            ");
   hashTypes = {};
   hashContexts = {};
   options = {hash:{},inverse:self.noop,fn:self.program(1, program1, data),contexts:[depth0,depth0,depth0,depth0,depth0],types:["STRING","STRING","STRING","STRING","STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
-  stack2 = ((stack1 = helpers['link-to'] || depth0['link-to']),stack1 ? stack1.call(depth0, "datasource", "DepartmentOfAgriculture-Quick%20Stats", "http%3A%2F%2F107.170.70.175%3A8890%2Fsparql", "http%3A%2F%2Fwww.linda-project.org%2Fexamples%2FDepartmentOfAgriculture-QuickStats.nt", "rdf", options) : helperMissing.call(depth0, "link-to", "datasource", "DepartmentOfAgriculture-Quick%20Stats", "http%3A%2F%2F107.170.70.175%3A8890%2Fsparql", "http%3A%2F%2Fwww.linda-project.org%2Fexamples%2FDepartmentOfAgriculture-QuickStats.nt", "rdf", options));
+  stack2 = ((stack1 = helpers['link-to'] || depth0['link-to']),stack1 ? stack1.call(depth0, "datasource", "DepartmentOfAgriculture-Quick%20Stats", "http%3A%2F%2Flocalhost%3A8890%2Fsparql", "http%3A%2F%2Fwww.linda-project.org%2Fexamples%2FDepartmentOfAgriculture-QuickStats.nt", "rdf", options) : helperMissing.call(depth0, "link-to", "datasource", "DepartmentOfAgriculture-Quick%20Stats", "http%3A%2F%2Flocalhost%3A8890%2Fsparql", "http%3A%2F%2Fwww.linda-project.org%2Fexamples%2FDepartmentOfAgriculture-QuickStats.nt", "rdf", options));
   if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
   data.buffer.push("\n        </li>\n        <li>\n            ");
   hashTypes = {};
   hashContexts = {};
   options = {hash:{},inverse:self.noop,fn:self.program(3, program3, data),contexts:[depth0,depth0,depth0,depth0,depth0],types:["STRING","STRING","STRING","STRING","STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
-  stack2 = ((stack1 = helpers['link-to'] || depth0['link-to']),stack1 ? stack1.call(depth0, "datasource", "DepartmentOfDefense-Marital%20Status", "http%3A%2F%2F107.170.70.175%3A8890%2Fsparql", "http%3A%2F%2Fwww.linda-project.org%2Fexamples%2FDepartmentOfDefense-MaritalStatus.nt", "rdf", options) : helperMissing.call(depth0, "link-to", "datasource", "DepartmentOfDefense-Marital%20Status", "http%3A%2F%2F107.170.70.175%3A8890%2Fsparql", "http%3A%2F%2Fwww.linda-project.org%2Fexamples%2FDepartmentOfDefense-MaritalStatus.nt", "rdf", options));
+  stack2 = ((stack1 = helpers['link-to'] || depth0['link-to']),stack1 ? stack1.call(depth0, "datasource", "DepartmentOfDefense-Marital%20Status", "http%3A%2F%2Flocalhost%3A8890%2Fsparql", "http%3A%2F%2Fwww.linda-project.org%2Fexamples%2FDepartmentOfDefense-MaritalStatus.nt", "rdf", options) : helperMissing.call(depth0, "link-to", "datasource", "DepartmentOfDefense-Marital%20Status", "http%3A%2F%2Flocalhost%3A8890%2Fsparql", "http%3A%2F%2Fwww.linda-project.org%2Fexamples%2FDepartmentOfDefense-MaritalStatus.nt", "rdf", options));
   if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
   data.buffer.push("\n        </li>\n        <li>\n            ");
   hashTypes = {};
   hashContexts = {};
   options = {hash:{},inverse:self.noop,fn:self.program(5, program5, data),contexts:[depth0,depth0,depth0,depth0,depth0],types:["STRING","STRING","STRING","STRING","STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
-  stack2 = ((stack1 = helpers['link-to'] || depth0['link-to']),stack1 ? stack1.call(depth0, "datasource", "DepartmentofHealthandHumanServices-OMHClaims%20Listed%20by%20State", "http%3A%2F%2F107.170.70.175%3A8890%2Fsparql", "http%3A%2F%2Fwww.linda-project.org%2Fexamples%2FDepartmentofHealthandHumanServices-OMHClaimsListedbyState.nt", "rdf", options) : helperMissing.call(depth0, "link-to", "datasource", "DepartmentofHealthandHumanServices-OMHClaims%20Listed%20by%20State", "http%3A%2F%2F107.170.70.175%3A8890%2Fsparql", "http%3A%2F%2Fwww.linda-project.org%2Fexamples%2FDepartmentofHealthandHumanServices-OMHClaimsListedbyState.nt", "rdf", options));
+  stack2 = ((stack1 = helpers['link-to'] || depth0['link-to']),stack1 ? stack1.call(depth0, "datasource", "DepartmentofHealthandHumanServices-OMHClaims%20Listed%20by%20State", "http%3A%2F%2Flocalhost%3A8890%2Fsparql", "http%3A%2F%2Fwww.linda-project.org%2Fexamples%2FDepartmentofHealthandHumanServices-OMHClaimsListedbyState.nt", "rdf", options) : helperMissing.call(depth0, "link-to", "datasource", "DepartmentofHealthandHumanServices-OMHClaims%20Listed%20by%20State", "http%3A%2F%2Flocalhost%3A8890%2Fsparql", "http%3A%2F%2Fwww.linda-project.org%2Fexamples%2FDepartmentofHealthandHumanServices-OMHClaimsListedbyState.nt", "rdf", options));
   if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
   data.buffer.push("\n        </li>\n        <li> \n            ");
   hashTypes = {};
   hashContexts = {};
   options = {hash:{},inverse:self.noop,fn:self.program(7, program7, data),contexts:[depth0,depth0,depth0,depth0,depth0],types:["STRING","STRING","STRING","STRING","STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
-  stack2 = ((stack1 = helpers['link-to'] || depth0['link-to']),stack1 ? stack1.call(depth0, "datasource", "DepartmentOfTheInterior-Wildl%20and%20Fires%20and%201960-2008", "http%3A%2F%2F107.170.70.175%3A8890%2Fsparql", "http%3A%2F%2Fwww.linda-project.org%2Fexamples%2FDepartmentOfTheInterior-WildlandFiresand1960-2008.nt", "rdf", options) : helperMissing.call(depth0, "link-to", "datasource", "DepartmentOfTheInterior-Wildl%20and%20Fires%20and%201960-2008", "http%3A%2F%2F107.170.70.175%3A8890%2Fsparql", "http%3A%2F%2Fwww.linda-project.org%2Fexamples%2FDepartmentOfTheInterior-WildlandFiresand1960-2008.nt", "rdf", options));
+  stack2 = ((stack1 = helpers['link-to'] || depth0['link-to']),stack1 ? stack1.call(depth0, "datasource", "DepartmentOfTheInterior-Wildl%20and%20Fires%20and%201960-2008", "http%3A%2F%2Flocalhost%3A8890%2Fsparql", "http%3A%2F%2Fwww.linda-project.org%2Fexamples%2FDepartmentOfTheInterior-WildlandFiresand1960-2008.nt", "rdf", options) : helperMissing.call(depth0, "link-to", "datasource", "DepartmentOfTheInterior-Wildl%20and%20Fires%20and%201960-2008", "http%3A%2F%2Flocalhost%3A8890%2Fsparql", "http%3A%2F%2Fwww.linda-project.org%2Fexamples%2FDepartmentOfTheInterior-WildlandFiresand1960-2008.nt", "rdf", options));
   if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
   data.buffer.push("\n        </li>\n        <li>\n            ");
   hashTypes = {};
   hashContexts = {};
   options = {hash:{},inverse:self.noop,fn:self.program(9, program9, data),contexts:[depth0,depth0,depth0,depth0,depth0],types:["STRING","STRING","STRING","STRING","STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
-  stack2 = ((stack1 = helpers['link-to'] || depth0['link-to']),stack1 ? stack1.call(depth0, "datasource", "DepartmentofState-Africa%20Conflicts%20Without%20Borders%202009", "http%3A%2F%2F107.170.70.175%3A8890%2Fsparql", "http%3A%2F%2Fwww.linda-project.org%2Fexamples%2FDepartmentofState-AfricaConflictsWithoutBorders2009.nt", "rdf", options) : helperMissing.call(depth0, "link-to", "datasource", "DepartmentofState-Africa%20Conflicts%20Without%20Borders%202009", "http%3A%2F%2F107.170.70.175%3A8890%2Fsparql", "http%3A%2F%2Fwww.linda-project.org%2Fexamples%2FDepartmentofState-AfricaConflictsWithoutBorders2009.nt", "rdf", options));
+  stack2 = ((stack1 = helpers['link-to'] || depth0['link-to']),stack1 ? stack1.call(depth0, "datasource", "DepartmentofState-Africa%20Conflicts%20Without%20Borders%202009", "http%3A%2F%2Flocalhost%3A8890%2Fsparql", "http%3A%2F%2Fwww.linda-project.org%2Fexamples%2FDepartmentofState-AfricaConflictsWithoutBorders2009.nt", "rdf", options) : helperMissing.call(depth0, "link-to", "datasource", "DepartmentofState-Africa%20Conflicts%20Without%20Borders%202009", "http%3A%2F%2Flocalhost%3A8890%2Fsparql", "http%3A%2F%2Fwww.linda-project.org%2Fexamples%2FDepartmentofState-AfricaConflictsWithoutBorders2009.nt", "rdf", options));
   if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
   data.buffer.push("\n        </li>\n        <li>  \n            ");
   hashTypes = {};
   hashContexts = {};
   options = {hash:{},inverse:self.noop,fn:self.program(11, program11, data),contexts:[depth0,depth0,depth0,depth0,depth0],types:["STRING","STRING","STRING","STRING","STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
-  stack2 = ((stack1 = helpers['link-to'] || depth0['link-to']),stack1 ? stack1.call(depth0, "datasource", "DepartmentOfTheTreasury-Quarterly%20Report%20on%20Bank%20Derivatives%20Activities", "http%3A%2F%2F107.170.70.175%3A8890%2Fsparql", "http%3A%2F%2Fwww.linda-project.org%2Fexamples%2FDepartmentOfTheTreasury-QuarterlyReportonBankDerivativesActivities.nt", "rdf", options) : helperMissing.call(depth0, "link-to", "datasource", "DepartmentOfTheTreasury-Quarterly%20Report%20on%20Bank%20Derivatives%20Activities", "http%3A%2F%2F107.170.70.175%3A8890%2Fsparql", "http%3A%2F%2Fwww.linda-project.org%2Fexamples%2FDepartmentOfTheTreasury-QuarterlyReportonBankDerivativesActivities.nt", "rdf", options));
+  stack2 = ((stack1 = helpers['link-to'] || depth0['link-to']),stack1 ? stack1.call(depth0, "datasource", "DepartmentOfTheTreasury-Quarterly%20Report%20on%20Bank%20Derivatives%20Activities", "http%3A%2F%2Flocalhost%3A8890%2Fsparql", "http%3A%2F%2Fwww.linda-project.org%2Fexamples%2FDepartmentOfTheTreasury-QuarterlyReportonBankDerivativesActivities.nt", "rdf", options) : helperMissing.call(depth0, "link-to", "datasource", "DepartmentOfTheTreasury-Quarterly%20Report%20on%20Bank%20Derivatives%20Activities", "http%3A%2F%2Flocalhost%3A8890%2Fsparql", "http%3A%2F%2Fwww.linda-project.org%2Fexamples%2FDepartmentOfTheTreasury-QuarterlyReportonBankDerivativesActivities.nt", "rdf", options));
   if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
   data.buffer.push("\n        </li>     \n        <li>\n            ");
   hashTypes = {};
   hashContexts = {};
   options = {hash:{},inverse:self.noop,fn:self.program(13, program13, data),contexts:[depth0,depth0,depth0,depth0,depth0],types:["STRING","STRING","STRING","STRING","STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
-  stack2 = ((stack1 = helpers['link-to'] || depth0['link-to']),stack1 ? stack1.call(depth0, "datasource", "DepartmentOfVeteransAffairs-Veterans%20Health%20Administration%202008", "http%3A%2F%2F107.170.70.175%3A8890%2Fsparql", "http%3A%2F%2Fwww.linda-project.org%2Fexamples%2FDepartmentOfVeteransAffairs-VeteransHealthAdministration2008.nt", "rdf", options) : helperMissing.call(depth0, "link-to", "datasource", "DepartmentOfVeteransAffairs-Veterans%20Health%20Administration%202008", "http%3A%2F%2F107.170.70.175%3A8890%2Fsparql", "http%3A%2F%2Fwww.linda-project.org%2Fexamples%2FDepartmentOfVeteransAffairs-VeteransHealthAdministration2008.nt", "rdf", options));
+  stack2 = ((stack1 = helpers['link-to'] || depth0['link-to']),stack1 ? stack1.call(depth0, "datasource", "DepartmentOfVeteransAffairs-Veterans%20Health%20Administration%202008", "http%3A%2F%2Flocalhost%3A8890%2Fsparql", "http%3A%2F%2Fwww.linda-project.org%2Fexamples%2FDepartmentOfVeteransAffairs-VeteransHealthAdministration2008.nt", "rdf", options) : helperMissing.call(depth0, "link-to", "datasource", "DepartmentOfVeteransAffairs-Veterans%20Health%20Administration%202008", "http%3A%2F%2Flocalhost%3A8890%2Fsparql", "http%3A%2F%2Fwww.linda-project.org%2Fexamples%2FDepartmentOfVeteransAffairs-VeteransHealthAdministration2008.nt", "rdf", options));
   if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
   data.buffer.push("\n        </li>       \n        <li>\n            ");
   hashTypes = {};
   hashContexts = {};
   options = {hash:{},inverse:self.noop,fn:self.program(15, program15, data),contexts:[depth0,depth0,depth0,depth0,depth0],types:["STRING","STRING","STRING","STRING","STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
-  stack2 = ((stack1 = helpers['link-to'] || depth0['link-to']),stack1 ? stack1.call(depth0, "datasource", "GeneralServicesAdministration-Cash%20and%20Payments%20Management%20Data", "http%3A%2F%2F107.170.70.175%3A8890%2Fsparql", "http%3A%2F%2Fwww.linda-project.org%2Fexamples%2FGeneralServicesAdministration-CashandPaymentsManagementData.nt", "rdf", options) : helperMissing.call(depth0, "link-to", "datasource", "GeneralServicesAdministration-Cash%20and%20Payments%20Management%20Data", "http%3A%2F%2F107.170.70.175%3A8890%2Fsparql", "http%3A%2F%2Fwww.linda-project.org%2Fexamples%2FGeneralServicesAdministration-CashandPaymentsManagementData.nt", "rdf", options));
+  stack2 = ((stack1 = helpers['link-to'] || depth0['link-to']),stack1 ? stack1.call(depth0, "datasource", "GeneralServicesAdministration-Cash%20and%20Payments%20Management%20Data", "http%3A%2F%2Flocalhost%3A8890%2Fsparql", "http%3A%2F%2Fwww.linda-project.org%2Fexamples%2FGeneralServicesAdministration-CashandPaymentsManagementData.nt", "rdf", options) : helperMissing.call(depth0, "link-to", "datasource", "GeneralServicesAdministration-Cash%20and%20Payments%20Management%20Data", "http%3A%2F%2Flocalhost%3A8890%2Fsparql", "http%3A%2F%2Fwww.linda-project.org%2Fexamples%2FGeneralServicesAdministration-CashandPaymentsManagementData.nt", "rdf", options));
   if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
   data.buffer.push("\n        </li>\n        <li>\n            ");
   hashTypes = {};
   hashContexts = {};
   options = {hash:{},inverse:self.noop,fn:self.program(17, program17, data),contexts:[depth0,depth0,depth0,depth0,depth0],types:["STRING","STRING","STRING","STRING","STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
-  stack2 = ((stack1 = helpers['link-to'] || depth0['link-to']),stack1 ? stack1.call(depth0, "datasource", "NationalScienceFoundation-NSF%20Research%20Grant%20Funding%20Rates", "http%3A%2F%2F107.170.70.175%3A8890%2Fsparql", "http%3A%2F%2Fwww.linda-project.org%2Fexamples%2FNationalScienceFoundation-NSFResearchGrantFundingRates.nt", "rdf", options) : helperMissing.call(depth0, "link-to", "datasource", "NationalScienceFoundation-NSF%20Research%20Grant%20Funding%20Rates", "http%3A%2F%2F107.170.70.175%3A8890%2Fsparql", "http%3A%2F%2Fwww.linda-project.org%2Fexamples%2FNationalScienceFoundation-NSFResearchGrantFundingRates.nt", "rdf", options));
+  stack2 = ((stack1 = helpers['link-to'] || depth0['link-to']),stack1 ? stack1.call(depth0, "datasource", "NationalScienceFoundation-NSF%20Research%20Grant%20Funding%20Rates", "http%3A%2F%2Flocalhost%3A8890%2Fsparql", "http%3A%2F%2Fwww.linda-project.org%2Fexamples%2FNationalScienceFoundation-NSFResearchGrantFundingRates.nt", "rdf", options) : helperMissing.call(depth0, "link-to", "datasource", "NationalScienceFoundation-NSF%20Research%20Grant%20Funding%20Rates", "http%3A%2F%2Flocalhost%3A8890%2Fsparql", "http%3A%2F%2Fwww.linda-project.org%2Fexamples%2FNationalScienceFoundation-NSFResearchGrantFundingRates.nt", "rdf", options));
   if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
   data.buffer.push("\n        </li>\n        <li>\n            ");
   hashTypes = {};
   hashContexts = {};
   options = {hash:{},inverse:self.noop,fn:self.program(19, program19, data),contexts:[depth0,depth0,depth0,depth0,depth0],types:["STRING","STRING","STRING","STRING","STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
-  stack2 = ((stack1 = helpers['link-to'] || depth0['link-to']),stack1 ? stack1.call(depth0, "datasource", "NationalTransportationSafetyBoardAviation-Accident%20Statistics%202008", "http%3A%2F%2F107.170.70.175%3A8890%2Fsparql", "http%3A%2F%2Fwww.linda-project.org%2Fexamples%2FNationalTransportationSafetyBoardAviation-AccidentStatistics2008.nt", "rdf", options) : helperMissing.call(depth0, "link-to", "datasource", "NationalTransportationSafetyBoardAviation-Accident%20Statistics%202008", "http%3A%2F%2F107.170.70.175%3A8890%2Fsparql", "http%3A%2F%2Fwww.linda-project.org%2Fexamples%2FNationalTransportationSafetyBoardAviation-AccidentStatistics2008.nt", "rdf", options));
+  stack2 = ((stack1 = helpers['link-to'] || depth0['link-to']),stack1 ? stack1.call(depth0, "datasource", "NationalTransportationSafetyBoardAviation-Accident%20Statistics%202008", "http%3A%2F%2Flocalhost%3A8890%2Fsparql", "http%3A%2F%2Fwww.linda-project.org%2Fexamples%2FNationalTransportationSafetyBoardAviation-AccidentStatistics2008.nt", "rdf", options) : helperMissing.call(depth0, "link-to", "datasource", "NationalTransportationSafetyBoardAviation-Accident%20Statistics%202008", "http%3A%2F%2Flocalhost%3A8890%2Fsparql", "http%3A%2F%2Fwww.linda-project.org%2Fexamples%2FNationalTransportationSafetyBoardAviation-AccidentStatistics2008.nt", "rdf", options));
   if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
   data.buffer.push("\n        </li>\n        <li> \n            ");
   hashTypes = {};
   hashContexts = {};
   options = {hash:{},inverse:self.noop,fn:self.program(21, program21, data),contexts:[depth0,depth0,depth0,depth0,depth0],types:["STRING","STRING","STRING","STRING","STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
-  stack2 = ((stack1 = helpers['link-to'] || depth0['link-to']),stack1 ? stack1.call(depth0, "datasource", "OfficeofPersonnelManagement-Fiscal%20Year%202007%20Employee%20Survivor%20Annuitants", "http%3A%2F%2F107.170.70.175%3A8890%2Fsparql", "http%3A%2F%2Fwww.linda-project.org%2Fexamples%2FOfficeofPersonnelManagement-FiscalYear2007EmployeeSurvivorAnnuitants.nt", "rdf", options) : helperMissing.call(depth0, "link-to", "datasource", "OfficeofPersonnelManagement-Fiscal%20Year%202007%20Employee%20Survivor%20Annuitants", "http%3A%2F%2F107.170.70.175%3A8890%2Fsparql", "http%3A%2F%2Fwww.linda-project.org%2Fexamples%2FOfficeofPersonnelManagement-FiscalYear2007EmployeeSurvivorAnnuitants.nt", "rdf", options));
+  stack2 = ((stack1 = helpers['link-to'] || depth0['link-to']),stack1 ? stack1.call(depth0, "datasource", "OfficeofPersonnelManagement-Fiscal%20Year%202007%20Employee%20Survivor%20Annuitants", "http%3A%2F%2Flocalhost%3A8890%2Fsparql", "http%3A%2F%2Fwww.linda-project.org%2Fexamples%2FOfficeofPersonnelManagement-FiscalYear2007EmployeeSurvivorAnnuitants.nt", "rdf", options) : helperMissing.call(depth0, "link-to", "datasource", "OfficeofPersonnelManagement-Fiscal%20Year%202007%20Employee%20Survivor%20Annuitants", "http%3A%2F%2Flocalhost%3A8890%2Fsparql", "http%3A%2F%2Fwww.linda-project.org%2Fexamples%2FOfficeofPersonnelManagement-FiscalYear2007EmployeeSurvivorAnnuitants.nt", "rdf", options));
   if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
   data.buffer.push("\n        </li>  \n        <li>\n            ");
   hashTypes = {};
   hashContexts = {};
   options = {hash:{},inverse:self.noop,fn:self.program(23, program23, data),contexts:[depth0,depth0,depth0,depth0,depth0],types:["STRING","STRING","STRING","STRING","STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
-  stack2 = ((stack1 = helpers['link-to'] || depth0['link-to']),stack1 ? stack1.call(depth0, "datasource", "SecurityAndExchangeCommission-Public%20Company%20Bankruptcy%20Cases%202009", "http%3A%2F%2F107.170.70.175%3A8890%2Fsparql", "http%3A%2F%2Fwww.linda-project.org%2Fexamples%2FSecurityAndExchangeCommission-PublicCompanyBankruptcyCases2009.nt", "rdf", options) : helperMissing.call(depth0, "link-to", "datasource", "SecurityAndExchangeCommission-Public%20Company%20Bankruptcy%20Cases%202009", "http%3A%2F%2F107.170.70.175%3A8890%2Fsparql", "http%3A%2F%2Fwww.linda-project.org%2Fexamples%2FSecurityAndExchangeCommission-PublicCompanyBankruptcyCases2009.nt", "rdf", options));
+  stack2 = ((stack1 = helpers['link-to'] || depth0['link-to']),stack1 ? stack1.call(depth0, "datasource", "SecurityAndExchangeCommission-Public%20Company%20Bankruptcy%20Cases%202009", "http%3A%2F%2Flocalhost%3A8890%2Fsparql", "http%3A%2F%2Fwww.linda-project.org%2Fexamples%2FSecurityAndExchangeCommission-PublicCompanyBankruptcyCases2009.nt", "rdf", options) : helperMissing.call(depth0, "link-to", "datasource", "SecurityAndExchangeCommission-Public%20Company%20Bankruptcy%20Cases%202009", "http%3A%2F%2Flocalhost%3A8890%2Fsparql", "http%3A%2F%2Fwww.linda-project.org%2Fexamples%2FSecurityAndExchangeCommission-PublicCompanyBankruptcyCases2009.nt", "rdf", options));
   if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
   data.buffer.push("\n        </li>\n        <li>        \n            ");
   hashTypes = {};
   hashContexts = {};
   options = {hash:{},inverse:self.noop,fn:self.program(25, program25, data),contexts:[depth0,depth0,depth0,depth0,depth0],types:["STRING","STRING","STRING","STRING","STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
-  stack2 = ((stack1 = helpers['link-to'] || depth0['link-to']),stack1 ? stack1.call(depth0, "datasource", "Sales%20Statistics", "http%3A%2F%2F107.170.70.175%3A3002%2Ftestsets%2FTS2_Sales_Statistics.csv", "-", "csv", options) : helperMissing.call(depth0, "link-to", "datasource", "Sales%20Statistics", "http%3A%2F%2F107.170.70.175%3A3002%2Ftestsets%2FTS2_Sales_Statistics.csv", "-", "csv", options));
+  stack2 = ((stack1 = helpers['link-to'] || depth0['link-to']),stack1 ? stack1.call(depth0, "datasource", "Sales%20Statistics", "http%3A%2F%2Flocalhost%3A3002%2Ftestsets%2FTS2_Sales_Statistics.csv", "-", "csv", options) : helperMissing.call(depth0, "link-to", "datasource", "Sales%20Statistics", "http%3A%2F%2Flocalhost%3A3002%2Ftestsets%2FTS2_Sales_Statistics.csv", "-", "csv", options));
   if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
   data.buffer.push("\n        </li>\n        <li>\n            ");
   hashTypes = {};
   hashContexts = {};
   options = {hash:{},inverse:self.noop,fn:self.program(27, program27, data),contexts:[depth0,depth0,depth0,depth0,depth0],types:["STRING","STRING","STRING","STRING","STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
-  stack2 = ((stack1 = helpers['link-to'] || depth0['link-to']),stack1 ? stack1.call(depth0, "datasource", "World%20Bank%20GDP%20per%20capita", "http%3A%2F%2F107.170.70.175%3A8890%2Fsparql", "http%3A%2F%2Fwww.linda-project.org%2Fexamples%2Fworldbank-slice-5000", "rdf", options) : helperMissing.call(depth0, "link-to", "datasource", "World%20Bank%20GDP%20per%20capita", "http%3A%2F%2F107.170.70.175%3A8890%2Fsparql", "http%3A%2F%2Fwww.linda-project.org%2Fexamples%2Fworldbank-slice-5000", "rdf", options));
+  stack2 = ((stack1 = helpers['link-to'] || depth0['link-to']),stack1 ? stack1.call(depth0, "datasource", "World%20Bank%20GDP%20per%20capita", "http%3A%2F%2Flocalhost%3A8890%2Fsparql", "http%3A%2F%2Fwww.linda-project.org%2Fexamples%2Fworldbank-slice-5000", "rdf", options) : helperMissing.call(depth0, "link-to", "datasource", "World%20Bank%20GDP%20per%20capita", "http%3A%2F%2Flocalhost%3A8890%2Fsparql", "http%3A%2F%2Fwww.linda-project.org%2Fexamples%2Fworldbank-slice-5000", "rdf", options));
   if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
   data.buffer.push("\n        </li>\n        <li>\n            ");
   hashTypes = {};
   hashContexts = {};
   options = {hash:{},inverse:self.noop,fn:self.program(29, program29, data),contexts:[depth0,depth0,depth0,depth0,depth0],types:["STRING","STRING","STRING","STRING","STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
-  stack2 = ((stack1 = helpers['link-to'] || depth0['link-to']),stack1 ? stack1.call(depth0, "datasource", "Healthcare%20Analysis", "http%3A%2F%2F107.170.70.175%3A8890%2Fsparql", "http%3A%2F%2Fwww.hospitals_reviewer.com%2F2014", "rdf", options) : helperMissing.call(depth0, "link-to", "datasource", "Healthcare%20Analysis", "http%3A%2F%2F107.170.70.175%3A8890%2Fsparql", "http%3A%2F%2Fwww.hospitals_reviewer.com%2F2014", "rdf", options));
+  stack2 = ((stack1 = helpers['link-to'] || depth0['link-to']),stack1 ? stack1.call(depth0, "datasource", "Healthcare%20Analysis", "http%3A%2F%2Flocalhost%3A8890%2Fsparql", "http%3A%2F%2Fwww.hospitals_reviewer.com%2F2014", "rdf", options) : helperMissing.call(depth0, "link-to", "datasource", "Healthcare%20Analysis", "http%3A%2F%2Flocalhost%3A8890%2Fsparql", "http%3A%2F%2Fwww.hospitals_reviewer.com%2F2014", "rdf", options));
   if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
   data.buffer.push("\n        </li>\n        <li>\n            ");
   hashTypes = {};
   hashContexts = {};
   options = {hash:{},inverse:self.noop,fn:self.program(31, program31, data),contexts:[depth0,depth0,depth0,depth0,depth0],types:["STRING","STRING","STRING","STRING","STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
-  stack2 = ((stack1 = helpers['link-to'] || depth0['link-to']),stack1 ? stack1.call(depth0, "datasource", "Water%20Quality%20Analysis", "http%3A%2F%2F107.170.70.175%3A8890%2Fsparql", "http%3A%2F%2Fwater_quality_check.it%2Finfo", "rdf", options) : helperMissing.call(depth0, "link-to", "datasource", "Water%20Quality%20Analysis", "http%3A%2F%2F107.170.70.175%3A8890%2Fsparql", "http%3A%2F%2Fwater_quality_check.it%2Finfo", "rdf", options));
+  stack2 = ((stack1 = helpers['link-to'] || depth0['link-to']),stack1 ? stack1.call(depth0, "datasource", "Water%20Quality%20Analysis", "http%3A%2F%2Flocalhost%3A8890%2Fsparql", "http%3A%2F%2Fwater_quality_check.it%2Finfo", "rdf", options) : helperMissing.call(depth0, "link-to", "datasource", "Water%20Quality%20Analysis", "http%3A%2F%2Flocalhost%3A8890%2Fsparql", "http%3A%2F%2Fwater_quality_check.it%2Finfo", "rdf", options));
   if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
   data.buffer.push("\n        </li>\n        <li>\n            ");
   hashTypes = {};
   hashContexts = {};
   options = {hash:{},inverse:self.noop,fn:self.program(33, program33, data),contexts:[depth0,depth0,depth0,depth0,depth0],types:["STRING","STRING","STRING","STRING","STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
-  stack2 = ((stack1 = helpers['link-to'] || depth0['link-to']),stack1 ? stack1.call(depth0, "datasource", "Newspaper%20Articles%20Analysis", "http%3A%2F%2F107.170.70.175%3A8890%2Fsparql", "http%3A%2F%2Fnewspaper.org%2Farticles_2007", "rdf", options) : helperMissing.call(depth0, "link-to", "datasource", "Newspaper%20Articles%20Analysis", "http%3A%2F%2F107.170.70.175%3A8890%2Fsparql", "http%3A%2F%2Fnewspaper.org%2Farticles_2007", "rdf", options));
+  stack2 = ((stack1 = helpers['link-to'] || depth0['link-to']),stack1 ? stack1.call(depth0, "datasource", "Newspaper%20Articles%20Analysis", "http%3A%2F%2Flocalhost%3A8890%2Fsparql", "http%3A%2F%2Fnewspaper.org%2Farticles_2007", "rdf", options) : helperMissing.call(depth0, "link-to", "datasource", "Newspaper%20Articles%20Analysis", "http%3A%2F%2Flocalhost%3A8890%2Fsparql", "http%3A%2F%2Fnewspaper.org%2Farticles_2007", "rdf", options));
   if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
   data.buffer.push("\n        </li>\n        <li>\n            ");
   hashTypes = {};
   hashContexts = {};
   options = {hash:{},inverse:self.noop,fn:self.program(35, program35, data),contexts:[depth0,depth0,depth0,depth0,depth0],types:["STRING","STRING","STRING","STRING","STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
-  stack2 = ((stack1 = helpers['link-to'] || depth0['link-to']),stack1 ? stack1.call(depth0, "datasource", "Newspaper%20Articles%20Analysis", "http%3A%2F%2F107.170.70.175%3A8890%2Fsparql", "http%3A%2F%2Fnewspaper.org%2Farticles_2007", "rdf", options) : helperMissing.call(depth0, "link-to", "datasource", "Newspaper%20Articles%20Analysis", "http%3A%2F%2F107.170.70.175%3A8890%2Fsparql", "http%3A%2F%2Fnewspaper.org%2Farticles_2007", "rdf", options));
+  stack2 = ((stack1 = helpers['link-to'] || depth0['link-to']),stack1 ? stack1.call(depth0, "datasource", "Newspaper%20Articles%20Analysis", "http%3A%2F%2Flocalhost%3A8890%2Fsparql", "http%3A%2F%2Fnewspaper.org%2Farticles_2007", "rdf", options) : helperMissing.call(depth0, "link-to", "datasource", "Newspaper%20Articles%20Analysis", "http%3A%2F%2Flocalhost%3A8890%2Fsparql", "http%3A%2F%2Fnewspaper.org%2Farticles_2007", "rdf", options));
   if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
   data.buffer.push("\n        </li>\n        <li>\n            ");
   hashTypes = {};
   hashContexts = {};
   options = {hash:{},inverse:self.noop,fn:self.program(37, program37, data),contexts:[depth0,depth0,depth0,depth0,depth0],types:["STRING","STRING","STRING","STRING","STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
-  stack2 = ((stack1 = helpers['link-to'] || depth0['link-to']),stack1 ? stack1.call(depth0, "datasource", "Bundestagswahlstatistik", "http%3A%2F%2F107.170.70.175%3A8890%2Fsparql", "http%3A%2F%2FBundestagswahlstatistik", "rdf", options) : helperMissing.call(depth0, "link-to", "datasource", "Bundestagswahlstatistik", "http%3A%2F%2F107.170.70.175%3A8890%2Fsparql", "http%3A%2F%2FBundestagswahlstatistik", "rdf", options));
+  stack2 = ((stack1 = helpers['link-to'] || depth0['link-to']),stack1 ? stack1.call(depth0, "datasource", "Bundestagswahlstatistik", "http%3A%2F%2Flocalhost%3A8890%2Fsparql", "http%3A%2F%2FBundestagswahlstatistik", "rdf", options) : helperMissing.call(depth0, "link-to", "datasource", "Bundestagswahlstatistik", "http%3A%2F%2Flocalhost%3A8890%2Fsparql", "http%3A%2F%2FBundestagswahlstatistik", "rdf", options));
   if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
   data.buffer.push("\n        </li>\n         <li>\n            ");
   hashTypes = {};
   hashContexts = {};
   options = {hash:{},inverse:self.noop,fn:self.program(39, program39, data),contexts:[depth0,depth0,depth0,depth0,depth0],types:["STRING","STRING","STRING","STRING","STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
-  stack2 = ((stack1 = helpers['link-to'] || depth0['link-to']),stack1 ? stack1.call(depth0, "datasource", "Health Data.gov - Hospital Inpatient Discharges by Facility", "http%3A%2F%2F107.170.70.175%3A8890%2Fsparql", "http%3A%2F%2FHealthData.govHospitalInpatientDischargesbyFacility", "rdf", options) : helperMissing.call(depth0, "link-to", "datasource", "Health Data.gov - Hospital Inpatient Discharges by Facility", "http%3A%2F%2F107.170.70.175%3A8890%2Fsparql", "http%3A%2F%2FHealthData.govHospitalInpatientDischargesbyFacility", "rdf", options));
+  stack2 = ((stack1 = helpers['link-to'] || depth0['link-to']),stack1 ? stack1.call(depth0, "datasource", "Health Data.gov - Hospital Inpatient Discharges by Facility", "http%3A%2F%2Flocalhost%3A8890%2Fsparql", "http%3A%2F%2FHealthData.govHospitalInpatientDischargesbyFacility", "rdf", options) : helperMissing.call(depth0, "link-to", "datasource", "Health Data.gov - Hospital Inpatient Discharges by Facility", "http%3A%2F%2Flocalhost%3A8890%2Fsparql", "http%3A%2F%2FHealthData.govHospitalInpatientDischargesbyFacility", "rdf", options));
+  if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
+  data.buffer.push("\n        </li>\n         <li>\n            ");
+  hashTypes = {};
+  hashContexts = {};
+  options = {hash:{},inverse:self.noop,fn:self.program(41, program41, data),contexts:[depth0,depth0,depth0,depth0,depth0],types:["STRING","STRING","STRING","STRING","STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  stack2 = ((stack1 = helpers['link-to'] || depth0['link-to']),stack1 ? stack1.call(depth0, "datasource", "TS1", "http%3A%2F%2Flocalhost%3A8890%2Fsparql", "http%3A//www.linda-project.org/TS1_LinearRegression_Result_Original", "rdf", options) : helperMissing.call(depth0, "link-to", "datasource", "TS1", "http%3A%2F%2Flocalhost%3A8890%2Fsparql", "http%3A//www.linda-project.org/TS1_LinearRegression_Result_Original", "rdf", options));
   if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
   data.buffer.push("\n        </li>\n    </ul>\n</div>");
   return buffer;
@@ -453,27 +444,34 @@ function program39(depth0,data) {
 Ember.TEMPLATES["propertiesList"] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
 this.compilerInfo = [4,'>= 1.0.0'];
 helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
-  var stack1, hashTypes, hashContexts, escapeExpression=this.escapeExpression, self=this, helperMissing=helpers.helperMissing;
+  var buffer = '', stack1, hashTypes, hashContexts, escapeExpression=this.escapeExpression, helperMissing=helpers.helperMissing, self=this;
 
 function program1(depth0,data) {
   
-  var buffer = '', stack1, hashTypes, hashContexts;
-  data.buffer.push("\n    <li>\n       <div class=\"category\"> ");
+  var buffer = '', stack1, stack2, hashContexts, hashTypes, options;
+  data.buffer.push("\n    <li>\n       <div ");
+  hashContexts = {'class': depth0};
+  hashTypes = {'class': "STRING"};
+  options = {hash:{
+    'class': ("category.name")
+  },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  data.buffer.push(escapeExpression(((stack1 = helpers['bind-attr'] || depth0['bind-attr']),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "bind-attr", options))));
+  data.buffer.push("> ");
   hashTypes = {};
   hashContexts = {};
-  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "category.name", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "category.datatype", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
   data.buffer.push(" </div>\n        <ul class=\"categorized-property\">\n            ");
   hashTypes = {};
   hashContexts = {};
-  stack1 = helpers.each.call(depth0, "item", "in", "category.items", {hash:{},inverse:self.noop,fn:self.program(2, program2, data),contexts:[depth0,depth0,depth0],types:["ID","ID","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
-  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  stack2 = helpers.each.call(depth0, "item", "in", "category.items", {hash:{},inverse:self.noop,fn:self.program(2, program2, data),contexts:[depth0,depth0,depth0],types:["ID","ID","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
   data.buffer.push("\n        </ul>\n    </li> \n");
   return buffer;
   }
 function program2(depth0,data) {
   
   var buffer = '', stack1, stack2, hashContexts, hashTypes, options;
-  data.buffer.push("\n                ");
+  data.buffer.push("  \n                ");
   hashContexts = {'data': depth0,'tagName': depth0};
   hashTypes = {'data': "ID",'tagName': "STRING"};
   options = {hash:{
@@ -487,17 +485,24 @@ function program2(depth0,data) {
   }
 function program3(depth0,data) {
   
-  var buffer = '', stack1, hashTypes, hashContexts;
-  data.buffer.push("\n                    <div class=\"categorized-property-parents\">\n                    ");
+  var buffer = '', stack1, stack2, hashContexts, hashTypes, options;
+  data.buffer.push("\n                   <div ");
+  hashContexts = {'class': depth0};
+  hashTypes = {'class': "STRING"};
+  options = {hash:{
+    'class': ("item.datatype")
+  },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  data.buffer.push(escapeExpression(((stack1 = helpers['bind-attr'] || depth0['bind-attr']),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "bind-attr", options))));
+  data.buffer.push(">\n                    <div class=\"categorized-property-parents\">\n                    ");
   hashTypes = {};
   hashContexts = {};
-  stack1 = helpers.each.call(depth0, "p", "in", "item.parent", {hash:{},inverse:self.noop,fn:self.program(4, program4, data),contexts:[depth0,depth0,depth0],types:["ID","ID","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
-  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  stack2 = helpers.each.call(depth0, "p", "in", "item.parent", {hash:{},inverse:self.noop,fn:self.program(4, program4, data),contexts:[depth0,depth0,depth0],types:["ID","ID","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
   data.buffer.push("\n                    </div>\n                    <div class=\"categorized-property-name\">\n                        ");
   hashTypes = {};
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "view.data.label", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
-  data.buffer.push("\n                    </div>\n                ");
+  data.buffer.push("\n                    </div>\n                  </div> \n                ");
   return buffer;
   }
 function program4(depth0,data) {
@@ -515,7 +520,8 @@ function program4(depth0,data) {
   hashContexts = {};
   stack1 = helpers.each.call(depth0, "category", "in", "view.categories", {hash:{},inverse:self.noop,fn:self.program(1, program1, data),contexts:[depth0,depth0,depth0],types:["ID","ID","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
-  else { data.buffer.push(''); }
+  data.buffer.push("\n");
+  return buffer;
   
 });
 
@@ -549,20 +555,21 @@ helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
   var buffer = '', stack1, hashContexts, hashTypes, options, helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression;
 
 
-  data.buffer.push("<div>\n    <div class=\"consumption-title\">    \n        <h7> Save Settings </h7>\n    </div>\n    <div class=\"consumption-content\">\n        ");
-  hashContexts = {'value': depth0,'placeholder': depth0,'size': depth0};
-  hashTypes = {'value': "ID",'placeholder': "STRING",'size': "STRING"};
+  data.buffer.push("<div>\n    <div class=\"consumption-title\">    \n        ");
+  hashContexts = {'value': depth0,'placeholder': depth0,'size': depth0,'class': depth0};
+  hashTypes = {'value': "ID",'placeholder': "STRING",'size': "STRING",'class': "STRING"};
   options = {hash:{
     'value': ("controller.configName"),
-    'placeholder': ("Enter name."),
-    'size': ("15")
+    'placeholder': ("Save settings"),
+    'size': ("15"),
+    'class': ("form-control")
   },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
   data.buffer.push(escapeExpression(((stack1 = helpers.input || depth0.input),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "input", options))));
-  data.buffer.push(" <a ");
+  data.buffer.push("    \n         <button type=\"button\" class=\"btn btn-default btn-xs\" ");
   hashTypes = {};
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers.action.call(depth0, "save", {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
-  data.buffer.push(" class=\"postfix\"> <i class=\"fi-save save-visualization  consumption-icons\"></i></a>     \n    </div>\n</div>");
+  data.buffer.push(">\n            <span class=\"glyphicon glyphicon-save\" aria-hidden=\"true\"></span>  Save\n        </button>\n    </div>    \n</div>");
   return buffer;
   
 });
@@ -660,7 +667,7 @@ function program6(depth0,data) {
   return buffer;
   }
 
-  data.buffer.push("<div class=\"col-xs-6 area-box\">\n    ");
+  data.buffer.push("<div class=\"area-box\">\n    ");
   hashContexts = {'inArea': depth0,'metadata': depth0,'label': depth0,'maxNumItems': depth0};
   hashTypes = {'inArea': "ID",'metadata': "ID",'label': "ID",'maxNumItems': "ID"};
   options = {hash:{
@@ -712,14 +719,16 @@ helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "view.label", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
   data.buffer.push("</span> ");
-  hashContexts = {'type': depth0,'value': depth0,'on': depth0};
-  hashTypes = {'type': "STRING",'value': "ID",'on': "STRING"};
+  hashContexts = {'type': depth0,'value': depth0,'on': depth0,'class': depth0};
+  hashTypes = {'type': "STRING",'value': "ID",'on': "STRING",'class': "STRING"};
   options = {hash:{
     'type': ("text"),
     'value': ("view.content"),
-    'on': ("enter")
+    'on': ("enter"),
+    'class': ("form-control")
   },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
   data.buffer.push(escapeExpression(((stack1 = helpers.input || depth0.input),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "input", options))));
+  data.buffer.push("\n");
   return buffer;
   
 });
@@ -742,7 +751,7 @@ helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
     'checked': ("view.content")
   },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
   data.buffer.push(escapeExpression(((stack1 = helpers.input || depth0.input),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "input", options))));
-  data.buffer.push("\n");
+  data.buffer.push("\n\n");
   return buffer;
   
 });
@@ -758,15 +767,16 @@ helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "view.label", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
   data.buffer.push("</span>  ");
-  hashContexts = {'type': depth0,'value': depth0,'on': depth0};
-  hashTypes = {'type': "STRING",'value': "ID",'on': "STRING"};
+  hashContexts = {'type': depth0,'value': depth0,'on': depth0,'class': depth0};
+  hashTypes = {'type': "STRING",'value': "ID",'on': "STRING",'class': "STRING"};
   options = {hash:{
     'type': ("text"),
     'value': ("view.content"),
-    'on': ("key-press")
+    'on': ("key-press"),
+    'class': ("form-control Number")
   },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
   data.buffer.push(escapeExpression(((stack1 = helpers.input || depth0.input),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "input", options))));
-  data.buffer.push("\n");
+  data.buffer.push("\n\n");
   return buffer;
   
 });
@@ -774,33 +784,67 @@ helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
 Ember.TEMPLATES["visualization"] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
 this.compilerInfo = [4,'>= 1.0.0'];
 helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
-  var buffer = '', stack1, hashContexts, hashTypes, options, escapeExpression=this.escapeExpression, helperMissing=helpers.helperMissing;
+  var buffer = '', stack1, stack2, hashContexts, hashTypes, options, helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression, self=this;
 
+function program1(depth0,data) {
+  
+  
+  data.buffer.push("\n                    <span class=\"glyphicon glyphicon-resize-full\" aria-hidden=\"true\"></span> \n                    ");
+  }
 
-  data.buffer.push("<div class=\"row box\">\n    <div class=\"large-5 medium-3 columns\">\n        <!-- Visualization Selection -->\n        <div class=\"row inner_box\">\n            <div class=\"inner_title_box\">\n                <h7>Select Visualization</h7>\n            </div>\n            <div class=\"sliderWrapper\">\n                ");
+function program3(depth0,data) {
+  
+  
+  data.buffer.push("\n                    <span class=\"glyphicon glyphicon-resize-small\" aria-hidden=\"true\"></span> \n                    ");
+  }
+
+  data.buffer.push("<div class=\"row\" id=\"v_container\">\n    <div ");
+  hashContexts = {'class': depth0};
+  hashTypes = {'class': "STRING"};
+  options = {hash:{
+    'class': ("isToggled:col-md-5:col-md-0")
+  },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  data.buffer.push(escapeExpression(((stack1 = helpers['bind-attr'] || depth0['bind-attr']),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "bind-attr", options))));
+  data.buffer.push(">\n        <!-- Visualization Selection -->\n        <div class=\"panel panel-default\">\n            <div class=\"panel-heading\">\n                <h1 class=\"panel-title pull-left\">Select Visualization</h1>\n            </div>\n            <div class=\"panel-body\">\n                <div class=\"sliderWrapper\">\n                    ");
   hashContexts = {'slides': depth0};
   hashTypes = {'slides': "ID"};
   data.buffer.push(escapeExpression(helpers.view.call(depth0, "App.SlideShowView", {hash:{
     'slides': ("controller.model")
   },contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
-  data.buffer.push("\n            </div>\n        </div>\n\n        <!-- Visualization Configuration - Left: Tree with data source; Right: dimension mapping -->\n        <div class=\"row inner_box\">\n            <div class=\"inner_title_box\">\n                <h7>Configure Visualization</h7>  <span class=\"visualize\"><a ");
-  hashTypes = {};
-  hashContexts = {};
-  data.buffer.push(escapeExpression(helpers.action.call(depth0, "select", {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
-  data.buffer.push(">Select Data</a></span>\n            </div>\n            <div class=\"row left-collapse\">\n                <div class=\"large-5 medium-6 columns properties-list-content\">\n                    <div class=\"data_selection_title_box\">\n                        <h7>Selected Data</h7>\n                    </div>\n                    ");
+  data.buffer.push("\n                </div>\n            </div>\n        </div>\n\n        <!-- Visualization Configuration - Left: Tree with data source; Right: dimension mapping -->\n        <div class=\"panel panel-default\">\n            <div class=\"panel-heading\">\n                <h1 class=\"panel-title pull-left\">Configure Visualization</h1>\n            </div>\n            <div class=\"panel-body\">\n                <div class=\"row\">\n                    <div class=\"col-md-6\">\n                        <div class=\"panel panel-default\">\n                            <div class=\"panel-heading\">\n                                <h1 class=\"panel-title pull-left\">Selected Data</h1>\n                            </div>\n                            <div class=\"panel-body\">\n                                ");
   hashContexts = {'categories': depth0};
   hashTypes = {'categories': "ID"};
   data.buffer.push(escapeExpression(helpers.view.call(depth0, "App.PropertiesListView", {hash:{
     'categories': ("controller.categorizedProperties")
   },contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
-  data.buffer.push("\n                </div>\n                <div class=\"large-7 medium-6 columns dimensions\">\n                    <div class=\"dimensions_title_box\">\n                        <h7>Visualization Dimensions</h7>\n                    </div>\n                    <div>\n                        ");
+  data.buffer.push("\n                            </div>                           \n                        </div> \n                    </div>\n                    <div class=\"col-md-6\">\n                        <div class=\"panel panel-default\">\n                            <div class=\"panel-heading\">\n                                <h1 class=\"panel-title pull-left\">Visualization Options</h1>\n                            </div>\n                            <div class=\"panel-body\">\n                                ");
   hashContexts = {'options': depth0,'config': depth0};
   hashTypes = {'options': "ID",'config': "ID"};
   data.buffer.push(escapeExpression(helpers.view.call(depth0, "App.VisualizationOptionsView", {hash:{
     'options': ("controller.structureOptions"),
     'config': ("controller.visualizationConfiguration")
   },contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
-  data.buffer.push("\n                    </div>\n                </div>\n            </div>\n        </div>\n        \n    </div>\n\n    <div class=\"large-7 medium-9 columns\">\n        <div class=\"inner_box\">\n            <!-- Visualization -->\n            <div class=\"row inner_box_visualization\">\n                ");
+  data.buffer.push("\n                            </div> \n\n                        </div>\n                    </div>\n                </div>\n            </div>\n            <div class=\"panel-footer clearfix\">\n                <button type=\"button\" class=\"btn btn-default pull-right\" ");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "select", {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push(">\n                    <span class=\"glyphicon glyphicon-stats\" aria-hidden=\"true\"></span>   Select Data\n                </button>\n            </div>\n        </div>\n\n    </div>\n\n    <div ");
+  hashContexts = {'class': depth0};
+  hashTypes = {'class': "STRING"};
+  options = {hash:{
+    'class': ("isToggled:col-md-7:col-md-12")
+  },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  data.buffer.push(escapeExpression(((stack1 = helpers['bind-attr'] || depth0['bind-attr']),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "bind-attr", options))));
+  data.buffer.push(">\n        <!-- Visualization -->\n        <div class=\"panel panel-default\">\n            <div class=\"panel-heading\">\n                <h1 class=\"panel-title pull-left\">Configured Visualization</h1>\n                <button type=\"button\" class=\"btn btn-default btn-xs pull-right\" ");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "toggle", {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push(">\n                    ");
+  hashTypes = {};
+  hashContexts = {};
+  stack2 = helpers['if'].call(depth0, "isToggled", {hash:{},inverse:self.program(3, program3, data),fn:self.program(1, program1, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
+  data.buffer.push("\n                </button>\n            </div>\n            <div class=\"panel-body\">\n                ");
   hashContexts = {'id': depth0,'visualization': depth0,'configurationArray': depth0};
   hashTypes = {'id': "STRING",'visualization': "ID",'configurationArray': "ID"};
   data.buffer.push(escapeExpression(helpers.view.call(depth0, "App.DrawVisualizationView", {hash:{
@@ -808,24 +852,24 @@ helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
     'visualization': ("controller.drawnVisualization"),
     'configurationArray': ("controller.visualizationConfiguration")
   },contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
-  data.buffer.push("\n            </div>\n               \n            <div class=\"row layout_option_box\">\n                <div class=\"large-4 medium-4 columns\">\n                    <!-- Visualization Consumption -->                   \n                     <div class=\"row inner_box\">\n                    ");
+  data.buffer.push("            \n            </div>\n            <div class=\"panel-footer clearfix\">\n                <div class=\"row\">\n                    <div class=\"col-md-6\">\n                        <div class=\"row\">\n                            ");
   hashTypes = {};
   hashContexts = {};
   options = {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
   data.buffer.push(escapeExpression(((stack1 = helpers.partial || depth0.partial),stack1 ? stack1.call(depth0, "export", options) : helperMissing.call(depth0, "partial", "export", options))));
-  data.buffer.push("\n                </div>\n                     <div class=\"row inner_box\">\n                    ");
+  data.buffer.push("\n                        </div>\n                        <div class=\"row\">\n                            ");
   hashTypes = {};
   hashContexts = {};
   options = {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
   data.buffer.push(escapeExpression(((stack1 = helpers.partial || depth0.partial),stack1 ? stack1.call(depth0, "save", options) : helperMissing.call(depth0, "partial", "save", options))));
-  data.buffer.push("\n                </div>\n                </div>\n\n                <div class=\"large-8 medium-8 columns inner_box\"> \n                    <!-- Visualization Customization -->\n                    <div class=\"inner_title_box\">\n                        <h7>Visualization Options</h7>\n            </div>\n                    <div>\n                        ");
+  data.buffer.push("\n                        </div>\n                    </div>\n                \n                <div class=\"col-md-6\">\n                    ");
   hashContexts = {'options': depth0,'config': depth0};
   hashTypes = {'options': "ID",'config': "ID"};
   data.buffer.push(escapeExpression(helpers.view.call(depth0, "App.VisualizationOptionsView", {hash:{
     'options': ("controller.layoutOptions"),
     'config': ("controller.visualizationConfiguration")
   },contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
-  data.buffer.push("\n        </div>\n    </div>\n\n            </div>\n\n\n\n        </div>\n\n    </div>\n</div>\n");
+  data.buffer.push("\n                </div>\n                    <div class=\"col-md-6\"></div>\n            </div>\n        </div>\n    </div>\n</div>\n</div>\n");
   return buffer;
   
 });

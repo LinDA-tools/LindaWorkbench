@@ -1,5 +1,6 @@
 App.DatasourceController = Ember.ObjectController.extend({
-    treeContent: function () {
+    isToggled: true,
+    treeContent: function() {
         console.log('DATASOURCE CONTROLLER');
         // console.log(this.get('model'));
 
@@ -24,22 +25,30 @@ App.DatasourceController = Ember.ObjectController.extend({
     previousSelection: [],
     dataSelection: [],
     selectedDatasource: null,
-    resetSelection: function () {
+    resetSelection: function() {
         this.get('dataSelection').length = 0;
     }.observes('model'),
     actions: {
-        visualize: function () {
+        visualize: function() {
             var self = this;
             var selection = this.get('dataSelection');
             var datasource = this.get('selectedDatasource');
             var selected = treeselection_data.getDataSelection(selection, datasource);
             var dataselection = this.store.createRecord('dataselection', selected);
-
-            dataselection.save().then(function (responseDataselection) {
+console.log('VISUALIZE');
+            dataselection.save().then(function(responseDataselection) {
                 console.log("SAVED DATA SELECTION. TRANSITION TO VISUALIZATION ROUTE .....");
                 console.dir(responseDataselection);
                 self.transitionToRoute('visualization', 'dataselection', responseDataselection.id);
             });
+        },
+        toggle: function() {
+            var toggled = this.get('isToggled');
+            if (toggled) {
+                this.set('isToggled', false);
+            } else {
+                this.set('isToggled', true);
+            }
         }
     }
 });

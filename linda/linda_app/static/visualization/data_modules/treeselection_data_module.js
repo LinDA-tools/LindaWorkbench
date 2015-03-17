@@ -112,9 +112,9 @@ var treeselection_data = function() {
                 title: label,
                 key: id,
                 lazy: grandchildren,
-                icon: true,
-                iconclass: getCategory(type),
+                extraClasses: getCSSClass(type),
                 type: type,
+                datatype: getDataType(type),
                 role: role,
                 special: special,
                 hideCheckbox: hideCheckbox(type),
@@ -149,14 +149,16 @@ var treeselection_data = function() {
 
         for (var i = 0; i < selection.length; i++) {
             var record = selection[i];
-
+            console.log('WERSG SGSD ')
+            console.dir(record.datatype);
             dataSelection['propertyInfos'].push({
                 key: record.key,
                 label: record.label,
                 parent: record.parent,
                 role: record.role,
                 special: record.special,
-                type: record.type
+                type: record.type,
+                datatype: record.datatype
             });
         }
 
@@ -166,22 +168,38 @@ var treeselection_data = function() {
         return dataSelection;
     }
 
-    function getCategory(record) {
+    function getCSSClass(record) {
         switch (record) {
             case "Quantitative":
-                return 'tree-icon-quantitative';
+                return 'treenode-number-label';
             case "Interval":
-                return 'tree-icon-interval';
+                return 'treenode-date-label';
             case "Categorical":
             case "Nominal":
-                return 'tree-icon-categorical';
+                return 'treenode-text-label';
             case "Class":
-                return 'tree-icon-class';
+                return 'treenode-class-label';
             case "Resource":
             case "Nothing":
-                return 'tree-icon-resource';
+                return 'treenode-resource-label';
         }
-        console.error("Unknown category of record  '" + record + "'");
+        console.error("Unknown type of record  '" + record + "'");
+        return null;
+    }
+    
+    function getDataType(record) {
+        switch (record) {
+            case "Quantitative":
+                return 'Number';
+            case "Interval":
+                return 'Date';
+            case "Categorical":
+            case "Nominal":
+			case "Class":
+			case "Resource":
+                return 'String';            
+        }
+        console.error("Unknown data type of record  '" + record + "'");
         return null;
     }
 

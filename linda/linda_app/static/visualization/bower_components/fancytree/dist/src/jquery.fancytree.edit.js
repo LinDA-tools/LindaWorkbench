@@ -4,13 +4,13 @@
  * Make node titles editable.
  * (Extension module for jquery.fancytree.js: https://github.com/mar10/fancytree/)
  *
- * Copyright (c) 2014, Martin Wendt (http://wwWendt.de)
+ * Copyright (c) 2008-2015, Martin Wendt (http://wwWendt.de)
  *
  * Released under the MIT license
  * https://github.com/mar10/fancytree/wiki/LicenseInfo
  *
- * @version 2.7.0
- * @date 2014-12-21T15:57
+ * @version 2.8.1
+ * @date 2015-03-01T20:28
  */
 
 ;(function($, window, document, undefined) {
@@ -191,7 +191,7 @@ $.ui.fancytree._FancytreeNodeClass.prototype.editEnd = function(applyChanges, _e
 */
 $.ui.fancytree._FancytreeNodeClass.prototype.editCreateNode = function(mode, init){
 	var newNode,
-		that = this;
+		self = this;
 
 	mode = mode || "child";
 	if( init == null ) {
@@ -204,15 +204,16 @@ $.ui.fancytree._FancytreeNodeClass.prototype.editCreateNode = function(mode, ini
 	// Make sure node is expanded (and loaded) in 'child' mode
 	if( mode === "child" && !this.isExpanded() && this.hasChildren() !== false ) {
 		this.setExpanded().done(function(){
-			that.editCreateNode(mode, init);
+			self.editCreateNode(mode, init);
 		});
 		return;
 	}
 	newNode = this.addNode(init, mode);
-	newNode.makeVisible();
-	$(newNode.span).addClass("fancytree-edit-new");
-	this.tree.ext.edit.relatedNode = this;
-	newNode.editStart();
+	newNode.makeVisible(/*{noAnimation: true}*/).done(function(){
+		$(newNode.span).addClass("fancytree-edit-new");
+		self.tree.ext.edit.relatedNode = self;
+		newNode.editStart();
+	});
 };
 
 
@@ -266,7 +267,7 @@ $.ui.fancytree.registerExtension({
 	currentNode: null,
 
 	treeInit: function(ctx){
-		this._super(ctx);
+		this._superApply(arguments);
 		this.$container.addClass("fancytree-ext-edit");
 	},
 	nodeClick: function(ctx) {
@@ -276,14 +277,14 @@ $.ui.fancytree.registerExtension({
 				return false;
 			}
 		}
-		return this._super(ctx);
+		return this._superApply(arguments);
 	},
 	nodeDblclick: function(ctx) {
 		if( $.inArray("dblclick", ctx.options.edit.triggerStart) >= 0 ){
 			ctx.node.editStart();
 			return false;
 		}
-		return this._super(ctx);
+		return this._superApply(arguments);
 	},
 	nodeKeydown: function(ctx) {
 		switch( ctx.originalEvent.which ) {
@@ -300,7 +301,7 @@ $.ui.fancytree.registerExtension({
 			}
 			break;
 		}
-		return this._super(ctx);
+		return this._superApply(arguments);
 	}
 });
 }(jQuery, window, document));
