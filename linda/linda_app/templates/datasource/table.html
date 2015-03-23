@@ -27,11 +27,7 @@
 
             </td>
             {% if datasource.is_public %}
-            <td>{% trans "Remote" %}
-                {% if datasource.is_public %}
-                    <span class="sparql-version">SPARQL {{datasource|sparql_version}}</span>
-                {% endif %}
-            </td>
+            <td>{% trans "Remote" %}</td>
             <td>{{datasource.uri}}</td>
             {% elif datasource.rss_info %}
                 <td>{% trans "RSS Feed" %}</td>
