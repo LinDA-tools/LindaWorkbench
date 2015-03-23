@@ -4,6 +4,7 @@ from django.core import serializers
 from django.core.paginator import Paginator, EmptyPage
 from django.http import HttpResponse, HttpResponseNotFound, Http404, HttpResponseForbidden
 from django.shortcuts import redirect, render, get_object_or_404
+from unidecode import unidecode
 from django.test._doctest import _OutputRedirectingPdb
 from django.utils.http import urlquote
 
@@ -782,7 +783,7 @@ def datasourceCreate(request):
                 return render(request, 'datasource/form.html', params)
 
             # find the slug
-            sname = slugify(request.POST.get("title"))
+            sname = slugify(unidecode(request.POST.get("title")))
 
             # check for RSS
             if request.POST.get("is_rss"):
@@ -823,7 +824,7 @@ def datasourceReplace(request, name):
             return render(request, 'datasource/replace_remote.html', params)
 
         datasource.title = request.POST.get("title")
-        datasource.name = slugify(datasource.title)
+        datasource.name = slugify(unidecode(datasource.title))
 
         if not request.POST.get("endpoint"):  # endpoint is obligatory
             params["error"] = "A public sparql enpoint must be specified"
@@ -1244,7 +1245,7 @@ def api_datasource_create(request):
             results['message'] = "Datasource already exists."
         else:
             # find the slug
-            sname = slugify(request.POST.get("title"))
+            sname = slugify(unidecode(request.POST.get("title")))
 
             # get rdf type
             if request.POST.get("format"):
