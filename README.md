@@ -114,7 +114,11 @@ Install pip:
   ```
   
 Install project requirements
-Go to the cloned LindaWorkbench directory and execute
+First install some necessary libraries
+  ```
+  apt-get install libxml2-dev libxslt-dev python-dev lib32z1-dev
+  ```
+Then go to the cloned LindaWorkbench directory and execute
   ```
   sudo pip install -r requirements.txt
   ```
@@ -145,9 +149,16 @@ Create administrator for the LinDA Workbench:
   sudo python manage.py createsuperuser
   ```
 ##Deploy
-In the "linda" directory 
-In order to access the LinDA workbench locally (via http://localhost:8000)
+In the "linda" directory:
+In order to automatically update rss feeds run the following command as a deamon:
   ```
-  sudo python manage.py runserver
+  nohup python manage.py update_datasources &
   ```
-
+To monitor the performance of remote SPARQL endpoints run the following command as a deamon:
+  ```
+  nohup python manage.py monitor_endpoints &
+  ```
+Finally, to start the LinDA workbench development server locally (via http://localhost:8000) run:
+  ```
+  python manage.py runserver
+  ```
