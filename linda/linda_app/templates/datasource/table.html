@@ -18,6 +18,8 @@
             <td>
                 {% if datasource.is_public %}
                     <img src="/static/images/public-endpoint.png" />
+                {% elif datasource.rss_info %}
+                    <img src="/static/images/rss.png" />
                 {% else %}
                     <img src="/static/images/rdf.png"/>
                 {% endif %}
@@ -31,12 +33,21 @@
                 {% endif %}
             </td>
             <td>{{datasource.uri}}</td>
+            {% elif datasource.rss_info %}
+                <td>{% trans "RSS Feed" %}</td>
+                <td>{{datasource.rss_info.url}}</td>
             {% else %}
-            <td>{% trans "Local" %}</td>
-            <td></td>
+                <td>{% trans "Local" %}</td>
+                <td></td>
             {% endif %}
             <td>{{datasource.createdOn}}</td>
-            <td>{{datasource.updatedOn}}</td>
+            <td>
+                {% if datasource.rss_info %}
+                    {{datasource.rss_info.lastDataFetchOn}}
+                {% else %}
+                    {{datasource.updatedOn}}
+                {% endif %}
+            </td>
         </tr>
         {% endfor %}
         </tbody>

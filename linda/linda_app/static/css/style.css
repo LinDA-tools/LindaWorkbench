@@ -555,6 +555,7 @@ form input[type="submit"] {
     padding: 5px;
     vertical-align: top;
     display: inline-block;
+    text-align: center;
 }
 
 .recent-list > p {
@@ -567,6 +568,11 @@ form input[type="submit"] {
 
 .recent-list .datasource.private .icon {
     background: url('/static/images/rdf.png')  center center no-repeat;
+}
+
+.recent-list .datasource.rss .icon {
+    background: url('/static/images/rss.png')  center center no-repeat;
+    background-size: auto 40%;
 }
 
 .recent-list h4 {
