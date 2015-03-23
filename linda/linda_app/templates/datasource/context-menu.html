@@ -34,11 +34,7 @@ $(function(){ //private datasource context menu
             url = "/query-builder?dt_id=" + id;
         else
         if (key == "Edit")
-            if (datasource_is_public[id]) {
-                url = "/datasource/" + id + "/replace/";
-            } else {
-                url = "/datasource/" + id + "/replace/rdf/";
-            }
+            url = "/datasource/" + id + "/replace/";
         else
         if (key == "Delete")
             url = "/datasource/" + id + "/delete/";

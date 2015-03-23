@@ -26,7 +26,7 @@
 
         <div class="endpoint-container" style="display: none;">
             <label for="title">{% trans "Title"%}:</label>
-            <input type="text" name="title" {%if datasource%}value="{{datasource.title}}"{% endif %}/>
+            <input type="text" name="title" {%if datasource%}value="{{datasource.title}}"{% endif %}/><br />
 
             <label for="endpoint">{% trans "Endpoint uri"%}:</label>
             <input type="url" name="endpoint" placeholder="http://www.example.com/sparql" {%if datasource and datasource.is_public%}value="{{datasource.uri}}"{% endif %}/>

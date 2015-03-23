@@ -2,12 +2,12 @@
 {% load url from future %}
 {% load i18n thumbnail2 %}
 {% load app_filters %}
-{% block title %}{% if action == "create"%}Create a new datasource{% else %}Replace an existing datasource{% endif%} | LinDA{% endblock %}
+{% block title %}{% if action == "create"%}Create a new datasource{% else %}Edit an existing datasource{% endif%} | LinDA{% endblock %}
 {% block bodyclass %}datasource-create{% endblock %}
 
 {% block content %}
 <div class="main">
-    <h1 class="page-title inline">{% trans "Replace a remote data source" %}</h1>
+    <h1 class="page-title inline">{% trans "Edit a remote data source" %}</h1>
 
     <form class="form datasource-create-form" method="post" action="." enctype="multipart/form-data">{% csrf_token %}
 
@@ -19,8 +19,12 @@
             <label for="title">{% trans "Title"%}:</label>
             <input type="text" name="title" {%if datasource%}value="{{datasource.title}}"{% endif %}/>
             <br/>
-            <label for="endpoint">{% trans "Endpoint uri"%}:</label>
-            <input type="url" name="endpoint" placeholder="http://www.example.com/sparql" {%if datasource and datasource.is_public%}value="{{datasource.uri}}"{% endif %}/>
+            <label for="endpoint">{% if datasource.rss_info %}{% trans "RSS feed url"%}{% else %}{% trans "Endpoint uri"%}{% endif %}:</label>
+            <input type="url" name="endpoint" placeholder="http://www.example.com/sparql"
+                   {% if datasource.rss_info %}value="{{datasource.rss_info.url}}"
+                   {% elif datasource and datasource.is_public%}value="{{datasource.uri}}"
+                   {% endif %}
+                    />
         </div>
 
         <div class="submit-box">

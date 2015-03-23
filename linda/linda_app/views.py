@@ -811,14 +811,13 @@ def datasourceReplace(request, name):
 
     datasource = DatasourceDescription.objects.filter(name=name)[0]
 
-    if not datasource.is_public:
-        return redirect("/datasource/" + name + "/replace/" + request.POST.get("datatype"))
+    # private datasource
+    if (not datasource.is_public) and (not datasource.rss_info):
+        return redirect("/datasource/" + name + "/replace/rdf/")
 
     params = {'datasource': datasource}
 
     if request.POST:
-        datasource.is_public = True
-
         if not request.POST.get("title"):  # title is obligatory
             params["error"] = "A datasource title must be specified"
             return render(request, 'datasource/replace_remote.html', params)
@@ -838,8 +837,15 @@ def datasourceReplace(request, name):
             params["error"] = "Invalid sparql enpoint (url does not exist) - " + e
             return render(request, 'datasource/replace_remote.html', params)
 
-        datasource.uri = request.POST.get("endpoint")
-        datasource.save()  # save changed object to the database
+        if datasource.is_public:
+            # endpoint
+            datasource.uri = request.POST.get("endpoint")
+            datasource.save()  # save changed object to the database
+        else:
+            # rss feed
+            datasource.rss_info.url = request.POST.get("endpoint")
+            datasource.rss_info.save()  # save changed object to the database
+            datasource.update_rss()  # update the rss contents
 
         return redirect("/datasources/")
     else:
