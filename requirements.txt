@@ -1,3 +1,4 @@
+lxml
 rdflib
 rdfextras
 rdflib-sqlite

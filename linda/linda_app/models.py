@@ -1,4 +1,5 @@
 from datetime import datetime
+from time import timezone
 import urllib
 from django.db import models
 from django.contrib.auth.models import User
@@ -6,6 +7,8 @@ from django.db.models.signals import post_save
 from django.template.defaultfilters import slugify, random
 from rdflib import Graph, OWL, RDFS
 from rdflib.util import guess_format
+import requests
+from lxml import etree as et
 from query_designer.models import Design
 
 import re
@@ -391,13 +394,54 @@ class VocabularyComments(models.Model):
     timePosted = models.DateTimeField(blank=True, null=True)  # Comment timestamp
 
 
+class RSSInfo(models.Model):
+    url = models.URLField(max_length=2048, blank=False, null=False)  # RSS url
+    lastDataFetchOn = models.DateTimeField(blank=False, null=False, default=datetime.now)  # datasource creation date
+    interval = models.IntegerField(default=3600)  # update every RSS feed every hour by default
+
+
+# transform rss to rdf
+def rss2rdf(rss_url):
+    # create the parser
+    parser = et.XMLParser(ns_clean=True, recover=True, encoding='utf-8')
+
+    # parse the original RSS XML document
+    rss_str = requests.get(rss_url).text.encode('utf-8')
+    rss = et.fromstring(rss_str, parser=parser)
+
+    if rss.tag == 'rdf':
+        # already rss 1.0
+        return rss_str
+    elif rss.tag == 'feed':
+        # atom to rss 2.0
+        xslt_str = '<?xml version="1.0" encoding="UTF-8"?>\n<xsl:stylesheet\n              xmlns:xsl="http://www.w3.org/1999/XSL/Transform"\n              xmlns:atom="http://www.w3.org/2005/Atom"\n              version="1.0">\n  <xsl:output method="xml" version="1.0" encoding="UTF-8"\n              indent="no"\n              media-type="application/rss+xml" />\n\n  <xsl:template match="@*|node()">\n    <xsl:copy><xsl:apply-templates select="@*|node()"/></xsl:copy>\n  </xsl:template>\n\n  <xsl:template match="/atom:feed">\n    <rss version="2.0">\n      <channel>\n        <xsl:apply-templates select="node()"/>\n        <xsl:if test="not(atom:summary)">\n          <description><xsl:value-of select="atom:title"/></description>\n        </xsl:if>\n      </channel>\n    </rss>\n  </xsl:template>\n\n  <xsl:template match="atom:feed">\n    <channel><xsl:apply-templates select="node()"/></channel>\n  </xsl:template>\n\n  <xsl:template match="atom:title">\n    <title><xsl:apply-templates select="node()"/></title>\n  </xsl:template>\n\n  <xsl:template match="atom:link[@rel=\'self\']">\n    <xsl:copy><xsl:apply-templates select="@*|node()"/></xsl:copy>\n  </xsl:template>\n\n  <xsl:template match="atom:link[1]">\n    <link><xsl:value-of select="@href"/></link>\n  </xsl:template>\n\n  <xsl:template match="atom:category">\n    <category><xsl:value-of select="@term"/></category>\n  </xsl:template>\n\n  <xsl:template match="atom:summary">\n    <description><xsl:apply-templates select="node()"/></description>\n  </xsl:template>\n\n  <xsl:template match="atom:entry">\n    <item><xsl:apply-templates select="node()"/></item>\n  </xsl:template>\n\n  <xsl:template match="atom:published">\n    <pubDate><xsl:apply-templates select="node()"/></pubDate>\n  </xsl:template>\n\n  <xsl:template match="atom:entry/atom:id">\n    <guid><xsl:apply-templates select="node()"/></guid>\n  </xsl:template>\n\n  <xsl:template match="atom:source"/>\n</xsl:stylesheet>'
+        xslt = et.fromstring(xslt_str)
+        transform = et.XSLT(xslt)
+        rss_dom = transform(rss)
+        rss = et.tostring(rss_dom, pretty_print=True)
+
+    # rss 2.0 to rss 1.0
+    xslt_str = '<?xml version="1.0" encoding="UTF-8"?>\n<xsl:stylesheet version="1.0"\nxmlns:xsl="http://www.w3.org/1999/XSL/Transform"\nxmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"\nxmlns="http://purl.org/rss/1.0/"\nxmlns:dc="http://purl.org/dc/elements/1.1/"\nxmlns:sy="http://purl.org/rss/1.0/modules/syndication/"\nxmlns:admin="http://webns.net/mvcb/">\n	<xsl:output method="xml" indent="yes"/>\n	<xsl:template match="rss">\n		<rdf:RDF\nxmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">\n			<xsl:apply-templates select="channel"/>\n			<xsl:apply-templates select="channel/image"/>\n			<xsl:apply-templates select="channel/item"/>\n			<xsl:apply-templates\nselect="channel/textinput"/>\n		</rdf:RDF>\n	</xsl:template>\n	<xsl:template match="channel">\n		<channel rdf:about="{link}">\n			<xsl:apply-templates select="title | description\n| link"/>\n			<xsl:copy-of select="dc:* | sy:* | admin:*"/>\n			<xsl:apply-templates select="image"\nmode="channel"/>\n			<items>\n				<rdf:Seq>\n					<xsl:for-each select="item">\n						<rdf:li>\n							<xsl:attribute\nname="rdf:resource">\n\n<xsl:value-of select="link"/>\n							</xsl:attribute>\n						</rdf:li>\n					</xsl:for-each>\n				</rdf:Seq>\n			</items>\n			<textinput>\n				<xsl:value-of select="textinput"/>\n			</textinput>\n		</channel>\n	</xsl:template>\n	<xsl:template match="channel/image">\n		<image>\n			<xsl:attribute name="rdf:about">\n				<xsl:value-of select="url"/>\n			</xsl:attribute>\n			<xsl:apply-templates select="title"/>\n			<xsl:apply-templates select="link"/>\n			<url>\n				<xsl:value-of select="image/url"/>\n			</url>\n		</image>\n	</xsl:template>\n	<xsl:template match="channel/image" mode="channel">\n		<image rdf:resource="{image/url}"/>\n	</xsl:template>\n	<xsl:template match="channel/item">\n		<item>\n			<xsl:attribute name="rdf:about">\n				<xsl:value-of select="link"/>\n			</xsl:attribute>\n			<xsl:apply-templates select="title"/>\n			<xsl:apply-templates select="link"/>\n			<xsl:apply-templates select="description"/>\n			<xsl:copy-of select="dc:* | sy:* | admin:*"/>\n		</item>\n	</xsl:template>\n	<xsl:template match="channel/textinput">\n		<textinput>\n			<xsl:attribute name="rdf:about">\n				<xsl:value-of select="url"/>\n			</xsl:attribute>\n			<xsl:apply-templates select="title"/>\n			<xsl:apply-templates select="description"/>\n			<xsl:apply-templates select="name"/>\n			<xsl:apply-templates select="link"/>\n		</textinput>\n	</xsl:template>\n	<xsl:template match="title | description | link | name">\n		<xsl:element name="{local-name()}"\nnamespace="http://purl.org/rss/1.0/">\n			<xsl:apply-templates/>\n		</xsl:element>\n	</xsl:template>\n</xsl:stylesheet>'
+
+    # parse the XSLT document
+    xslt = et.fromstring(xslt_str)
+
+    # apply the xslt and create the new dom
+    transform = et.XSLT(xslt)
+    rdf_dom = transform(rss)
+
+    # get the RDF/XML string
+    return et.tostring(rdf_dom, pretty_print=True)
+
+
 class DatasourceDescription(models.Model):
     title = models.CharField(max_length=512, blank=False, null=False)  # datasource title
     is_public = models.BooleanField(default=False)  # true if datasource is public
     name = models.CharField(max_length=512, blank=False, null=False)  # datasource name - slug
-    uri = models.CharField(max_length=2048, blank=False, null=False)  # sesame uri
+    uri = models.CharField(max_length=2048, blank=False, null=False)  # sesame uri or endpoint
     createdOn = models.DateField(blank=False, null=False)  # datasource creation date
     updatedOn = models.DateField(blank=False, null=False)  # datasource last edit date
+    rss_info = models.ForeignKey(RSSInfo, null=True, blank=True, default=None)  # info for RSS datasources
 
     def __unicode__(self):
         return self.title
@@ -407,6 +451,14 @@ class DatasourceDescription(models.Model):
             return self.uri
         else:
             return LINDA_HOME + "sparql/" + self.name + "/"
+
+    def update_rss(self):
+        if self.rss_info:
+            # replace the local rdf copy
+            headers = {'accept': 'application/json'}
+            data = {"content": rss2rdf(self.rss_info.url)}
+            callReplace = requests.post(LINDA_HOME + "api/datasource/" + self.name +
+                                           "/replace/?append=false", headers=headers, data=data)
 
 
 # Transform [x1,x2,...,xN] to "x1, x2, ... and/or xN"
@@ -465,37 +517,6 @@ def create_query_description(dtname, query):
 
             if terms[2][0] == '?':
                 continue  # ignore variable constraints
-
-            '''
-            tp_pos = 1  # first constraint property
-            old_tp_name = ''
-            constraint_str = ''
-            while tp_pos < len(terms):  # foreach sub-constraint in the union
-                tp_name = get_label_by_uri(terms[tp_pos])
-                # get seperator
-                if tp_pos < len(terms) - 2:
-                    sep = ', '
-                else:
-                    sep = ' or '
-
-                if not old_tp_name:
-                    constraint_str += tp_name + ' is '
-                elif old_tp_name.lower() == tp_name.lower():
-                    constraint_str += sep
-                else:
-                    constraint_str += sep + tp_name + ' is '
-                constraint_str += get_label_by_uri(terms[tp_pos+1])
-
-                old_tp_name = tp_name
-                tp_pos += 4  # move to the next sub-contraint
-
-            # add 'and' if it is not the first constraint
-            if first_constraint:
-                constraints_out += ' where ' + constraint_str
-                first_constraint = False
-            else:
-                constraints_out += ' and ' + constraint_str
-            '''
 
     if not instances:  # no class detected
         classes = 'objects'

@@ -30,6 +30,11 @@
 
             <label for="endpoint">{% trans "Endpoint uri"%}:</label>
             <input type="url" name="endpoint" placeholder="http://www.example.com/sparql" {%if datasource and datasource.is_public%}value="{{datasource.uri}}"{% endif %}/>
+
+            <div class="rss">
+                <input type="checkbox" name="is_rss" />
+                <label for="is_rss">{% trans "is RSS feed"%}</label>
+            </div>
         </div>
 
         <div class="datatype-container" style="display: none;">

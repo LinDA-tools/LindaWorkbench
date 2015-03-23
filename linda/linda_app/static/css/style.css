@@ -1712,6 +1712,19 @@ input, textarea {
     width: 190px
 }
 
+.datasource-create-form .endpoint-container .rss {
+    display: inline;
+}
+
+.datasource-create-form .endpoint-container .rss input {
+    width: auto; ]
+    margin-left: 20px;
+}
+
+.datasource-create-form .endpoint-container .rss label {
+    min-width: 10px;
+}
+
 /*Query Builder*/
 /*.query-builder, .sparql-query {
     border-top: 1px solid #FC5006;

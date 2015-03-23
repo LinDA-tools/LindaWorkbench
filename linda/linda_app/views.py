@@ -784,10 +784,20 @@ def datasourceCreate(request):
             # find the slug
             sname = slugify(request.POST.get("title"))
 
-            new_datasource = DatasourceDescription.objects.create(title=request.POST.get("title"), is_public=True,
-                                                                  name=sname, uri=request.POST.get("endpoint"),
-                                                                  createdOn=datetime.now(), updatedOn=datetime.now())
-            new_datasource.save()
+            # check for RSS
+            if request.POST.get("is_rss"):
+                # case rss feed
+                uri = get_configuration().private_sparql_endpoint + "/rdf-graphs/" + sname
+                new_feed = RSSInfo.objects.create(url=request.POST.get("endpoint"))
+                dt = DatasourceDescription.objects.create(title=request.POST.get("title"), is_public=False,
+                                                          name=sname, rss_info=new_feed,
+                                                          uri=uri, createdOn=datetime.now(), updatedOn=datetime.now())
+                dt.update_rss()
+            else:
+                # default case - sparql endpoint
+                DatasourceDescription.objects.create(title=request.POST.get("title"), is_public=True,
+                                                     name=sname, uri=request.POST.get("endpoint"),
+                                                     createdOn=datetime.now(), updatedOn=datetime.now())
 
             # go to view all datasources
             return redirect("/datasources/")
@@ -823,7 +833,7 @@ def datasourceReplace(request, name):
         # Try to verify that the endpoint uri exists
         validate = URLValidator()
         try:
-            validate('http://www.somelink.com/to/my.pdf')
+            validate(request.POST.get("endpoint"))
         except ValidationError, e:
             params["error"] = "Invalid sparql enpoint (url does not exist) - " + e
             return render(request, 'datasource/replace_remote.html', params)
