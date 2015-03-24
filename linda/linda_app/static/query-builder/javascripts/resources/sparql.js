@@ -54,7 +54,7 @@ SPARQL = {
                 query = SPARQL.get_query();
                 $("#btn_show_checked_properties_yes").click();
             }
-            var download_url = Utils.rdf2any.server+Utils.rdf2any.actions.convert+"rdb-converter.sql?dataset="+QueryBuilder.datasets.get_selected()+"&query="+encodeURIComponent(query);
+            var download_url = Utils.rdf2any.actions.convert+"rdb-converter.sql?dataset="+QueryBuilder.datasets.get_selected()+"&query="+encodeURIComponent(query);
             var selected_class = QueryBuilder.classes.get_selected_class();
             if(selected_class != undefined && selected_class != ''){
                download_url += "&for_class="+selected_class;
@@ -69,7 +69,7 @@ SPARQL = {
                 query = SPARQL.get_query();
                 $("#btn_show_checked_properties_yes").click();
             }
-            var download_url = Utils.rdf2any.server+Utils.rdf2any.actions.convert+"csv-converter.csv?dataset="+QueryBuilder.datasets.get_selected()+"&query="+encodeURIComponent(query);
+            var download_url = Utils.rdf2any.actions.convert+"csv-converter.csv?dataset="+QueryBuilder.datasets.get_selected()+"&query="+encodeURIComponent(query);
             var selected_class = QueryBuilder.classes.get_selected_class();
             if(selected_class != undefined && selected_class != ''){
                download_url += "&for_class="+selected_class;
@@ -87,7 +87,7 @@ SPARQL = {
                     $("#btn_show_checked_properties_yes").click();
                     $("#btn_show_checked_properties_no").click();
                 }
-                var download_url = Utils.rdf2any.server+Utils.rdf2any.actions.convert+"json?dataset="+QueryBuilder.datasets.get_selected()+"&query="+encodeURIComponent(query)+"&json_output_format=sesame";
+                var download_url = Utils.rdf2any.actions.convert+"json?dataset="+QueryBuilder.datasets.get_selected()+"&query="+encodeURIComponent(query)+"&json_output_format=sesame";
                 window.open(download_url);
             },
             virtuoso : function(){
@@ -96,7 +96,7 @@ SPARQL = {
                     $("#btn_show_checked_properties_yes").click();
                     $("#btn_show_checked_properties_no").click();
                 }
-                var download_url = Utils.rdf2any.server+Utils.rdf2any.actions.convert+"json?dataset="+QueryBuilder.datasets.get_selected()+"&query="+encodeURIComponent(query);
+                var download_url = Utils.rdf2any.actions.convert+"json?dataset="+QueryBuilder.datasets.get_selected()+"&query="+encodeURIComponent(query);
                 window.open(download_url);
             },
             for_class : function(){
@@ -105,7 +105,7 @@ SPARQL = {
                     $("#btn_show_checked_properties_no").click();
                     $("#btn_show_checked_properties_yes").click();
                 }
-                var download_url = Utils.rdf2any.server+Utils.rdf2any.actions.convert+"json?dataset="+QueryBuilder.datasets.get_selected()+"&query="+encodeURIComponent(query)+"&for_class="+QueryBuilder.classes.get_selected_class();
+                var download_url = Utils.rdf2any.actions.convert+"json?dataset="+QueryBuilder.datasets.get_selected()+"&query="+encodeURIComponent(query)+"&for_class="+QueryBuilder.classes.get_selected_class();
                 download_url += "&properties="+encodeURIComponent(QueryBuilder.properties.get_checked_properties()); 
                 window.open(download_url);
             }
@@ -118,7 +118,7 @@ SPARQL = {
                 query = SPARQL.get_query();;
                 $("#btn_show_checked_properties_yes").click();
             }
-            var download_url = Utils.rdf2any.server+Utils.rdf2any.actions.convert+"configured-converter?dataset="+QueryBuilder.datasets.get_selected()+"&query="+encodeURIComponent(query);
+            var download_url = Utils.rdf2any.actions.convert+"configured-converter?dataset="+QueryBuilder.datasets.get_selected()+"&query="+encodeURIComponent(query);
             download_url += "&for_class="+QueryBuilder.classes.get_selected_class();
             download_url += "&properties="+encodeURIComponent(QueryBuilder.properties.get_checked_properties()); 
             var str_variable_dictionary = "";
@@ -140,8 +140,4 @@ SPARQL = {
     flash_error : function(msg){
         $.gritter.add({title: "ERROR in SPARQL query execution",text: msg, sticky:true});
     }
-
-
-
-
 };

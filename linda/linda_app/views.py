@@ -1,6 +1,7 @@
 from itertools import starmap
 from operator import attrgetter
 from django.core import serializers
+from django.views.decorators.cache import cache_page
 from django.core.paginator import Paginator, EmptyPage
 from django.http import HttpResponse, HttpResponseNotFound, Http404, HttpResponseForbidden
 from django.shortcuts import redirect, render, get_object_or_404
@@ -1151,6 +1152,7 @@ def get_qbuilder_call(request, link):
 
 # middle-mans between LinDA query builder page and the RDF2Any server
 @csrf_exempt
+@cache_page(60*60*24)
 def get_rdf2any_call(request, link):
     total_link = get_configuration().rdf2any_server + 'rdf2any/' + link
     if request.GET:
