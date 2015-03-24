@@ -60,7 +60,7 @@
                     success: function(data, textStatus, jqXHR) {
                         if (data.results.bindings.length > 0) {
                             var n = data.results.bindings[0].cnt.value;
-                            $("#class_instance_" + new_id + " .title h3").append('<span class="n-of-instances">[' + Number(n).toLocaleString() + ']</span>');
+                            $("#class_instance_" + new_id + " .title h3").append('<span class="n-of-instances">(' + Number(n).toLocaleString() + ')</span>');
                         }
                     }
                 });
@@ -259,6 +259,7 @@
                 }
                 builder.options.distinct = data.distinct;
                 builder.options.limit = data.limit;
+                builder.options.offset = data.offset;
                 builder.options.variables = data.variables;
 
                 arrows.draw();
@@ -273,6 +274,7 @@
                     pattern: builder.options.pattern,
                     distinct: builder.options.distinct,
                     limit: builder.options.limit,
+                    offset: builder.options.offset,
                     variables: builder.options.variables
                 };
 
@@ -481,6 +483,49 @@
             builder_workbench.instances[i].selected_properties[n].show = $(this).is(':checked');
             builder.reset();
         });
+
+    $.contextMenu({
+        selector: '.property-table .property-row',
+        callback: function(key, options) {
+            var id = options.$trigger.attr('id');
+            var url;
+
+            if (key == "Options") {
+                PropertyOptions.show($(options.$trigger).data('i'), $(options.$trigger).data('n'));
+            }
+            else
+            if (key == "Move up") {
+                var prev = $(options.$trigger).prev();
+
+                if ($(prev).hasClass("property-row")) {
+                    $(options.$trigger).insertBefore($(prev));
+                    builder_workbench.update_orders(null,{item: $(options.$trigger)});
+                }
+            }
+            else
+            if (key == "Move down") {
+                var next = $(options.$trigger).next();
+
+                if ($(next).hasClass("property-row")) {
+                    $(next).insertBefore($(options.$trigger));
+                    builder_workbench.update_orders(null,{item: $(options.$trigger)});
+                }
+            }
+            else
+            if (key == "Delete") {
+                $(options.$trigger).find('.delete-property').click();
+            }
+        },
+        items: {
+            "Options": {name: "Options", icon: "edit"},
+            "sep1": "---------",
+            "Move up": {name: "Move up", icon: "move-up"},
+            "Move down": {name: "Move down", icon: "move-down"},
+            "sep2": "---------",
+            "Delete": {name: "Delete", icon: "delete"},
+        }
+    });
+
 
 
 

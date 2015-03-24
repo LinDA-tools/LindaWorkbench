@@ -1,0 +1,29 @@
+<div id="property-options" class="form">
+    <div>
+        <label>URI</label>
+        <label class="property-uri"></label>
+    </div>
+    <div>
+        <label>Variable name</label>
+        <input class="property-name" type="text"/>
+    </div>
+    <div>
+        <label>Group by</label>
+        <input class="property-group-by" type="checkbox"/>
+    </div>
+    <div>
+        <label>Aggregate</label>
+        <select class="property-aggregate">
+            <option value=""></option>
+            <option value="sum">Sum</option>
+            <option value="count">Count</option>
+            <option value="avg">Average</option>
+            <option value="min">Minimum</option>
+            <option value="max">Maximum</option>
+            <option value="group_concat">Group concat</option>
+            <option value="sample">Sample</option>
+        </select>
+    </div>
+
+    <button id="property-options-done" class="button right orange">OK</button>
+</div>

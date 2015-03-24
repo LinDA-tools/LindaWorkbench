@@ -26,7 +26,7 @@ $(function(){ //private datasource context menu
         callback: function(key, options) {
         var id = options.$trigger.attr('id');
         var url;
-        console.log(key + ' ' + id);
+
         if (key == "Visualize") {
             url = datasource_visualize_URIs[id]; console.log(url)}
         else

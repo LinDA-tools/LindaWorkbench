@@ -79,6 +79,7 @@ $("#show-query-options").on('click', function() {
     //load options
     $("#query_pattern").val(o.pattern);
     $("#query_limit").val(o.limit);
+    $("#query_offset").val(o.offset);
     if (o.distinct) {
         $("#query_distinct").prop('checked', true);
     }
@@ -104,6 +105,14 @@ $("#query-options-done").on('click', function() {
         o.limit = undefined;
     } else {
         o.limit = Number(l);
+    }
+
+    //get offset
+    var ofs = $("#query_offset").val();
+    if (ofs == "") {
+        o.offset = undefined;
+    } else {
+        o.offset = Number(ofs);
     }
 
     //get distinct

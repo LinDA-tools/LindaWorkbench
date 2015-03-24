@@ -2464,6 +2464,10 @@ input, textarea {
     cursor: pointer;
 }
 
+#builder_workspace .property-row.context-menu-active {
+    background: #ddd;
+}
+
 #builder_workspace .class-instance header-row span/*:nth-of-type(5), #builder_workspace .class-instance .header-row span:nth-of-type(6)*/{
     color: #000 !important;
 }
@@ -2599,6 +2603,19 @@ input, textarea {
 
 #builder-options label {
     width: 150px;
+}
+
+#property-options .property-uri {
+    font-size: 80%;
+    color: #777;
+}
+
+.builder-advanced .ui-dialog {
+    padding: 0 !important;
+}
+
+.builder-advanced .ui-dialog-titlebar {
+    border-radius: 0;
 }
 
 .class-instance .property-control .sort-frequency {

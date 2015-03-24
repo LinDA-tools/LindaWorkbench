@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="/static/css/jquery.modal.css" />
 
     <link data-turbolinks-track="true" href="/static/css/chosen.min.css" media="all" rel="stylesheet" />
+    <link rel="stylesheet" href="/static/css/jquery.contextMenu.css"/>
 
     <link data-turbolinks-track="true" href="/static/query-builder/stylesheets/_variables.css?body=1" media="all" rel="stylesheet" />
     <link data-turbolinks-track="true" href="/static/query-builder/stylesheets/bootstrap.css?body=1" media="all" rel="stylesheet" />
@@ -53,7 +54,7 @@
 
         {% include "builder_advanced/filters.html" %}
         {% include "builder_advanced/options.html" %}
-
+        {% include "builder_advanced/property-options.html" %}
     </div>
 
 {% endblock %}
@@ -70,6 +71,7 @@
     <script src="/static/js/jquery-ui.min.js"></script>
     <script src="/static/js/jquery.confirm.js"></script>
     <script src="/static/js/jquery.smartresize.js"></script>
+    <script src="/static/js/jquery.contextMenu.js"></script>
 
     <script src="/static/js/chosen.jquery.min.js"></script>
 
@@ -220,6 +222,7 @@
 
     <script src="/static/query_designer/builder_options.js"></script>
     <script src="/static/query_designer/builder.js"></script>
+    <script src="/static/query_designer/property-options.js"></script>
 
     <script>
         rdf2any_server = "{{RDF2ANY_SERVER}}";

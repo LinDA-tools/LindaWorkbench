@@ -304,8 +304,11 @@ var builder = {
         for (var j=0; j<inst.selected_properties.length; j++) {
             var p = inst.selected_properties[j];
             if (this.property_names[i][j] === undefined) {
-                p.name = i_name + '_' + this.uri_to_constraint(p.uri); //e.g ?city_leaderName
+                if (p.name === undefined) {
+                    p.name = i_name + '_' + this.uri_to_constraint(p.uri); //e.g ?city_leaderName
+                }
                 this.property_names[i][j] = p.name;
+
 
                 if (p.uri != 'URI') {
                     this.create_foreign(w, i, this.property_names[i][j], j); //handle uri foreign keys
@@ -342,11 +345,20 @@ var builder = {
 
             //add chosen properties to select
             if (p.show) {
+                var name;
                 if (p.uri == 'URI') {
-                    this.select_vars.push('?' + i_name);
+                    name = i_name;
                 } else {
-                    this.select_vars.push('?' + p_name);
+                    name = p_name;
                 }
+
+                if (p.aggregate === undefined) {
+                    this.select_vars.push('?' + name);
+                } else {
+                    p.aggr_name = p.name + '_' + p.aggregate;
+                    this.select_vars.push('(' + p.aggregate + '(?' + name + ') AS ?' + p.aggr_name + ')');
+                }
+
             }
         }
 
@@ -370,18 +382,30 @@ var builder = {
                 }
             }
 
-            //check if order
-            if ((p.order_by) && (p.order_by.length > 0)) {
+            //get variable name
+            var v_name = "";
+            if (p.aggregate) {
+                v_name = "?" + p.aggr_name;
+            }
+            else if (p.uri != 'URI') {
+                v_name = "?" + p_name;
+            } else {
+                v_name = "?" + i_name;
+            }
 
-                if (this.order_clause == "") {
-                    this.order_clause = "ORDER BY";
+            //check if group by
+            if (p.group_by) {
+                if (this.group_by_clause == "") {
+                    this.group_by_clause = "GROUP BY";
                 }
 
-                var v_name = "";
-                if (p.uri != 'URI') {
-                     v_name = "?" + p_name;
-                } else {
-                     v_name = "?" + i_name;
+                this.group_by_clause += " " + v_name;
+            }
+
+            //check if order
+            if ((p.order_by) && (p.order_by.length > 0)) {
+                if (this.order_clause == "") {
+                    this.order_clause = "ORDER BY";
                 }
 
                 var new_order_clause = "";
@@ -444,6 +468,7 @@ var builder = {
         this.error = "";
         this.where_clause = "WHERE ";
         this.order_clause = "";
+        this.group_by_clause = "";
         this.endpoint = "";
         this.prefixes = [];
 
@@ -498,11 +523,16 @@ var builder = {
         if (this.cnt_objects == 0) { //empty query
             this.query = '';
         } else { //the result is the SELECT ... WHERE ...
-            this.query = this.get_prefixes() + select_clause + '\n' + this.where_clause + this.order_clause;
+            this.query = this.get_prefixes() + select_clause + '\n' + this.where_clause + this.group_by_clause + '\n' + this.order_clause;
 
             //limit
             if (typeof(this.options.limit) != "undefined") {
                 this.query += "\nLIMIT " + this.options.limit;
+            }
+
+            //offset
+            if (typeof(this.options.offset) != "undefined") {
+                this.query += "\nOFFSET " + this.options.offset;
             }
         }
 
