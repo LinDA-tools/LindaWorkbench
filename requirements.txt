@@ -6,6 +6,7 @@ rdflib-sqlite
 django==1.7
 Pillow
 django-allauth
+django-view-cache-utils
 django-imagekit
 django-haystack
 pyelasticsearch

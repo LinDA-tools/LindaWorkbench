@@ -1,12 +1,12 @@
 from itertools import starmap
 from operator import attrgetter
 from django.core import serializers
-from django.views.decorators.cache import cache_page
+from view_cache_utils import cache_page_with_prefix
+from hashlib import md5
 from django.core.paginator import Paginator, EmptyPage
 from django.http import HttpResponse, HttpResponseNotFound, Http404, HttpResponseForbidden
 from django.shortcuts import redirect, render, get_object_or_404
 from unidecode import unidecode
-from django.test._doctest import _OutputRedirectingPdb
 from django.utils.http import urlquote
 
 from django.core.validators import URLValidator
@@ -15,7 +15,6 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import ListView, UpdateView, DetailView, DeleteView, CreateView
 
 import json
-import requests
 
 from microsofttranslator import Translator
 from analytics.models import Analytics
@@ -1152,7 +1151,7 @@ def get_qbuilder_call(request, link):
 
 # middle-mans between LinDA query builder page and the RDF2Any server
 @csrf_exempt
-@cache_page(60*60*24)
+@cache_page_with_prefix(60*15, lambda request: md5(request.get_full_path()).hexdigest())
 def get_rdf2any_call(request, link):
     total_link = get_configuration().rdf2any_server + 'rdf2any/' + link
     if request.GET:
