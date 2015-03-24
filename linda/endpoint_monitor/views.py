@@ -51,6 +51,10 @@ def monitor_datasources():
 
 # show statistics
 def statistics(request):
+    # just fetch around 20 last samples for each datasouce
+    n_of_public = len(DatasourceDescription.objects.filter(is_public=True))
+
     return render(request, 'endpoint_monitor/statistics.html',
                   {"tests": EndpointTest.objects.all(),
+                   "recent_tests": EndpointTest.objects.all().order_by("execution_time").reverse()[:15*n_of_public],
                    "datasources": DatasourceDescription.objects.filter(is_public=True)})

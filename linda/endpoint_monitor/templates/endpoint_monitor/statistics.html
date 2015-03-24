@@ -28,7 +28,7 @@
     var dt_name;
     var exec_time, resp_time;
 
-    {% for test in tests %}
+    {% for test in recent_tests %}
         dt_name = '{{test.datasource.name}}';
         if (metrics[dt_name] === undefined) {
             metrics[dt_name] = [];
