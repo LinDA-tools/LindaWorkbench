@@ -60,7 +60,8 @@
 
 .context-menu-item.hover {
     cursor: pointer;
-    background-color: #39F;
+    background-color: #5C97BF;
+    color: #fff;
 }
 
 .context-menu-item.disabled {
@@ -93,6 +94,8 @@
 .context-menu-item.icon-visualize { background-image: url(/static/images/visualize.png); }
 .context-menu-item.icon-analyze { background-image: url(/static/images/analyze.png); }
 .context-menu-item.icon-explore {background-image: url("/static/images/search.png"); }
+.context-menu-item.icon-move-up {background-image: url("/static/images/up.png"); }
+.context-menu-item.icon-move-down {background-image: url("/static/images/down.png"); }
 .context-menu-item.icon-edit { background-image: url(/static/images/edit.png); }
 .context-menu-item.icon-delete { background-image: url(/static/images/remove.png); }
 .context-menu-item.icon-download { background-image: url(/static/images/download.png); }
