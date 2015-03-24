@@ -2601,6 +2601,10 @@ input, textarea {
     display: none;
 }
 
+#property-options {
+    display: none;
+}
+
 #builder-options label {
     width: 150px;
 }
