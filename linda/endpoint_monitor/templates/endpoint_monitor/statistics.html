@@ -55,7 +55,7 @@
     //get datasource titles
     var titles = [];
     {% for datasource in datasources %}
-        titles['{{datasource.name}}'] = '{{datasource.title}}';
+        titles['{{datasource.name}}'] = '{{datasource.title|safe}}';
     {% endfor %}
 
     //calculate data
