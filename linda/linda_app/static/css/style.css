@@ -2179,7 +2179,7 @@ input, textarea {
     text-transform: uppercase;
 }
 
-#query_pattern, #query_limit {
+#query_pattern, #query_limit, #query_offset {
     width: 300px;
     margin-top: 5px;
 }
