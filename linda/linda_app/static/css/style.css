@@ -86,19 +86,12 @@ img {
 
 /* Body */
 body {
-    /*background: url('../images/pattern.png');
-    nowhitespace: afterproperty;*/
     font: 14px/1.8 'Open Sans', Helvetica, Arial, sans-serif;
     color: #666;
     background: #ccc;
     -webkit-font-smoothing: antialiased;
     -webkit-text-size-adjust: 100%;
 }
-
-/*body.visualizations {
-    background: #fff;
-    font: 14px/1.8 'Open Sans', Helvetica, Arial, sans-serif !important;
-}*/
 
 body a {
     color: #FC5006;
@@ -127,8 +120,6 @@ body h1, h2 {
 header {
     background: #FC5006;
 }
-
-/*hide visualizations header*/
 
 header a {
     color: #eee !important;
@@ -295,102 +286,9 @@ header .site-title:hover {
     }
 }
 
-.visualizationTool .columns {
+.visualizationTool, .visualizationTool * {
     box-sizing: border-box
 }
-
-/*Visualizations header & menu*/
-/*.ember-application > .ember-view  #header .title-area a {
-    color: #FC5006 !important;
-    font-weight: 300;
-    font-size: 14pt !important;
-    font-family: 'Open Sans';
-}
-
-.ember-application h1, .ember-application h2, .ember-application h3, .ember-application h4, .ember-application h5, .ember-application h6 {
-    font-family: 'Open Sans';
-    font-weight: 300;
-}
-
-.ember-application > .ember-view  #header > .top-bar,
-.ember-application > .ember-view  #header > .top-bar .top-bar-section > ul > li,
-.ember-application > .ember-view  #header > .top-bar .top-bar-section > ul > li > a {
-    background: none !important;
-}
-
-.ember-application > .ember-view > .container > .row > .box {
-    border: none !important;
-    box-shadow: none !important;
-}*/
-
-/*.visualizations #menu-select-area {
-    margin-left: 50px;
-    width: 600px;
-    display: inline-block;
-    background: none;
-}
-
-.visualizations #menu-select-area ul li {
-    display: inline;
-}*/
-
-/*.visualizations #menu-select-area ul li:nth-of-type(2) {
-    position: relative;
-    top: -33px;
-    left: 30px;
-}*/
-
-/*.visualizations #menu-select-area select {
-    font-family: 'Open Sans';
-    max-width: 400px;
-    display: inline-block;
-}
-
-.visualizations .site-search-input {
-    display: inline-block;
-    height: 30px !important;
-}*/
-
-/*.visualizations #main-container {
-    display: inline;
-    width: 265px;
-}
-
-.visualizations #menu {
-    display: inline-block;
-    width: 265px;
-}
-
-.visualizations #menu a, .visualizations .secondary-menu a {
-    color: #eee !important;
-    font-size: 11pt;
-}
-
-.visualizations #menu > ul {
-    margin-left: 0;
-}
-
-.visualizations .site-search-input {
-    height: 30px;
-    display: inline;
-}
-
-.visualizations footer {
-    color: #888;
-    padding-bottom: 30px;
-}
-
-.ember-application > .ember-view  {
-    display: inline-block;
-    width: calc(100% - 275px);
-}
-
-@media only screen and (max-width: 690px){
-    .ember-application > .ember-view  {
-        display: block;
-        width: 100%;
-    }
-}*/
 
 /* Main Area */
 #main-container {

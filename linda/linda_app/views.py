@@ -43,11 +43,6 @@ def index(request):
     return render(request, 'index.html', params)
 
 
-def openDatasource(request):
-    params = {}
-    return render(request, 'datasource/open.html', params)
-
-
 def terms(request):
     params = {}
     return render(request, 'terms.html', params)

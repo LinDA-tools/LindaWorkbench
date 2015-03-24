@@ -14,3 +14,4 @@ MySQL-python
 xmltodict
 microsofttranslator
 pattern
+unidecode
