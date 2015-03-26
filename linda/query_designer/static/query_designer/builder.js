@@ -340,7 +340,7 @@ var builder = {
         }
 
         //add class constraint -- local copy of total where clause
-        wh_c += '\t?' + i_name + ' a <' + inst.uri + '>';
+        wh_c += '\t?' + i_name + ' a <' + inst.uri + '>.';
 
         //add properties to select clause
         for (var j=0; j<inst.selected_properties.length; j++) {
@@ -374,12 +374,7 @@ var builder = {
             //connect property to class instances
             var constraint = '';
             if (p.uri != 'URI') {
-                if ((p.optional) || ((j > 0) && (inst.selected_properties[j-1].optional))) {
-                    constraint = '\t?' + i_name;
-                } else if (!p.optional) {
-                    constraint = '\t\t';
-                }
-                constraint += ' <' + p.uri + '> ?' + p_name;
+                constraint = '\t\t?' + i_name + ' <' + p.uri + '> ?' + p_name + '.';
             }
 
             //add filters
@@ -435,16 +430,10 @@ var builder = {
 
             //mark optional properties
             if (p.optional) {
-                constraint = '\tOPTIONAL {\n' + '    ' + constraint + '\n\t}\n';
-                wh_c += constraint;
+                constraint = 'OPTIONAL {\n' + constraint + '}\n';
             }
-            else {
-                var terminator = ';'
-                if ((j == inst.selected_properties.length-1) || (inst.selected_properties[j+1].optional)) {
-                    terminator = '.';
-                }
-                wh_c += constraint + terminator + '\n';
-            }
+            
+            wh_c += constraint + '\n';
         }
 
         if (endpoint != this.endpoint) { //close SERVICE keyword
