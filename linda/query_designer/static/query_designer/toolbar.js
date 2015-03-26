@@ -272,11 +272,10 @@ var toolbar = {
             }
 
             toolbar.load_classes(that, name, 1, false);
-        }, 10000);
+        }, 15000);
     });
 
 /*On search text change*/
-
 $( '#toolbar > input[type="search"]' ).on('input propertychange paste', function() {
     var search_val = $(this).val();
     var that = this;

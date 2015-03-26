@@ -45,8 +45,9 @@ var PropertyOptions = {
 
     save: function() {
         //save changes
-        //change name
+        //change name in builder & workbench
         this.property.name = $('#property-options .property-name').val();
+        $("#class_instance_" + this.i + " .property-row:nth-of-type(" + (this.p+2) + ") span:nth-of-type(2)").html(this.property.name);
         builder.property_names[this.i][this.p] = undefined;
 
         this.property.group_by = $('#property-options .property-group-by').is(":checked");

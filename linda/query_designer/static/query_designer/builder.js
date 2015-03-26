@@ -432,7 +432,7 @@ var builder = {
             if (p.optional) {
                 constraint = 'OPTIONAL {\n' + constraint + '}\n';
             }
-            
+
             wh_c += constraint + '\n';
         }
 
@@ -484,7 +484,7 @@ var builder = {
         this.prepare_query(w);
 
         //none sub-queries instances
-        this.where_clause = "WHERE {\n" + this.create_subquery(undefined);
+        this.where_clause = "WHERE {\n";
 
         //apply the pattern
         var pt = this.options.pattern;
@@ -507,6 +507,7 @@ var builder = {
                 }
             }
         }
+        this.where_clause += this.create_subquery(undefined);
         this.where_clause += "}";
 
         //construct the select clause -- only keep unique values and order according to options

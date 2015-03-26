@@ -101,12 +101,12 @@ def active_classes(request, dt_name):
             distinct = "DISTINCT"
         else:
             distinct = ""
-
+        print "dst = " + distinct
         # query to get all classes with at least one instance
         classes_query_paginate_by = 10000
         query = "SELECT " + distinct + " ?class WHERE { ?s a ?class } LIMIT " + str(classes_query_paginate_by) + " OFFSET " + str(
             (int(p) - 1) * classes_query_paginate_by)
-
+        print query
     return sparql_query_json(endpoint, query)
 
 
@@ -204,24 +204,34 @@ def uri_to_label(uri):
 # will return <http://wifo5-04.informatik.uni-mannheim.de/factbook/resource/France>
 def get_entity_suggestions(request, dt_name):
     # get query
-    q = request.GET.get('term', None)
+    q = request.GET.get('term', '')
 
-    # get instance type
+    # get instance & property type
     class_uri = request.GET.get('class_uri')
+    property_uri = request.GET.get('property_uri')
 
     # get the endpoint of the query
     endpoint = get_endpoint_from_dt_name(dt_name)
 
-    if q:
-        regex = '^http://(/)*(.)*' + q + '(.)*'
-        query = 'SELECT DISTINCT ?instance WHERE {?instance a <' + class_uri + \
-                '> FILTER regex(str(?instance), "' + regex + '" , "i")} LIMIT 20'
+    regex = '^http://(/)*(.)*' + q + '(.)*'
+
+    if property_uri:
+        if q:
+            query = 'SELECT DISTINCT ?instance WHERE {?x a <' + class_uri + \
+                    '>. ?x <' + property_uri + '> ?instance FILTER regex(str(?instance), "' + regex + '" , "i")} LIMIT 20'
+        else:
+            query = 'SELECT DISTINCT ?instance WHERE {?x a <' + class_uri + '>. ?x <' +\
+                    property_uri + '> ?instance} LIMIT 20'
     else:
-        query = 'SELECT DISTINCT ?instance WHERE {?instance a <' + class_uri + '>} LIMIT 20'
+        if q:
+            query = 'SELECT DISTINCT ?instance WHERE {?instance a <' + class_uri + \
+                    '> FILTER regex(str(?instance), "' + regex + '" , "i")} LIMIT 20'
+        else:
+            query = 'SELECT DISTINCT ?instance WHERE {?instance a <' + class_uri + '>} LIMIT 20'
 
     # get json result
     result = sparql_query_json(endpoint, query)
-
+    print result.content
     # make array of results
     results = []
     res = json.loads(result.content)
