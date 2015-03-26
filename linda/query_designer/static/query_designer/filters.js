@@ -40,6 +40,11 @@ $("#property-filters .select-filter-type select").change(function() {
         $("#property-filters .filter-type-date").show();
     else
         $("#property-filters .filter-type-date").hide();
+
+    if (val == "value")
+        $("#property-filters .filter-type-value").show();
+    else
+        $("#property-filters .filter-type-value").hide();
 });
 
 /*String filter change*/
@@ -91,6 +96,17 @@ function show_filters() {
                 $("#filter-prototype-str").show();
             }
         }
+
+        /*Find specific value autocomplete*/
+        $(".filter-type-value input").autocomplete({
+            source: "/query-designer/api/suggest/" + builder_workbench.instances[builder_workbench.property_selection_of_instance].dt_name + "/?class_uri=" +
+                                             encodeURIComponent(builder_workbench.instances[builder_workbench.property_selection_of_instance].uri),
+            minLength: 0,
+
+            open: function(event, ui) {
+                $(".ui-autocomplete").css("z-index", 100000);
+            },
+        });
     }
 }
 

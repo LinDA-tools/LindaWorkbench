@@ -1364,6 +1364,14 @@ form input[type="submit"] {
     float: left !important;
 }
 
+.select-filter-type, .filter-type-value {
+    display: inline;
+}
+
+.filter-type-value input {
+    width: 305px;
+}
+
 .select-button .caret {
     position: absolute;
     width: 0;
@@ -1460,6 +1468,10 @@ form input[type="submit"] {
     display: none;
 }
 
+.builder-advanced .ui-dialog {
+    overflow: visible;
+}
+
 .ui-autocomplete {
     border: 1px solid #FC5006;
     background: #fff;
@@ -1469,13 +1481,9 @@ form input[type="submit"] {
     padding: 5px;
 }
 
-.ui-autocomplete li:hover {
-    cursor: pointer;
-    background: #FC5006;
-}
-
-.ui-autocomplete li:hover a {
-    color: #fff;
+.builder-advanced .ui-autocomplete li {
+    font-size: 80%;
+    white-space: nowrap;
 }
 
 input, textarea {

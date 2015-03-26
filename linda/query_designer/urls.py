@@ -17,6 +17,8 @@ urlpatterns = patterns('',
 
                        url(r'^api/active_class_properties/(?P<dt_name>[\w-]+)/$',
                            views.active_class_properties),
+                       url(r'^api/suggest/(?P<dt_name>[\w-]+)/$', views.get_entity_suggestions),
+
                        url(r'^api/class_info/(?P<dt_name>[\w-]+)/$', views.class_info),
                        url(r'^api/get_properties_with_domain/(?P<dt_name>[\w-]+)/$', views.get_properties_with_domain),
                        url(r'^api/get_property_type/(?P<dt_name>[\w-]+)/$', views.get_property_type),

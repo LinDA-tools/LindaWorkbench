@@ -1,3 +1,4 @@
+//TODO: Refactor builder
 var builder = {
     query: "",
     select_vars: [],
@@ -207,6 +208,9 @@ var builder = {
             var ops = {'eq': '=', 'neq': '!=', 'gt': '>', 'lt': '<', 'gte': '>=', 'lte': '<='};
             this.prefixes['xsd'] = "<http://www.w3.org/2001/XMLSchema#>";
             result = "xsd:date(" + p_name + ")" + ops[f.operator] + "xsd:date('" + f.value + "')";
+        }
+        else if (f.type == "value") {
+            result = p_name + " = <" + f.value + ">";
         }
 
         return result;
@@ -514,8 +518,7 @@ var builder = {
                 }
             }
         }
-
-        this.where_clause += "}\n"
+        this.where_clause += "}";
 
         //construct the select clause -- only keep unique values and order according to options
         this.options.order_select();
@@ -533,7 +536,7 @@ var builder = {
         if (this.cnt_objects == 0) { //empty query
             this.query = '';
         } else { //the result is the SELECT ... WHERE ...
-            this.query = this.get_prefixes() + select_clause + '\n' + this.where_clause + this.group_by_clause + '\n' + this.order_clause;
+            this.query = this.get_prefixes() + select_clause + '\n' + this.where_clause + '\n' + this.group_by_clause + '\n' + this.order_clause;
 
             //limit
             if (typeof(this.options.limit) != "undefined") {

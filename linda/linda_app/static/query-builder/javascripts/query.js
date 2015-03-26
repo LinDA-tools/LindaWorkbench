@@ -29,7 +29,7 @@ this.display_sparql_uri = function(data) {
   if (uri_display.length > 60) {
     uri_display = data.value.substring(0, 60) + "...";
   }
-  return "<td class='result-col-uri' uri=\"" + data.value + "\"><a onclick=Utils.show_uri_viewer('" + data.value + "') class='clickable'>" + uri_display + "</a></td>";
+  return "<td class='result-col-uri' uri=\"" + data.value + "\"><a onclick=Utils.show_uri_viewer('" + data.value + "') class='clickable'>" + data.value + "</a></td>";
 };
 
 this.display_sparql_row_entry = function(data) {

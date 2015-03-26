@@ -147,6 +147,7 @@ function property_select(instance) {
         var offset = (this.page-1)*limit;
         $("#class_instance_" + this.c.id + " .property-control .property-dropdown .properties-list").html('');
         $("#class_instance_" + this.c.id + " .dropdown-toggle-properties > span").removeClass("loading");
+        $("#class_instance_" + this.c.id + " .dropdown-toggle-properties > span").html('');
         $("#class_instance_" + this.c.id + " .dropdown-toggle-properties > span").addClass("caret");
 
         if (this.page > 1) { // previous page

@@ -195,6 +195,42 @@ def active_properties(request, dt_name):
     return sparql_query_json(endpoint, query)
 
 
+def uri_to_label(uri):
+    return uri.split('/')[-1].split('#')[-1].replace('_', ' ')
+
+
+# Suggest entities of a type
+# e.g search for countries in World FactBook typing "fra"
+# will return <http://wifo5-04.informatik.uni-mannheim.de/factbook/resource/France>
+def get_entity_suggestions(request, dt_name):
+    # get query
+    q = request.GET.get('term', None)
+
+    # get instance type
+    class_uri = request.GET.get('class_uri')
+
+    # get the endpoint of the query
+    endpoint = get_endpoint_from_dt_name(dt_name)
+
+    if q:
+        regex = '^http://(/)*(.)*' + q + '(.)*'
+        query = 'SELECT DISTINCT ?instance WHERE {?instance a <' + class_uri + \
+                '> FILTER regex(str(?instance), "' + regex + '" , "i")} LIMIT 20'
+    else:
+        query = 'SELECT DISTINCT ?instance WHERE {?instance a <' + class_uri + '>} LIMIT 20'
+
+    # get json result
+    result = sparql_query_json(endpoint, query)
+
+    # make array of results
+    results = []
+    res = json.loads(result.content)
+    for b in res['results']['bindings']:
+        results.append({"value": b['instance']['value'], "label": uri_to_label(b['instance']['value'])})
+
+    return HttpResponse(json.dumps(results), "application/json")
+
+
 # Get the return type of a property
 def get_property_type(request, dt_name):
     # get property uri
