@@ -327,6 +327,7 @@ var builder = {
     /*Adds an instance to the query*/
     /*Continues recursively*/
     add_instance: function(w, i) {
+        this.cnt_objects++;
         var wh_c = '';
 
         var inst = w.instances[i];
@@ -334,10 +335,6 @@ var builder = {
 
         //check if resource comes from a remote endpoint
         var endpoint = total_endpoints[ w.instances[i].dt_name ];
-
-        if (endpoint != this.endpoint) { //use SERVICE keyword
-            wh_c += '\n  SERVICE <' + endpoint + '> {\n';
-        }
 
         //add class constraint -- local copy of total where clause
         wh_c += '\t?' + i_name + ' a <' + inst.uri + '>.';
@@ -436,10 +433,6 @@ var builder = {
             wh_c += constraint + '\n';
         }
 
-        if (endpoint != this.endpoint) { //close SERVICE keyword
-            wh_c += '  }. \n';
-        }
-
         return wh_c;
     },
 
@@ -448,17 +441,39 @@ var builder = {
     create_subquery: function(ch) {
         var w = builder_workbench;
 
-        var result = '';
+        //initially group by same endpoints
+        var instance_endpoints = new Array();
         for (var i=0; i<w.instances.length; i++) { //foreach instance
-            if (w.instances[i] == undefined) continue;
-
             if (w.instances[i].subquery === ch) { //if it belongs in the same subquery
-                this.cnt_objects++;
-                if (this.endpoint == "") {
-                    this.endpoint = total_endpoints[ w.instances[i].dt_name ];
+                if (!instance_endpoints[w.instances[i].dt_name]) {
+                    instance_endpoints[w.instances[i].dt_name] = new Array();
+
+                    if (this.endpoint == "") {
+                        this.endpoint = total_endpoints[ w.instances[i].dt_name ];
+                    }
                 }
 
-                result += this.add_instance(w, i);
+                instance_endpoints[w.instances[i].dt_name].push(i);
+            }
+        }
+
+        //create subquery
+        var result = '';
+        for (var k in instance_endpoints){ //foreach endpoint
+            if (instance_endpoints.hasOwnProperty(k)) {
+                //check if accessing remote endpoint
+                var remote = total_endpoints[ w.instances[instance_endpoints[k][0]].dt_name ] != this.endpoint;
+                if (remote) { //use SERVICE keyword
+                    result += '\n  SERVICE <' + total_endpoints[ w.instances[instance_endpoints[k][0]].dt_name ] + '> {\n';
+                }
+
+                for (var i=0; i<instance_endpoints[k].length; i++) {
+                    result += this.add_instance(w, instance_endpoints[k][i]);
+                }
+
+                if (remote) { //use SERVICE keyword
+                    result += '\n  }\n';
+                }
             }
         }
 
