@@ -96,7 +96,7 @@
                         if (typeof default_properties[k] == 'string') { //property uri as input
                             self.add_property(new_id, default_properties[k]);
                         } else { //property object as input
-                            self.add_property(new_id, default_properties[k].uri);;
+                            self.add_property(new_id, default_properties[k].uri, default_properties[k].name);;
 
                             inst.selected_properties[k] = jQuery.extend(true, {}, default_properties[k]); //clone the property object
                             var sel = "#class_instance_" + new_id + " .property-row:nth-of-type(" + (k+2) + ") ";
@@ -193,7 +193,7 @@
                 $(obj).css("z-index", mx+1);
             },
 
-            add_property: function(i_num, p_uri) {
+            add_property: function(i_num, p_uri, p_name) {
                 var instance = this.instances[i_num];
                 var p_object = {uri: p_uri, n: instance.selected_properties.length, optional:false, show:true, order_by: undefined, filters: []};
 
@@ -202,6 +202,11 @@
                 var optional_disabled = "";
                 if (p_object.uri == "URI") { //URI can not be optional
                     optional_disabled = 'disabled = "disabled"';
+                }
+
+                //load custom name
+                if (!p_name) {
+                    p_name = uri_to_label(p_object.uri);
                 }
 
                 var data_i_n = 'data-i="' + i_num + '" data-n="' + p_object.n + '"';
@@ -213,7 +218,7 @@
 
                 var property_object_str = '<div class="property-row" ' + data_i_n + '>' + delete_property + '<span class="property-show"><input type="checkbox" checked="checked"/></span><span>';
                 var order_select = '<select><option value=""></option><option value="ASC">ASC</option><option value="DESC">DESC</option><option value="NUMBER_ASC">ASC (number)</option><option value="NUMBER_DESC">DESC (number)</option><option value="DATE_ASC">ASC (date)</option>><option value="DATE_DESC">DESC (date)</option></select>'
-                property_object_str += uri_to_label(p_object.uri) + '</span><span class="property-optional"><input  type="checkbox" ' + optional_disabled + ' /></span><span class="property-order-by">' + order_select + '</span><span>Edit</span><span>+Add</span></div>';
+                property_object_str += p_name + '</span><span class="property-optional"><input  type="checkbox" ' + optional_disabled + ' /></span><span class="property-order-by">' + order_select + '</span><span>Edit</span><span>+Add</span></div>';
                 var property_object = $.parseHTML(property_object_str);
 
                 var id = "#class_instance_" + i_num;
@@ -230,7 +235,7 @@
                         {
                             p_object.type = data.type;
                             if (p_object.type.length != "") {
-                                $("#class_instance_" + i_num + " .property-row:nth-of-type(" + (p_object.n+2) + ") span:nth-of-type(2)").html(uri_to_label(p_object.uri) + ' (' + uri_to_label(p_object.type) + ')');
+                                $("#class_instance_" + i_num + " .property-row:nth-of-type(" + (p_object.n+2) + ") span:nth-of-type(2)").html(p_name + ' (' + uri_to_label(p_object.type) + ')');
                                 arrows.draw();
                             }
                         },
