@@ -1479,7 +1479,8 @@ def query_save(request):
                                  description=description, createdOn=datetime.now(), updatedOn=datetime.now(),
                                  design=design)
 
-    return HttpResponse(json.dumps({'id': query.id, 'description': query.description}), 'application/json')  # return query id
+    # return query info
+    return HttpResponse(json.dumps({'id': query.id, 'description': query.description}), 'application/json')
 
 
 # Update an existing query
@@ -1519,7 +1520,8 @@ def query_update(request, pk):
     # Save changes
     q_obj.save()
 
-    return HttpResponse('')
+    # return query info
+    return HttpResponse(json.dumps({'id': q_obj.id, 'description': q_obj.description}), 'application/json')
 
 
 # Delete an existing query
