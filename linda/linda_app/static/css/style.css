@@ -2590,6 +2590,7 @@ input, textarea {
 .filter-object .filter-remove {
     position: absolute;
     top: 0px;
+    right: 5px;
     margin-left: 10px;
     margin-right: 5px;
     font-size: 80%;
