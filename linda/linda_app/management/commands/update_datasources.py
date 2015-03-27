@@ -19,8 +19,8 @@ class Command(BaseCommand):
                     # update rss
                     datasource.update_rss()
                     # update info & save
-                    datasource.lastDataFetchOn = datetime.now()
-                    datasource.save()
+                    datasource.rss_info.lastDataFetchOn = datetime.now()
+                    datasource.rss_info.save()
                     print datasource.lastDataFetchOn.strftime("%Y-%m-%d %H:%M:%S") + ' updated ' + datasource.title
 
             # sleep for a minute
