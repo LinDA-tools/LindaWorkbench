@@ -231,4 +231,3 @@ TEST_RUNNER = 'django.test.runner.DiscoverRunner'
 # chunk size for uploading RDFs
 RDF_CHUNK_SIZE = 10000000
 
-

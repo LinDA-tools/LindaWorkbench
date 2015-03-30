@@ -53,7 +53,7 @@ def getstarted(request):
     return render(request, 'getstarted.html', params)
 
 
-def sparql(request):
+def sparql(request, q_id=None):
     params = {}
     params['mode'] = "sparql"
     params['datasources'] = list(DatasourceDescription.objects.all())
@@ -65,8 +65,8 @@ def sparql(request):
     params['RDF2ANY_SERVER'] = get_configuration().rdf2any_server
 
     # get query parameter
-    if request.GET.get('q_id'):
-        params['query'] = Query.objects.get(pk=request.GET.get('q_id'))
+    if q_id:
+        params['query'] = Query.objects.get(pk=q_id)
         if not params['query']:
             return Http404
 
