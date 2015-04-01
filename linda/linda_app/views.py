@@ -787,13 +787,15 @@ def datasourceCreate(request):
                 new_feed = RSSInfo.objects.create(url=request.POST.get("endpoint"))
                 dt = DatasourceDescription.objects.create(title=request.POST.get("title"), is_public=False,
                                                           name=sname, rss_info=new_feed,
-                                                          uri=uri, createdOn=datetime.now(), updatedOn=datetime.now())
+                                                          uri=uri, createdOn=datetime.now(), updatedOn=datetime.now(),
+                                                          createdBy=request.user)
                 dt.update_rss()
             else:
                 # default case - sparql endpoint
                 DatasourceDescription.objects.create(title=request.POST.get("title"), is_public=True,
                                                      name=sname, uri=request.POST.get("endpoint"),
-                                                     createdOn=datetime.now(), updatedOn=datetime.now())
+                                                     createdOn=datetime.now(), updatedOn=datetime.now(),
+                                                     createdBy=request.user)
 
             # go to view all datasources
             return redirect("/datasources/")
@@ -1261,7 +1263,8 @@ def api_datasource_create(request):
                 DatasourceDescription.objects.create(title=request.POST.get("title"),
                                                      name=sname,
                                                      uri=get_configuration().private_sparql_endpoint + "/rdf-graphs/" + sname,
-                                                     createdOn=datetime.now(), updatedOn=datetime.now())
+                                                     createdOn=datetime.now(), updatedOn=datetime.now(),
+                                                     createdBy=request.user)
 
                 results['status'] = '200'
                 results['message'] = 'Datasource created succesfully.'
@@ -1474,10 +1477,13 @@ def query_save(request):
     else:
         design = None
 
+    # get user
+    created_by = request.user if request.user.is_authenticated() else None
+
     # create the query object
     query = Query.objects.create(endpoint=endpoint, sparql=query,
                                  description=description, createdOn=datetime.now(), updatedOn=datetime.now(),
-                                 design=design)
+                                 design=design, createdBy=created_by)
 
     # return query info
     return HttpResponse(json.dumps({'id': query.id, 'description': query.description}), 'application/json')
