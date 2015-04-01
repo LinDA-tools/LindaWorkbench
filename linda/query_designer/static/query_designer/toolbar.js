@@ -223,9 +223,12 @@ var toolbar = {
 };
 
 /*On select change load active classes in dataset*/
-    $( "#toolbar > select" ).change(function() {
-        var name = $(this).val();
-        var that = this;
+    $( "#toolbar > select" ).change(on_datasource_select);
+
+    function on_datasource_select() {
+        var that = $("#toolbar select");
+        var name = that.val();
+
         toolbar.started_loading = false;
         toolbar.finished_loading = false;
         if (name == "") return;
@@ -238,7 +241,7 @@ var toolbar = {
             url: ADVANCED_BUILDER_API_URI + "object_properties/" +  name + "/",
             type: "GET",
             success: function(data, textStatus, jqXHR) {
-                if ($(that).val() != name) { //check if datasource has changed
+                if (that.val() != name) { //check if datasource has changed
                     return;
                 }
 
@@ -273,7 +276,7 @@ var toolbar = {
 
             toolbar.load_classes(that, name, 1, false);
         }, 15000);
-    });
+    }
 
 /*On search text change*/
 $( '#toolbar > input[type="search"]' ).on('input propertychange paste', function() {

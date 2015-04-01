@@ -163,7 +163,8 @@ header .site-title:hover {
     overflow: hidden;
 }
 
-.builder-advanced #main-container > .main {
+.builder-advanced #main-container > .main,
+.getting-started #main-container > .main{
     padding: 0;
 }
 
@@ -307,6 +308,16 @@ header .site-title:hover {
 #main-container > .main.full {
     width: calc(100% - 20px);
     margin-left: 0;
+}
+
+.builder-advanced #main-container > .main,
+.getting-started #main-container > .main{
+    width: calc(100% - 260px);
+}
+
+.builder-advanced #main-container > .main.full,
+.getting-started #main-container > .main.full {
+    width: 100%;
 }
 
 .sparql #main-container > .main,

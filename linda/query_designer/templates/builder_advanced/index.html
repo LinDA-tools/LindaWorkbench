@@ -24,7 +24,9 @@
 
 {% block content %}
     <div class="main">
-        {% include "builder_advanced/toolbar.html" %}
+        {% with default=datasource_default %}
+            {% include "builder_advanced/toolbar.html" %}
+        {% endwith %}
 
         <div id="builder_workspace">
             <span>{% trans "Drag and drop items here to create a query"%}</span>
@@ -244,4 +246,11 @@
     <script data-turbolinks-track="true" src="/static/query-builder/javascripts/gritter.js?body=1"></script>
     <script data-turbolinks-track="true" src="/static/query-builder/javascripts/application.js?body=1"></script>
 
+    {% if datasource_default %}
+        <script>
+            $().ready(function() {
+                on_datasource_select();
+            });
+        </script>
+    {% endif %}
 {% endblock %}

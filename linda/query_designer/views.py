@@ -29,6 +29,10 @@ def designer_defaults():
 # Home page
 def index(request):
     params = designer_defaults()
+    if request.GET.get('dt_id'):
+        params['datasource_default'] = DatasourceDescription.objects.get(name=request.GET.get('dt_id'))
+        if not params['datasource_default']:
+            return Http404
 
     return render(request, "builder_advanced/index.html", params)
 

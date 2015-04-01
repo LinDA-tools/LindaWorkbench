@@ -442,6 +442,7 @@ class DatasourceDescription(models.Model):
     createdOn = models.DateField(blank=False, null=False)  # datasource creation date
     updatedOn = models.DateField(blank=False, null=False)  # datasource last edit date
     rss_info = models.ForeignKey(RSSInfo, null=True, blank=True, default=None)  # info for RSS datasources
+    createdBy = models.ForeignKey(User, null=True, blank=True, default=None)  # user who created the datasource
 
     def __unicode__(self):
         return self.title
@@ -554,6 +555,7 @@ class Query(models.Model):
     createdOn = models.DateField(blank=False, null=False)  # query creation date
     updatedOn = models.DateField(blank=False, null=True)  # query last update date
     design = models.ForeignKey(Design, blank=True, null=True)  # the json object produced in the Query Designer
+    createdBy = models.ForeignKey(User, null=True, blank=True, default=None)  # user who created the query
 
     def __str__(self):
         return self.description
