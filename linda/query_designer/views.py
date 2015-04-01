@@ -105,12 +105,12 @@ def active_classes(request, dt_name):
             distinct = "DISTINCT"
         else:
             distinct = ""
-        print "dst = " + distinct
+
         # query to get all classes with at least one instance
         classes_query_paginate_by = 10000
         query = "SELECT " + distinct + " ?class WHERE { ?s a ?class } LIMIT " + str(classes_query_paginate_by) + " OFFSET " + str(
             (int(p) - 1) * classes_query_paginate_by)
-        print query
+
     return sparql_query_json(endpoint, query)
 
 
@@ -235,7 +235,7 @@ def get_entity_suggestions(request, dt_name):
 
     # get json result
     result = sparql_query_json(endpoint, query)
-    print result.content
+
     # make array of results
     results = []
     res = json.loads(result.content)
