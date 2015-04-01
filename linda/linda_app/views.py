@@ -780,6 +780,9 @@ def datasourceCreate(request):
             # find the slug
             sname = slugify(unidecode(request.POST.get("title")))
 
+            # get user
+            created_by = request.user if request.user.is_authenticated() else None
+
             # check for RSS
             if request.POST.get("is_rss"):
                 # case rss feed
@@ -788,14 +791,14 @@ def datasourceCreate(request):
                 dt = DatasourceDescription.objects.create(title=request.POST.get("title"), is_public=False,
                                                           name=sname, rss_info=new_feed,
                                                           uri=uri, createdOn=datetime.now(), updatedOn=datetime.now(),
-                                                          createdBy=request.user)
+                                                          createdBy=created_by)
                 dt.update_rss()
             else:
                 # default case - sparql endpoint
                 DatasourceDescription.objects.create(title=request.POST.get("title"), is_public=True,
                                                      name=sname, uri=request.POST.get("endpoint"),
                                                      createdOn=datetime.now(), updatedOn=datetime.now(),
-                                                     createdBy=request.user)
+                                                     createdBy=created_by)
 
             # go to view all datasources
             return redirect("/datasources/")
@@ -1259,12 +1262,15 @@ def api_datasource_create(request):
                                     data=data)
 
             if callAdd.text == "":
+                # get user
+                created_by = request.user if request.user.is_authenticated() else None
+
                 # create datasource description
                 DatasourceDescription.objects.create(title=request.POST.get("title"),
                                                      name=sname,
                                                      uri=get_configuration().private_sparql_endpoint + "/rdf-graphs/" + sname,
                                                      createdOn=datetime.now(), updatedOn=datetime.now(),
-                                                     createdBy=request.user)
+                                                     createdBy=created_by)
 
                 results['status'] = '200'
                 results['message'] = 'Datasource created succesfully.'
