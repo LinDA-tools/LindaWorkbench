@@ -28,8 +28,9 @@ html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockq
     box-sizing: content-box;
 }
 
-html {
+body {
     overflow-y: scroll;
+    position: relative;
 }
 
 html, body
