@@ -13,7 +13,7 @@ urlpatterns = patterns('',
                        #Basic pages
                        # url(r'^$', views.index, name='home'),
 
-                       url(r'^users/', views.api_datasources_list, name='datasources-list'),
+                       url(r'^datasources/', views.api_datasources_list, name='datasources-list'),
                        url(r'^recommend/',views.recommend_dataset, name="recommend_dataset")
                        # url(r'^users/{userid}/vocabularies/', views.api_datasource_create, name='datasource-create'),
                        #

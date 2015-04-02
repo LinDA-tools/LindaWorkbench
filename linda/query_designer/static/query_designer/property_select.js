@@ -210,7 +210,7 @@ function property_select(instance) {
 
     this.load(); //start loading properties
 
-    $("#class_instance_" + this.c.id + " .property-control").html('<input type="search" autocomplete="false" placeholder="search"/><div class="dropdown-toggle-properties"><span class="loading"></span></div><span class="properties-found">Loading properties</span>');
+    $("#class_instance_" + this.c.id + " .property-control").html('<input type="search" autocomplete="false" placeholder="find property"/><div class="dropdown-toggle-properties"><span class="loading"></span></div><span class="properties-found">Loading properties</span>');
     $("#class_instance_" + this.c.id + " .property-control").append('<div class="property-dropdown"><div class="button up"></div><div class="properties-list"></div><div class="button down"></button></div>');
 }
 

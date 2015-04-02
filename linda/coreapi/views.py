@@ -170,18 +170,22 @@ def recommend_dataset(request):
 
     results = sorted(results, key=itemgetter('ranking'), reverse=True)
 
-    paginator = Paginator(results, 20)
+    if page != "all":
+        paginator = Paginator(results, 20)
 
-    try:
-        vocabularies = paginator.page(page)
-    except PageNotAnInteger:
-        vocabularies = paginator.page(1)
-    except EmptyPage:
-        vocabularies = paginator.page(paginator.num_pages)
+        try:
+            records = paginator.page(page)
+        except PageNotAnInteger:
+            records = paginator.page(1)
+        except EmptyPage:
+            records = paginator.page(paginator.num_pages)
+    else:
+        print results
+        records = results
 
     data = []
-    for vocab in vocabularies:
-        data.append(vocab)
+    for record in records:
+        data.append(record)
     data = json.dumps(data)
     mimetype = 'application/json'
     return HttpResponse(data, mimetype)
