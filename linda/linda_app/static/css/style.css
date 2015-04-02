@@ -42,6 +42,10 @@ p {
     margin-bottom: 10px;
 }
 
+i, em {
+	font-style: italic;
+}
+
 article, aside,aside1, details, figcaption, figure, footer, header, hgroup, menu, nav, section {
     display: block;
 }

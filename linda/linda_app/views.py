@@ -34,7 +34,7 @@ def index(request):
     params['installation_pending'] = installation_pending()
     params['recent_datasources'] = DatasourceDescription.objects.all().order_by('-updatedOn')[:3]
     params['recent_queries'] = Query.objects.all().order_by('-updatedOn')[:3]
-    if request.user.is_authenticated:
+    if request.user.is_authenticated():
         params['recent_analytics'] = Analytics.objects.filter(user_id=request.user.pk).order_by('-updatedOn')[:3]
     else:
         params['recent_analytics'] = []

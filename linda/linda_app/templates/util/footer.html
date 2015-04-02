@@ -1,26 +1,10 @@
-{% if not visualization %}
         </div> <!-- main-container -->
 
     <footer class="centered">
 
-        <p class="left">&copy; 2014 LinDA Project. All rights reserved.</p>
+        <p class="left">&copy; {% now "Y" %} LinDA Project. All rights reserved.</p>
         <a href="/terms-of-use" class="right">Terms of use</a>
 
         <div class="clearfix"></div>
     </footer>
-{% else %}
-    <script>
-		var footer_str = '<footer class="centered">      <p class="left">&copy; 2014 LinDA Project. All rights reserved.</p>     <a href="/terms-of-use" class="right">Terms of use</a>      <div class="clearfix"></div> </footer>';
-        $(function() {
-			var f = function (){
-				if ($(".ember-view").length == 0) { //ember application container has not loaded yet -- wait 50 more milliseconds
-					setTimeout(f, 50);
-				} else {
-					$("body").append(footer_str);
-				}
-			};
-			
-			setTimeout(f, 50);
-        });
-    </script>
 {% endif %}
