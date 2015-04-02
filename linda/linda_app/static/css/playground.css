@@ -1,0 +1,33 @@
+/* Header menu*/
+
+.header-menu, .header-menu li {
+    display: inline-block;
+    vertical-align: top;
+}
+
+.header-menu {
+    margin-top: 10px;
+    margin-left: 40px;
+}
+
+.header-menu li {
+    margin: 5px 10px;
+}
+
+#menu-toggle {
+    display: none !important;
+}
+
+/* Main container */
+#main-container > .main {
+    width: 100%;
+}
+
+.sparql #main-container > .main, .builder-advanced #main-container > .main {
+    width: 100%;
+}
+
+/* Text colors */
+.green-text {
+    color: #00B16A;
+}

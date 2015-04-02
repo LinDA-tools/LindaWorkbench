@@ -3,6 +3,7 @@ from time import timezone
 import urllib
 from django.db import models
 from django.contrib.auth.models import User
+from django.db.models import Q
 from django.db.models.signals import post_save
 from django.template.defaultfilters import slugify, random
 from rdflib import Graph, OWL, RDFS
@@ -548,6 +549,12 @@ def datasource_from_endpoint(endpoint):
     return None
 
 
+# Custom Query Manager
+class QueryManager(models.Manager):
+    def for_user(self, user):
+        return super(QueryManager, self).get_query_set().filter(createdBy=user)
+
+
 class Query(models.Model):
     endpoint = models.URLField(blank=False, null=False)  # the query endpoint
     sparql = models.CharField(max_length=4096, blank=False, null=False)  # the query string (select ?s ?p ?o...)
@@ -556,6 +563,8 @@ class Query(models.Model):
     updatedOn = models.DateField(blank=False, null=True)  # query last update date
     design = models.ForeignKey(Design, blank=True, null=True)  # the json object produced in the Query Designer
     createdBy = models.ForeignKey(User, null=True, blank=True, default=None)  # user who created the query
+
+    objects = QueryManager()
 
     def __str__(self):
         return self.description

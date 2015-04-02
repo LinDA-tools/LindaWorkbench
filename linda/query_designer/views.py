@@ -34,6 +34,8 @@ def index(request):
         if not params['datasource_default']:
             return Http404
 
+    params['tutorial'] = request.GET.get('tutorial', None)
+
     return render(request, "builder_advanced/index.html", params)
 
 

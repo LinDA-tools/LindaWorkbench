@@ -14,7 +14,7 @@ MANAGERS = ADMINS
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'linda',
+        'NAME': 'linda_playground',
         'USER': passwords.DB_USER,  # load from file passwords.py, the actual contents of which are !!NOT!! uploaded to github for privacy reasons
         'PASSWORD': passwords.DB_PASSWORD,
         'character': 'utf8',

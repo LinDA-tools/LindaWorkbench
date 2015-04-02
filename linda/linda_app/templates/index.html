@@ -50,32 +50,36 @@
             </div>
         </div>
 
-        <div class="recent-box">
-            <h2 class="recent-box-title">{%trans "Recent Data Sources"%}</h2>
-            <div class="recent-list">
-                {% with datasources=recent_datasources out="html" %}
-                    {% include "datasource/pretty-list.html" %}
-                {% endwith %}
+        {% if user.is_authenticated %}
+            <div class="recent-box">
+                <h2 class="recent-box-title">{%trans "Recent Data Sources"%}</h2>
+                <div class="recent-list">
+                    {% with datasources=recent_datasources out="html" %}
+                        {% include "datasource/pretty-list.html" %}
+                    {% endwith %}
+                </div>
             </div>
-        </div>
 
-        <div class="recent-box">
-            <h2 class="recent-box-title">{%trans "Recent Queries"%}</h2>
-            <div class="recent-list">
-                {% with queries=recent_queries out="html" %}
-                    {% include "queries/pretty-list.html" %}
-                {% endwith %}
+            <div class="recent-box">
+                <h2 class="recent-box-title">{%trans "Recent Queries"%}</h2>
+                <div class="recent-list">
+                    {% with queries=recent_queries out="html" %}
+                        {% include "queries/pretty-list.html" %}
+                    {% endwith %}
+                </div>
             </div>
-        </div>
 
-        <div class="recent-box">
-            <h2 class="recent-box-title">{%trans "Recent Analytics"%}</h2>
-            <div class="recent-list">
-                {% with analytics=recent_analytics out="html" %}
-                    {% include "analytics/pretty-list.html" %}
-                {% endwith %}
+            <div class="recent-box">
+                <h2 class="recent-box-title">{%trans "Recent Analytics"%}</h2>
+                <div class="recent-list">
+                    {% with analytics=recent_analytics out="html" %}
+                        {% include "analytics/pretty-list.html" %}
+                    {% endwith %}
+                </div>
             </div>
-        </div>
+        {% else %}
+            <p>Click <a href="/accounts/signup/">here</a> to create an account in the LinDA Playground now!</p>
+        {% endif %}
 	</div>
 
 {% endblock %}
