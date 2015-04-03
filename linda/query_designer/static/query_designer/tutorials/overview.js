@@ -51,27 +51,27 @@
     //#4: User adds a "Film" instance
     function on_toolbar_load() {
         //check every half second if the class was created
-        //much simpler than manipulating on drop event, while not really resource gready
+        //much simpler than manipulating on drop event, while not really resource greedy
         var interval = setInterval(function() {
             if (builder_workbench.instances.length > 0) { //new instance
-                //stop waiting
-                clearInterval(interval);
-
                 if (builder_workbench.instances[0].uri == "http://data.linkedmdb.org/resource/movie/film") {
+                    //stop waiting
+                    clearInterval(interval);
+
                     tooltip('#class_instance_0',
                             'Adding a <span class=\"green-text\">Film</span> instance in the workspace will create a query that gets all films found in the IMDB data source.',
                             'top'
                     );
 
                     //show after a while
-                    setTimeout(on_instance_add, 6000);
+                    setTimeout(on_film_add, 6000);
                 }
             }
         }, 500);
     }
 
     //#5: User adds film properties
-    function on_instance_add() {
+    function on_film_add() {
         tooltip('#class_instance_0 .property-control',
                 'By default the result will contain the film\'s URI, which works like an ID.<br />We want to really find out about those films, so let\'s add some film <em>properties</em>.<br />Choose <span class="green-text">label</span> and <span class="green-text">initial release date</span> from the properties.',
                 'right'
@@ -80,8 +80,9 @@
 
         var that = $('#class_instance_0 .property-control');
         var interval = setInterval(function() {
-            $(".tooltipster-base").css('left', $(that).offset().left + (that).outerWidth() + 15);
-            $(".tooltipster-base").css('top', $(that).offset().top - 5);
+            //$(".tooltipster-base").css('left', $(that).offset().left + (that).outerWidth() + 10);
+            //$(".tooltipster-base").css('top', $(that).offset().top - 7);
+            $('#class_instance_0 .property-control').tooltipster('reposition');
 
             if (check_properties(0, ["http://www.w3.org/2000/01/rdf-schema#label", "http://data.linkedmdb.org/resource/movie/initial_release_date"])) {
                 //stop waiting
@@ -162,13 +163,13 @@
         );
 
         setTimeout(function() {
-            //scroll to instance
+            //scroll to film
             $('html,body').animate({
-                scrollTop: 0
+                scrollTop: $("#class_instance_0").offset().top - 200
             });
 
             tooltip("#class_instance_0 .header-row span:nth-of-type(1)",
-                'From the <span class="green-text">shown</span> column you can decide if a property will be shown in the results or not.<br />The film\'s URI is still in the query to identify each film, but it\'s not presented.<br />Try to <span class="green-text">uncheck</span> the shown option of the URI and run the query again.<br /><br /><em>Hint: you may also press <span class="green-text">F9</span> to run the query</em>',
+                'From the <span class="green-text">shown</span> column you can decide if a property will be shown in the results or not.<br />The film\'s URI is still in the query to identify each film, but it\'s not presented.<br />Try to <span class="green-text">uncheck</span> the shown option of the URI and <span class="green-text">run</span> the query again.<br /><br /><em>Hint: you may also press <span class="green-text">F9</span> to run the query</em>',
                 'top'
             );
 
@@ -197,4 +198,160 @@
                 'There you go!',
                 'top'
         );
+
+        setTimeout(function() {
+            tooltip("#sparql_results_table",
+                'Now let\'s try something new! What if we wanted to see which actors have performed in every film?',
+                'top'
+            );
+
+            setTimeout(function() {
+                //scroll to instance
+                $('html,body').animate({
+                    scrollTop: 0
+                });
+
+                tooltip("#toolbar",
+                    'Drag and drop the <span class="green-text">Actor</span> class in the workspace.',
+                    'bottom'
+                );
+
+                //wait for actor
+                var interval = setInterval(function() {
+                    if (builder_workbench.instances.length > 1) { //new instance
+                        if (builder_workbench.instances[1].uri == "http://data.linkedmdb.org/resource/movie/actor") {
+                            //stop waiting
+                            clearInterval(interval);
+
+                            tooltip('#toolbar input[type="search"]',
+                                    'You can always use this search to find <em>classes</em> in your data source',
+                                    'bottom'
+                            );
+
+                            //show after a while
+                            setTimeout(on_actor_added, 5000);
+                        }
+                    }
+                }, 500);
+            }, 6000);
+        }, 2500);
+    }
+
+    //#10: Create connection between films and actors
+    function on_actor_added() {
+        tutorial_step++;
+
+        tooltip('#class_instance_1',
+                'Here you have also added <span class="green-text">Actors</span> in the query. You have to specify a <b><em>connection</em><b> between films and their actors...',
+                'top'
+        );
+
+        setTimeout(function() {
+            tooltip('#class_instance_0 .property-control',
+                'Add the actor property to the film.',
+                'right'
+            );
+
+            //wait for the actor property to be added
+            var interval = setInterval(function() {
+                if (check_properties(0, ["http://www.w3.org/2000/01/rdf-schema#label", "http://data.linkedmdb.org/resource/movie/initial_release_date", "http://data.linkedmdb.org/resource/movie/actor"])) {
+                    tutorial_step++;
+
+                    clearInterval(interval);
+                    add_connection();
+                }
+            }, 500);
+        }, 7000);
+    }
+
+    function add_connection() {
+        tooltip('#class_instance_0 .header-row span:nth-of-type(6)',
+                'The <em>Foreign</em> column is used to add <span class="green-text">foreign key</span> connections.<br />When the arrow enters a property you can see an <b>add</b> link.',
+                'top'
+        );
+
+        setTimeout(function() {
+            tooltip('#class_instance_0 .property-row:last-of-type',
+                    'Click the <span class="green-text">add</span> foreign key link',
+                    'right'
+            );
+
+            //wait for the actor property to be added
+            var interval = setInterval(function() {
+                if (typeof(builder_workbench.connection_from) != "undefined") {
+                    clearInterval(interval);
+
+                    tooltip('#class_instance_1 .title',
+                            'Now click the Actor\'s title to create the connection',
+                            'top'
+                    );
+
+                    //wait for the connection to be created
+                    var interval2 = setInterval(function() {
+                        if ((arrows.connections.length > 0) && (builder_workbench.connection_from === undefined)) {
+                            tutorial_step++;
+
+                            clearInterval(interval2);
+                            add_actor_label();
+                        }
+                    }, 500);
+                }
+            }, 500);
+        }, 5000)
+    }
+
+    function add_actor_label() {
+        tooltip('#class_instance_1 .property-control',
+                'Fantastic!<br />Now add the actor\'s label, hide their URI and run the query again.',
+                'right'
+        );
+
+        //clear results table
+        $("#sparql_results_table tbody").html('');
+
+        //wait for it to fill again
+        var interval = setInterval(function() {
+            if ($("#sparql_results_table tbody tr").length > 0) {
+                clearInterval(interval);
+
+                tooltip('#sparql_results_table',
+                        'Alright! Now let\'s order the results by film name, shall we?',
+                        'top'
+                );
+
+                setTimeout(function(){
+                    //scroll to film
+                    $('html,body').animate({
+                        scrollTop: $("#class_instance_0").offset().top - 200
+                    });
+
+                    tooltip('#class_instance_0 .header-row span:nth-of-type(4)',
+                            'You can order results by setting the <span class="green-text">order by</span> option.<br />Set the label\'s order by to <span class="green-text">ASC</span> and run one more time.<br />There are also options for numbers and dates, no need for them right now...',
+                            'top'
+                    );
+
+                    //clear results table
+                    $("#sparql_results_table tbody").html('');
+
+                    //wait for it to fill again
+                    var interval2 = setInterval(function() {
+                        if ($("#sparql_results_table tbody tr").length > 0) {
+                            clearInterval(interval2);
+
+                            tooltip('#sparql_results_table',
+                                    'Awesome!',
+                                    'top'
+                            );
+
+                            setTimeout(function() {
+                                tooltip('#sparql_results_table',
+                                        'It seems you\'re querying like a boss! Click <a href="/query-designer/?tutorial=filters">here</a> to move to the next tutorial!',
+                                        'top'
+                                );
+                            }, 2000);
+                        }
+                    }, 500);
+                }, 5000);
+            }
+        }, 500);
     }

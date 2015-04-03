@@ -2,16 +2,14 @@
 
     //show a new tooltip
     function tooltip(selector, text, position) {
-        if (last_shown_tooltip != '') {
-            //remove prev
-            $(last_shown_tooltip).tooltipster('destroy');
-        }
+        toolbar_destroy();
 
         $(selector).tooltipster({
             content: text,
             trigger: 'custom',
             contentAsHTML: true,
-            position: position
+            position: position,
+            interactive: true
         });
         $(selector).tooltipster('show');
 
@@ -20,7 +18,10 @@
 
     //destroy an existing toolbar
     function toolbar_destroy() {
-        $(last_shown_tooltip).tooltipster('destroy');
+        if (last_shown_tooltip != "") {
+            $(last_shown_tooltip).tooltipster('destroy');
+            $(last_shown_tooltip).attr('title', '');
+        }
         last_shown_tooltip = '';
     }
 
