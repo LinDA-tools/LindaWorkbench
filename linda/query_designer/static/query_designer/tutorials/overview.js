@@ -1,30 +1,21 @@
     var tutorial_step = 1;
 
     //#1: Welcome users to the tutorial
-    $('#toolbar .chosen-container').tooltipster({
-        content: '<h6>Welcome to LinDA Query designer!</h6>At the end of this tutorial, you\'ll be able to make complex queries on linked data sources with a few easy steps!<br />To start this tutorial, choose the <span class="green-text">IMDB</span> data source.',
-        trigger: 'custom', // default is 'hover' which is no good here
-        contentAsHTML: true,
-        position: 'bottom'
-    });
-
-    //show after a while
-    setTimeout(function() {$('.chosen-container').tooltipster('show');}, 2000);
+    setTimeout(function() {
+        tooltip('#toolbar .chosen-container',
+                '<h6>Welcome to LinDA Query designer!</h6>At the end of this tutorial, you\'ll be able to make complex queries on linked data sources with a few easy steps!<br />To start this tutorial, choose the <span class="green-text">IMDB</span> data source.',
+                'bottom'
+        );
+    }, 2000);
     tutorial_step++;
 
     //#2: User clicks on data sources
     $('#toolbar').on('click', '.chosen-container', function() {
         if (tutorial_step == 2) {
-            //remove prev
-            $('#toolbar .chosen-container').tooltipster('destroy');
-
-            $('#toolbar .chosen-container').tooltipster({
-                content: 'You can also search for a data source by typing<br />Try searching for "<span class=\"green-text\">imdb</span>" and select the result',
-                trigger: 'custom',
-                contentAsHTML: true,
-                position: 'right'
-            });
-            $('.chosen-container').tooltipster('show');
+            tooltip('#toolbar .chosen-container',
+                    'You can also search for a data source by typing<br />Try searching for "<span class=\"green-text\">imdb</span>" and select the result',
+                    'right'
+            );
 
             //go to next step
             tutorial_step++;
@@ -34,31 +25,24 @@
     //#3: Classes appear
     $('#toolbar select').on('change', function() {
         if (tutorial_step == 3) {
-            //remove prev
-            $('#toolbar .chosen-container').tooltipster('destroy');
+            toolbar_destroy();
 
             var that = this;
             setTimeout(function() {
                 if ($(that).val() == "imdb") {
-                    $('#toolbar').tooltipster({
-                        content: 'When you select a data source, the different types of objects in the datasource start to appear in the above area (named <i>toolbar</i>).<br />Buttons such as "<span class=\"green-text\">Film</span>" and "<span class=\"green-text\">Actor</span>" should have appeared by now in the toolbar.<br />Drag and drop the "<span class=\"green-text\">Film</span>" button in the white are bellow to find films in IMDB.',
-                        trigger: 'custom',
-                        contentAsHTML: true,
-                        position: 'bottom'
-                    });
-                    $('#toolbar').tooltipster('show');
+                    tooltip('#toolbar',
+                            'When you select a data source, the different types of objects in the datasource start to appear in the above area (named <i>toolbar</i>).<br />Buttons such as "<span class=\"green-text\">Film</span>" and "<span class=\"green-text\">Actor</span>" should have appeared by now in the toolbar.<br />Drag and drop the "<span class=\"green-text\">Film</span>" button in the white are bellow to find films in IMDB.',
+                            'bottom'
+                    );
 
                     //go to next step
                     on_toolbar_load();
                     tutorial_step++;
                 } else {
-                    $('#toolbar').tooltipster({
-                        content: 'That doesn\'t really look like IMDB\'s data source, right?<br />Anyway, feel free to play around! We\'ll continue when you choose <b>IMDB</b>.',
-                        trigger: 'custom',
-                        contentAsHTML: true,
-                        position: 'bottom'
-                    });
-                    $('#toolbar').tooltipster('show');
+                    tooltip('#toolbar',
+                            'That doesn\'t really look like IMDB\'s data source, right?<br />Anyway, feel free to play around! We\'ll continue when you choose <b>IMDB</b>.',
+                            'bottom'
+                    );
                 }
             }, 2000);
         }
@@ -73,21 +57,14 @@
                 //stop waiting
                 clearInterval(interval);
 
-                //remove prev
-                 $('#toolbar').tooltipster('destroy');
-
-                console.log(builder_workbench.instances[0].uri);
                 if (builder_workbench.instances[0].uri == "http://data.linkedmdb.org/resource/movie/film") {
-                    $('#class_instance_0').tooltipster({
-                        content: 'Adding a <span class=\"green-text\">Film</span> instance in the workspace will create a query that gets all films found in the IMDB data source.',
-                        trigger: 'custom',
-                        contentAsHTML: true,
-                        position: 'top'
-                    });
-                    $('#class_instance_0').tooltipster('show');
+                    tooltip('#class_instance_0',
+                            'Adding a <span class=\"green-text\">Film</span> instance in the workspace will create a query that gets all films found in the IMDB data source.',
+                            'top'
+                    );
 
                     //show after a while
-                    setTimeout(on_instance_add, 7000);
+                    setTimeout(on_instance_add, 6000);
                 }
             }
         }, 500);
@@ -95,20 +72,129 @@
 
     //#5: User adds film properties
     function on_instance_add() {
-        //remove prev
-        $('#class_instance_0').tooltipster('destroy');
+        tooltip('#class_instance_0 .property-control',
+                'By default the result will contain the film\'s URI, which works like an ID.<br />We want to really find out about those films, so let\'s add some film <em>properties</em>.<br />Choose <span class="green-text">label</span> and <span class="green-text">initial release date</span> from the properties.',
+                'right'
 
-        $('#class_instance_0 .property-control').tooltipster({
-            content: 'By default the result will contain the film\'s URI, which works like an ID.<br />We want to really find out about those films, so let\'s add some film <em>properties</em>.<br />Choose <span class="green-text">label</span> and <span class="green-text">release date</span> from the properties.',
-            trigger: 'custom',
-            contentAsHTML: true,
-            position: 'right'
-        });
-        $('#class_instance_0 .property-control').tooltipster('show');
+        );
 
         var that = $('#class_instance_0 .property-control');
-        var position_interval = setInterval(function() {
+        var interval = setInterval(function() {
             $(".tooltipster-base").css('left', $(that).offset().left + (that).outerWidth() + 15);
             $(".tooltipster-base").css('top', $(that).offset().top - 5);
+
+            if (check_properties(0, ["http://www.w3.org/2000/01/rdf-schema#label", "http://data.linkedmdb.org/resource/movie/initial_release_date"])) {
+                //stop waiting
+                clearInterval(interval);
+
+                //move to step 6
+                tutorial_step = 6;
+                run_query();
+            }
         }, 500);
+    }
+
+    //#6: Run query
+    function run_query() {
+        //scroll to query
+        $('html,body').animate({
+           scrollTop: $(".editor-container").offset().top
+        });
+
+        tooltip('.ace_content',
+                'As you can see above, a <em>SPARQL query</em> has been created.<br />Do you care about the query? Because <em>I</em> don\'t...<br />Let\'s find those films!',
+                'bottom'
+        );
+
+        //show after a while
+        setTimeout(function() {
+            tooltip('.qb-equivalent-query-main .btn-success',
+                    'With the <span class="green-text">run</span> button, you can execute the query.<br />Click run to view the results!',
+                    'right'
+            );
+
+            var interval = setInterval(function() {
+                if ($("#sparql_results_table tbody tr").length > 0) { //results have been returned
+                    clearInterval(interval);
+                    tutorial_step++;
+                    results_appear();
+                }
+            }, 500);
+        }, 6000);
+    }
+
+    //#7: Results appear
+    function results_appear() {
+        tooltip('#sparql_results_table th:nth-of-type(3)',
+                'Can you see all these films? Nice job!<br />',
+                'top'
+        );
+
+        setTimeout(function() {
+            tooltip("#sparql_results_table tbody tr:nth-of-type(10) td:nth-of-type(4)",
+                    'Wow, some of these movies are <em>old</em>...',
+                    'left'
+            );
+        }, 3000);
+
+        setTimeout(function() {
+            tooltip(".results-next-container",
+                    'By default you can only see the first 100 results, but you can always move between result pages from here.',
+                    'bottom'
+            );
+
+            //scroll to paginator
+            $('html,body').animate({
+                scrollTop: $(".results-next-container").offset().top - 40
+            });
+        }, 6000);
+
+        setTimeout(hide_uris, 11000);
+    }
+
+    //#8: Hide URIs
+    function hide_uris() {
+        tutorial_step++;
+
+        tooltip("#sparql_results_table th:nth-of-type(2)",
+                'Is there any real need for those URIs to mess up with our pretty table? Let\'s throw them away!',
+                'top'
+        );
+
+        setTimeout(function() {
+            //scroll to instance
+            $('html,body').animate({
+                scrollTop: 0
+            });
+
+            tooltip("#class_instance_0 .header-row span:nth-of-type(1)",
+                'From the <span class="green-text">shown</span> column you can decide if a property will be shown in the results or not.<br />The film\'s URI is still in the query to identify each film, but it\'s not presented.<br />Try to <span class="green-text">uncheck</span> the shown option of the URI and run the query again.<br /><br /><em>Hint: you may also press <span class="green-text">F9</span> to run the query</em>',
+                'top'
+            );
+
+            //wait for new results
+            var interval = setInterval(function () {
+                var th = $("#sparql_results_table th");
+                var uri_removed = true;
+                for (var i=0; i<th.length; i++) {
+                    if ($(th[i]).html() == "Film") { //nope - still there
+                        uri_removed = false;
+                        break;
+                    }
+                }
+
+                if (uri_removed) {
+                    clearInterval(interval);
+                    on_uri_removed();
+                }
+            }, 500);
+        }, 5000);
+    }
+
+    //#9: New results
+    function on_uri_removed() {
+        tooltip("#sparql_results_table",
+                'There you go!',
+                'top'
+        );
     }
