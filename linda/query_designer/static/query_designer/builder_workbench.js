@@ -485,9 +485,43 @@
             var i = $(this).parent().parent().data('i');
             var n = $(this).parent().parent().data('n');
 
+            //set value & propagate to foreign keys
             builder_workbench.instances[i].selected_properties[n].show = $(this).is(':checked');
+            propagate_shown_property(i, n, $(this).is(':checked'));
+
             builder.reset();
         });
+
+    //search for connected properties & change their show to
+    function propagate_shown_property(i, n, val) {
+        for (var c=0; c<arrows.connections.length; c++) {
+            var fi = arrows.connections[c].f.split('_').pop();
+            var ti = arrows.connections[c].t.split('_').pop();
+
+            if ((fi == i) && (arrows.connections[c].fp == n)) {
+                //if already set no need to continue
+                if (builder_workbench.instances[ ti ].selected_properties[ arrows.connections[c].tp ].show == builder_workbench.instances[i].selected_properties[n].show) {
+                    return;
+                }
+
+                $(arrows.connections[c].t + " .property-row:nth-of-type(" + (arrows.connections[c].tp + 2) + ") span:nth-of-type(1) input").prop('checked', val);
+                builder_workbench.instances[ ti ].selected_properties[ arrows.connections[c].tp ].show = val;
+
+                propagate_shown_property(ti, arrows.connections[c].tp);
+            }
+            else if ((ti == i) && (arrows.connections[c].tp == n)) {
+                //if already set no need to continue
+                if (builder_workbench.instances[ fi ].selected_properties[ arrows.connections[c].fp ].show == builder_workbench.instances[i].selected_properties[n].show) {
+                    return;
+                }
+
+                $(arrows.connections[c].f + " .property-row:nth-of-type(" + (arrows.connections[c].fp + 2) + ") span:nth-of-type(1) input").prop('checked', val);
+                builder_workbench.instances[ fi ].selected_properties[ arrows.connections[c].fp ].show = val;
+
+                propagate_shown_property(fi, arrows.connections[c].fp);
+            }
+        }
+    }
 
     $.contextMenu({
         selector: '.property-table .property-row',
