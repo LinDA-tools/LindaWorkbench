@@ -1,12 +1,19 @@
     var tutorial_step = 1;
 
+    //intervals
+    var INTERVAL_VERY_LONG = 8000;
+    var INTERVAL_LONG = 6000;
+    var INTERVAL_NORMAL = 5000;
+    var INTERVAL_SHORT = 4000;
+    var INTERVAL_VERY_SHORT = 3000;
+
     //#1: Welcome users to the tutorial
     setTimeout(function() {
         tooltip('#toolbar .chosen-container',
                 '<h6>Welcome to LinDA Query designer!</h6>At the end of this tutorial, you\'ll be able to make complex queries on linked data sources with a few easy steps!<br />To start this tutorial, choose the <span class="green-text">IMDB</span> data source.',
                 'bottom'
         );
-    }, 2000);
+    }, 1000);
     tutorial_step++;
 
     //#2: User clicks on data sources
@@ -64,7 +71,7 @@
                     );
 
                     //show after a while
-                    setTimeout(on_film_add, 6000);
+                    setTimeout(on_film_add, INTERVAL_VERY_LONG);
                 }
             }
         }, 500);
@@ -73,7 +80,7 @@
     //#5: User adds film properties
     function on_film_add() {
         tooltip('#class_instance_0 .property-control',
-                'By default the result will contain the film\'s URI, which works like an ID.<br />We want to really find out about those films, so let\'s add some film <em>properties</em>.<br />Choose <span class="green-text">label</span> and <span class="green-text">initial release date</span> from the properties.',
+                'By default the result will contain the film\'s URI, which works like an ID.<br />We want to really find out about those films, so let\'s add some film <em>properties</em>.<br />Choose <span class="green-text">label</span> and <span class="green-text">initial release date</span> from the properties.<br /><br /><em>Hint: You can search for properties by typing in the <span class="green-text">find property</span> box.</em>',
                 'right'
 
         );
@@ -121,7 +128,7 @@
                     results_appear();
                 }
             }, 500);
-        }, 6000);
+        }, INTERVAL_LONG);
     }
 
     //#7: Results appear
@@ -136,21 +143,21 @@
                     'Wow, some of these movies are <em>old</em>...',
                     'left'
             );
-        }, 3000);
 
-        setTimeout(function() {
-            tooltip(".results-next-container",
-                    'By default you can only see the first 100 results, but you can always move between result pages from here.',
-                    'bottom'
-            );
+            setTimeout(function() {
+                tooltip(".results-next-container",
+                        'By default you can only see the first 100 results, but you can always move between result pages from here.',
+                        'bottom'
+                );
 
-            //scroll to paginator
-            $('html,body').animate({
-                scrollTop: $(".results-next-container").offset().top - 40
-            });
-        }, 6000);
+                //scroll to paginator
+                $('html,body').animate({
+                    scrollTop: $(".results-next-container").offset().top - 40
+                });
 
-        setTimeout(hide_uris, 11000);
+                setTimeout(hide_uris, INTERVAL_LONG);
+            }, INTERVAL_LONG);
+        }, INTERVAL_SHORT);
     }
 
     //#8: Hide URIs
@@ -189,7 +196,7 @@
                     on_uri_removed();
                 }
             }, 500);
-        }, 5000);
+        }, INTERVAL_NORMAL);
     }
 
     //#9: New results
@@ -229,12 +236,12 @@
                             );
 
                             //show after a while
-                            setTimeout(on_actor_added, 5000);
+                            setTimeout(on_actor_added, INTERVAL_NORMAL);
                         }
                     }
                 }, 500);
-            }, 6000);
-        }, 2500);
+            }, INTERVAL_LONG);
+        }, INTERVAL_SHORT);
     }
 
     //#10: Create connection between films and actors
@@ -261,7 +268,7 @@
                     add_connection();
                 }
             }, 500);
-        }, 7000);
+        }, INTERVAL_VERY_LONG);
     }
 
     function add_connection() {
@@ -297,7 +304,7 @@
                     }, 500);
                 }
             }, 500);
-        }, 5000)
+        }, INTERVAL_NORMAL)
     }
 
     function add_actor_label() {
@@ -348,10 +355,10 @@
                                         'It seems you\'re querying like a boss! Click <a href="/query-designer/?tutorial=filters">here</a> to move to the next tutorial!',
                                         'top'
                                 );
-                            }, 2000);
+                            }, INTERVAL_VERY_SHORT);
                         }
                     }, 500);
-                }, 5000);
+                }, INTERVAL_NORMAL);
             }
         }, 500);
     }
