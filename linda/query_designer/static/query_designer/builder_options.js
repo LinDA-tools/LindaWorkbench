@@ -9,6 +9,12 @@ function BuilderOptions(b) {
         period: undefined
     };
 
+    this.unique = function(array) {
+        return $.grep(array, function(el, index) {
+            return index == $.inArray(el, array);
+        });
+    },
+
     //change order
     this.reorder = function(new_var, old_var, is_before) {
         var v = this.variables;
@@ -31,7 +37,7 @@ function BuilderOptions(b) {
         var result = [];
 
         //remove duplicates from select
-        this.builder.select_vars = $.unique(this.builder.select_vars);
+        this.builder.select_vars = this.unique(this.builder.select_vars);
 
         //insert all variables in the suggestion if they where found in the select
         if (typeof(this.variables) != "undefined") {
@@ -48,8 +54,8 @@ function BuilderOptions(b) {
         }
 
         //remove duplicates & save
-        this.builder.select_vars = $.unique(result);
-        this.variables = $.unique(result);
+        this.builder.select_vars = this.unique(result);
+        this.variables = this.unique(result);
     }
 }
 
