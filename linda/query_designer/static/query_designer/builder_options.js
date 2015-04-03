@@ -48,7 +48,8 @@ function BuilderOptions(b) {
         }
 
         //remove duplicates & save
-        this.select_vars = $.unique(result);
+        this.builder.select_vars = $.unique(result);
+        this.variables = $.unique(result);
     }
 }
 
