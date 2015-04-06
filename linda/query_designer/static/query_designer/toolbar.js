@@ -223,8 +223,7 @@ var toolbar = {
 };
 
 /*On select change load active classes in dataset*/
-    $( "#toolbar > select" ).change(on_datasource_select);
-
+$( "#toolbar > select" ).change(on_datasource_select);
     function on_datasource_select() {
         var that = $("#toolbar select");
         var name = that.val();
@@ -233,6 +232,8 @@ var toolbar = {
         toolbar.finished_loading = false;
         if (name == "") return;
 
+        update_tree_toolbar();
+        
         $("#toolbar .active-classes").html('<span class="loading">Loading classes and properties...</span>');
         $("#tree_toolbar").css('top', $("#toolbar").position().top + $("#toolbar").height() + 30);
         toolbar.clear();
@@ -317,10 +318,9 @@ $("body").on('mouseup','.toolbar', function(e) {
     toolbar.show_classes($( '#toolbar > input[type="search"]' ).val(), offset);
 });
 
-/*Load root classes*/
-$( "#toolbar > select" ).change(function() {
-    var name = $(this).val();
-    var that = this;
+function update_tree_toolbar() {
+    var name = $( "#toolbar > select" ).val();
+    var that = $( "#toolbar > select" );
     if (name == "") return;
 
     TreeObjects = [];
@@ -351,7 +351,7 @@ $( "#toolbar > select" ).change(function() {
             console.log(textStatus + ': ' + errorThrown);
         }
     });
-});
+}
 
 /*Open a class*/
 $("#tree_toolbar").on('click', '.arrow.closed', function(e) {
