@@ -1528,6 +1528,7 @@ def query_update(request, pk):
         else:
             if q_obj.design:
                 q_obj.design.delete()
+                q_obj.design = None
 
     # Save changes
     q_obj.save()
