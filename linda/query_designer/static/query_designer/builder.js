@@ -43,6 +43,7 @@ var builder = {
         label = label.replace(/\./g, '_');
 		label = label.replace(/\(/g, '_');
 		label = label.replace(/\)/g, '_');
+		label = label.replace(/%3A/g, '_');
 		
         return decodeURI(label);
     },
@@ -153,8 +154,11 @@ var builder = {
                         this.prefixes[prf] = '<' + roots[i] + '>';
                     }
 
-                    //replace the root uri with the prefix
-                    q = q.substr(0, idx-1) + prf + ':' + q.substr(idx+roots[i].length, (ent_close_pos - idx - roots[i].length ))+ q.substr(ent_close_pos+1);
+                    if (q.substr(idx, ent_close_pos - 1).indexOf('%') < 0) { //must NOT contain unicode symbol
+                        //replace the root uri with the prefix
+                        q = q.substr(0, idx-1) + prf + ':' + q.substr(idx+roots[i].length, (ent_close_pos - idx - roots[i].length ))+ q.substr(ent_close_pos+1);
+                    }
+
                     //update the point from which to start to search for root in the next iteration
                     offset = idx + prf.length + 1;
                 }
