@@ -320,6 +320,9 @@
 
             //rearrange remaining instances after the deleted
             for (var i=n+1; i<builder_workbench.instances.length; i++) {
+                //update the object's id
+                builder_workbench.instances[i].id = i-1;
+
                 //update the instance (meta) data
                 $("#class_instance_" + i).data('n', (i-1));
                 $("#class_instance_" + i).attr('data-n', (i-1));
