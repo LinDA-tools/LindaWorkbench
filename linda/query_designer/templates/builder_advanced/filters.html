@@ -2,8 +2,11 @@
     <div id="property-filters">
         <div class="filter-prototype">
             <select>
-                <option value="and" selected="selected">All filters must apply</option>
-                <option value="or">At least one filter needs to apply</option>
+                <option value="and" selected="selected">All filters must be true (AND)</option>
+                <option value="or">At least one filter needs to be true (OR)</option>
+                <option value="nand">All filters must be false (NAND)</option>
+                <option value="nor">At least one filter needs to be false (NOR)</option>
+
                 <option value="custom">Specify a custom boolean expression</option>
             </select>
 

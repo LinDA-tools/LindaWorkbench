@@ -73,7 +73,14 @@ function show_filters() {
             if (p.filters[i] == undefined) continue;
 
             cnt++;
-            $("#all-filters").append('<div class="filter-object">' + p.filters[i].operator_label + ' ' +p.filters[i].value + '<span class="filter-id">[' + i + ']</span><span class="filter-remove" data-about="' + i + '">x</span></div>');
+            var label;
+            if (p.filters[i].type == "value") {
+                label = '= ' + uri_to_label(p.filters[i].value);
+            } else {
+                label = p.filters[i].operator_label + ' ' + p.filters[i].value;
+            }
+
+            $("#all-filters").append('<div class="filter-object">' + label + '<span class="filter-id">[' + i + ']</span><span class="filter-remove" data-about="' + i + '">x</span></div>');
         }
 
         if (cnt == 0) {
@@ -127,6 +134,7 @@ $(".add-filter").click(function() {
 
     //save the new filter and refresh
     builder_workbench.property_selection.filters.push(nf);
+    $(".filter-type-" + nf.type + " input").val('');
     show_filters();
 });
 
@@ -137,19 +145,27 @@ $(".done").click(function() {
     var f_proto_val = $(".filter-prototype select").val();
     var proto = "";
 
-    if ((f_proto_val == "and") || (f_proto_val == "or")) { //automatically create the prototype
+    if ((f_proto_val == "and") || (f_proto_val == "or") || f_proto_val == "nand" || f_proto_val == "nor") { //automatically create the prototype
+        if ((f_proto_val == "nand") || (f_proto_val == "nor")) {
+            proto = "!(";
+        }
+
         for (var f=0; f<p.filters.length; f++) {
             if (p.filters[f] == undefined) continue;
 
             n++;
             proto += '[' + f + ']';
             if (f < p.filters.length - 1) {
-                if (f_proto_val == "and") {
+                if ((f_proto_val == "and") || (f_proto_val == "nand")) {
                     proto += ' && ';
                 } else {
                     proto += ' || ';
                 }
             }
+        }
+
+        if ((f_proto_val == "nand") || (f_proto_val == "nor")) {
+            proto += ")";
         }
     } else { //get prototype from user
         proto = $("#filter-prototype-str").val();
@@ -178,5 +194,9 @@ $(".done").click(function() {
 $("body").on('click', '.filter-remove', function() {
     var f = $(this).data('about');
     builder_workbench.property_selection.filters[f] = undefined;
+    //TODO: better remove of filters
+    if (f == builder_workbench.property_selection.filters.length -1) { //last filter
+        builder_workbench.property_selection.filters.pop();
+    }
     show_filters();
 });
