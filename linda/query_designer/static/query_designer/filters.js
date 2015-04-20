@@ -86,18 +86,27 @@ function show_filters() {
         if (cnt == 0) {
             $("#all-filters").html('No filters applied.');
         } else if (p.filter_prototype) { //restore filter type
-            if ((p.filter_prototype.indexOf("&&") < 0) && (p.filter_prototype.indexOf("||") < 0) && (p.filter_prototype.indexOf("!") < 0)) { //no operator -- default to AND
+            if ((p.filter_prototype.indexOf("&&") < 0) && (p.filter_prototype.indexOf("||") < 0) && (p.filter_prototype.indexOf("![") < 0)) { //no operator -- default to AND
                 $(".filter-prototype select").val('and');
                 $("#filter-prototype-str").hide();
             }
-            else if ((p.filter_prototype.indexOf("&&") >= 0) && (p.filter_prototype.indexOf("||") < 0) && (p.filter_prototype.indexOf("!") < 0)) { //AND join filters
+            else if ((p.filter_prototype.indexOf("&&") >= 0) && (p.filter_prototype.indexOf("||") < 0) && (p.filter_prototype.indexOf("![") < 0)) { //AND join filters
                 $(".filter-prototype select").val('and');
                 $("#filter-prototype-str").hide();
             }
-            else if ((p.filter_prototype.indexOf("&&") < 0) && (p.filter_prototype.indexOf("||") >= 0) && (p.filter_prototype.indexOf("!") < 0)) { //OR join filters
+            else if ((p.filter_prototype.indexOf("&&") < 0) && (p.filter_prototype.indexOf("||") >= 0) && (p.filter_prototype.indexOf("![") < 0)) { //OR join filters
                 $(".filter-prototype select").val('or');
                 $("#filter-prototype-str").hide();
-            } else { //CUSTOM join filter boolean expression
+            }
+            else if ((p.filter_prototype.indexOf("&&") >= 0) && (p.filter_prototype.indexOf("||") < 0) && (p.filter_prototype.indexOf(" [") < 0)) { //NAND join filters
+                $(".filter-prototype select").val('nand');
+                $("#filter-prototype-str").hide();
+            }
+            else if ((p.filter_prototype.indexOf("&&") < 0) && (p.filter_prototype.indexOf("||") >= 0) && (p.filter_prototype.indexOf(" [") < 0)) { //NOR join filters
+                $(".filter-prototype select").val('nor');
+                $("#filter-prototype-str").hide();
+            }
+            else { //CUSTOM join filter boolean expression
                 $(".filter-prototype select").val('custom');
                 $("#filter-prototype-str").val(p.filter_prototype);
                 $("#filter-prototype-str").show();
@@ -146,14 +155,13 @@ $(".done").click(function() {
     var proto = "";
 
     if ((f_proto_val == "and") || (f_proto_val == "or") || f_proto_val == "nand" || f_proto_val == "nor") { //automatically create the prototype
-        if ((f_proto_val == "nand") || (f_proto_val == "nor")) {
-            proto = "!(";
-        }
-
         for (var f=0; f<p.filters.length; f++) {
             if (p.filters[f] == undefined) continue;
 
             n++;
+            if ((f_proto_val == "nand") || (f_proto_val == "nor")) {
+                proto += '!';
+            }
             proto += '[' + f + ']';
             if (f < p.filters.length - 1) {
                 if ((f_proto_val == "and") || (f_proto_val == "nand")) {
@@ -162,10 +170,6 @@ $(".done").click(function() {
                     proto += ' || ';
                 }
             }
-        }
-
-        if ((f_proto_val == "nand") || (f_proto_val == "nor")) {
-            proto += ")";
         }
     } else { //get prototype from user
         proto = $("#filter-prototype-str").val();
