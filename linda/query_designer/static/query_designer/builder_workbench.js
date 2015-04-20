@@ -205,8 +205,12 @@
                 }
 
                 //load custom name
-                if (!p_name) {
-                    p_name = uri_to_label(p_object.uri);
+                if (p_name === undefined) {
+                    if (p_object.uri == "URI") {
+                        p_name = "URI";
+                    } else {
+                        p_name = uri_to_label(p_object.uri);
+                    }
                 }
 
                 var data_i_n = 'data-i="' + i_num + '" data-n="' + p_object.n + '"';

@@ -12,6 +12,7 @@ var PropertyOptions = {
     p: undefined,
     instance: undefined,
     property: undefined,
+    prev_name: undefined,
 
     show: function(i, p) {
         this.i = i;
@@ -28,8 +29,11 @@ var PropertyOptions = {
         } else {
             $("#property-options .property-uri").html('&lt;' + this.property.uri + '&gt;');
         }
+
         //name
+        this.prev_name = this.property.name;
         $("#property-options .property-name").val(this.property.name);
+
         //group by
         $('#property-options .property-group-by').attr('checked', this.property.group_by === true);
         //aggregate
@@ -48,7 +52,8 @@ var PropertyOptions = {
             return "URI";
         }
 
-        return this.property.name.replace('_', ' ').replace(builder.instance_names[this.instance.id], '').charAt(0).toUpperCase();
+        var result = this.property.name.replace('_', ' ').replace(builder.instance_names[this.instance.id], '');
+        return result.charAt(0).toUpperCase() + result.slice(1);
     },
 
     property_name_printable: function(i, p) {
@@ -61,10 +66,9 @@ var PropertyOptions = {
     save: function() {
         //save changes
         //change name in builder & workbench
-        if ($('#property-options .property-name').val() != builder.property_names[this.i][this.p]) {
+        if ($('#property-options .property-name').val() != this.prev_name) {
             this.property.name = $('#property-options .property-name').val();
             $("#class_instance_" + this.i + " .property-row:nth-of-type(" + (this.p+2) + ") span:nth-of-type(2)").html(this.current_property_print());
-            builder.property_names[this.i][this.p] = undefined;
         }
 
         this.property.group_by = $('#property-options .property-group-by').is(":checked");

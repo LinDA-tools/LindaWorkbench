@@ -257,13 +257,30 @@ var builder = {
         }
     },
 
+    //get URI
+    get_uri_property: function(i) {
+        var sp = builder_workbench.instances[i].selected_properties;
+        for (var p=0; p<sp.length; p++) {
+            if (sp[p].uri == "URI") {
+                return sp[p];
+            }
+        }
+
+        return undefined;
+    },
+
     //finds instance & property names
     prepare_query: function(w) {
         var i_names = this.instance_names;
 
         //initialize base unique names to empty
         for (var i=0; i<w.instances.length; i++) {
-            i_names[i] = "";
+            var p = this.get_uri_property(i);
+            if (p.name !== undefined  && p.name != "") {
+                i_names[i] = p.name;
+            } else {
+                i_names[i] ="";
+            }
         }
 
         //set base unique names
@@ -313,7 +330,11 @@ var builder = {
             var p = inst.selected_properties[j];
             if (this.property_names[i][j] === undefined) {
                 if (p.name === undefined) {
-                    p.name = i_name + '_' + this.uri_to_constraint(p.uri); //e.g ?city_leaderName
+                    if (p.uri == "URI") {
+                        p.name = i_name;
+                    } else {
+                        p.name = i_name + '_' + this.uri_to_constraint(p.uri); //e.g ?city_leaderName
+                    }
                 }
                 this.property_names[i][j] = p.name;
 

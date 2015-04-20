@@ -211,6 +211,7 @@ def uri_to_label(uri):
 def get_entity_suggestions(request, dt_name):
     # get query
     q = request.GET.get('term', '')
+    q = q.replace(' ', '_')
 
     # get instance & property type
     class_uri = request.GET.get('class_uri')
