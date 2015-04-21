@@ -1,5 +1,6 @@
 from itertools import starmap
 from operator import attrgetter
+from django.contrib.auth.decorators import login_required
 from django.core import serializers
 from view_cache_utils import cache_page_with_prefix
 from hashlib import md5
@@ -32,7 +33,7 @@ from passwords import MS_TRANSLATOR_UID, MS_TRANSLATOR_SECRET
 def index(request):
     params = {}
     params['installation_pending'] = installation_pending()
-    params['recent_datasources'] = DatasourceDescription.objects.all().order_by('-updatedOn')[:3]
+    params['recent_datasources'] = get_datasources(request.user).order_by('-updatedOn')[:3]
     params['recent_queries'] = Query.objects.all().order_by('-updatedOn')[:3]
     if request.user.is_authenticated():
         params['recent_analytics'] = Analytics.objects.filter(user_id=request.user.pk).order_by('-updatedOn')[:3]
@@ -56,7 +57,7 @@ def getstarted(request):
 def sparql(request, q_id=None):
     params = {}
     params['mode'] = "sparql"
-    params['datasources'] = list(DatasourceDescription.objects.all())
+    params['datasources'] = list(get_datasources(request.user))
     params['datasources'].insert(0,
                                  DatasourceDescription(title="All private data dources", name="all", is_public=False
                                                        , uri=LINDA_HOME + "sparql/all/", createdOn=datetime.today(),
@@ -143,7 +144,7 @@ def site_search(request):
 
     # also search in datasources, queries and analytics
     params = {'search_q': q,
-              'datasources': DatasourceDescription.objects.filter(name__icontains=q),
+              'datasources': get_datasources(request.user).filter(name__icontains=q),
               'queries': Query.objects.filter(description__icontains=q),
               'analytics': Analytics.objects.filter(description__icontains=q),
               'vocabularies_list': vocabularies_page.object_list, 'classes_list': classes_page.object_list,
@@ -739,11 +740,11 @@ def downloadRDF(request, pk, type):
 def datasources(request):
     params = {}
     params['page'] = 'Datasources'
-    params['datasources'] = DatasourceDescription.objects.all().order_by('title')
+    params['datasources'] = get_datasources(request.user).order_by('title')
 
     return render(request, 'datasource/index.html', params)
 
-
+@login_required
 def datasourceCreate(request):
     params = {'types': {('public', 'Remote'), ('private', 'Local')},
               'datatypes': {('csv', 'CSV file'), ('rdb', 'Database (relational)'), ('xls', 'Excel file'),
@@ -781,7 +782,7 @@ def datasourceCreate(request):
             sname = slugify(unidecode(request.POST.get("title")))
 
             # get user
-            created_by = request.user if request.user.is_authenticated() else None
+            created_by = request.user
 
             # check for RSS
             if request.POST.get("is_rss"):
@@ -805,12 +806,12 @@ def datasourceCreate(request):
     else:  # create form elements and various categories
         return render(request, 'datasource/form.html', params)
 
-
+@login_required
 def datasourceReplace(request, name):
-    if not DatasourceDescription.objects.filter(name=name):  # datasource does not exist
+    if not get_datasources(request.user).filter(name=name):  # datasource does not exist
         return redirect("/datasources/")
 
-    datasource = DatasourceDescription.objects.filter(name=name)[0]
+    datasource = get_datasources(request.user).filter(name=name)[0]
 
     # private datasource
     if (not datasource.is_public) and (not datasource.rss_info):
@@ -979,7 +980,7 @@ def datasourceCreateRDF(request):
 
         return render(request, 'datasource/create_rdf.html', params)
 
-
+@login_required
 def datasourceReplaceRDF(request, dtname):
     if request.POST:
         title = request.POST.get("title", None)
@@ -1024,7 +1025,7 @@ def datasourceReplaceRDF(request, dtname):
         j_obj = json.loads(callReplace.text)
         if j_obj['status'] == '200':
             # update data source information
-            dt_object = DatasourceDescription.objects.filter(name=dtname)[0]
+            dt_object = get_datasources(request.user).filter(name=dtname)[0]
             dt_object.title = request.POST.get("title")
             dt_object.save()
             return redirect("/datasources/")
@@ -1037,7 +1038,7 @@ def datasourceReplaceRDF(request, dtname):
             return render(request, 'datasource/replace_rdf.html', params)
     else:
         params = {}
-        dt_object = DatasourceDescription.objects.filter(name=dtname)[0]
+        dt_object = get_datasources(request.user).filter(name=dtname)[0]
         params['title'] = dt_object.title
         params['append'] = True
 
@@ -1050,10 +1051,10 @@ def datasourceDownloadRDF(request, dtname):
     mimetype = "application/xml+rdf"
     return HttpResponse(data, mimetype)
 
-
+@login_required
 def datasourceDelete(request, dtname):
     # get the datasource with this name
-    datasource = DatasourceDescription.objects.filter(name=dtname)[0]
+    datasource = get_datasources(request.user).filter(name=dtname)[0]
 
     if request.POST:
         if datasource.is_public:  # just delete the datasource description
@@ -1081,14 +1082,14 @@ def datasourceDelete(request, dtname):
 # Query builder
 def queryBuilder(request):
     params = {}
-    params['datasources'] = list(DatasourceDescription.objects.all())
+    params['datasources'] = list(get_datasources(request.user))
     params['datasources'].insert(0,
                                  DatasourceDescription(title="All private data dources", name="all", is_public=False
                                                        , uri=LINDA_HOME + "sparql/all/", createdOn=datetime.today(),
                                                        updatedOn=datetime.today()))
 
     if 'dt_id' in request.GET:
-        params['datasource_default'] = DatasourceDescription.objects.filter(name=request.GET.get('dt_id'))[0]
+        params['datasource_default'] = get_datasources(request.user).filter(name=request.GET.get('dt_id'))[0]
 
     params['PRIVATE_SPARQL_ENDPOINT'] = get_configuration().private_sparql_endpoint
     params['RDF2ANY_SERVER'] = get_configuration().rdf2any_server
@@ -1220,7 +1221,7 @@ def default_description(request):
 @csrf_exempt
 def api_datasources_list(request):
     results = []
-    for source in DatasourceDescription.objects.all():
+    for source in get_datasources(request.user):
         source_info = {}
 
         source_info['name'] = source.name
@@ -1237,11 +1238,12 @@ def api_datasources_list(request):
 
 # Create a new datasource with some rdf data
 @csrf_exempt
+@login_required
 def api_datasource_create(request):
     results = {}
     if request.POST:  # request must be POST
         # check if datasource already exists
-        if DatasourceDescription.objects.filter(title=request.POST.get("title")).exists():
+        if get_datasources(request.user).filter(title=request.POST.get("title")).exists():
             results['status'] = '403'
             results['message'] = "Datasource already exists."
         else:
@@ -1263,7 +1265,7 @@ def api_datasource_create(request):
 
             if callAdd.text == "":
                 # get user
-                created_by = request.user if request.user.is_authenticated() else None
+                created_by = request.user
 
                 # create datasource description
                 DatasourceDescription.objects.create(title=request.POST.get("title"),
@@ -1294,7 +1296,7 @@ def api_datasource_get(request, dtname):
     results = {}
 
     # check if datasource exists
-    if DatasourceDescription.objects.filter(name=dtname).exists():
+    if get_datasources(request.user).filter(name=dtname).exists():
         # get rdf type
         if request.GET.get("format"):
             rdf_format = request.GET.get("format")
@@ -1318,11 +1320,12 @@ def api_datasource_get(request, dtname):
 
 # Replace all data from datasource with new rdf data
 @csrf_exempt
+@login_required
 def api_datasource_replace(request, dtname):
     results = {}
     if request.POST:  # request must be POST
         # check if datasource exists
-        if DatasourceDescription.objects.filter(name=dtname).exists():
+        if get_datasources(request.user).filter(name=dtname).exists():
             # get rdf type
             if request.POST.get("format"):
                 rdf_format = request.POST.get("format")
@@ -1344,7 +1347,7 @@ def api_datasource_replace(request, dtname):
 
             if call.text == "":
                 # update datasource database object
-                source = DatasourceDescription.objects.filter(name=dtname)[0]
+                source = get_datasources(request.user).filter(name=dtname)[0]
                 source.updatedOn = datetime.now()
                 source.save()
 
@@ -1368,12 +1371,13 @@ def api_datasource_replace(request, dtname):
 
 # Delete an RDF datasource
 @csrf_exempt
+@login_required
 def api_datasource_delete(request, dtname):
     results = {}
     if request.method == 'POST':  # request must be POST
 
         # check if datasource exists
-        if DatasourceDescription.objects.filter(name=dtname).exists():
+        if get_datasources(request.user).filter(name=dtname).exists():
             # make REST api call to delete graph
             callDelete = requests.delete(get_configuration().private_sparql_endpoint + '/rdf-graphs/' + dtname)
 
@@ -1382,7 +1386,7 @@ def api_datasource_delete(request, dtname):
                 results['message'] = 'Datasource deleted succesfully.'
 
                 # delete object from database
-                source = DatasourceDescription.objects.filter(name=dtname)[:1].get()
+                source = get_datasources(request.user).filter(name=dtname)[:1].get()
                 source.delete()
             else:
                 results['status'] = callDelete.status_code
@@ -1414,7 +1418,7 @@ def datasource_sparql(request, dtname):  # Acts as a "fake" seperate sparql endp
     query = urllib.unquote_plus(q)
 
     if dtname != "all":  # search in all private datasource
-        datasources = DatasourceDescription.objects.filter(name=dtname)
+        datasources = get_datasources(request.user).filter(name=dtname)
 
         if not datasources:  # datasource not found by name
             results['status'] = '404'

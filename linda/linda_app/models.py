@@ -463,6 +463,19 @@ class DatasourceDescription(models.Model):
                                            "/replace/?append=false", headers=headers, data=data)
 
 
+# Get datasources accessible by user
+def get_datasources(user):
+    if user.is_authenticated():
+        return DatasourceDescription.objects.filter(Q(createdBy=user) | Q(createdBy=None))
+    else:
+        return DatasourceDescription.objects.filter(createdBy=None)
+
+
+# Get datasources owned by user
+def get_own_datasources(user):
+    return DatasourceDescription.objects.filter(createdBy=user)
+
+
 # Transform [x1,x2,...,xN] to "x1, x2, ... and/or xN"
 def str_extend(array, op_join='and'):
     result = array[0]

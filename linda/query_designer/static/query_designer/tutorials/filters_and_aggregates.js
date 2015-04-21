@@ -155,11 +155,28 @@
                                             $("#sparql_results_table tbody").html('');
 
                                             tooltip('.ui-dialog[aria-describedby="property-filters"] .button.orange',
-                                                    'Finally click save <b>Save & close</b> button and <span class="green-text">run</span> the query again.',
+                                                    'Finally click save <b>Save & close</b> button.',
                                                     'right'
                                             );
 
-                                            wait_for_results();
+                                            //wait for dialog to close
+                                            interval =  setInterval(function() {
+                                                if ($('.ui-dialog[aria-describedby="property-filters"]').css('display') == 'none') {
+                                                    clearInterval(interval);
+
+                                                    //scroll to query
+                                                    $('html,body').animate({
+                                                        scrollTop: $(".qb-equivalent-query-main").offset().top - 200
+                                                    });
+
+                                                    tooltip('.qb-equivalent-query-main .btn-success',
+                                                            'Run the query again!',
+                                                            'right'
+                                                    );
+
+                                                    wait_for_results();
+                                                }
+                                            }, 500);
                                         }
                                     }, 500);
                                 }, INTERVAL_VERY_SHORT);
@@ -257,21 +274,39 @@
                         clearInterval(interval);
 
                         tooltip('.ui-dialog[aria-describedby="property-options"] .property-aggregate',
-                                'From the aggregate functions list select <em>Average</em>, click the <em>OK</em> button and <span class="green-text">run</span> the query again.',
+                                'From the aggregate functions list select <em>Average</em> and click the <em>OK</em> button.',
                                 'right'
                         );
 
                         //clear results table
                         $("#sparql_results_table tbody").html('');
 
+                        //wait for dialog to close
                         interval =  setInterval(function() {
-                            if ($("#sparql_results_table tbody tr").length > 0) {
+                            console.log($('.ui-dialog[aria-describedby="property-options"]').css('display'));
+                            if ($('.ui-dialog[aria-describedby="property-options"]').css('display') == 'none') {
                                 clearInterval(interval);
 
-                                tooltip('#sparql_results_table',
-                                        '<b>Congratulations!</b><br /><br />With what you learned on this tutorial, you can create composite queries with number, string, date or URI filters on multiple properties.<br/>You can also extract aggregates directly from the remote endpoints or the RDF datasets.<br/><br/>Click <a href="/query-designer/tutorials/filters_and_aggregates/">here</a> to move to the next tutorial!',
-                                        'top'
+                                //scroll to query
+                                $('html,body').animate({
+                                    scrollTop: $(".qb-equivalent-query-main").offset().top - 200
+                                });
+
+                                tooltip('.qb-equivalent-query-main .btn-success',
+                                        'Run the query to find the average.',
+                                        'right'
                                 );
+
+                                interval =  setInterval(function() {
+                                    if ($("#sparql_results_table tbody tr").length > 0) {
+                                        clearInterval(interval);
+
+                                        tooltip('#sparql_results_table',
+                                                '<b>Congratulations!</b><br /><br />With what you learned on this tutorial, you can create composite queries with number, string, date or URI filters on multiple properties.<br/>You can also extract aggregates directly from the remote endpoints or the RDF datasets.<br/><br/>Click <a href="/query-designer/tutorials/filters_and_aggregates/">here</a> to move to the next tutorial!',
+                                                'top'
+                                        );
+                                    }
+                                }, 500);
                             }
                         }, 500);
                     }
