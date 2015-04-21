@@ -34,10 +34,15 @@ def index(request):
         if not params['datasource_default']:
             return Http404
 
-    params['tutorial'] = request.GET.get('tutorial', None)
-
     return render(request, "builder_advanced/index.html", params)
 
+
+# Tutorials
+def tutorials(request, tutorial):
+    params = designer_defaults()
+    params['tutorial'] = tutorial
+
+    return render(request, "builder_advanced/index.html", params)
 
 # Load an existing design
 def load_design(request, pk):

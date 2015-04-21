@@ -1,12 +1,5 @@
     var tutorial_step = 1;
 
-    //intervals
-    var INTERVAL_VERY_LONG = 8000;
-    var INTERVAL_LONG = 6000;
-    var INTERVAL_NORMAL = 5000;
-    var INTERVAL_SHORT = 4000;
-    var INTERVAL_VERY_SHORT = 3000;
-
     //#1: Welcome users to the tutorial
     setTimeout(function() {
         tooltip('#toolbar .chosen-container',
@@ -110,7 +103,7 @@
         });
 
         tooltip('.ace_content',
-                'As you can see above, a <em>SPARQL query</em> has been created.<br />Do you care about the query? Because <em>I</em> don\'t...<br />Let\'s find those films!',
+                'As you can see above, a <em>SPARQL query</em> has been created.<br />Let\'s just find those films!',
                 'bottom'
         );
 
@@ -352,7 +345,7 @@
 
                             setTimeout(function() {
                                 tooltip('#sparql_results_table',
-                                        'It seems you\'re querying like a boss! Click <a href="/query-designer/?tutorial=filters">here</a> to move to the next tutorial!',
+                                        'It seems you\'re querying like a boss! Click <a href="/query-designer/tutorials/filters_and_aggregates/">here</a> to move to the next tutorial!',
                                         'top'
                                 );
                             }, INTERVAL_VERY_SHORT);

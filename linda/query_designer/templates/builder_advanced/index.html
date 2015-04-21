@@ -21,6 +21,9 @@
     <link data-turbolinks-track="true" href="/static/query-builder/stylesheets/gritter.css?body=1" media="all" rel="stylesheet" />
 
     <link rel="stylesheet" href="/static/css/tooltipster.css"/>
+    {% if tutorial %}
+        <link rel="stylesheet" href="/static/query_designer/tutorials/tutorials.css"/>
+    {% endif %}
 {% endblock %}
 
 {% block content %}

@@ -1,4 +1,11 @@
-    last_shown_tooltip = '';
+    var last_shown_tooltip = '';
+
+    //intervals
+    var INTERVAL_VERY_LONG = 8000;
+    var INTERVAL_LONG = 6000;
+    var INTERVAL_NORMAL = 5000;
+    var INTERVAL_SHORT = 4000;
+    var INTERVAL_VERY_SHORT = 3000;
 
     //show a new tooltip
     function tooltip(selector, text, position) {
