@@ -2637,6 +2637,10 @@ input, textarea {
 #property-options .property-uri {
     font-size: 80%;
     color: #777;
+	word-break: break-all;
+	max-width: calc(100% - 150px);
+	vertical-align: top;
+	text-align: left;
 }
 
 .builder-advanced .ui-dialog {
