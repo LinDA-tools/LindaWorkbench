@@ -27,29 +27,30 @@
 
                     <div class="table centered">
                         <div class="row">
-                            <span class="cell">{%trans "Username" %}:<span
-                                    class="error">{{ form.username.errors }}</span></span>
+                            <span class="error">{{ form.username.errors }}</span>
+                            <span class="cell">{%trans "Username" %}:</span>
                             <input id="user_username" class="input-text cell" type="text" name="username"
+                                   required="required" value='{{form.username.value|default_if_none:""}}'/>
+                        </div>
+
+                        <div class="row">
+                            <span class="error">{{ form.password1.errors }}</span>
+                            <span class="cell">{%trans "Password" %}:</span>
+                            <input id="user_password1" class="input-text cell" type="password" name="password1"
                                    required="required"/>
                         </div>
 
                         <div class="row">
-                            <span class="cell">{%trans "Password" %}:<span
-                                    class="error">{{ form.password1.errors }}</span></span>
-                            <input id="user_password" class="input-text cell" type="password" name="password1"
-                                   required="required"/>
-                        </div>
-
-                        <div class="row">
-                            <span class="cell">{%trans "Password (again)" %}:<span class="error">{{ form.password2.errors }}</span></span>
-                            <input id="user_password" class="input-text cell" type="password" name="password2"
+                            <span class="error">{{ form.password2.errors }}</span>
+                            <span class="cell">{%trans "Password (again)" %}:</span>
+                            <input id="user_password2" class="input-text cell" type="password" name="password2"
                                    required="required">
                         </div>
 
                         <div class="row">
-
-                            <span class="cell">{%trans "E-mail: (optional)" %}:<span class="error">{{ form.email.errors }}</span></span>
-                            <input id="user_email" class="input-email cell" type="email" name="email">
+                            <span class="error">{{ form.email.errors }}</span>
+                            <span class="cell">{%trans "E-mail: (optional)" %}:</span>
+                            <input id="user_email" class="input-email cell" type="email" name="email" value='{{form.email.value|default_if_none:""}}'>
                         </div>
                     </div>
 
