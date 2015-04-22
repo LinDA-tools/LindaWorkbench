@@ -26,15 +26,16 @@
 
         <div>
             <label for="id_file">{% trans "Upload an RDF"%}:</label>
-            <div id="file-uploader" class="button green">{% trans "Choose file"%}</div>
-            <input id="id_file" type="file" class="hidden" name="rdffile" />
+            <div id="file-uploader" class="button green">{% if rdffile %}{{rdffile}}{% else %}{% trans "Choose file" %}{% endif %}</div>
+            <input id="id_file" type="file" class="hidden" name="rdffile" value="{{rdffile}}"/>
             <select id="format" name="format">
-                <option value="application/rdf+xml">RDF/XML</option>
-                <option value="text/rdf+n3">N3</option>
-                <option value="application/x-turtle">Turtle</option>
-                <option value="application/trix">TriX</option>
-                <option value="application/x-trig">TriG</option>
-                <option value="application/x-binary-rdf">SesameBinary RDF</option>
+                <option {% if format == "application/rdf+xml" %} selected="selected" {% endif %} value="application/rdf+xml">RDF/XML</option>
+                <option {% if format == "text/rdf+n3" %} selected="selected" {% endif %} value="text/rdf+n3">N3</option>
+                <option {% if format == "text/plain" %} selected="selected" {% endif %} value="text/plain">N-Tripples</option>
+                <option {% if format == "application/x-turtle" %} selected="selected" {% endif %} value="application/x-turtle">Turtle</option>
+                <option {% if format == "application/trix" %} selected="selected" {% endif %} value="application/trix">TriX</option>
+                <option {% if format == "application/x-trig" %} selected="selected" {% endif %} value="application/x-trig">TriG</option>
+                <option {% if format == "application/x-binary-rdf" %} selected="selected" {% endif %} value="application/x-binary-rdf">SesameBinary RDF</option>
             </select>
         </div>
 
@@ -43,7 +44,7 @@
             <textarea id="id_rdfdata" name="rdfdata">{{rdfdata}}</textarea>
         </div>
 
-        <div class="newline" style="display: none;">
+        <div class="newline" {%if format == "text/rdf+n3" or format == "text/plain" or format == "application/x-turtle" %}{% else %}style="display: none;"{% endif %}}>
             <label for="newline">{% trans "Tripples end with newlines<br />(will upload faster)" %}</label>
             <input type="checkbox" id="newline" name="newline" value="{% if newlines %}true{% else %}false{% endif %}" />
         </div>

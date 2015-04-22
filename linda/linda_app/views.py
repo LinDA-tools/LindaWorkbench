@@ -897,16 +897,20 @@ def clear_chunk(c, newlines):
 
 def datasourceCreateRDF(request):
     if request.POST:
+        params = {
+            'title': request.POST.get('title'),
+            'format': request.POST.get('format'),
+            'newlines': request.POST.get('newlines'),
+            'rdfdata': request.POST.get("rdfdata"),
+            'rdffile': request.FILES.get("rdffile"),
+        }
+
         # Get the posted rdf data
-        current_chunk = ''
         rem = ''
         newlines = request.POST.get('newlines', None)
         title = request.POST.get("title", None)
         if not title:
-            params = {}
             params['form_error'] = 'Title is required'
-            params['rdfdata'] = request.POST.get("rdfdata")
-            params['newline'] = request.POST.get("newline")
 
             return render(request, 'datasource/create_rdf.html', params)
 
@@ -967,47 +971,44 @@ def datasourceCreateRDF(request):
 
             return redirect("/datasources")
         else:
-            params = {}
-
             params['form_error'] = j_obj['message']
-            params['title'] = request.POST.get("title")
-            params['rdfdata'] = request.POST.get("rdfdata")
-            params['newline'] = request.POST.get("newline")
-
             return render(request, 'datasource/create_rdf.html', params)
     else:
-        params = {}
-        params['title'] = ""
-        params['rdfdata'] = ""
+        params = {
+            'title': '',
+            'rdfdata': ''
+        }
 
         return render(request, 'datasource/create_rdf.html', params)
 
 @login_required
 def datasourceReplaceRDF(request, dtname):
     if request.POST:
-        title = request.POST.get("title", None)
+        params = {
+            'title': request.POST.get('title'),
+            'format': request.POST.get('format'),
+            'newlines': request.POST.get('newlines'),
+            'rdfdata': request.POST.get("rdfdata"),
+            'rdffile': request.FILES.get("rdffile"),
+            'append': request.POST.get('append', False)
+        }
+
+        title = params['title']
         if not title:
-            params = {}
             params['form_error'] = 'Title is required'
-            params['rdfdata'] = request.POST.get("rdfdata")
-            params['newline'] = request.POST.get("newline")
-            params['append'] = request.POST.get("append")
 
             return render(request, 'datasource/replace_rdf.html', params)
 
-        current_chunk = ''
-        rem = ''
-        newlines = request.POST.get('newlines', None)
-        append = request.POST.get('append', False)
+        newlines = params['newlines']
+        append = params['append']
 
         # Get the posted rdf data
         if "rdffile" in request.FILES:
-            inp_file = request.FILES["rdffile"].file
+            inp_file = params['rdffile'].file
             current_chunk = inp_file.read(RDF_CHUNK_SIZE)
             current_chunk, rem = clear_chunk(current_chunk, newlines)
         else:
-            current_chunk = request.POST.get("rdfdata")
-            inp_file = False
+            current_chunk = params['rdfdata']
 
         # Check if appending or completely replacing
         if append:
@@ -1036,11 +1037,7 @@ def datasourceReplaceRDF(request, dtname):
             dt_object.save()
             return redirect("/datasources/")
         else:
-            params = {}
-
             params['form_error'] = j_obj['message']
-            params['rdfdata'] = request.POST.get("rdfdata")
-
             return render(request, 'datasource/replace_rdf.html', params)
     else:
         params = {}
