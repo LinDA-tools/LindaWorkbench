@@ -231,3 +231,7 @@ TEST_RUNNER = 'django.test.runner.DiscoverRunner'
 # chunk size for uploading RDFs
 RDF_CHUNK_SIZE = 10000000
 
+# maximum number of datasources per user in the playground
+# does not affect admins
+MAX_NUMBER_OF_DATASOURCES = 10
+

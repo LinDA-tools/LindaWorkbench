@@ -1,4 +1,3 @@
-from itertools import starmap
 from operator import attrgetter
 from django.contrib.auth.decorators import login_required
 from django.core import serializers
@@ -20,13 +19,14 @@ import json
 from microsofttranslator import Translator
 from analytics.models import Analytics
 from query_designer.views import sparql_query_json
+from query_designer.models import Design
 
 from forms import *
 from rdflib import Graph
 from datetime import datetime
 
 from installer.views import installation_pending
-from settings import LINDA_HOME, RDF_CHUNK_SIZE
+from settings import LINDA_HOME, RDF_CHUNK_SIZE, MAX_NUMBER_OF_DATASOURCES
 from passwords import MS_TRANSLATOR_UID, MS_TRANSLATOR_SECRET
 
 
@@ -59,8 +59,8 @@ def sparql(request, q_id=None):
     params['mode'] = "sparql"
     params['datasources'] = list(get_datasources(request.user))
     params['datasources'].insert(0,
-                                 DatasourceDescription(title="All private data dources", name="all", is_public=False
-                                                       , uri=LINDA_HOME + "sparql/all/", createdOn=datetime.today(),
+                                 DatasourceDescription(title="All private data dources", name="all", is_public=False,
+                                                       uri=LINDA_HOME + "sparql/all/", createdOn=datetime.today(),
                                                        updatedOn=datetime.today()))
     params['page'] = 'Sparql'
     params['RDF2ANY_SERVER'] = get_configuration().rdf2any_server
@@ -793,7 +793,7 @@ def datasourceCreate(request):
                                                           name=sname, rss_info=new_feed,
                                                           uri=uri, createdOn=datetime.now(), updatedOn=datetime.now(),
                                                           createdBy=created_by)
-                dt.update_rss()
+                update_rss(dt)
             else:
                 # default case - sparql endpoint
                 DatasourceDescription.objects.create(title=request.POST.get("title"), is_public=True,
@@ -808,10 +808,11 @@ def datasourceCreate(request):
 
 @login_required
 def datasourceReplace(request, name):
-    if not get_datasources(request.user).filter(name=name):  # datasource does not exist
+    own_datasources = get_own_datasources(request.user).filter(name=name)
+    if not own_datasources:  # datasource does not exist
         return redirect("/datasources/")
 
-    datasource = get_datasources(request.user).filter(name=name)[0]
+    datasource = own_datasources[0]
 
     # private datasource
     if (not datasource.is_public) and (not datasource.rss_info):
@@ -926,10 +927,10 @@ def datasourceCreateRDF(request):
         if request.POST.get('format'):
             data['format'] = request.POST.get('format')
 
-        callAdd = requests.post(LINDA_HOME + "api/datasource/create/", headers=headers,
-                                data=data)
+        mock_request = MockRequest(user=request.user, post=request.POST, data=data, accept='application/json')
+        callAdd = api_datasource_create(mock_request)
 
-        j_obj = json.loads(callAdd.text)
+        j_obj = json.loads(callAdd.content)
         if j_obj['status'] == '200':
             # get new datasource name
             dt_name = j_obj['name']
@@ -949,15 +950,16 @@ def datasourceCreateRDF(request):
                     data['format'] = request.POST.get('format')
 
                 # request to update
-                callAppend = requests.post(LINDA_HOME + "api/datasource/" + dt_name + "/replace/?append=true", headers=headers,
-                                    data=data)
-
+                mock_request = MockRequest(user=request.user, post=request.POST, data=data,
+                                           get={'append': 'true'}, accept='application/json')
+                callAppend = api_datasource_replace(mock_request, dt_name)
             if rem:  # a statement has not been pushed
                 data = {"content": current_chunk}
                 if request.POST.get('format'):
                     data['format'] = request.POST.get('format')
-                callAppend = requests.post(LINDA_HOME + "api/datasource/" + dt_name + "/replace/?append=true", headers=headers,
-                                    data=data)
+                mock_request = MockRequest(user=request.user, post=request.POST, data=data,
+                                           get={'append': 'true'}, accept='application/json')
+                callAppend = api_datasource_replace(mock_request, dt_name)
 
             b = datetime.now().replace(microsecond=0)
             print title + ':'
@@ -1019,13 +1021,17 @@ def datasourceReplaceRDF(request, dtname):
         if request.POST.get('format'):
             data['format'] = request.POST.get('format')
 
-        callReplace = requests.post(LINDA_HOME + "api/datasource/" + dtname + "/replace/" + append_str, headers=headers,
-                                    data=data)
+        mock_request = MockRequest(user=request.user, post=request.POST, data=data, accept='application/json')
+        # Check if appending or completely replacing
+        if append:
+            mock_request.GET['append'] = 'true'
 
-        j_obj = json.loads(callReplace.text)
+        callReplace = api_datasource_replace(mock_request, dtname)
+
+        j_obj = json.loads(callReplace.content)
         if j_obj['status'] == '200':
             # update data source information
-            dt_object = get_datasources(request.user).filter(name=dtname)[0]
+            dt_object = get_own_datasources(request.user).filter(name=dtname)[0]
             dt_object.title = request.POST.get("title")
             dt_object.save()
             return redirect("/datasources/")
@@ -1038,7 +1044,7 @@ def datasourceReplaceRDF(request, dtname):
             return render(request, 'datasource/replace_rdf.html', params)
     else:
         params = {}
-        dt_object = get_datasources(request.user).filter(name=dtname)[0]
+        dt_object = get_own_datasources(request.user).filter(name=dtname)[0]
         params['title'] = dt_object.title
         params['append'] = True
 
@@ -1046,25 +1052,33 @@ def datasourceReplaceRDF(request, dtname):
 
 
 def datasourceDownloadRDF(request, dtname):
-    callDatasource = requests.get(LINDA_HOME + "api/datasource/" + dtname + "/")
-    data = json.loads(callDatasource.text)['content']
+    mock_request = MockRequest(user=request.user)
+    callDatasource = api_datasource_get(mock_request, dtname)
+
+    data = json.loads(callDatasource.content)['content']
     mimetype = "application/xml+rdf"
     return HttpResponse(data, mimetype)
 
 @login_required
 def datasourceDelete(request, dtname):
     # get the datasource with this name
-    datasource = get_datasources(request.user).filter(name=dtname)[0]
+    own_datasources = get_own_datasources(request.user).filter(name=dtname)
+    if not own_datasources:  # datasource does not exist
+        return redirect("/datasources/")
+
+    datasource = own_datasources[0]
 
     if request.POST:
         if datasource.is_public:  # just delete the datasource description
             datasource.delete()
             return redirect("/datasources/")
         else:  # also remove data from the sesame
-            headers = {'accept': 'application/json'}
-            callDelete = requests.post(LINDA_HOME + "api/datasource/" + dtname + "/delete/", headers=headers)
-            j_obj = json.loads(callDelete.text)
+            mock_request = MockRequest(user=request.user, post=request.POST, accept='application/json')
+            callDelete = api_datasource_delete(mock_request, dtname)
+
+            j_obj = json.loads(callDelete.content)
             if j_obj['status'] == '200':
+                datasource.delete()
                 return redirect("/datasources/")
             else:
                 params = {}
@@ -1219,6 +1233,7 @@ def default_description(request):
 
 # Return a list with all created datasources
 @csrf_exempt
+@login_required
 def api_datasources_list(request):
     results = []
     for source in get_datasources(request.user):
@@ -1242,45 +1257,55 @@ def api_datasources_list(request):
 def api_datasource_create(request):
     results = {}
     if request.POST:  # request must be POST
-        # check if datasource already exists
-        if get_datasources(request.user).filter(title=request.POST.get("title")).exists():
-            results['status'] = '403'
-            results['message'] = "Datasource already exists."
+        # check if user is authenticated
+        if not request.user.is_authenticated():
+            results['status'] = '401'
+            results['message'] = "Not authenticated"
         else:
-            # find the slug
-            sname = slugify(unidecode(request.POST.get("title")))
-
-            # get rdf type
-            if request.POST.get("format"):
-                rdf_format = request.POST.get("format")
+            # check if limit is hit
+            if (not request.user.is_superuser) and (get_own_datasources(request.user).count() == MAX_NUMBER_OF_DATASOURCES):
+                results['status'] = '401'
+                results['message'] = "You have reached the maximum number of datasources you\'re allowed to create in the LinDA Playground."
             else:
-                rdf_format = 'application/rdf+xml'  # rdf+xml by default
+                # check if datasource already exists
+                if DatasourceDescription.objects.filter(name=slugify(request.POST.get("title"))).exists():
+                    results['status'] = '403'
+                    results['message'] = "Datasource already exists."
+                else:
+                    # find the slug
+                    sname = slugify(unidecode(request.POST.get("title")))
 
-            data = request.POST.get("content").encode('utf-8')
+                    # get rdf type
+                    if request.POST.get("format"):
+                        rdf_format = request.POST.get("format")
+                    else:
+                        rdf_format = 'application/rdf+xml'  # rdf+xml by default
 
-            # make REST api call to add rdf data
-            headers = {'accept': 'application/rdf+xml', 'content-type': rdf_format, 'charset': 'utf-8'}
-            callAdd = requests.post(get_configuration().private_sparql_endpoint + '/rdf-graphs/' + sname, headers=headers,
-                                    data=data)
+                    data = request.POST.get("content").encode('utf-8')
 
-            if callAdd.text == "":
-                # get user
-                created_by = request.user
+                    # make REST api call to add rdf data
+                    headers = {'accept': 'application/rdf+xml', 'content-type': rdf_format, 'charset': 'utf-8'}
+                    callAdd = requests.post(get_configuration().private_sparql_endpoint + '/rdf-graphs/' + sname, headers=headers,
+                                            data=data)
 
-                # create datasource description
-                DatasourceDescription.objects.create(title=request.POST.get("title"),
-                                                     name=sname,
-                                                     uri=get_configuration().private_sparql_endpoint + "/rdf-graphs/" + sname,
-                                                     createdOn=datetime.now(), updatedOn=datetime.now(),
-                                                     createdBy=created_by)
+                    if callAdd.text == "":
+                        # get user
+                        created_by = request.user
 
-                results['status'] = '200'
-                results['message'] = 'Datasource created succesfully.'
-                results['name'] = sname
-                results['uri'] = get_configuration().private_sparql_endpoint + "/rdf-graphs/" + sname
-            else:
-                results['status'] = callAdd.status_code
-                results['message'] = 'Error storing rdf data: ' + callAdd.text
+                        # create datasource description
+                        DatasourceDescription.objects.create(title=request.POST.get("title"),
+                                                             name=sname,
+                                                             uri=get_configuration().private_sparql_endpoint + "/rdf-graphs/" + sname,
+                                                             createdOn=datetime.now(), updatedOn=datetime.now(),
+                                                             createdBy=created_by)
+
+                        results['status'] = '200'
+                        results['message'] = 'Datasource created succesfully.'
+                        results['name'] = sname
+                        results['uri'] = get_configuration().private_sparql_endpoint + "/rdf-graphs/" + sname
+                    else:
+                        results['status'] = callAdd.status_code
+                        results['message'] = 'Error storing rdf data: ' + callAdd.text
     else:
         results['status'] = '403'
         results['message'] = 'POST method must be used to create a datasource.'
@@ -1305,13 +1330,13 @@ def api_datasource_get(request, dtname):
 
         # make REST api call to get graph
         headers = {'accept': rdf_format, 'content-type': rdf_format}
-        callReplace = requests.get(get_configuration().private_sparql_endpoint + '/rdf-graphs/' + dtname, headers=headers)
+        callGet = requests.get(get_configuration().private_sparql_endpoint + '/rdf-graphs/' + dtname, headers=headers)
 
         results['status'] = '200'
         results['message'] = "Datasource retrieved successfully"
-        results['content'] = callReplace.text
+        results['content'] = callGet.text
     else:
-        results['status'] = '403'
+        results['status'] = '404'
         results['message'] = "Datasource does not exist."
 
     data = json.dumps(results)
@@ -1325,7 +1350,7 @@ def api_datasource_replace(request, dtname):
     results = {}
     if request.POST:  # request must be POST
         # check if datasource exists
-        if get_datasources(request.user).filter(name=dtname).exists():
+        if get_own_datasources(request.user).filter(name=dtname).exists():
             # get rdf type
             if request.POST.get("format"):
                 rdf_format = request.POST.get("format")
@@ -1337,7 +1362,6 @@ def api_datasource_replace(request, dtname):
             # make REST api call to update graph
             headers = {'accept': 'application/rdf+xml', 'content-type': rdf_format}
 
-            print request.GET.get('append', '')
             if request.GET.get('append'):  # append data to the data source
                 call = requests.post(get_configuration().private_sparql_endpoint + '/rdf-graphs/' + dtname, headers=headers,
                                        data=data)
@@ -1347,7 +1371,7 @@ def api_datasource_replace(request, dtname):
 
             if call.text == "":
                 # update datasource database object
-                source = get_datasources(request.user).filter(name=dtname)[0]
+                source = get_own_datasources(request.user).filter(name=dtname)[0]
                 source.updatedOn = datetime.now()
                 source.save()
 
@@ -1377,7 +1401,7 @@ def api_datasource_delete(request, dtname):
     if request.method == 'POST':  # request must be POST
 
         # check if datasource exists
-        if get_datasources(request.user).filter(name=dtname).exists():
+        if get_own_datasources(request.user).filter(name=dtname).exists():
             # make REST api call to delete graph
             callDelete = requests.delete(get_configuration().private_sparql_endpoint + '/rdf-graphs/' + dtname)
 
@@ -1386,7 +1410,7 @@ def api_datasource_delete(request, dtname):
                 results['message'] = 'Datasource deleted succesfully.'
 
                 # delete object from database
-                source = get_datasources(request.user).filter(name=dtname)[:1].get()
+                source = get_own_datasources(request.user).filter(name=dtname)[:1].get()
                 source.delete()
             else:
                 results['status'] = callDelete.status_code
@@ -1418,7 +1442,7 @@ def datasource_sparql(request, dtname):  # Acts as a "fake" seperate sparql endp
     query = urllib.unquote_plus(q)
 
     if dtname != "all":  # search in all private datasource
-        datasources = get_datasources(request.user).filter(name=dtname)
+        datasources = DatasourceDescription.objects.filter(name=dtname)
 
         if not datasources:  # datasource not found by name
             results['status'] = '404'
@@ -1684,3 +1708,14 @@ class ConfigurationUpdateView(UpdateView):
 
     def get_object(self):
         return get_configuration()
+
+
+# Update RSS feed
+def update_rss(datasource):
+    if datasource.rss_info:
+        # replace the local rdf copy
+        data = {"content": rss2rdf(datasource.rss_info.url)}
+        mock_request = MockRequest(user=datasource.createdBy, data=data, method='POST', accept='application/json')
+        mock_request.GET['append'] = 'false'
+
+        api_datasource_replace(mock_request, datasource.name)

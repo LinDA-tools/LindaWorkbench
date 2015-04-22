@@ -2,7 +2,7 @@ from datetime import datetime
 from time import timezone
 import urllib
 from django.db import models
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, AnonymousUser
 from django.db.models import Q
 from django.db.models.signals import post_save
 from django.template.defaultfilters import slugify, random
@@ -21,6 +21,35 @@ from settings import LINDA_HOME
 User.profile = property(lambda u: UserProfile.objects.get_or_create(user=u)[0])
 
 photo_upload_path = 'static/images/photos/'
+
+
+# A fake request class
+class MockRequest:
+    def __init__(self, user=AnonymousUser, get={}, post={}, put={}, data={}, accept=None, method=None):
+        self.user = user
+        self.GET = get
+        self.POST = post
+        self.PUT = put
+        if accept:
+            self.META = {'HTTP_ACCEPT': accept}
+        if method:
+            self.method = method
+        else:
+            self.method = 'GET'
+            if self.POST:
+                self.method = 'POST'
+            elif self.PUT:
+                self.method = 'PUT'
+        if data:
+            if self.method == 'POST':
+                for key in data:
+                    self.POST[key] = data[key]
+            elif self.method == 'GET':
+                for key in data:
+                    self.GET[key] = data[key]
+            elif self.method == 'PUT':
+                for key in data:
+                    self.PUT[key] = data[key]
 
 
 class UserProfile(models.Model):
@@ -453,14 +482,6 @@ class DatasourceDescription(models.Model):
             return self.uri
         else:
             return LINDA_HOME + "sparql/" + self.name + "/"
-
-    def update_rss(self):
-        if self.rss_info:
-            # replace the local rdf copy
-            headers = {'accept': 'application/json'}
-            data = {"content": rss2rdf(self.rss_info.url)}
-            callReplace = requests.post(LINDA_HOME + "api/datasource/" + self.name +
-                                           "/replace/?append=false", headers=headers, data=data)
 
 
 # Get datasources accessible by user
