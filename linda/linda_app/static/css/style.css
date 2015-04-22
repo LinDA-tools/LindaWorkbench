@@ -1140,6 +1140,15 @@ form input[type="submit"] {
     display: table-row;
 }
 
+body.login .cell {
+    min-width: 150px;
+    display: inline-block;
+}
+
+body.login .row, body.login .form-field {
+    margin-bottom: 10px;
+}
+
 .query-builder .row, .sparql .row {
     display: block;
 }
