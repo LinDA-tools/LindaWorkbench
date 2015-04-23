@@ -10,7 +10,7 @@ import requests
 from linda_app.models import DatasourceDescription, VocabularyProperty, Query, get_configuration
 
 from linda_app.settings import LINDA_HOME
-from LindaWorkbench.linda.linda_app.models import get_datasources
+from linda_app.models import get_datasources
 
 
 def designer_defaults(request):
