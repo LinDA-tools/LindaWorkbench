@@ -10,11 +10,12 @@ import requests
 from linda_app.models import DatasourceDescription, VocabularyProperty, Query, get_configuration
 
 from linda_app.settings import LINDA_HOME
+from LindaWorkbench.linda.linda_app.models import get_datasources
 
 
-def designer_defaults():
+def designer_defaults(request):
     params = {
-        'datasources': list(DatasourceDescription.objects.all()),
+        'datasources': list(get_datasources(request.user)),
         'RDF2ANY_SERVER': get_configuration().rdf2any_server
     }
 
@@ -28,7 +29,7 @@ def designer_defaults():
 
 # Home page
 def index(request):
-    params = designer_defaults()
+    params = designer_defaults(request)
     if request.GET.get('dt_id'):
         params['datasource_default'] = DatasourceDescription.objects.get(name=request.GET.get('dt_id'))
         if not params['datasource_default']:
@@ -39,7 +40,7 @@ def index(request):
 
 # Tutorials
 def tutorials(request, tutorial):
-    params = designer_defaults()
+    params = designer_defaults(request)
     params['tutorial'] = tutorial
 
     return render(request, "builder_advanced/index.html", params)
