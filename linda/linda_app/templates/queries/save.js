@@ -35,7 +35,7 @@
                     error: function (jqXHR, textStatus, errorThrown)
                     {
                         $("#alert_modal .modal-title").html('Error');
-                        $("#alert_modal .modal-body").html(errorThrown);
+                        $("#alert_modal .modal-body").html(textStatus);
                         $("#alert_modal .modal-footer .btn-default").html('OK');
                         $("#alert_modal").show();
                     }
