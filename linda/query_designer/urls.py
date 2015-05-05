@@ -23,4 +23,7 @@ urlpatterns = patterns('',
                        url(r'^api/get_properties_with_domain/(?P<dt_name>[\w-]+)/$', views.get_properties_with_domain),
                        url(r'^api/get_property_type/(?P<dt_name>[\w-]+)/$', views.get_property_type),
                        url(r'^api/active_properties/(?P<dt_name>[\w-]+)/$', views.active_properties),
+
+                       # Docs
+                       url(r'^docs/sparql/(?P<keyword>[\w-]+)/', views.sparql_core_docs)
 )

@@ -50,7 +50,7 @@ jQuery(function () {
 					success: function(vocabularyList) {
 						callback(null, vocabularyList.map(function(v) {
 							$(editor_selector).css('cursor', 'inherit');
-							return {caption: v.vocabulary, name: v.vocabulary, value: v.prefix + ": <" + v.uri + ">\n", score: v.ranking, meta: "Vocabulary"}
+							return {caption: v.vocabulary, name: v.vocabulary, value: v.prefix + ": <" + v.uri + ">\n", score: v.ranking, meta: "Vocabulary", snippet: "this is the snippet"}
 						}))
 					}
 				});
@@ -168,5 +168,48 @@ jQuery(function () {
 			e.stopPropagation();
         }
     }, false);
+
+    /*Check if autocomplete selection has changed*/
+    setInterval(function() {
+    	var prev = editor.autocomplete_selection;
+    	var res = $('.ace_autocomplete .ace_text-layer .ace_line.ace_selected');
+    	editor.autocomplete_selection = undefined;
+    	if (res.length > 0) {
+    		if (editor.completer.completions) {
+    			editor.autocomplete_selection_index = $(res[0]).index();
+    			editor.autocomplete_selection = editor.completer.completions.filtered[editor.autocomplete_selection_index];
+			}
+		}
+
+		if (prev != editor.autocomplete_selection) { //selection changed
+			$('.autocomplete-tooltip').remove(); //remove prev tooltip
+			if (editor.autocomplete_selection) {
+				var a = editor.autocomplete_selection;
+
+				$('body').append('<div class="autocomplete-tooltip"><h3>' + a.name + '</h3><span class="loading"></span></div>');
+				$('.autocomplete-tooltip').css('left', $('.ace_autocomplete').offset().left + $('.ace_autocomplete').width() + 5);
+				$('.autocomplete-tooltip').css('top', $('.ace_autocomplete').offset().top + editor.autocomplete_selection_index*16);
+
+				var info = "No info found";
+				var callback = function(data) {
+					info = data;
+					$('.autocomplete-tooltip span.loading').remove();
+					console.log(info);
+					$('.autocomplete-tooltip').append(info);
+
+					//apply formatting
+					var pre_list = $('.autocomplete-tooltip pre');
+					for (var i=0; i<pre_list.length; i++) {
+						var text = $(pre_list[i]).text();
+						$(pre_list[i]).text(decodeURIComponent(text));
+					}
+				};
+
+				if (a.meta == "SPARQL Core") { //core
+					info = $.ajax({url: 'http://localhost:8000/query-designer/docs/sparql/' + a.value + '/'}).then(callback);
+				}
+			}
+		}
+    }, 1000);
 });
 
