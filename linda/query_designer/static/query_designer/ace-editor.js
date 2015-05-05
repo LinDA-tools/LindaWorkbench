@@ -206,7 +206,7 @@ jQuery(function () {
 				};
 
 				if (a.meta == "SPARQL Core") { //core
-					info = $.ajax({url: 'http://localhost:8000/query-designer/docs/sparql/' + a.value + '/'}).then(callback);
+					info = $.ajax({url: '/query-designer/docs/sparql/' + a.value + '/'}).then(callback);
 				}
 			}
 		}
