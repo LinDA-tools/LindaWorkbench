@@ -177,26 +177,6 @@
                 builder.reset();
             }
         });
-		
-		/*F9 to run query*/
-		$("body").on('keyup', function(e) {
-            if (e.keyCode == 120) { //F9 key pressed
-                execute_sparql_query();
-				
-				e.preventDefault();
-				e.stopPropagation();
-            }
-        });
-		
-		/*Ctrl+S to save query*/
-		document.addEventListener("keydown", function(e) {
-            if (e.keyCode == 83 && e.ctrlKey) { //Ctrl+S key pressed
-                save_design();
-				
-				e.preventDefault();
-				e.stopPropagation();
-            }
-        }, false);
     </script>
 
     <script src="/static/query_designer/toolbar.js"></script>
