@@ -48,12 +48,7 @@ var PropertyOptions = {
     },
 
     current_property_print: function() {
-        if (this.property.uri == "URI") {
-            return "URI";
-        }
-
-        var result = this.property.name.replace('_', ' ').replace(builder.instance_names[this.instance.id], '');
-        return result.charAt(0).toUpperCase() + result.slice(1);
+        return this.property_name_printable_from_string(this.instance.id, this.property.uri, this.property.name);
     },
 
     property_name_printable: function(i, p) {
@@ -63,11 +58,21 @@ var PropertyOptions = {
         return this.current_property_print();
     },
 
+    property_name_printable_from_string: function(i, p_uri, p_name) {
+        if (p_uri == "URI") {
+            return "URI";
+        }
+
+        var result = p_name.replace('_', ' ').replace(builder.instance_names[i], '').trim();
+        return result.charAt(0).toUpperCase() + result.slice(1);
+    },
+
     save: function() {
         //save changes
         //change name in builder & workbench
         if ($('#property-options .property-name').val() != this.prev_name) {
             this.property.name = $('#property-options .property-name').val();
+            this.property.name_from_user = true;
             $("#class_instance_" + this.i + " .property-row:nth-of-type(" + (this.p+2) + ") span:nth-of-type(2)").html(this.current_property_print());
         }
 
