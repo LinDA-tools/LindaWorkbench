@@ -45,9 +45,10 @@ def tutorials(request, tutorial):
 
     return render(request, "builder_advanced/index.html", params)
 
+
 # Load an existing design
 def load_design(request, pk):
-    params = designer_defaults()
+    params = designer_defaults(request)
     params['query'] = Query.objects.get(pk=pk)
 
     if not params['query']:
@@ -57,8 +58,6 @@ def load_design(request, pk):
 
 
 # API calls
-
-
 # get endpoint by data source name
 def get_endpoint_from_dt_name(dt_name):
     if dt_name != "all":  # search in all private data source
