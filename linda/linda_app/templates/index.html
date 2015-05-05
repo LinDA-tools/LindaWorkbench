@@ -9,6 +9,7 @@
     {% if installation_pending %}
         <link rel="stylesheet" href="/static/installer/style.css"/>
     {% endif %}
+    <link rel="stylesheet" href="/static/css/gettingstarted.css" />
 {% endblock %}
 
 {% block content %}
@@ -19,34 +20,102 @@
         {% endif %}
 
         <div class="welcome">
-            <!--img class="welcome-video" src="/static/images/video-placeholder.jpg" /-->
-            <iframe width="350" height="250" src="//www.youtube.com/embed/b988bbpmR00" frameborder="0" allowfullscreen></iframe>
             <div class="welcome-message clearfix">
-                <h2>Welcome to LinDA Workbench</h2>
-                <p>{% trans "With LinDa toolset you can easily transform your data into RDF format and enjoy the massive power of Linked Data."%}<br />{% trans "Welcome to the future of interconnected information."%}</p>
-
-                <div class="welcome-step">
-                    <strong>{%trans "STEP 1"%}</strong>
-                    <img class="right" src="/static/images/photo.png" />
-                    <br/>
-                    <span><a style="color:#666" href="http://linda-project.eu/wiki/index.php?title=Transformation_Engine_-_RDF_Conversion_Tool">{%trans "Turn Data into RDF"%}</a></span>
-                </div>
-
-                <div class="welcome-step">
-                    <strong>{%trans "STEP 2"%}</strong>
-                    <img class="right" src="/static/images/dir.png" />
-                    <br/>
-                    <span><a style="color:#666" href="http://linda-project.eu/wiki/index.php?title=LinDA_Publication_and_Consumption_Framework">{%trans "Query / Link your Data"%}</a></span>
-                </div>
-
-                <div class="welcome-step">
-                    <strong>{%trans "STEP 3"%}</strong>
-                    <img class="right" src="/static/images/people.png" />
-                    <br/>
-                    <span><a style="color:#666" href="http://linda-project.eu/wiki/index.php?title=LinDA_Visualization_and_Exploration">{%trans "Visualize / Analyze your Data"%}</a></span>
-                </div>
-
+                <h1>Welcome to the LinDA Playground</h1>
+                <p>Play with the LinDA tools that enchace semantic web technologies <span class="orange-text">|</span> Learn how to use data from all around the world.
                 <a href="/get-started" class="button orange right">{% trans "Get started"%}</a>
+                </p>
+                <div class="welcome-step">
+                    <div class="row">
+                       <div class="col-md-8 content">
+                          <h2>What is LinDA? </h2>
+                          <div class="whatislinda_inner_text">
+                             <p> LinDA is a complete open-source package of Enterprise Linked Data tools to quickly map and publish your data in the Linked Data Format,
+                                interlink them with other public or private data, analyze them and create visualizations.
+                             </p>
+                          </div>
+                          <!--end of whatislinda inner text -->
+                       </div>
+                       <!--end of col-md-8 -->
+                       <div class="col-md-3 image-container">
+                          <div class="image-block">
+                             <div id="linda-concept-image"></div>
+                          </div>
+                          <!--end of video-block-->
+                       </div>
+                       <!--end of col-md-3 -->
+                    </div>
+                </div>
+
+                <div class="welcome-step">
+                    <div class="row">
+                       <div class="col-md-8">
+                          <h2>Why do people like it?</h2>
+                          <div class="whatislinda_inner_text">
+                             <p>With LinDA, users and developers not familiar with Linked Data can easily setup their data sources to the RDF format as well as connect to any available public linked data format.
+                             </p>
+                             <p>Making queries, visualizations and analytics on these data is just a click away with built-in, open-source and free visualization and analytics engine.</p>
+                             <p> <strong> LinDA helps enterprises & researchers create and consume high-quality linked data, faster.</strong>
+                             </p>
+                          </div>
+                          <!--end of whatislinda inner text -->
+                       </div>
+                    </div>
+                    <!--end of row -->
+                </div>
+
+                <div class="welcome-step">
+                       <div class="row">
+                            <div class="step-background"></div>
+                            <div class="col-md-8 content">
+                                <h2>LinDA in 3 simple Steps</h2>
+                                <div class="whatislinda_inner_text">
+                                    <p><strong>Turn Data into RDF</strong>: Using LinDA Transformation engine, users can publish their data as linked data in a few, simple steps.</p>
+                                    <p><strong>Query / Link your Data </strong>: With the LinDA Query builder and Query designer, users can perform simple or complex queries through an intuitive graphical environment that eliminates the need for SPARQL syntax.</p>
+                                    <p><strong>Visualize / Analyze your Data </strong>: LinDA Visualization and Analytic engines can help enterprise users gain insight from the data that the company generates.</p>
+                                </div>
+                                <!--end of whatislinda inner text -->
+                            </div>
+                            <!--end of col-md-8 -->
+                           <!--end of col-md-3 -->
+                       </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="tutorials">
+            <h1>Having tools is great!</h1>
+            <p>Follow a couple of simple tutorials to explore the advanced capabilities of LinDA Tools:</p>
+
+            <h6>Query linked data with the Query Designer / no matter where they are</h6>
+            <div class="query-tutorials">
+                <a href="/query-designer/tutorials/overview/">
+                    <div class="tutorial-box">
+                        <span class="number">1</span>
+                        <p>Lear how to make simple queries and join data from different sources</p>
+                    </div>
+                </a>
+
+                <a href="/query-designer/tutorials/filters_and_aggregates/">
+                    <div class="tutorial-box">
+                        <span class="number">2</span>
+                        <p>Explore filtering of results and aggregates</p>
+                    </div>
+                </a>
+
+                <a href="/query-designer/tutorials/filters_and_aggregates/">
+                    <div class="tutorial-box">
+                        <span class="number">3</span>
+                        <p>Find out how to define and make combinations of sub-queries</p>
+                    </div>
+                </a>
+
+                <a href="/query-designer/tutorials/filters_and_aggregates/">
+                    <div class="tutorial-box">
+                        <span class="number">4</span>
+                        <p>Learn how to use our advanced SPARQL query editor</p>
+                    </div>
+                </a>
             </div>
         </div>
 
@@ -77,8 +146,6 @@
                     {% endwith %}
                 </div>
             </div>
-        {% else %}
-            <p>Click <a href="/accounts/signup/">here</a> to create an account in the LinDA Playground now!</p>
         {% endif %}
 	</div>
 

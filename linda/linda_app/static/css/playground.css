@@ -65,7 +65,8 @@
 }
 
 /* Main container */
-#main-container > .main {
+#main-container > .main,
+.getting-started #main-container > .main {
     width: 100%;
 }
 
@@ -73,7 +74,142 @@
     width: 100%;
 }
 
+.welcome-message {
+    width: 100%;
+}
+
+.welcome-message p {
+    font-size: 14pt;
+}
+
+.welcome-message .image-block > div {
+    height: 100px !important;
+    width: 100px !important;
+    margin-top: 0 !important;
+    margin-left: auto;
+}
+
+.welcome {
+    background: none;
+}
+
+.welcome-step {
+    width: calc((100% - 25px) / 3 - 20px);
+    padding: 10px;
+    background: #F3F3F3;
+    height: 580px;
+}
+
+.welcome-step:nth-of-type(3) > .row {
+    position: relative;
+}
+
+.step-background {
+    background: url('/static/images/threesteps.jpg');
+    background-repeat: no-repeat;
+    background-size: 100% auto;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 40%;
+    height: 80%;
+    opacity: 0.5;
+    margin-left: 60%;
+    margin-top: 20%;
+}
+
+.welcome-step .content {
+    width: 60%;
+    display: inline-block;
+}
+
+.welcome-step .image-container {
+    display: inline-block;
+    width: 35%;
+}
+
+.tutorials {
+    padding: 20px;
+    margin: 10px;
+    text-align: center;
+}
+
+.tutorials h1 {
+    border-bottom: 5px solid #ddd;
+    display: inline-block;
+}
+
+@media only screen and (max-width: 1240px) {
+    .welcome-step {
+        width: 100%;
+        height: auto;
+    }
+
+    .step-background {
+        height: 100%;
+        margin-top: 0;
+        background-size: auto 100%;
+    }
+}
+
+/* Tutorials */
+.tutorials h6 {
+    display: inline-block;
+    font-size: 120%;
+}
+
+.tutorials > p {
+    font-size: 130%;
+    font-weight: 300;
+}
+
+.tutorials .tutorial-box {
+    display: inline-block;
+    width: 170px;
+    background: #eee;
+    padding: 10px;
+    margin: 5px;
+    vertical-align: top;
+    min-height: 150px;
+    border-radius: 5px;
+    color: #666;
+    transition: background-color 500ms linear;
+    transition: color 500ms linear;
+}
+
+.query-tutorials h6 {
+    margin-top: 50px;
+}
+
+.tutorials .tutorial-box .number {
+    width: 36px;
+    height: 36px;
+    padding: 8px;
+    display: block;
+    border-radius: 50%;
+    background: #333;
+    color: #eee;
+    text-align: center;
+    margin: auto;
+    margin-bottom: 10px;
+    font-size: 1.6em;
+    transition: background-color 500ms linear;
+}
+
+.tutorials .tutorial-box:hover {
+    background: #5C97BF;
+    color: #fff;
+}
+
+.tutorials .tutorial-box:hover .number {
+    background: #FC5006;
+}
+
 /* Text colors */
 .green-text {
     color: #00B16A;
+}
+
+.orange-text {
+    color: #FC5006;
 }
