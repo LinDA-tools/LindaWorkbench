@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}SparQL Endpoint | LinDa{% endblock %}
+{% block title %}SPARQL Editor | LinDa{% endblock %}
 {% block bodyclass %}sparql{% endblock %}
 {% load app_filters %}
 {% load i18n %}
@@ -23,7 +23,7 @@
 
 {% block content %}
 <div class="main sparql">
-    <h1 class="page-title">SparQL Editor{% if query %} - Edit Query #{{query.id}}{% endif %}</h1>
+    <h1 class="page-title">SPARQL Editor{% if query %} - Edit Query #{{query.id}}{% endif %}</h1>
 
     <div>
         <select id="datasource-select">
@@ -32,21 +32,7 @@
                 <option value="{{datasource.name}}">{{datasource.title}}</option>
             {% endfor %}
         </select>
-        <!--<div class="dropdown clear-dataset">
-            <button class="btn btn-default dropdown-toggle clear-dataset col-md-12" type="button" id="dd_select_dataset"
-                    data-toggle="dropdown">
-                Choose a Data Source&nbsp;
-                <span class="caret"></span>
-            </button>
 
-            <ul class="dropdown-menu col-md-12" role="menu" aria-labelledby="dd_select_dataset">
-                {% for datasource in datasources %}
-                    <li role="presentation"><a role="menuitem" tabindex="-1"
-                                           onclick="select_dataset('{{datasource.name}}', '{{datasource | get_endpoint}}');">{{datasource.title}}</a>
-                    </li>
-                {% endfor %}
-            </ul>
-        </div>-->
         {% with hidden_value_id="hdn_qb_dataset" div_classes="done-dataset" div_id="div_select_dataset" remove_function="QueryBuilder.datasets.reset()" hidden_value_value="" %}
             {% include 'query-builder/selector.html' %}
         {% endwith %}
