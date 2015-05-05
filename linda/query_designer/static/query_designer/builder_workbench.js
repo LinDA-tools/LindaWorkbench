@@ -96,7 +96,7 @@
                         if (typeof default_properties[k] == 'string') { //property uri as input
                             self.add_property(new_id, default_properties[k]);
                         } else { //property object as input
-                            self.add_property(new_id, default_properties[k].uri, default_properties[k].name);;
+                            self.add_property(new_id, default_properties[k].uri, PropertyOptions.property_name_printable_from_string(new_id, default_properties[k].uri, default_properties[k].name));
 
                             inst.selected_properties[k] = jQuery.extend(true, {}, default_properties[k]); //clone the property object
                             var sel = "#class_instance_" + new_id + " .property-row:nth-of-type(" + (k+2) + ") ";

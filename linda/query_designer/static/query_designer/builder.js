@@ -279,14 +279,15 @@ var builder = {
             if (p.name !== undefined  && p.name != "") {
                 i_names[i] = p.name;
             } else {
-                i_names[i] ="";
+                i_names[i] = "";
             }
         }
 
         //set base unique names
         for (var i=0; i<w.instances.length; i++) {
+            var p_uri = this.get_uri_property(i);
             if (w.instances[i] == undefined) continue;
-            if (i_names[i] != "") continue;
+            if (p_uri.name_from_user) continue;
 
             var label = this.get_constraint_name(w.instances[i].uri, true); //get the constraint name
 
@@ -307,6 +308,7 @@ var builder = {
             if (i_names[i] == "") {
                 i_names[i] = label;
             }
+            p_uri.name = i_names[i];
         }
 
         //find property names
@@ -335,14 +337,13 @@ var builder = {
                     } else {
                         p.name = i_name + '_' + this.uri_to_constraint(p.uri); //e.g ?city_leaderName
                     }
+                    p.name_from_user = false;
                 }
                 this.property_names[i][j] = p.name;
-
 
                 if (p.uri != 'URI') {
                     this.create_foreign(w, i, this.property_names[i][j], j); //handle uri foreign keys
                 } else {
-                    p.name = i_name;
                     this.create_foreign(w, i, this.instance_names[i], j); //handle property foreign keys
                 }
             }
