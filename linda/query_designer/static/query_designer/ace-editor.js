@@ -31,7 +31,6 @@ jQuery(function () {
 			}
 
 			var editor_selector = '.ace_content';
-			$(editor_selector).css('cursor', 'wait');
 			setTimeout(function() {$(editor_selector).css('cursor', 'inherit')}, SUGGESTIONS_TIMEOUT);
 			var in_vocabulary = '';
 			var vocab_prefix = '';
@@ -43,6 +42,7 @@ jQuery(function () {
 
 			var val = token.value.toLowerCase()
 			if (val == "prefix") { //suggest vocabularies
+				$(editor_selector).css('cursor', 'wait');
 				$.ajax({
 					dataType: "json",
 					url: "/coreapi/recommend/?vocabulary=" + prefix,
@@ -56,6 +56,7 @@ jQuery(function () {
 				});
 			}
 			else if (val == "service") { //suggest services
+				$(editor_selector).css('cursor', 'wait');
 				$.ajax({
 					dataType: "json",
 					url: "/api/datasources/",
@@ -75,6 +76,7 @@ jQuery(function () {
 			}
 			else if ((val == "a") || (val == "type")) { //suggest classes
 		        if (in_vocabulary == "") { //look inside the data source
+		        	$(editor_selector).css('cursor', 'wait');
 					$.ajax({
 						dataType: "json",
 						url: "/query-designer/api/active_classes/" + $("#datasource-select").val() + '/?q=' + editor.session.getTokenAt(pos.row, pos.column).value,
@@ -89,6 +91,7 @@ jQuery(function () {
 						}
                     });
                 } else {
+                	$(editor_selector).css('cursor', 'wait');
                     $.ajax({ //ask the vocabulary repository
 						dataType: "json",
                         url: "/coreapi/recommend/?class=" + prefix + in_vocabulary,
@@ -103,6 +106,7 @@ jQuery(function () {
                 }
 			} else if ((token.type == "sparql.variable") || (token.type == "sparql.constant.uri")) { //suggest properties
 			    if (in_vocabulary == "") { //look inside the data source
+			    	$(editor_selector).css('cursor', 'wait');
                     $.ajax({
 						dataType: "json",
                         url: "/query-designer/api/active_properties/" + $("#datasource-select").val() + '/?q=' + editor.session.getTokenAt(pos.row, pos.column).value,
@@ -116,6 +120,7 @@ jQuery(function () {
 						}
 					});
 			    } else { //ask the vocabulary repository
+			    	$(editor_selector).css('cursor', 'wait');
                     $.ajax({
 						dataType: "json",
                         url: "/coreapi/recommend/?property=" + prefix + in_vocabulary,
@@ -129,6 +134,7 @@ jQuery(function () {
 					});
 				}
 			} else if (in_vocabulary != "") {
+				$(editor_selector).css('cursor', 'wait');
             	$.ajax({
 					dataType: "json",
                     url: "/coreapi/recommend/?class_property=" + prefix + in_vocabulary,
