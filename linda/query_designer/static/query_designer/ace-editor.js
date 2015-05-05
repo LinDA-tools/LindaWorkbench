@@ -50,7 +50,7 @@ jQuery(function () {
 					success: function(vocabularyList) {
 						callback(null, vocabularyList.map(function(v) {
 							$(editor_selector).css('cursor', 'inherit');
-							return {caption: v.vocabulary, name: v.vocabulary, value: v.prefix + ": <" + v.uri + ">\n", score: v.ranking, meta: "Vocabulary", snippet: "this is the snippet"}
+							return {caption: v.vocabulary, name: v.vocabulary, value: v.prefix + ": <" + v.uri + ">\n", score: v.ranking, meta: "Vocabulary"}
 						}))
 					}
 				});
@@ -194,7 +194,6 @@ jQuery(function () {
 				var callback = function(data) {
 					info = data;
 					$('.autocomplete-tooltip span.loading').remove();
-					console.log(info);
 					$('.autocomplete-tooltip').append(info);
 
 					//apply formatting
