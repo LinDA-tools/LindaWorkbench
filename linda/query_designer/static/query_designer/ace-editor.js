@@ -176,7 +176,7 @@ jQuery(function () {
     }, false);
 
     /*Check if autocomplete selection has changed*/
-    setInterval(function() {
+    function watch_autocomplete() {
     	var prev = editor.autocomplete_selection;
     	var res = $('.ace_autocomplete .ace_text-layer .ace_line.ace_selected');
     	editor.autocomplete_selection = undefined;
@@ -187,7 +187,7 @@ jQuery(function () {
 			}
 		}
 
-		if (prev != editor.autocomplete_selection) { //selection changed
+		if (prev !== editor.autocomplete_selection) { //selection changed
 			$('.autocomplete-tooltip').remove(); //remove prev tooltip
 			if (editor.autocomplete_selection) {
 				var a = editor.autocomplete_selection;
@@ -215,6 +215,19 @@ jQuery(function () {
 				}
 			}
 		}
-    }, 1000);
+    }
+
+	/* watch body for changes */
+    $("body")[0].addEventListener('DOMNodeInserted', function() {
+    	var res = $('.ace_autocomplete');
+		if ((res.length > 0 && res.css('display') != "none") && (typeof(editor.selection.watch) === "undefined")) {
+			editor.selection.watch = setInterval(watch_autocomplete, 500);
+		}
+		else if ((res.length == 0 || res.css('display') == "none") && (typeof(editor.selection.watch) !== "undefined")) {
+			clearInterval(editor.selection.watch);
+			editor.selection.watch = undefined;
+			watch_autocomplete();
+		}
+    }, false);
 });
 

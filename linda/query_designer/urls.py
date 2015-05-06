@@ -2,6 +2,7 @@ __author__ = 'dimitris'
 
 from django.conf.urls import patterns, url
 from query_designer import views
+from docs import views as doc_views
 
 urlpatterns = patterns('',
                        # Basic pages
@@ -25,5 +26,5 @@ urlpatterns = patterns('',
                        url(r'^api/active_properties/(?P<dt_name>[\w-]+)/$', views.active_properties),
 
                        # Docs
-                       url(r'^docs/sparql/(?P<keyword>[\w-]+)/', views.sparql_core_docs)
+                       url(r'^docs/sparql/(?P<keyword>[\w-]+)/', doc_views.sparql_core_docs)
 )

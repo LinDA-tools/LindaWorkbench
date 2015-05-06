@@ -306,21 +306,3 @@ def class_info(request, dt_name):
     return sparql_query_json(endpoint, query)
 
 
-# Get documentation about each keyword
-def sparql_core_docs(request, keyword):
-    import os
-    module_dir = os.path.dirname(__file__)
-
-    # load SPARQL docs
-    keyword_docs = []
-    keyword_doc_lines = open(os.path.join(module_dir, 'docs/sparql.txt')).read().split('\n')
-    for line in keyword_doc_lines:
-        items = line.split(':', 1)
-        keyword_docs.append((items[0], items[1]))
-
-    for keyword_doc in keyword_docs:
-        if keyword_doc[0] == keyword.lower():
-            return HttpResponse(keyword_doc[1])
-
-    return HttpResponse('No documentation found.')
-
