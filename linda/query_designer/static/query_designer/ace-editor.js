@@ -209,8 +209,8 @@ jQuery(function () {
 
 				var title = a.name || a.caption || a.value;
 				$('body').append('<div class="autocomplete-tooltip"><h3>' + title + '</h3><span class="loading"></span></div>');
-				$('.autocomplete-tooltip').css('left', $('.ace_autocomplete').offset().left + $('.ace_autocomplete').width() + 5);
-				$('.autocomplete-tooltip').css('top', $('.ace_autocomplete').offset().top + editor.autocomplete_selection_index*16);
+				$('.autocomplete-tooltip').css('left', $('.ace_autocomplete').offset().left - $(document).scrollLeft() + $('.ace_autocomplete').width() + 5);
+				$('.autocomplete-tooltip').css('top', $('.ace_autocomplete').offset().top - $(document).scrollTop() + editor.autocomplete_selection_index*16);
 
 				var info = "<p>No info found.</p>";
 				var callback = function(data) {
