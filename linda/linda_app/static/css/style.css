@@ -2550,7 +2550,8 @@ input, textarea {
     box-sizing: border-box;
 }
 
-.builder-advanced .loading {
+.builder-advanced .loading,
+.sparql .loading {
     padding: 10px;
     padding-right: 16px;
     background: url('/static/images/loading.gif') no-repeat right center;
@@ -2757,4 +2758,77 @@ input, textarea {
 
 .sparql .chosen-container {
     width: 100% !important;
+}
+
+/* ace editor tooltips */
+.autocomplete-tooltip {
+    z-index: 200000;
+    background: #fbfbfb;
+    color: #444;
+    border: 1px lightgray solid;
+    position: fixed;
+    box-shadow: 2px 3px 5px rgba(0,0,0,.2);
+    line-height: 1.4;
+    width: 600px;
+    min-height: 100px;
+    max-height: 500px;
+    overflow-y: auto;
+    padding: 5px;
+}
+
+.autocomplete-tooltip h3 {
+    font-family: Consolas;
+    border-bottom: 1px dotted #ccc;
+    margin-bottom: 10px;
+    padding-bottom: 5px;
+}
+
+.autocomplete-tooltip h6 {
+    margin-bottom: 10px;
+}
+
+.autocomplete-tooltip .code {
+    background: #C8F7C5;
+}
+
+.autocomplete-tooltip pre {
+    font-family: Consolas;
+    padding: 5px;
+    margin: 10px 0;
+    font-weight: 300;
+}
+
+.autocomplete-tooltip ul {
+    list-style: disc;
+}
+
+.autocomplete-tooltip li {
+    list-style: disc;
+    margin-left: 20px;
+    font-weight: 400;
+}
+
+.autocomplete-tooltip table.code {
+    margin: 10px 0;
+    background:
+}
+
+.autocomplete-tooltip table.code td,
+.autocomplete-tooltip table.code th {
+    border: 1px solid #aaa;
+    padding: 5px;
+}
+
+.autocomplete-tooltip table.code th {
+    font-weight: 600;
+}
+.autocomplete-tooltip table.code td {
+    font-weight: 400;
+}
+
+.autocomplete-tooltip .functional {
+    display: block;
+    font-family: Consolas;
+    font-size: 1.6em;
+    margin-bottom: 10px;
 }
