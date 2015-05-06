@@ -1,6 +1,10 @@
+import urllib
+from django.shortcuts import render
+from linda_app.models import Vocabulary, VocabularyClass, VocabularyProperty
+
 __author__ = 'dimitris'
 
-from django.http import HttpResponse
+from django.http import HttpResponse, Http404
 
 
 # Get documentation about each keyword
@@ -52,3 +56,57 @@ def sparql_core_docs(request, keyword):
             return HttpResponse(keyword_doc[1])
 
     return HttpResponse('No documentation found.')
+
+
+# Get vocabulary from namespace uri
+def get_voc_from_uri(v_uri_enc):
+    v_uri = urllib.unquote(v_uri_enc).decode('utf8')
+    v = Vocabulary.objects.get(preferredNamespaceUri=v_uri)
+    if not v:
+        return None
+    return v
+
+
+# Get info about a vocabulary
+def vocabulary_docs(request):
+    q = request.GET.get('q', None)
+    if not q:
+        raise Http404
+
+    v = get_voc_from_uri(q)
+    if not v:
+        return HttpResponse('Vocabulary not found')
+
+    return render(request, "builder_advanced/docs/vocabulary.html", {"vocabulary": v})
+
+
+# Docs for classes in vocabularies
+def vocabulary_class_docs(request, vocabulary):
+    q = request.GET.get('q', None)
+    if not q:
+        raise Http404
+
+    # get class
+    c_uri = urllib.unquote(q).decode('utf8')
+    c = VocabularyClass.objects.get(uri=c_uri)
+    if not c:
+        raise Http404
+
+    return render(request, "builder_advanced/docs/class.html", {"class": c})
+
+
+# Docs for properties in vocabularies
+def vocabulary_property_docs(request, vocabulary):
+    q = request.GET.get('q', None)
+    if not q:
+        raise Http404
+
+    # get class
+    p_uri = urllib.unquote(q).decode('utf8')
+    p = VocabularyProperty.objects.get(uri=p_uri)
+    if not p:
+        raise Http404
+
+    return render(request, "builder_advanced/docs/property.html", {"property": p})
+
+

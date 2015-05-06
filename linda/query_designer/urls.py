@@ -26,5 +26,8 @@ urlpatterns = patterns('',
                        url(r'^api/active_properties/(?P<dt_name>[\w-]+)/$', views.active_properties),
 
                        # Docs
-                       url(r'^docs/sparql/(?P<keyword>[\w-]+)/', doc_views.sparql_core_docs)
+                       url(r'^docs/sparql/(?P<keyword>[\w-]+)/', doc_views.sparql_core_docs),
+                       url(r'^docs/vocabulary/$', doc_views.vocabulary_docs),
+                       url(r'^docs/classes/(?P<vocabulary>[\w-]+)/$', doc_views.vocabulary_class_docs),
+                       url(r'^docs/properties/(?P<vocabulary>[\w-]+)/$', doc_views.vocabulary_property_docs),
 )

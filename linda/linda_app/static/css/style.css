@@ -2825,3 +2825,10 @@ input, textarea {
 .autocomplete-tooltip table.code td {
     font-weight: 400;
 }
+
+.autocomplete-tooltip .functional {
+    display: block;
+    font-family: Consolas;
+    font-size: 1.6em;
+    margin-bottom: 10px;
+}

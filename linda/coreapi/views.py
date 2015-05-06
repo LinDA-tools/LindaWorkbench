@@ -87,6 +87,7 @@ def recommend_dataset(request):
                     source_info["uri"] = source_info["uri"][1:]
             else:
                 source_info["uri"] = source.uri
+            source_info['full_uri'] = source.uri
             source_info['label'] = source.label
             source_info['ranking'] = source.vocabulary.lodRanking
 
@@ -115,6 +116,7 @@ def recommend_dataset(request):
                     source_info["uri"] = source_info["uri"][1:]
             else:
                 source_info["uri"] = source.uri
+            source_info['full_uri'] = source.uri
             source_info["label"] = source.label
             source_info["ranking"] = int(source.vocabulary.lodRanking)
 

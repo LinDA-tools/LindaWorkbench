@@ -22,7 +22,7 @@ var TextHighlightRules = require("./text_highlight_rules").TextHighlightRules;
 
 var SparqlHighlightRules = function() {
 
-  var builtinFunctions_str = "str|lang|langmatches|datatype|bound|sameterm|isiri|isuri|isblank|isliteral|union|a|count|number|sum|min|max|avg";
+  var builtinFunctions_str = "str|lang|langmatches|datatype|bound|sameterm|isiri|isuri|isblank|isliteral|a|count|number|sum|min|max|avg";
   var builtinFunctions = lang.arrayToMap(builtinFunctions_str.split("|"));
   var keyword_str = "BASE|PREFIX|SELECT|ASK|CONSTRUCT|DESCRIBE|WHERE|FROM|REDUCED|NAMED|ORDER|GROUP|LIMIT|OFFSET|FILTER|OPTIONAL|GRAPH|BY|ASC|DESC|UNION|MINUS|SERVICE|DISTINCT|AS";
   
@@ -50,7 +50,7 @@ var SparqlHighlightRules = function() {
         regex : "[\\?\\$][a-zA-Z_][a-zA-Z_0-9]*"
       }, {
         token : "sparql.prefix.constant.language",
-        regex : "[a-zA-Z]+:"
+        regex : "[a-zA-Z][a-zA-Z0-9]+:"
       }, {
         token : "string.regexp",
         regex : "[/](?:(?:\\[(?:\\\\]|[^\\]])+\\])|(?:\\\\/|[^\\]/]))*[/]\\w*\\s*(?=[).,;]|$)"
