@@ -1,5 +1,8 @@
-{% if class.description %}
-    <p>{{class.description}}</p>
+{% if not from_json %}
+    {% if class.description %}
+        <p>{{class.description}}</p>
+    {% endif %}
+    <p>Class defined in <a href="/vocabulary/{{class.vocabulary.pk}}/" target="_blank">{{class.vocabulary.title}}</a>.</p>
+    <a href="/class/{{class.pk}}/" class="button orange right" target="_blank">Read more</a>
+{% else %}
 {% endif %}
-<p>Class defined in <a href="/vocabulary/{{class.vocabulary.pk}}/" target="_blank">{{class.vocabulary.title}}</a>.</p>
-<a href="/class/{{class.pk}}/" class="button orange right" target="_blank">Read more</a>

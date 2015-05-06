@@ -1,6 +1,8 @@
+import json
 import urllib
 from django.shortcuts import render
 from linda_app.models import Vocabulary, VocabularyClass, VocabularyProperty
+from query_designer.views import get_endpoint_from_dt_name, sparql_query_json
 
 __author__ = 'dimitris'
 
@@ -110,3 +112,71 @@ def vocabulary_property_docs(request, vocabulary):
     return render(request, "builder_advanced/docs/property.html", {"property": p})
 
 
+def active_classes(request, dt_name):
+    # get class
+    q = request.GET.get('q', None)
+    if not q:
+        raise Http404
+    q = urllib.unquote(q).decode('utf8')
+
+    # try to locate in the repository first
+    c_from_db = VocabularyClass.objects.filter(uri=q)
+    if c_from_db:
+        return render(request, "builder_advanced/docs/class.html", {"class": c_from_db[0]})
+
+    # get endpoint
+    endpoint = get_endpoint_from_dt_name(dt_name)
+    if not endpoint:
+        raise Http404
+
+    query = "select ?domain ?range where { ?x <http://data.linkedmdb.org/resource/movie/actor> ?y . ?x a ?domain . ?y a ?range . } limit 1"
+
+    # get json result
+    result = sparql_query_json(endpoint, query)
+
+    # create the class object
+    res = json.loads(result.content)
+
+    if len(res['results']['bindings']) == 0:
+        return HttpResponse('<p>Docs not found.</p>')
+
+    b = res['results']['bindings'][0]
+    class_object = {"domain": b['domain']['value'], "range": b['range']['value']}
+
+    # return class template
+    return render(request, "builder_advanced/docs/class.html", {"class": class_object, "from_json": True})
+
+
+def active_properties(request, dt_name):
+    # get class
+    q = request.GET.get('q', None)
+    if not q:
+        raise Http404
+    q = urllib.unquote(q).decode('utf8')
+
+    # try to locate in the repository first
+    p_from_db = VocabularyProperty.objects.filter(uri=q)
+    if p_from_db:
+        return render(request, "builder_advanced/docs/property.html", {"property": p_from_db[0]})
+
+    # get endpoint
+    endpoint = get_endpoint_from_dt_name(dt_name)
+    if not endpoint:
+        raise Http404
+
+    query = 'SELECT (COALESCE(?d, <http://www.w3.org/2002/07/owl#Class>) as ?domain) (COALESCE(COALESCE(?r, datatype(?r)), <http://www.w3.org/2000/01/rdf-schema#Literal>) as ?range) where { ?a <' + q + '> ?b . optional{?a a ?d .} optional{?b a ?r .} } limit 1'
+
+    # get json result
+    result = sparql_query_json(endpoint, query)
+
+    # create the class object
+    res = json.loads(result.content)
+
+    if len(res['results']['bindings']) == 0:
+        return HttpResponse('<p>Docs not found.</p>')
+
+    b = res['results']['bindings'][0]
+    property_object = {"uri": q, "domain": b['domain']['value'], "range": b['range']['value']}
+
+    # return class template
+    return render(request, "builder_advanced/docs/property.html", {"property": property_object, "from_json": True})

@@ -14,6 +14,7 @@ jQuery(function () {
 	var SparqlMode = require("ace/mode/sparql").Mode;
 	editor.getSession().setMode(new SparqlMode());
 
+	//add autocompletion
 	ace.config.loadModule("ace/ext/language_tools", function() {
 		editor.setOptions({
 			enableSnippets: true,
@@ -21,11 +22,9 @@ jQuery(function () {
 		});
 	});
 
-	//add autocomplete for prefixes
 	var SparQLCompleter = {
 		getCompletions: function(editor, session, pos, prefix, callback) {
 			var token = editor.session.getTokenAt(pos.row, pos.column - prefix.length - 1);  //get previous token
-
 			if (!token) {
 				return;
 			}
@@ -43,7 +42,7 @@ jQuery(function () {
 				token = editor.session.getTokenAt(pos.row, token.start - 1); //get the previous token
 			}
 
-			var val = token.value.toLowerCase()
+			var val = token.value.toLowerCase();
 			if (val == "prefix") { //suggest vocabularies
 				$(editor_selector).css('cursor', 'wait');
 				editor.recommendation = 'vocabulary';
@@ -54,7 +53,7 @@ jQuery(function () {
 					success: function(vocabularyList) {
 						callback(null, vocabularyList.map(function(v) {
 							$(editor_selector).css('cursor', 'inherit');
-							return {caption: v.vocabulary, name: v.vocabulary, value: v.prefix + ": <" + v.uri + ">\n", score: v.ranking, meta: "Vocabulary", full_uri: v.uri}
+							return {caption: v.vocabulary, name: v.vocabulary, value: v.prefix + ": <" + v.uri + ">\n", score: Math.max(v.ranking, 1), meta: "Vocabulary", full_uri: v.uri}
 						}))
 					}
 				});
@@ -74,7 +73,7 @@ jQuery(function () {
 							}
 
 							$(editor_selector).css('cursor', 'inherit');
-							return {caption: d.title, name: d.title, value: "<" + d.endpoint + "> { ", score: 0, meta: tp}
+							return {caption: d.title, name: d.title, value: "<" + d.endpoint + "> { ", score: 1, meta: tp}
 						}))
 					}
 				});
@@ -93,7 +92,7 @@ jQuery(function () {
 								var label = uri_to_label(c.Concept.value);
 
 								$(editor_selector).css('cursor', 'inherit');
-								return {caption: label, name: label, value: '<' + c.Concept.value + '> ', score: 1000-label.length, meta: $("#datasource-select option:selected").text(), full_uri: p.full_uri}
+								return {caption: label, name: label, value: '<' + c.Concept.value + '> ', score: 1000-label.length, meta: $("#datasource-select option:selected").text(), full_uri: c.Concept.value}
 							}))
 						}
                     });
@@ -108,7 +107,7 @@ jQuery(function () {
                         success: function(classList) {
                             callback(null, classList.map(function(c) {
                             	$(editor_selector).css('cursor', 'inherit');
-                                return {caption: c.label, name: c.label, value: c.uri + ' ', score: c.ranking, meta: c.vocabulary, full_uri: c.full_uri}
+                                return {caption: c.label, name: c.label, value: c.uri + ' ', score: Math.max(c.ranking, 1), meta: c.vocabulary, full_uri: c.full_uri}
 							}))
 						}
 					});
@@ -126,7 +125,7 @@ jQuery(function () {
 							callback(null, propertyList.results.bindings.map(function(c) {
 								var label = uri_to_label(c.property.value);
 								$(editor_selector).css('cursor', 'inherit');
-								return {caption: label, name: label, value: '<' + c.property.value + '> ', score: 1000-label.length, meta: $("#datasource-select option:selected").text(), full_uri: c.full_uri}
+								return {caption: label, name: label, value: '<' + c.property.value + '> ', score: 1000-label.length, meta: $("#datasource-select option:selected").text(), full_uri: c.property.value}
 							}))
 						}
 					});
@@ -141,7 +140,7 @@ jQuery(function () {
                     	success: function(propertyList) {
                         	callback(null, propertyList.map(function(p) {
 								$(editor_selector).css('cursor', 'inherit');
-								return {caption: p.label, name: p.label, value: p.uri + ' ', score: p.ranking, meta: p.vocabulary, full_uri: p.full_uri}
+								return {caption: p.label, name: p.label, value: p.uri + ' ', score: Math.max(p.ranking, 1), meta: p.vocabulary, full_uri: p.full_uri}
 							}))
 						}
 					});
@@ -157,13 +156,13 @@ jQuery(function () {
 					success: function(propertyList) {
 						callback(null, propertyList.map(function(p) {
 							$(editor_selector).css('cursor', 'inherit');
-							return {caption: p.label, name: p.label, value: p.uri + ' ', score: p.ranking, meta: p.vocabulary, full_uri: p.full_uri}
+							return {caption: p.label, name: p.label, value: p.uri + ' ', score: Math.max(p.ranking, 1), meta: p.vocabulary, full_uri: p.full_uri}
 						}))
 					}
 				});
 			}
 		}
-	}
+	};
 	langTools.addCompleter(SparQLCompleter);
 
 	/*F9 to run query*/
