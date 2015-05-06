@@ -1692,22 +1692,24 @@ exports.FilteredList = FilteredList;
 
 define("ace/autocomplete/text_completer",["require","exports","module","ace/range"], function(require, exports, module) {
     var Range = require("../range").Range;
-    
-    var splitRegex = /[^a-zA-Z_0-9\$\-\u00C0-\u1FFF\u2C00-\uD7FF\w]+/;
 
     function getWordIndex(doc, pos) {
         var textBefore = doc.getTextRange(Range.fromPoints({row: 0, column:0}, pos));
-        return textBefore.split(splitRegex).length - 1;
+        return textBefore.split(' ').length - 1;
     }
     function wordDistance(doc, pos) {
 		/*Hacked core to remove keywords from local*/
         var prefixPos = getWordIndex(doc, pos);
 		var keywords = editor.getSession().getMode().$highlightRules.$keywords;
 		var words = [];
-        var words_init = doc.getValue().split(splitRegex);
-		for (var i=0; i<words_init.length - 1; i++) {
-			if (keywords.indexOf(words_init[i]) < 0) {
-				words.push(words_init[i]);
+        var words_init = doc.getValue().split(' ');
+		for (var i=0; i<words_init.length; i++) {
+			var word = words_init[i];
+			if (!word || word === currentWord) continue;
+			if (word[0] != '?') continue;
+			
+			if (keywords.indexOf(word) < 0) {
+				words.push(word.substr(1));
 			}
 		}
         var wordScores = Object.create(null);
@@ -1752,7 +1754,6 @@ var lang = require("../lib/lang");
 var util = require("../autocomplete/util");
 
 var textCompleter = require("../autocomplete/text_completer");
-console.log(textCompleter);
 var keyWordCompleter = {
     getCompletions: function(editor, session, pos, prefix, callback) {
         if (session.$mode.completer) {
