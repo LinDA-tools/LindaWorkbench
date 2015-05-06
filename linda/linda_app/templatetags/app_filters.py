@@ -1,5 +1,6 @@
 from django import template
 from django.utils.http import urlquote
+import re
 from endpoint_monitor.models import EndpointTest
 from linda_app.models import Vocabulary, VocabularyClass, VocabularyProperty, get_configuration
 from analytics.models import Algorithm, Category
@@ -54,3 +55,11 @@ def sparql_version(datasource):
             return ""
     else:
         return "1.1"
+
+@register.filter
+def label_from_uri(uri):
+    label = uri.split('/')[-1]
+    if label.find('#'):
+        label = uri.split('#')[-1]
+
+    return label

@@ -1,22 +1,26 @@
+{% load app_filters %}
+
 {% if property.description %}
     <p>{{property.description}}</p>
 {% endif %}
 
 {% with domain=property.get_domain_object domain_uri=property.domain_uri range=property.get_range_object range_uri=property.range_uri %}
-    {% if domain and range %}
-        <span class="functional">{{property.label}}(<a href="/class/{{domain.pk}}/" target="_blank">{{domain.label}}</a>) &rarr; <a href="/class/{{range.pk}}/" target="_blank">{{range.label}}</a></span>
+    {% if domain %}
+        <div class="functional">{{property.label}}(<a href="/class/{{domain.pk}}/" target="_blank">{{domain.label}}</a>)
+            {% if range %}
+                &rarr; <a href="/class/{{range.pk}}/" target="_blank">{{range.label}}</a>
+            {% elif range_uri %}
+                &rarr; <a href="range_uri" target="_blank">{{range_uri|label_from_uri}}</a>
+            {% endif %}
+        </div>
     {% else %}
-        {% if domain %}
-            <p>Domain: <a href="/class/{{domain.pk}}/" target="_blank">{{domain.label}}</a></p>
-        {% elif domain_uri %}
-            {%
+        {% if domain_uri %}
             <p>Domain: <a href="domain_uri" target="_blank">&lt;{{domain_uri}}&gt;</a></p>
         {% endif %}
 
         {% if range %}
             <p>Range: <a href="/class/{{range.pk}}/" target="_blank">{{range.label}}</a></p>
         {% elif range_uri %}
-            {%
             <p>Range: <a href="range_uri" target="_blank">&lt;{{range_uri}}&gt;</a></p>
         {% endif %}
     {% endif %}
