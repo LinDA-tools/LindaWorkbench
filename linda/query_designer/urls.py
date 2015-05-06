@@ -33,4 +33,7 @@ urlpatterns = patterns('',
                        url(r'^docs/vocabulary/$', doc_views.vocabulary_docs),
                        url(r'^docs/classes/(?P<vocabulary>[\w-]+)/$', doc_views.vocabulary_class_docs),
                        url(r'^docs/properties/(?P<vocabulary>[\w-]+)/$', doc_views.vocabulary_property_docs),
+
+                       url(r'^docs/active-classes/(?P<dt_name>[\w-]+)/$', doc_views.active_classes),
+                       url(r'^docs/active-properties/(?P<dt_name>[\w-]+)/$', doc_views.active_properties),
 )

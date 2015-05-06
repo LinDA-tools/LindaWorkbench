@@ -1700,8 +1700,16 @@ define("ace/autocomplete/text_completer",["require","exports","module","ace/rang
         return textBefore.split(splitRegex).length - 1;
     }
     function wordDistance(doc, pos) {
+		/*Hacked core to remove keywords from local*/
         var prefixPos = getWordIndex(doc, pos);
-        var words = doc.getValue().split(splitRegex);
+		var keywords = editor.getSession().getMode().$highlightRules.$keywords;
+		var words = [];
+        var words_init = doc.getValue().split(splitRegex);
+		for (var i=0; i<words_init.length - 1; i++) {
+			if (keywords.indexOf(words_init[i]) < 0) {
+				words.push(words_init[i]);
+			}
+		}
         var wordScores = Object.create(null);
         
         var currentWord = words[prefixPos];
@@ -1744,6 +1752,7 @@ var lang = require("../lib/lang");
 var util = require("../autocomplete/util");
 
 var textCompleter = require("../autocomplete/text_completer");
+console.log(textCompleter);
 var keyWordCompleter = {
     getCompletions: function(editor, session, pos, prefix, callback) {
         if (session.$mode.completer) {

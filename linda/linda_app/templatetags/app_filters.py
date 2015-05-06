@@ -59,7 +59,7 @@ def sparql_version(datasource):
 @register.filter
 def label_from_uri(uri):
     label = uri.split('/')[-1]
-    if label.find('#'):
+    if label.find('#') >= 0:
         label = uri.split('#')[-1]
 
     return label
