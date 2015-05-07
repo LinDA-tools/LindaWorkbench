@@ -56,6 +56,17 @@ def sparql_version(datasource):
     else:
         return "1.1"
 
+
+@register.filter
+def domain_of(cls, limit):
+    return cls.domain_of()[:limit]
+
+
+@register.filter
+def range_of(cls, limit):
+    return cls.range_of()[:limit]
+
+
 @register.filter
 def label_from_uri(uri):
     label = uri.split('/')[-1]

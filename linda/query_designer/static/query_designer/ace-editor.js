@@ -80,22 +80,32 @@ jQuery(function () {
 			}
 			else if ((val == "a") || (val == "type")) { //suggest classes
 		        if (in_vocabulary == "") { //look inside the data source
-		        	$(editor_selector).css('cursor', 'wait');
-		        	editor.recommendation = 'active-classes';
-		        	editor.recommendation_from = $("#datasource-select").val();
-					$.ajax({
-						dataType: "json",
-						url: "/query-designer/api/active_classes/" + $("#datasource-select").val() + '/?q=' + editor.session.getTokenAt(pos.row, pos.column).value,
-						timeout: SUGGESTIONS_TIMEOUT,
-						success: function(classList) {
-							callback(null, classList.results.bindings.map(function(c) {
-								var label = uri_to_label(c.Concept.value);
+		        	var dt_name = $("#datasource-select").val();
+		        	if (dt_name !== "") { // in a datasource
+						$(editor_selector).css('cursor', 'wait');
+						editor.recommendation = 'active-classes';
 
-								$(editor_selector).css('cursor', 'inherit');
-								return {caption: label, name: label, value: '<' + c.Concept.value + '> ', score: 1000-label.length, meta: $("#datasource-select option:selected").text(), full_uri: c.Concept.value}
-							}))
+						editor.recommendation_from = dt_name;
+
+						var val =  editor.session.getTokenAt(pos.row, pos.column).value;
+						var url = "/query-designer/api/active_classes/" + dt_name + '/?q=' + val;
+						if (val == "") {
+							url += '&distinct=True';
 						}
-                    });
+						$.ajax({
+							dataType: "json",
+							url: url,
+							timeout: SUGGESTIONS_TIMEOUT,
+							success: function(classList) {
+								callback(null, classList.results.bindings.map(function(c) {
+									var label = uri_to_label(c.Concept.value);
+
+									$(editor_selector).css('cursor', 'inherit');
+									return {caption: label, name: label, value: '<' + c.Concept.value + '> ', score: 1000-label.length, meta: $("#datasource-select option:selected").text(), full_uri: c.Concept.value}
+								}))
+							}
+						});
+					}
                 } else {
                 	$(editor_selector).css('cursor', 'wait');
                 	editor.recommendation = 'classes';
@@ -114,21 +124,24 @@ jQuery(function () {
                 }
 			} else if ((token.type == "sparql.variable") || (token.type == "sparql.constant.uri")) { //suggest properties
 			    if (in_vocabulary == "") { //look inside the data source
-			    	$(editor_selector).css('cursor', 'wait');
-			    	editor.recommendation = 'active-properties';
-			    	editor.recommendation_from = $("#datasource-select").val();
-                    $.ajax({
-						dataType: "json",
-                        url: "/query-designer/api/active_properties/" + $("#datasource-select").val() + '/?q=' + editor.session.getTokenAt(pos.row, pos.column).value,
-                    	timeout: SUGGESTIONS_TIMEOUT,
-                    	success: function(propertyList) {
-							callback(null, propertyList.results.bindings.map(function(c) {
-								var label = uri_to_label(c.property.value);
-								$(editor_selector).css('cursor', 'inherit');
-								return {caption: label, name: label, value: '<' + c.property.value + '> ', score: 1000-label.length, meta: $("#datasource-select option:selected").text(), full_uri: c.property.value}
-							}))
-						}
-					});
+			    	var dt_name = $("#datasource-select").val();
+					if (dt_name !== "") { // in a datasource
+						$(editor_selector).css('cursor', 'wait');
+						editor.recommendation = 'active-properties';
+						editor.recommendation_from = dt_name;
+						$.ajax({
+							dataType: "json",
+							url: "/query-designer/api/active_properties/" + dt_name + '/?q=' + editor.session.getTokenAt(pos.row, pos.column).value,
+							timeout: SUGGESTIONS_TIMEOUT,
+							success: function(propertyList) {
+								callback(null, propertyList.results.bindings.map(function(c) {
+									var label = uri_to_label(c.property.value);
+									$(editor_selector).css('cursor', 'inherit');
+									return {caption: label, name: label, value: '<' + c.property.value + '> ', score: 1000-label.length, meta: $("#datasource-select option:selected").text(), full_uri: c.property.value}
+								}))
+							}
+						});
+					}
 			    } else { //ask the vocabulary repository
 			    	$(editor_selector).css('cursor', 'wait');
 			    	editor.recommendation = 'properties';
@@ -192,12 +205,12 @@ jQuery(function () {
     /*Check if autocomplete selection has changed*/
     function watch_autocomplete() {
     	var prev = editor.autocomplete_selection;
-    	var res = $('.ace_autocomplete .ace_text-layer .ace_line.ace_selected');
+    	var res = editor.completer.popup.getRow();
     	editor.autocomplete_selection = undefined;
-    	if (res.length > 0) {
+    	if (res >= 0) {
     		if (editor.completer.completions) {
-    			editor.autocomplete_selection_index = $(res[0]).index();
-    			editor.autocomplete_selection = editor.completer.completions.filtered[editor.autocomplete_selection_index];
+    			editor.autocomplete_selection_index = res;
+    			editor.autocomplete_selection = editor.completer.completions.filtered[res];
 			}
 		}
 
@@ -207,15 +220,19 @@ jQuery(function () {
 				var a = editor.autocomplete_selection;
 
 				var title = a.name || a.caption || a.value;
-				$('body').append('<div class="autocomplete-tooltip"><h3>' + title + '</h3><span class="loading"></span></div>');
+				$('body').append('<div class="autocomplete-tooltip"><h3>' + title + '</h3><div class="content"><span class="loading"></span></div></div>');
 				$('.autocomplete-tooltip').css('left', $('.ace_autocomplete').offset().left - $(document).scrollLeft() + $('.ace_autocomplete').width() + 5);
 				$('.autocomplete-tooltip').css('top', $('.ace_autocomplete').offset().top - $(document).scrollTop() + editor.autocomplete_selection_index*16);
 
 				var info = "<p>No info found.</p>";
 				var callback = function(data) {
+					//check if selection has changed
+					var a = editor.autocomplete_selection;
+					var new_title = a.name || a.caption || a.value;
+					if (title != new_title) return;
+
 					info = data;
-					$('.autocomplete-tooltip span.loading').remove();
-					$('.autocomplete-tooltip').append(info);
+					$('.autocomplete-tooltip > .content').html(info);
 
 					//apply formatting
 					var pre_list = $('.autocomplete-tooltip pre');
@@ -227,8 +244,7 @@ jQuery(function () {
 
 				var info_url = '';
 				if (a.meta == "local") { //local variables
-					$('.autocomplete-tooltip span.loading').remove();
-					$('.autocomplete-tooltip').append('<p>Local term.</p>');
+					$('.autocomplete-tooltip > .content').html('<p>Local term.</p>');
 				}
 				else { //everything else
 					if (a.meta == "SPARQL Core") { //core
@@ -243,8 +259,7 @@ jQuery(function () {
 
 					//get the info from server
 					info = $.ajax({url: info_url}).then(callback, function() {
-						$('.autocomplete-tooltip span.loading').remove();
-						$('.autocomplete-tooltip').append('<p>No info found.</p>');
+						$('.autocomplete-tooltip > .content').append('<p>No info found.</p>');
 					});
 				}
 			}
