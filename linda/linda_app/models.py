@@ -286,10 +286,10 @@ class VocabularyClass(models.Model):  # A class inside an RDF vocabulary
     def __unicode__(self):
         return self.label
 
-    def domain_of(self):
+    def domain_of(self, limit=None):
         return VocabularyProperty.objects.filter(domain=self.uri)
 
-    def range_of(self):
+    def range_of(self, limit=None):
         return VocabularyProperty.objects.filter(range=self.uri)
 
 

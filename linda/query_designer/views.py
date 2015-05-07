@@ -98,7 +98,7 @@ def active_classes(request, dt_name):
         query = 'select distinct ?Concept where {[] a ?Concept. FILTER regex(str(?Concept), "' + regex + '" , "i")} LIMIT 20'
     else:
         # get page
-        p = request.GET.get('p', '0')
+        p = request.GET.get('p', '1')
 
         # check if searching distinct
         if request.GET.get('distinct'):
@@ -108,7 +108,7 @@ def active_classes(request, dt_name):
 
         # query to get all classes with at least one instance
         classes_query_paginate_by = 10000
-        query = "SELECT " + distinct + " ?class WHERE { ?s a ?class } LIMIT " + str(classes_query_paginate_by) + " OFFSET " + str(
+        query = "SELECT " + distinct + " ?Concept WHERE { ?s a ?Concept } LIMIT " + str(classes_query_paginate_by) + " OFFSET " + str(
             (int(p) - 1) * classes_query_paginate_by)
 
     return sparql_query_json(endpoint, query)
@@ -268,7 +268,7 @@ def get_property_type(request, dt_name):
     return HttpResponse(data, "application/json")
 
 
-# Get the return type of a property
+# Get the domain of a property
 def get_properties_with_domain(request, dt_name):
     # get class uri
     if not request.GET.get('class_uri'):

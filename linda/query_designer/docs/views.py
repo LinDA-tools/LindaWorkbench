@@ -129,22 +129,28 @@ def active_classes(request, dt_name):
     if not endpoint:
         raise Http404
 
-    query = "select ?domain ?range where { ?x <http://data.linkedmdb.org/resource/movie/actor> ?y . ?x a ?domain . ?y a ?range . } limit 1"
+    property_limit = 10
+    query = 'SELECT DISTINCT ?property WHERE { ?x a <' + q + '>. ?x ?property ?y .} limit ' + str(property_limit)
 
     # get json result
     result = sparql_query_json(endpoint, query)
 
+    # check for errors
+    if result.status_code >= 400:
+        return HttpResponse(result.content, status=result.status_code)
+
     # create the class object
     res = json.loads(result.content)
 
-    if len(res['results']['bindings']) == 0:
-        return HttpResponse('<p>Docs not found.</p>')
-
-    b = res['results']['bindings'][0]
-    class_object = {"domain": b['domain']['value'], "range": b['range']['value']}
+    properties = []
+    bindings = res['results']['bindings']
+    for b in bindings:
+        properties.append(b['property']['value'])
+    class_object = {"uri": q, "properties": properties}
 
     # return class template
-    return render(request, "builder_advanced/docs/class.html", {"class": class_object, "from_json": True})
+    options = {"class": class_object, "from_json": True, "property_limit": property_limit}
+    return render(request, "builder_advanced/docs/class.html", options)
 
 
 def active_properties(request, dt_name):
@@ -164,10 +170,14 @@ def active_properties(request, dt_name):
     if not endpoint:
         raise Http404
 
-    query = 'SELECT (COALESCE(?d, <http://www.w3.org/2002/07/owl#Class>) as ?domain) (COALESCE(COALESCE(?r, datatype(?r)), <http://www.w3.org/2000/01/rdf-schema#Literal>) as ?range) where { ?a <' + q + '> ?b . optional{?a a ?d .} optional{?b a ?r .} } limit 1'
+    query = 'SELECT ?domain ?range WHERE { ?a <' + q + '> ?b . ?a a ?domain . optional{?b a ?range .} } limit 1'
 
     # get json result
     result = sparql_query_json(endpoint, query)
+
+    # check for errors
+    if result.status_code >= 400:
+        return HttpResponse(result.content, status=result.status_code)
 
     # create the class object
     res = json.loads(result.content)
@@ -176,7 +186,11 @@ def active_properties(request, dt_name):
         return HttpResponse('<p>Docs not found.</p>')
 
     b = res['results']['bindings'][0]
-    property_object = {"uri": q, "domain": b['domain']['value'], "range": b['range']['value']}
+    if 'range' in b:
+        p_range = b['range']['value']
+    else:
+        p_range = 'http://www.w3.org/2000/01/rdf-schema#Literal'
+    property_object = {"uri": q, "domain": b['domain']['value'], "range": p_range}
 
     # return class template
     return render(request, "builder_advanced/docs/property.html", {"property": property_object, "from_json": True})

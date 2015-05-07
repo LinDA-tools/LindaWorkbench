@@ -1,8 +1,54 @@
+{% load app_filters %}
+
 {% if not from_json %}
     {% if class.description %}
         <p>{{class.description}}</p>
     {% endif %}
+
+    {% with property_limit=10 %}
+        {% with properties=class|domain_of:property_limit %}
+            {% if properties %}
+                <div class="code json-container">
+                    {{class.label}} {
+                    {% for property in properties %}
+                        <div class="json-inner">
+                            <a href="/property/{{property.pk}}/" target="_blank">{{property.label}}</a>
+                            {% if not forloop.last or properties|length == property_limit %}
+                                ,
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                    </ul>
+                    {% if properties|length == property_limit %}
+                        <span class="json-inner">...</span>
+                    {% endif %}
+                    }
+                </div>
+            {% endif %}
+        {% endwith %}
+    {% endwith %}
+
     <p>Class defined in <a href="/vocabulary/{{class.vocabulary.pk}}/" target="_blank">{{class.vocabulary.title}}</a>.</p>
     <a href="/class/{{class.pk}}/" class="button orange right" target="_blank">Read more</a>
 {% else %}
+    {% if class.properties %}
+        <div class="code json-container">
+            {{class.uri|label_from_uri}} {
+            {% for property in class.properties %}
+                <div class="json-inner">
+                    <a href="{{property}}" target="_blank">{{property|label_from_uri}}</a>
+                    {% if not forloop.last or class.properties|length == property_limit %}
+                        ,
+                    {% endif %}
+                </div>
+            {% endfor %}
+            </ul>
+            {% if class.properties|length == property_limit %}
+                <span class="json-inner">...</span>
+            {% endif %}
+            }
+        </div>
+    {% endif %}
+
+    <a href="{{class.uri}}" class="button orange right" target="_blank">Read more</a>
 {% endif %}

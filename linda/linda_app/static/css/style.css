@@ -2789,6 +2789,7 @@ input, textarea {
 
 .autocomplete-tooltip .code {
     background: #C8F7C5;
+    font-family: Consolas;
 }
 
 .autocomplete-tooltip pre {
@@ -2831,4 +2832,13 @@ input, textarea {
     font-family: Consolas;
     font-size: 1.6em;
     margin-bottom: 10px;
+}
+
+.autocomplete-tooltip .json-container {
+    margin-bottom: 10px;
+}
+
+.autocomplete-tooltip .json-container > .json-inner {
+    margin: 0 0 0 40px;
+    display: block;
 }
