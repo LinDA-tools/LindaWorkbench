@@ -31,6 +31,9 @@
                         $("#alert_modal .modal-body").html('Query saved');
                         $("#alert_modal .modal-footer .btn-default").html('Close');
                         $("#alert_modal").show();
+                        if (typeof(builder) !== "undefined") {
+                            builder.saved_query = builder.query;
+                        }
                     },
                     error: function (jqXHR, textStatus, errorThrown)
                     {
