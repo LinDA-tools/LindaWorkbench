@@ -572,6 +572,16 @@
         }
     });
 
+    /*Warn on page unload*/
+    window.addEventListener("beforeunload", function (e) {
+        if (builder.query != builder.saved_query) {
+            var confirmationMessage = 'There are changes in the Query Designer that have not been saved.';
+
+            (e || window.event).returnValue = confirmationMessage; //Gecko + IE
+            return confirmationMessage; //Gecko + Webkit, Safari, Chrome etc.
+        }
+    });
+
 
 
 

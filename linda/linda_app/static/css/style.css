@@ -2679,7 +2679,16 @@ input, textarea {
 }
 
 .ui-dialog-titlebar-close {
-    display: none;
+    display: block;
+    background: none;
+    border: none;
+    color: #eee;
+    outline: none;
+    font-size: 80%;
+}
+
+.ui-dialog-titlebar-close:after {
+    content: "X";
 }
 
 #sparql_results_table th {

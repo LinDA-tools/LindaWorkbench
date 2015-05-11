@@ -1,6 +1,7 @@
 //TODO: Refactor builder
 var builder = {
     query: "",
+    saved_query: "",
     select_vars: [],
     where_clause: "",
     order_clause: "",
