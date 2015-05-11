@@ -1511,6 +1511,10 @@ def query_save(request):
     # get user
     created_by = request.user if request.user.is_authenticated() else None
 
+    # user must be logged in
+    if not created_by:
+        return HttpResponseForbidden('You must <a href="/accounts/login/" target="_blank">login</a> to save a query.')
+
     # create the query object
     query = Query.objects.create(endpoint=endpoint, sparql=query,
                                  description=description, createdOn=datetime.now(), updatedOn=datetime.now(),
