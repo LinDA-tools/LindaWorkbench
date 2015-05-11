@@ -98,7 +98,7 @@ function show_filters() {
                 $(".filter-prototype select").val('or');
                 $("#filter-prototype-str").hide();
             }
-            else if ((p.filter_prototype.indexOf("&&") >= 0) && (p.filter_prototype.indexOf("||") < 0) && (p.filter_prototype.indexOf(" [") < 0)) { //NAND join filters
+            else if ((p.filter_prototype.indexOf("||") < 0) && (p.filter_prototype.indexOf(" [") < 0)) { //NAND join filters
                 $(".filter-prototype select").val('nand');
                 $("#filter-prototype-str").hide();
             }

@@ -2684,7 +2684,7 @@ input, textarea {
     border: none;
     color: #eee;
     outline: none;
-    font-size: 80%;
+    font-size: 80% !important;
 }
 
 .ui-dialog-titlebar-close:after {
