@@ -41,11 +41,11 @@ var toolbar = {
                 var bindings = data.results.bindings;
                 var n_of_added = 0;
                 for (var i=0; i<bindings.length; i++) { //add all classes
-                    if (!bindings[i].class) {
+                    if (!bindings[i].Concept) {
                         continue;
                     }
 
-                    var class_uri = bindings[i].class.value;
+                    var class_uri = bindings[i].Concept.value;
                     var already_exists = false;
                     if (!distinct) {
                         for (var j=0; j<toolbar.all_classes_properties.length; j++) {
