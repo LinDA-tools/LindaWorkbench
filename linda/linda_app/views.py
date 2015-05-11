@@ -740,7 +740,7 @@ def downloadRDF(request, pk, type):
 def datasources(request):
     params = {}
     params['page'] = 'Datasources'
-    params['datasources'] = get_datasources(request.user).order_by('title')
+    params['datasources'] = get_datasources(request.user).order_by('-updatedOn')
 
     return render(request, 'datasource/index.html', params)
 
@@ -1489,6 +1489,7 @@ class QueryListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super(QueryListView, self).get_context_data(**kwargs)
+        context['queries'] = context['queries'].order_by('-updatedOn')
         context['page'] = 'Queries'
         return context
 

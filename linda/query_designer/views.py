@@ -2,6 +2,7 @@ from datetime import datetime
 import json
 from numbers import Number
 import urllib
+import urllib2
 from django.http import Http404, HttpResponse
 from django.shortcuts import render
 from django.test._doctest import _OutputRedirectingPdb
@@ -207,7 +208,8 @@ def active_properties(request, dt_name):
 
 
 def uri_to_label(uri):
-    return uri.split('/')[-1].split('#')[-1].replace('_', ' ')
+    label = uri.split('/')[-1].split('#')[-1].replace('_', ' ').encode('utf-8')
+    return urllib.unquote(label)
 
 
 # Suggest entities of a type

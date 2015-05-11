@@ -9,7 +9,7 @@
             <th>{% trans "Datasource" %}</th>
             <th>{% trans "Description"%}</th>
             <th>{% trans "Query" %}</th>
-            <th>{% trans "Created on" %}</th>
+            <th>{% trans "Updated on" %}</th>
         </tr>
         </thead>
         <tbody>
@@ -22,10 +22,10 @@
                     <a href="#">Analyze</a>
                 </div>
             </td>
-            <td>{{query.get_datasource}}</td>
+            <td>{{query|get_datasources}}</td>
             <td class="description"><p>{{query.description}}</p></td>
             <td class="sparql-query"><p>{{query.sparql|linebreaksbr}}</p></td>
-            <td>{{query.createdOn}}</td>
+            <td>{{query.updatedOn}}</td>
         </tr>
         {% endfor %}
         </tbody>
@@ -34,6 +34,7 @@
     <script>
         $(".queries-table").dataTable({
             "iDisplayLength": {{paginate_by}},
+            "order": [],
             "language": {
                 "info": "Showing _START_ to _END_ of _TOTAL_ queries",
                 "infoEmpty": "No datasources available",
