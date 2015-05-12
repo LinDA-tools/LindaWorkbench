@@ -111,7 +111,7 @@ var builder = {
         var prf_cnt = 0;
         var roots = Object.keys(cnt);
         roots.sort(function(a, b){
-          return b.length - a.length; //DESC sort of roots based on their length
+            return b.length - a.length; //DESC sort of roots based on their length
         });
 
         for (var i=0; i<roots.length; i++) {
@@ -243,11 +243,12 @@ var builder = {
         for (var j=0; j<arrows.connections.length; j++) {
              if ((arrows.connections[j].f == '#class_instance_' + i) && (arrows.connections[j].fp == p)) {
                 var tn = arrows.connections[j].t.split('_')[2] //3rd part is the number #class_instance_1
+
                 if (w.instances[tn].selected_properties[arrows.connections[j].tp].uri == 'URI') { //foreign key to other entity
                     if (w.instances[i].selected_properties[p].uri == 'URI') {
                         this.instance_names[tn] = this.instance_names[i];
                     } else {
-                        this.property_names[i][p] = this.instance_names[tn];
+                        this.instance_names[tn] = this.property_names[i][p];
                     }
                 } else { //foreign key to other entity's property
                     this.property_names[tn][arrows.connections[j].tp] = p_name;
@@ -277,7 +278,7 @@ var builder = {
         //initialize base unique names to empty
         for (var i=0; i<w.instances.length; i++) {
             var p = this.get_uri_property(i);
-            if (p.name !== undefined  && p.name != "") {
+            if (p.name !== undefined  && p.name != "" && p.name_from_user) {
                 i_names[i] = p.name;
             } else {
                 i_names[i] = "";
@@ -288,7 +289,7 @@ var builder = {
         for (var i=0; i<w.instances.length; i++) {
             var p_uri = this.get_uri_property(i);
             if (w.instances[i] == undefined) continue;
-            if (p_uri.name_from_user) continue;
+            if ((p_uri.name_from_user) || (i_names[i] != "")) continue;
 
             var label = this.get_constraint_name(w.instances[i].uri, true); //get the constraint name
 
@@ -341,12 +342,12 @@ var builder = {
                     p.name_from_user = false;
                 }
                 this.property_names[i][j] = p.name;
+            }
 
-                if (p.uri != 'URI') {
-                    this.create_foreign(w, i, this.property_names[i][j], j); //handle uri foreign keys
-                } else {
-                    this.create_foreign(w, i, this.instance_names[i], j); //handle property foreign keys
-                }
+            if (p.uri != 'URI') {
+                this.create_foreign(w, i, this.property_names[i][j], j); //handle uri foreign keys
+            } else {
+                this.create_foreign(w, i, this.instance_names[i], j); //handle property foreign keys
             }
         }
     },

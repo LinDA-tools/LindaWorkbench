@@ -92,6 +92,7 @@
 
             {% if query.design %}
                 builder_workbench.from_json($.parseJSON( '{{query.design.data|safe}}' ));
+                builder.saved_query = '{{query.sparql|escapejs}}';
             {% endif %}
         });
     </script>
