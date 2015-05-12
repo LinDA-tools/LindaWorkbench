@@ -278,7 +278,7 @@ var builder = {
         //initialize base unique names to empty
         for (var i=0; i<w.instances.length; i++) {
             var p = this.get_uri_property(i);
-            if (p.name !== undefined  && p.name != "") {
+            if (p.name !== undefined  && p.name != "" && p.name_from_user) {
                 i_names[i] = p.name;
             } else {
                 i_names[i] = "";
@@ -289,7 +289,7 @@ var builder = {
         for (var i=0; i<w.instances.length; i++) {
             var p_uri = this.get_uri_property(i);
             if (w.instances[i] == undefined) continue;
-            if (p_uri.name_from_user) continue;
+            if ((p_uri.name_from_user) || (i_names[i] != "")) continue;
 
             var label = this.get_constraint_name(w.instances[i].uri, true); //get the constraint name
 
