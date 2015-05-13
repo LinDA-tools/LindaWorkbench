@@ -12,7 +12,30 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from linda_app.forms import *
 
 
+def json_response(func):
+    """
+    A decorator thats takes a view response and turns it
+    into json. If a callback is added through GET or POST
+    the response is JSONP.
+    """
+    def decorator(request, *args, **kwargs):
+        objects = func(request, *args, **kwargs)
+        if isinstance(objects, HttpResponse):
+            return objects
+        try:
+            data = json.dumps(objects)
+            if 'callback' in request.REQUEST:
+                # a jsonp response!
+                data = '%s(%s);' % (request.REQUEST['callback'], data)
+                return HttpResponse(data, "text/javascript")
+        except:
+            data = json.dumps(str(objects))
+        return HttpResponse(data, "application/json")
+    return decorator
+
+
 @csrf_exempt
+@json_response
 def api_datasources_list(request):
     results = []
     for source in DatasourceDescription.objects.all():
@@ -22,12 +45,11 @@ def api_datasources_list(request):
         source_info['title'] = source.title
         results.append(source_info)
 
-    data = json.dumps(results)
-    mimetype = 'application/json'
-    return HttpResponse(data, mimetype)
+    return results
 
 
 @csrf_exempt
+@json_response
 def recommend_dataset(request):
     vocabulary = request.GET.get("vocabulary", None)
     class_ = request.GET.get("class", None)
@@ -158,7 +180,6 @@ def recommend_dataset(request):
     data = []
     for record in records:
         data.append(record)
-    data = json.dumps(data)
-    mimetype = 'application/json'
-    return HttpResponse(data, mimetype)
+
+    return data
 
