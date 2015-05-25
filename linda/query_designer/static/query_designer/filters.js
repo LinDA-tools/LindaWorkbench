@@ -85,32 +85,38 @@ function show_filters() {
 
         if (cnt == 0) {
             $("#all-filters").html('No filters applied.');
-        } else if (p.filter_prototype) { //restore filter type
-            if ((p.filter_prototype.indexOf("&&") < 0) && (p.filter_prototype.indexOf("||") < 0) && (p.filter_prototype.indexOf("![") < 0)) { //no operator -- default to AND
-                $(".filter-prototype select").val('and');
-                $("#filter-prototype-str").hide();
+            $('#filters-clear').css('display', 'none');
+        } else {
+            if (p.filter_prototype) { //restore filter type
+                if ((p.filter_prototype.indexOf("&&") < 0) && (p.filter_prototype.indexOf("||") < 0) && (p.filter_prototype.indexOf("![") < 0)) { //no operator -- default to AND
+                    $(".filter-prototype select").val('and');
+                    $("#filter-prototype-str").hide();
+                }
+                else if ((p.filter_prototype.indexOf("&&") >= 0) && (p.filter_prototype.indexOf("||") < 0) && (p.filter_prototype.indexOf("![") < 0)) { //AND join filters
+                    $(".filter-prototype select").val('and');
+                    $("#filter-prototype-str").hide();
+                }
+                else if ((p.filter_prototype.indexOf("&&") < 0) && (p.filter_prototype.indexOf("||") >= 0) && (p.filter_prototype.indexOf("![") < 0)) { //OR join filters
+                    $(".filter-prototype select").val('or');
+                    $("#filter-prototype-str").hide();
+                }
+                else if ((p.filter_prototype.indexOf("||") < 0) && (p.filter_prototype.indexOf(" [") < 0)) { //NAND join filters
+                    $(".filter-prototype select").val('nand');
+                    $("#filter-prototype-str").hide();
+                }
+                else if ((p.filter_prototype.indexOf("&&") < 0) && (p.filter_prototype.indexOf("||") >= 0) && (p.filter_prototype.indexOf(" [") < 0)) { //NOR join filters
+                    $(".filter-prototype select").val('nor');
+                    $("#filter-prototype-str").hide();
+                }
+                else { //CUSTOM join filter boolean expression
+                    $(".filter-prototype select").val('custom');
+                    $("#filter-prototype-str").val(p.filter_prototype);
+                    $("#filter-prototype-str").show();
+                }
             }
-            else if ((p.filter_prototype.indexOf("&&") >= 0) && (p.filter_prototype.indexOf("||") < 0) && (p.filter_prototype.indexOf("![") < 0)) { //AND join filters
-                $(".filter-prototype select").val('and');
-                $("#filter-prototype-str").hide();
-            }
-            else if ((p.filter_prototype.indexOf("&&") < 0) && (p.filter_prototype.indexOf("||") >= 0) && (p.filter_prototype.indexOf("![") < 0)) { //OR join filters
-                $(".filter-prototype select").val('or');
-                $("#filter-prototype-str").hide();
-            }
-            else if ((p.filter_prototype.indexOf("||") < 0) && (p.filter_prototype.indexOf(" [") < 0)) { //NAND join filters
-                $(".filter-prototype select").val('nand');
-                $("#filter-prototype-str").hide();
-            }
-            else if ((p.filter_prototype.indexOf("&&") < 0) && (p.filter_prototype.indexOf("||") >= 0) && (p.filter_prototype.indexOf(" [") < 0)) { //NOR join filters
-                $(".filter-prototype select").val('nor');
-                $("#filter-prototype-str").hide();
-            }
-            else { //CUSTOM join filter boolean expression
-                $(".filter-prototype select").val('custom');
-                $("#filter-prototype-str").val(p.filter_prototype);
-                $("#filter-prototype-str").show();
-            }
+
+            //show the clear filters button
+            $('#filters-clear').css('display', 'inline-block');
         }
 
         /*Find specific value autocomplete*/
@@ -202,5 +208,11 @@ $("body").on('click', '.filter-remove', function() {
     if (f == builder_workbench.property_selection.filters.length -1) { //last filter
         builder_workbench.property_selection.filters.pop();
     }
+    show_filters();
+});
+
+/*On filter clear click*/
+$("body").on('click', '#filters-clear', function() {
+    builder_workbench.property_selection.filters = [];
     show_filters();
 });

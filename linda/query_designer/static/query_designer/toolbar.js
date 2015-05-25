@@ -218,7 +218,7 @@ var toolbar = {
             offset: offset
         };
 
-        $("#tree_toolbar").css('top', $("#toolbar").position().top + $("#toolbar").height() + 30);
+        $("#tree_toolbar").css('top', $(".toolbar-container").position().top + $(".toolbar-container").height() + 10);
     }
 };
 
@@ -235,7 +235,7 @@ $( "#toolbar > select" ).change(on_datasource_select);
         update_tree_toolbar();
         
         $("#toolbar .active-classes").html('<span class="loading">Loading classes and properties...</span>');
-        $("#tree_toolbar").css('top', $("#toolbar").position().top + $("#toolbar").height() + 30);
+        $("#tree_toolbar").css('top', $(".toolbar-container").position().top + $(".toolbar-container").height() + 10);
         toolbar.clear();
 
         $.ajax({ //make request for properties

@@ -2080,7 +2080,7 @@ input, textarea {
     position: absolute;
     right: 0;
     max-width: 300px;
-    top: 120px;
+    top: 150px;
     z-index: 500;
     background: #fff;
     border-left: 1px solid #eee;
@@ -2130,10 +2130,13 @@ input, textarea {
 .toolbar {
     padding: 10px;
     border-bottom: 1px solid #ddd;
+}
+
+.toolbar-container {
     background: #eee;
 }
 
-.toolbar > * {
+.toolbar-container > * {
     vertical-align: top;
 }
 
@@ -2193,8 +2196,75 @@ input, textarea {
     background: #26C281;
 }
 
-.toolbar > select {
+.toolbar select {
     padding: 5px;
+}
+
+.builder-advanced .qb-equivalent-query-main {
+    display: none !important;
+}
+
+.glyphicon.loading {
+    padding: 0 !important;
+}
+
+.designer-menu {
+    background: #eee;
+    /*border-bottom: 1px solid #aaa;*/
+}
+
+.designer-menu .designer-button,
+.query-title {
+    display: inline-block;
+    border: 1px solid #eee;
+    padding: 2px 5px;
+    vertical-align: top;
+    margin: 2px 5px;
+}
+
+.query-title {
+    color: #999;
+}
+
+.designer-menu .designer-button > span.text {
+    margin-left: 5px;
+    display: inline-block;
+    vertical-align: top;
+}
+
+.designer-menu .designer-button.checked {
+    background: #ccc;
+}
+
+.designer-menu #show-source {
+    font-family: Consolas;
+    font-weight: 600;
+}
+
+.text-green {
+    color: #00B16A;
+}
+
+.text-white {
+    color: #fff;
+}
+
+.text-orange {
+    color: #FC5006;
+}
+
+.text-gray {
+    color: #999;
+}
+
+.designer-menu .designer-button img {
+    height: 30px;
+}
+
+.designer-menu .designer-button:hover {
+    border: 1px solid #ddd;
+    background: #eaeaea;
+    cursor: pointer;
 }
 
 #builder_workspace {
@@ -2757,6 +2827,10 @@ input, textarea {
 .toolbar .chosen-container,
 .toolbar select {
     max-width: 250px;
+}
+
+.toolbar input[type="search"] {
+    vertical-align: top;
 }
 
 .chosen-container .chosen-single {

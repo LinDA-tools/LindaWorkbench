@@ -4,7 +4,8 @@ from .forms import AnalyticsForm,DocumentForm
 from django.views import generic
 from django.core.urlresolvers import reverse
 from django.views.generic import ListView, UpdateView, DetailView, DeleteView
-
+from django.contrib.auth.models import User
+from django.db.models import Q,Count
 
 from django.shortcuts import render_to_response
 from django.template import RequestContext
@@ -12,7 +13,8 @@ import simplejson
 import socket
 
 from analytics.models import Analytics,Category,Algorithm,Params
-from linda_app.models import Query
+from linda_app.models import Query,UserProfile,DatasourceDescription
+
 
 import urllib2
 import json
@@ -21,12 +23,18 @@ import pprint
 from ConfigParser import ConfigParser
 import os.path
 import requests
+import datetime
 
 from linda_app.settings import LINDA_HOME
 
 from django.contrib import messages
 from django.contrib.messages import get_messages
-
+import pdfkit
+import reportlab
+from reportlab.pdfgen import canvas
+from django.http import HttpResponse
+from tempfile import *
+import csv
 
 
 
@@ -56,6 +64,9 @@ def analytics(request):
 		new_lindaAnalytics.version = 0
 		new_lindaAnalytics.user_id = current_user.id
 		print(new_lindaAnalytics.trainQuery)
+		current_time = datetime.datetime.today();
+		new_lindaAnalytics.createdOn = current_time;
+		new_lindaAnalytics.updatedOn = current_time;
 		new_lindaAnalytics.save()
 		#try to use params form
 		callRESTfulLINDA(new_lindaAnalytics.pk,'lindaAnalytics_analytics',request)
@@ -140,6 +151,16 @@ def detail(request, analytics_id):
         raise Http404
     return render(request, 'analytics/detail.html', {'analytics': analytics,'analytics_list': analytics_list})
    #return HttpResponse("You're looking at analytics %s." % analytics_id)
+   
+def detailtoprint(request, analytics_id):
+    analytics = get_object_or_404(Analytics, pk=analytics_id)
+    print(analytics.user_id)
+    current_user = get_object_or_404(User, id=analytics.user_id)
+    try:
+        analytics = Analytics.objects.get(pk=analytics_id)
+    except Analytics.DoesNotExist:
+        raise Http404
+    return render(request, 'analytics/detailtoprint.html', {'analytics': analytics,'current_user':current_user})
 
 
 def ajax(request):
@@ -199,6 +220,26 @@ def reevaluate(request, analytics_id):
         raise Http404
     #return render(request, 'analytics/detail.html', {'analytics': analytics,'analytics_list': analytics_list})
     return HttpResponseRedirect(reverse('analytics:detail', args=(analytics_id,)))
+  
+def exportreport(request, analytics_id):
+    analytics = get_object_or_404(Analytics, pk=analytics_id)
+    try:
+        analytics = Analytics.objects.get(pk=analytics_id)
+        tempfile=gettempdir()+"/out.pdf"
+        currenturl= request.path
+        pdfurl = currenturl.replace("/exportreport/", "");
+        pdfkit.from_url('http://localhost:8000'+str(pdfurl), tempfile)
+        f = open(tempfile, 'r')
+        pdf = f.read()
+        f.close()
+        response = HttpResponse(content_type='application/pdf')
+        response['Content-Disposition'] = 'attachment; filename=myreport.pdf'
+        response.write(pdf)
+        
+
+    except Analytics.DoesNotExist:
+        raise Http404
+    return response
   
    
 def sendRDFToTriplestore(request1 , analytics_id):
@@ -283,4 +324,75 @@ def popup_query_info(request):
     return render(request, 'analytics/query.html', {'query': query,})
   
   
+
+def statistics(request):
+    return render(request, 'analytics/statistics.html')  
+
+def statistics_4_drildown_Datasources(request):
+    queries=Query.objects.all()
+    #n_of_public = len(Query.objects.all())
+    #print(n_of_public)
+    queries_list = []
+    for query in queries:
+        queries_dict = {}
+        queries_dict['datasource'] = query.endpoint
+        queries_dict['query'] = 'ID:'+str(query.id)+' '+str(query.description)
+        queries_dict['n_of_analytics'] = len(Analytics.objects.filter(Q(trainQuery_id=query.id) | Q(evaluationQuery_id=query.id)))
+        queries_list.append(queries_dict)
+        
+    n_test = len(queries_list)
+    print('makari')
+    print(n_test)
+    return HttpResponse(json.dumps(queries_list), content_type='application/json')    
   
+def statistics_4_drildown_Algorithms(request):
+    algorithms=Algorithm.objects.all()
+    #n_of_public = len(Query.objects.all())
+    algorithms_list = []
+    for algorithm in algorithms:
+        algorithms_dict = {}
+        algorithms_dict['category'] = algorithm.category_name()
+        algorithms_dict['algorithm'] = algorithm.name
+        algorithms_dict['n_of_analytics'] = len(Analytics.objects.filter(algorithm_id=algorithm.id))
+        algorithms_list.append(algorithms_dict)
+    return HttpResponse(json.dumps(algorithms_list), content_type='application/json')    
+  
+def statistics4heatmap(request):
+    algorithms=Algorithm.objects.all()
+    analytics=Analytics.objects.all()
+    queries=Query.objects.all()
+    analytics_list = []
+    for algorithm in algorithms:
+        print(algorithm.name)
+        analytics_per_algorithm =Analytics.objects.filter(algorithm_id=algorithm.id)
+        analytics_per_algorithm_per_trainQuery = analytics_per_algorithm.values('trainQuery_id').annotate(dcount=Count('trainQuery_id'))
+        analytics_per_algorithm_per_evaluationQuery = analytics_per_algorithm.values('evaluationQuery_id').annotate(dcount=Count('evaluationQuery_id'))
+        for trainQuery in analytics_per_algorithm_per_trainQuery:
+	    analytics_dict = {}
+	    print('aaaaaaaaaaaa')
+	    print(trainQuery)
+            analytics_dict['n_of_analytics'] = trainQuery['dcount']
+            analytics_dict['query'] = trainQuery['trainQuery_id']
+            analytics_dict['algorithm'] = algorithm.name
+            analytics_list.append(analytics_dict)
+      
+        
+    return HttpResponse(json.dumps(analytics_list), content_type='application/json')    
+  
+  
+  
+def statistics4heatmap1(request):
+    # Create the HttpResponse object with the appropriate CSV header.
+    response = HttpResponse(content_type='text/tsv')
+    response['Content-Disposition'] = 'attachment; filename="somefilename.csv"'
+
+    writer = csv.writer(response)
+   
+    queries=Query.objects.all()
+    n_of_public = len(Query.objects.all())
+    print(n_of_public)
+    queries_list = []
+    for query in queries:
+        writer.writerow([query.endpoint, query.id, len(Analytics.objects.filter(Q(trainQuery_id=query.id) | Q(evaluationQuery_id=query.id)))])
+        
+    return response    

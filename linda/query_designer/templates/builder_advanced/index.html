@@ -28,12 +28,12 @@
 
 {% block content %}
     <div class="main">
-        {% with default=datasource_default %}
+        {% with default=datasource_default query=query %}
             {% include "builder_advanced/toolbar.html" %}
         {% endwith %}
 
         <div id="builder_workspace">
-            <span>{% trans "Drag and drop items here to create a query"%}</span>
+            <span class="help-prompt">{% trans "Drag and drop items here to create a query"%}</span>
             <canvas id="builder-canvas"></canvas>
         </div>
 
@@ -80,6 +80,7 @@
     <script src="/static/js/jquery.contextMenu.js"></script>
 
     <script src="/static/js/chosen.jquery.min.js"></script>
+    <script src="/static/js/sparql-menu.js"></script>
 
     <script src="/static/query_designer/arrows.js"></script>
     <script>

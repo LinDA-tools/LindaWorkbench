@@ -1,0 +1,314 @@
+{% extends "base.html" %}
+
+{% load staticfiles %}
+{% load url from future %}
+{% load i18n %}
+{% block title %}LinDA | {% trans "Analytics" %}{% endblock %}
+{% block bodyclass %}analytics{% endblock %}
+
+{% block scripts %}
+<script src="/static/js/jquery.bpopup.min.js"></script>
+<script src="/static/js/jquery.blockUI.js"></script>
+
+<link rel="stylesheet" type="text/css" href="/static/css/analytics_style.css" />
+
+
+<script src="/static/js/jquery-ui.js"></script>
+
+<script>
+$(document).ready(function(){
+    $( "#toggleCategoryDescription" ).click(function() {
+        $('#categoryDescription').bPopup();
+    });
+    
+    $( "#toggleAlgorithmDescription" ).click(function() {
+       $('#algorithmDescription').bPopup();
+    });    
+    
+    $( "#toggleAnalyticsDescription" ).click(function() {
+       $( "#analyticsDescription" ).bPopup();
+    });
+    
+    $( "#toggleAnalyticsModel" ).click(function() {
+        $( "#model" ).toggle();
+    });
+    
+    $( "#toggleResultDocument" ).click(function() {
+        $( "#resultdocument" ).toggle();
+    });
+    
+    $( "#toggleplot1info" ).click(function() {
+        $( "#plot1info" ).toggle();
+    });
+    
+     $( "#toggleplot2info" ).click(function() {
+        $( "#plot2info" ).toggle();
+    });
+    
+    
+    
+    $( "#toggleprocessinfo" ).click(function() {
+        $( "#processinfo" ).toggle();
+    });
+    
+    $( "#toggleTrainQueryDescription" ).click(function() {
+	$.ajax({
+	url : "/analytics/popup_query_info",
+	type : "POST",
+	dataType: "html",
+	data : {
+	query_id : {{analytics.trainQuery_id}},
+	csrfmiddlewaretoken: '{{ csrf_token }}'
+	},
+	success : function(data) {
+	  $('#queries_info').html(data);
+	  $( "#queries_info" ).bPopup();
+	},
+	error : function(xhr,errmsg,err) {
+	alert(xhr.status + ": " + xhr.responseText);
+	}
+	});
+      return false;
+   });
+  
+   $( "#toggleEvaluationQueryDescription" ).click(function() {
+	$.ajax({
+	url : "/analytics/popup_query_info",
+	type : "POST",
+	dataType: "html",
+	data : {
+	query_id : {{analytics.evaluationQuery_id}},
+	csrfmiddlewaretoken: '{{ csrf_token }}'
+	},
+	success : function(data) {
+	  $('#queries_info').html(data);
+	  $( "#queries_info" ).bPopup();
+	},
+	error : function(xhr,errmsg,err) {
+	alert(xhr.status + ": " + xhr.responseText);
+	}
+	});
+      return false;
+   });
+   
+    $('#reevaluateButton').click(function() { 
+        $.blockUI({ css: { 
+            border: 'none', 
+            padding: '15px', 
+            backgroundColor: '#000', 
+            '-webkit-border-radius': '10px', 
+            '-moz-border-radius': '10px', 
+            opacity: .5, 
+            color: '#fff' 
+        } }); 
+         
+    }); 
+
+});
+</script>
+<style>
+#menu{display:none}
+#processinfo,#model {width:100%}
+#main-container > .main{width:100%}
+div.description{background:none repeat scroll 0% 0% #DADFE1}
+#report_info{float:right}
+footer{display:none}
+.username.right{display:none}
+
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="main content-sidebar">
+   <content>
+             <div id="report_info">  
+             <strong>Report Created From :<strong/><br/>
+                    {% if current_user.profile.avatar.photo_original %}
+                    <img src="{{ current_user.profile.avatar.photo_original}}" class="user-avatar image-rounded"/>
+                    {% else %}
+                    <img width=150 height=150 src="/static/images/avatar.jpg" class="user-avatar image-rounded"/>
+                    {% endif %}<br/>
+             <strong>From user : <strong/>   {{current_user.first_name}}  {{current_user.last_name}}     
+                </div>
+    
+           {% if messages %}
+            <div style="border:3px solid #FD8036;font-weight:bold">
+	      <ul class="messages">
+		{% for message in messages %}
+		  <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+		{% endfor %}
+	      </ul>
+	    </div>  
+	   {% endif %}
+   
+   
+          <table>
+	    <tr>
+	      <td><h1 class="page-title inline">Analytic ID: {{ analytics.id }} - V: {{ analytics.version }}</h1></td>
+	    </tr>
+          </table>
+          
+          <h3>{% trans "Current Analytic Info" %}</h3>
+                     <table>
+                                 <tr>
+				    <td>
+					<p> Analytics Category : {{ analytics.category }}
+					</p>				    
+				    </td>
+				  </tr>
+				  <tr>
+				    <td>
+					<p> Analytics Algorithm : {{ analytics.algorithm }}	    
+					</p>			    
+				    </td>
+				  </tr>
+				  <tr>
+				    <td>
+				      {% if analytics.parameters %}
+					<p>Algorithm Parameters :  {{ analytics.parameters }}</p> 
+				      {% endif %}		    
+				    </td>
+				  </tr>
+				  <tr>
+				    <td>     
+				      <p>Analytic process Description :<div class="description"> {{analytics.description}}</div>
+				      </p>		    
+				    </td>
+				  </tr>
+				  <tr>
+				    <td>     
+				       <p>Export Format : {{ analytics.exportFormat }}</p>		    
+				    </td>
+				  </tr>
+				  <tr>
+				    <td> 
+				     {% if analytics.document and not analytics.trainQuery %}
+				       <p>Analytics train dataset :<div class="description">{{ analytics.document }}</div><p>
+				     {% endif %} 
+				     
+				     {% if analytics.trainQuery and analytics.evaluationQuery %}
+				       <p style="float:left;">Analytics train Query :<p>
+				     {% endif %} 
+				     {% if analytics.trainQuery and  not analytics.evaluationQuery %}
+				       <p style="float:left;">Analytics input Query :<p>
+				     {% endif %} 
+				     {% if analytics.trainQuery %}
+				      <br/><div class="description">{{ analytics.trainQuery }}</div>
+				      Visualize & run query :<a href="http://{{ request.META.HTTP_HOST }}/sparql/{{ analytics.trainQuery.id }}" target="_blank">http://{{ request.META.HTTP_HOST }}/sparql/{{ analytics.trainQuery.id }}</a>
+				     {% endif %} 
+				     </br>
+				    </td>
+				  </tr>
+				  <tr>
+				    <td>     
+				      {% if analytics.testdocument and not analytics.evaluationQuery %}
+				      <p>Analytics evaluation dataset :<div class="description">{{ analytics.testdocument }}</div><p>	
+				      {% endif %}
+				      {% if analytics.evaluationQuery %}
+				       <p style="float:left;">Analytics evaluation Query :<p>
+				       <input type="image" src="/static/images/info-button-orange-small.jpg" name="toggleEvaluationQueryDescription"  id="toggleEvaluationQueryDescription" />
+				       Query Name: <div class="description">{{ analytics.evaluationQuery }}</div>
+				       Visualize & run query : <a href="http://{{ request.META.HTTP_HOST }}/sparql/{{ analytics.evaluationQuery.id }}" target="_blank">{{ analytics.evaluationQuery.description }}</a>
+				      {% endif %} 
+				    </td>
+				  </tr>				  
+                    </table>
+                     <table>
+                                 <tr>
+				    <td>
+					 </br><p style="margin:0px;color:#FC5006;"><b>Performance Numbers :</b></p>				    
+				    </td>
+				  </tr>
+				  <tr>
+				    <td>
+					 Time To Get Data: {{analytics.timeToGet_data}} sec
+				    </td>
+				  </tr>
+				  <tr>
+				    <td>
+					 Size Of Analyzed Data : {{analytics.data_size}} B
+				    </td>
+				  </tr>
+				  <tr>
+				    <td>
+					 Time To Run analytics: {{analytics.timeToRun_analytics}} sec
+				    </td>
+				  </tr>
+				   <tr>
+				    <td>
+					Time To Result Document:   {{analytics.timeToCreate_RDF}} sec    
+				    </td>
+				  </tr>
+		    </table>
+          
+          
+           {% if analytics.resultdocument %}
+          <p style="margin:0px;color:#FC5006;">Result document : 
+          
+	     {% if analytics.loadedRDFContext|length > 0 %}
+             <p style= "border:3px solid #FD8036;font-weight:bold">{{ analytics.loadedRDFContext|safe }}</p>
+             {% endif %}
+           
+             <a href="{{analytics.display_linda_apache_analytics}}{{analytics.resultdocument}}" TARGET="_blank">
+	     {{analytics.display_linda_apache_analytics}}{{analytics.resultdocument}}
+             </a>
+           </p>
+           {% endif %}
+          
+          {% if analytics.processMessage|length > 0 %}
+            <pre><p style= "border:3px solid #FD8036;font-weight:bold">{{ analytics.processMessage|safe }}</p></pre>
+          {% endif %}
+          
+          {% if analytics.plot1 %}
+	      {% if analytics.exists_plot1_file %}
+		<p style="margin:0px;color:#FC5006;">{{ analytics.plot1.description }} 
+		  <div id="plot1info"  >
+		  <img src="{{analytics.display_linda_apache_analytics}}plots/plotid{{analytics.plot1.id}}.png"></img>
+		    
+		  </div>
+		</p>
+	      {% else %}
+	       <p style="margin:0px;color:#FC5006;">No Plot generated for this analytics process.</p>
+	      {% endif %}
+           {% endif %}
+           
+          
+          
+          {% if analytics.plot2 %}
+             {% if analytics.exists_plot2_file %}
+	      <p style="margin:0px;color:#FC5006;">{{ analytics.plot2.description }} 
+		<div id="plot2info"  >
+		  <img src="{{analytics.display_linda_apache_analytics}}plots/plotid{{analytics.plot2.id}}.png"></img>
+		    
+		  </div>
+	      </p>
+             {% else %}
+             <p style="margin:0px;color:#FC5006;">No Plot generated for this analytics process.</p>
+	     {% endif %}
+           {% endif %}
+
+          {% if analytics.modelReadable %}
+          <p style="margin:0px;color:#FC5006;">Analytics model file 
+          <!--{ { analytics.modelReadable } }-->
+             <button id="toggleAnalyticsModel">see/hide Info</button>
+            <div id="model"   class="description">
+                <pre>{{analytics.display_model_file}}</pre>
+              </div>
+          </p>
+          {% endif %}
+
+          {% if analytics.processinfo %}
+          <p style="margin:0px;color:#FC5006;">Process Info  <!--{ { analytics.processinfo } }-->
+            <div id="processinfo"  class="description">
+                <pre>{{analytics.display_processinfo_file}}</pre>
+              </div>
+          </p>
+          {% endif %}
+          
+         
+          
+          <div id="queries_info" class="analytics-description-hidden" ></div>
+    </content>
+</div>
+{% endblock %}
+

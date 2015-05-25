@@ -33,6 +33,7 @@
             /*Adds an instance of a class*/
             add_instance: function(dt_name, uri, x,y, default_properties) {
                 var new_id = this.instances.length;
+                $('.help-prompt').remove();
                 var new_instance = $.parseHTML('<div id="class_instance_' + new_id + '" class="class-instance" data-n="' + new_id + '"style="left: ' + x + 'px; top: ' + y + 'px;"><div class="title"><h3>' + uri_to_label(uri) + '</h3><span class="subquery-select empty"></span><span class="uri">&lt;' + uri + '&gt;</span><span class="delete" data-about="' + new_id + '">x</span><span class="dataset">' + dt_name + '</span></div><div class="properties"><span class="loading">Loading properties...</span></div></div>');
                 $("#builder_workspace").append(new_instance);
                 $(new_instance).draggable({cancel : '.subquery-select', handle: '.title', cursor: 'move', drag: function() {
