@@ -34,6 +34,8 @@
                         if (typeof(builder) !== "undefined") {
                             builder.saved_query = builder.query;
                         }
+
+                        $('.designer-menu .query-title').html('#' + data.id + ': ' + data.description);
                     },
                     error: function (jqXHR, textStatus, errorThrown)
                     {
@@ -46,9 +48,18 @@
             }
 
             function save_query(designer) {
+                var q = editor.getSession().getValue();
+                if ((typeof(dt_name) === "undefined") || q == "") {
+                    $("#alert_modal .modal-title").html('Error');
+                    $("#alert_modal .modal-body").html('The base datasource and the query text must not be empty.');
+                    $("#alert_modal .modal-footer .btn-default").html('OK');
+
+                    $("#alert_modal").show();
+                    return;
+                }
                 if (!query_object) { //get the default description
                     $.ajax({
-                        url: "/api/queries/default-description?datasource=" + dt_name + "&query=" + encodeURIComponent(editor.getSession().getValue()),
+                        url: "/api/queries/default-description?datasource=" + dt_name + "&query=" + encodeURIComponent(q),
                         type: "GET",
                         success: function(data, textStatus, jqXHR) { //show alert to change the default description
                             var description = data.description;

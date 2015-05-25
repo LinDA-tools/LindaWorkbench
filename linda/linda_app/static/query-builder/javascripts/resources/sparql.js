@@ -40,7 +40,13 @@ SPARQL = {
         is_valid : function(){
             var query = SPARQL.get_query();
             if(query == undefined || query.trim() == ''){
-                Utils.alert("No SPARQL query input specified.")
+
+                //Utils.alert("No SPARQL query input specified.")
+                $("#alert_modal .modal-title").html('Error');
+                $("#alert_modal .modal-body").html("No SPARQL query input specified.");
+                $("#alert_modal .modal-footer .btn-default").html('OK');
+
+                $("#alert_modal").show();
                 return false;
             }
             return true;

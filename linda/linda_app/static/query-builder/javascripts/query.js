@@ -46,7 +46,7 @@ this.display_sparql_row_entry = function(data) {
   }
 };
 
-this.execute_sparql_query = function(offset) {
+this.execute_sparql_query = function(offset, callback) {
   if (SPARQL.textbox.is_valid()) {
     show_loading();
     $("#sparql_results_container").hide();
@@ -63,6 +63,9 @@ this.execute_sparql_query = function(offset) {
     }, function(data) {
       var result_columns, result_rable_rows, result_rows, result_table, result_table_header, row_counter;
       if (data.error !== void 0) {
+        if (callback) {
+            callback();
+        }
         SPARQL.flash_error(data.description);
         hide_loading();
       } else {
@@ -121,12 +124,22 @@ this.execute_sparql_query = function(offset) {
           result_table.find("tbody").first().append(result_rable_rows);
         }
         Utils.scroll_to('#sparql_results_container');
+        if (callback) {
+            callback();
+        }
       }
     }).fail(function(error) {
 		$("#alert_modal .modal-title").html('SPARQL error');
 		$("#alert_modal .modal-body").html('<pre>' + error.responseText + '</pre>');
 		$("#alert_modal").show();
+        if (callback) {
+            callback();
+        }
 	});;
+  } else {
+      if (callback) {
+        callback();
+      }
   }
 };
 
