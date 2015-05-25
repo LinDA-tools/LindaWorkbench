@@ -137,6 +137,13 @@ $(document).ready(function(){
 		    <input id="reevaluateButton" type="submit" value="Re-Evaluate" style="padding:0px;font-size: 12px;"/>
 		  </form>		  
 	      </td>
+	      <td>
+		  <form id="analytics_report" action="/analytics/report/{{ analytics.id }}/exportreport" method="get">
+		    {% csrf_token %}
+		    <input id="getReport" type="submit" value="Download Report" style="margin-left:10px;padding:0px;font-size: 12px;"/>
+		  </form>		  
+	      </td>
+	      
 	    </tr>
           </table>
           

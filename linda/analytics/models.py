@@ -3,6 +3,7 @@ from django.forms import ModelForm
 import os
 import datetime
 from django.conf import settings
+from django.contrib.auth.models import User
 
 
 # Create your models here.
@@ -86,6 +87,7 @@ class Analytics(models.Model):
     loadedRDFContext = models.TextField(max_length=500)
     processMessage = models.TextField(max_length=300)
     user_id = models.IntegerField()
+    #user_id = models.ForeignKey('linda_app.UserProfile', null=True, related_name='user', blank=True)
     parameters = models.TextField(max_length=100, blank=True)
     # Auto-populated fields for created on/updated on time
     createdOn = models.DateField(editable=False, null=True)

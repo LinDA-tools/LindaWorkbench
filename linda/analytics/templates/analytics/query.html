@@ -1,7 +1,7 @@
 <h1>Query Info: </h1>
 <p> Query ID: {{ query.id }}</p>
 <p> Endpoint: {{ query.endpoint }}</p>
-<p> Run & Edit Query  <a href="http://{{ request.META.HTTP_HOST }}/sparql/?q_id={{ query.id }}" target="_blank">{{ query.description }}</a></p>
+<p> Run & Edit Query  <a href="http://{{ request.META.HTTP_HOST }}/sparql/{{ query.id }}" target="_blank">{{ query.description }}</a></p>
 <p> sparql:</p>
 <div style="border: 2px solid #FD8036;border-radius: 5px;padding:10px;">  {{query.sparql|linebreaks}}</div>
 <!-- p> URL: <a href="{{ query.csv_link }}">Download query info</a></p-->
