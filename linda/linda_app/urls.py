@@ -23,8 +23,8 @@ urlpatterns = patterns('',
                        
                        # Endpoints
                        url(r'^sparql/$', views.sparql, name='sparql'),
-                       url(r'^sparql/(?P<q_id>\w+)/$', views.sparql, name='sparql'),
-                       url(r'^sparql/local/(?P<dtname>[\w-]+)/$', views.datasource_sparql, name='datasource-sparql'),
+                       url(r'^sparql/queries/(?P<q_id>\w+)/$', views.sparql, name='sparql'),
+                       url(r'^sparql/(?P<dtname>[\w-]+)/$', views.datasource_sparql, name='datasource-sparql'),
 
                        # Visualizations
                        url(r'^visualizations/', include('visualisation.urls')),

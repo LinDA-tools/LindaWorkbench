@@ -451,7 +451,7 @@ class DatasourceDescription(models.Model):
         if self.is_public:
             return self.uri
         else:
-            return LINDA_HOME + "sparql/local/" + self.name + "/"
+            return LINDA_HOME + "sparql/" + self.name + "/"
 
     def update_rss(self):
         if self.rss_info:
