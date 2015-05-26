@@ -59,7 +59,7 @@ def sparql(request, q_id=None):
     params['datasources'] = list(DatasourceDescription.objects.all())
     params['datasources'].insert(0,
                                  DatasourceDescription(title="All private data dources", name="all", is_public=False
-                                                       , uri=LINDA_HOME + "sparql/all/", createdOn=datetime.today(),
+                                                       , uri=LINDA_HOME + "sparql/local/all/", createdOn=datetime.today(),
                                                        updatedOn=datetime.today()))
     params['page'] = 'Sparql'
     params['RDF2ANY_SERVER'] = get_configuration().rdf2any_server
@@ -1081,7 +1081,7 @@ def queryBuilder(request):
     params['datasources'] = list(DatasourceDescription.objects.all())
     params['datasources'].insert(0,
                                  DatasourceDescription(title="All private data dources", name="all", is_public=False
-                                                       , uri=LINDA_HOME + "sparql/all/", createdOn=datetime.today(),
+                                                       , uri=LINDA_HOME + "sparql/local/all/", createdOn=datetime.today(),
                                                        updatedOn=datetime.today()))
 
     if 'dt_id' in request.GET:
@@ -1446,6 +1446,7 @@ def datasource_sparql(request, dtname):  # Acts as a "fake" seperate sparql endp
     query_enc = urlquote(query, safe='')
 
     # get query results
+    print get_configuration().private_sparql_endpoint
     response = requests.get(
         get_configuration().private_sparql_endpoint + "?Accept=" + urlquote(
             "application/sparql-results+" + result_format) + "&query=" + query_enc)

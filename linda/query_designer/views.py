@@ -21,7 +21,7 @@ def designer_defaults():
 
     params['datasources'].insert(0,
                                  DatasourceDescription(title="All private data dources", name="all", is_public=False
-                                                       , uri=LINDA_HOME + "sparql/all/", createdOn=datetime.today(),
+                                                       , uri=LINDA_HOME + "sparql/local/all/", createdOn=datetime.today(),
                                                        updatedOn=datetime.today()))
 
     return params
@@ -306,5 +306,4 @@ def class_info(request, dt_name):
     # query to get all classes with at least one instance
     query = "SELECT (count(?x) AS ?cnt) WHERE {?x a <" + class_uri + ">}"
     return sparql_query_json(endpoint, query)
-
 

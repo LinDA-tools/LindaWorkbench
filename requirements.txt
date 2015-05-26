@@ -16,3 +16,5 @@ xmltodict
 microsofttranslator
 pattern
 unidecode
+pdfkit
+reportlab
