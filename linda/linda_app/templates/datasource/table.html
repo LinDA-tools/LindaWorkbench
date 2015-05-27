@@ -17,11 +17,11 @@
         <tr id="{{datasource.name}}" class="datasource {% if datasource.is_public %}public{% else %}private{% endif %}">
             <td>
                 {% if datasource.is_public %}
-                    <img src="/static/images/public-endpoint.png" />
+                    <img src="/static/images/public-endpoint.png" alt="SPARQL endpoint"/>
                 {% elif datasource.rss_info %}
-                    <img src="/static/images/rss.png" />
+                    <img src="/static/images/rss.png" alt="RSS datasource"/>
                 {% else %}
-                    <img src="/static/images/rdf.png"/>
+                    <img src="/static/images/rdf.png" alt="Local datasource"/>
                 {% endif %}
                 {{datasource.title}}
 
