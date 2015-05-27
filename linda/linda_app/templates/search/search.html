@@ -6,15 +6,15 @@
 
 {% block content %}
     <div class="main">
-		<h1 class="page-title">LinDA - {% trans "Vocabulary search" %}{% if request.GET.definedBy %} {% trans "inside"%} {{vocabulary_define.title}}{% endif %}</h1>
+		<h2 class="page-title">LinDA - {% trans "Vocabulary search" %}{% if request.GET.definedBy %} {% trans "inside"%} {{vocabulary_define.title}}{% endif %}</h2>
 
 		<div class="home-search">
 			<form method="get" action="/vocabularies" class="form vocabulary-search-form">
-                <input style="display:none;" type="text" name="type" value="{{type}}"/>
+                <input style="display:none;" type="text" name="type" value="{{type}}" title="Search type"/>
                 {% if request.GET.definedBy %}
                     <input style="display:none;" type="number" name="definedBy" value="{{request.GET.definedBy}}"/>
                 {% endif %}
-                <input id="vocabulary-search-text" type="text" name="q" required="required" placeholder='{% trans "Search" %}' value="{% if q %}{{q}}{% endif %}"/>
+                <input id="vocabulary-search-text" type="text" name="q" title="Search here" required="required" placeholder='{% trans "Search" %}' value="{% if q %}{{q}}{% endif %}"/>
                 <input type="submit" value=""/>
                 {% if query or request.GET.definedBy %}
                     <a href="/{{type}}/all" class="button delete-button clear-search" title='Clear search'></a>
@@ -22,8 +22,8 @@
 
                 <div id="localize" class="right">
                     <label id="localization-label">Localization {% if translate %}ON{% else %}OFF{% endif %}</label>
-                    <a href="#" alt='{% trans "By enabling localization, you can search in your local language and let LinDA translate terms in English!"%}'><img id="translate-icon" class="icon-translate {% if translate %}enabled{% endif %}" src="/static/images/localize.png" /></a>
-                    <input id="id_translate" type="checkbox" name="translate" {% if translate %}checked="checked"{% endif %}/>
+                    <a href="#" alt='{% trans "By enabling localization, you can search in your local language and let LinDA translate terms in English!"%}'><img id="translate-icon" class="icon-translate {% if translate %}enabled{% endif %}" src="/static/images/localize.png" alt="Localization"/></a>
+                    <input id="id_translate" type="checkbox" name="translate" {% if translate %}checked="checked"{% endif %} title="Localization"/>
                 </div>
                 {% if not check_for_updates %}
                     {% if user.is_authenticated and type == "vocabularies" %}
