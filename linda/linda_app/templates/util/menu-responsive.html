@@ -3,7 +3,7 @@
     <div id="menu-select-area" class="clearfix">
         <ul>
             <li>
-                <select id="menu-select">
+                <select id="menu-select" title="LinDA main menu">
                     <option value="/" {%if page == "Home" %}selected="selected"{% endif %}>{% trans "Home" %}</option>
                     <option value="/datasources" {%if page == "Datasources" %}selected="selected"{% endif %}>{% trans "Data Sources" %}</option>
                     <option value="/queries/" {%if page == "Queries" %}selected="selected"{% endif %}>{% trans "Queries" %}</option>
@@ -17,7 +17,7 @@
 
             <li class="right">
                 <form class="form menu-search" method="GET" action="/find/" class="form">
-                    <input type="text" name="search_q" class="site-search-input" placeholder="Search LinDA" />
+                    <input type="text" name="search_q" class="site-search-input" placeholder="Search LinDA" title="Search LinDA"/>
                     <input type="submit" value="">
                 </form>
             </li>
