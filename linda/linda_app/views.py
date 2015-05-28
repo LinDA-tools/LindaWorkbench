@@ -1474,6 +1474,7 @@ def datasource_sparql(request, dtname):  # Acts as a "fake" seperate sparql endp
     query_enc = urlquote(query, safe='')
 
     # get query results
+    print get_configuration().private_sparql_endpoint
     response = requests.get(
         get_configuration().private_sparql_endpoint + "?Accept=" + urlquote(
             "application/sparql-results+" + result_format) + "&query=" + query_enc)

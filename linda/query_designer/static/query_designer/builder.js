@@ -335,7 +335,7 @@ var builder = {
         for (var j=0; j<inst.selected_properties.length; j++) {
             var p = inst.selected_properties[j];
             if (this.property_names[i][j] === undefined) {
-                if (p.name === undefined) {
+                if (p.name === undefined || !p.name_from_user) {
                     if (p.uri == "URI") {
                         p.name = i_name;
                     } else {

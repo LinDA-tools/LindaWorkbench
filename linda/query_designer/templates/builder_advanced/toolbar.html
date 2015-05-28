@@ -9,7 +9,7 @@
             <option value="">{% trans "Choose a data source" %}</option>
             {% for datasource in datasources %}
             <option value="{{datasource.name}}" {% if default == datasource %}selected="selected"{% endif %}>
-                {{datasource.title}}
+                {{datasource.title|safe}}
             </option>
             {% endfor %}
         </select>

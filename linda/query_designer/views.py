@@ -314,4 +314,3 @@ def class_info(request, dt_name):
     query = "SELECT (count(?x) AS ?cnt) WHERE {?x a <" + class_uri + ">}"
     return sparql_query_json(endpoint, query)
 
-
