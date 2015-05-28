@@ -63,7 +63,7 @@ var PropertyOptions = {
             return "URI";
         }
 
-        var result = p_name.replace('_', ' ').replace(builder.instance_names[i], '').trim();
+        var result = p_name.replace(/_/g, ' ').replace(builder.instance_names[i], '').trim();
         return result.charAt(0).toUpperCase() + result.slice(1);
     },
 
@@ -72,7 +72,12 @@ var PropertyOptions = {
         //change name in builder & workbench
         if ($('#property-options .property-name').val() != this.prev_name) {
             this.property.name = $('#property-options .property-name').val();
-            this.property.name_from_user = true;
+			if (this.property.name == "") {
+				this.property.name_from_user = false;
+				builder.reset();
+			} else {
+				this.property.name_from_user = true;
+			}
             $("#class_instance_" + this.i + " .property-row:nth-of-type(" + (this.p+2) + ") span:nth-of-type(2)").html(this.current_property_print());
         }
 
