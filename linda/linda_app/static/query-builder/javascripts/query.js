@@ -130,7 +130,8 @@ this.execute_sparql_query = function(offset, callback) {
       }
     }).fail(function(error) {
 		$("#alert_modal .modal-title").html('SPARQL error');
-		$("#alert_modal .modal-body").html('<pre>' + error.responseText + '</pre>');
+		console.log(error);
+		$("#alert_modal .modal-body").html('<pre>' + error.responseText.replace(/<style>.*<\/style>/g, "").replace(/<script>.*<\/script>/g, "") + '</pre>');
 		$("#alert_modal").show();
         if (callback) {
             callback();
