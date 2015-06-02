@@ -1,10 +1,9 @@
 from django import template
 from django.utils.http import urlquote
-import re
 from endpoint_monitor.models import EndpointTest
+from linda_app.lists import CATEGORIES
 from linda_app.models import Vocabulary, VocabularyClass, VocabularyProperty, get_configuration, \
     datasource_from_endpoint
-from analytics.models import Algorithm, Category
 
 register = template.Library()
 
@@ -66,6 +65,15 @@ def domain_of(cls, limit):
 @register.filter
 def range_of(cls, limit):
     return cls.range_of()[:limit]
+
+
+@register.filter
+def category_display_name(category):
+    for c in CATEGORIES:
+        if c[0] == category:
+            return c[1]
+
+    return category
 
 
 @register.filter

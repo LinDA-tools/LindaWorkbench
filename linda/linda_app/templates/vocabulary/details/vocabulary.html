@@ -11,7 +11,7 @@
         <h1 class="page-title inline">{{vocabulary.title}}</h1>
 
 		{% if vocabulary.category %}
-			<p class="upload-info">{% trans "Category" %}: {{vocabulary.get_category_display}}</p>
+			<p class="upload-info">{% trans "Category" %}: <a href="/vocabularies/categories/?category={{vocabulary.category}}" class="category-tag">{{vocabulary.get_category_display}}</a></p>
         {% endif %}
 		<p class="upload-info">{% trans "Namespace URI" %}: <a href="#">{{vocabulary.preferredNamespaceUri}}</a></p>
 		<p class="upload-info">{% trans "Namespace prefix" %}: <strong>{{vocabulary.preferredNamespacePrefix}}</strong></p>
