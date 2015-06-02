@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% load url from future %}
+{% load i18n thumbnail2 %}
+{% load app_filters %}
+{% block title %}Vocabulary categories | LinDA{% endblock %}
+{% block bodyclass %}vocabulary{% endblock %}
+
+{% block content %}
+<div class="main delete-page">
+    <h1 class="page-title inline">{% trans "Vocabulary categories"%}</h1>
+    <p>{% trans "Select a category to find vocabularies in each domain" %}:</p>
+    <div class="vocabulary-category-list">
+        {% for category in categories %}
+            <a href="/vocabularies/categories/?category={{category.0}}" class="category-tag">{{category.1}}</a>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

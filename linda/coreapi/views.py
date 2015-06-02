@@ -57,8 +57,12 @@ def recommend_dataset(request):
     class_property = request.GET.get("class_property", None)
     q = request.GET.get("q", None)
     prefix = request.GET.get("prefix", None)
-
     page = request.GET.get('page')
+
+    # find in specific categories
+    categories = request.GET.get("category", None)
+    if categories:
+        categories = categories.split(',')
 
     if vocabulary is not None:
         flag = "Vocabulary"
@@ -73,18 +77,6 @@ def recommend_dataset(request):
 
     results = []
 
-    '''if flag == "General":
-        vocabs = Vocabulary.objects.filter(title__iregex=property, description__iregex=property)
-        for source in vocabs:
-            source_info = {}
-            source_info['vocabulary'] = source.title
-            source_info['uri'] = source.originalUrl
-            source_info['label'] = source.description
-            # if source.lodRanking > 0:
-            source_info['ranking'] = source.lodRanking
-            # else:
-            #     continue
-            results.append(source_info)'''
 
     if flag == "Property" or flag == "General" or flag == "ClassProperty":
         if flag == "General":
@@ -99,6 +91,9 @@ def recommend_dataset(request):
                 vocabs = VocabularyProperty.objects.filter(vocabulary__preferredNamespacePrefix=prefix)
         else:
             vocabs = VocabularyProperty.objects.filter(label__iregex=property)
+
+        if categories:
+            vocabs = vocabs.filter(vocabulary__category__in=categories)
 
         for source in vocabs:
             source_info = {}
@@ -129,6 +124,9 @@ def recommend_dataset(request):
         else:
             vocabs = VocabularyClass.objects.filter(label__iregex=class_)
 
+        if categories:
+            vocabs = vocabs.filter(vocabulary__category__in=categories)
+
         for source in vocabs:
             source_info = {}
             source_info["vocabulary"] = source.vocabulary.title
@@ -152,6 +150,10 @@ def recommend_dataset(request):
             vocabs = Vocabulary.objects.filter(Q(title__iregex=vocabulary) | Q(preferredNamespacePrefix__iregex=vocabulary))
         else:
             vocabs = Vocabulary.objects.all()
+
+        if categories:
+            vocabs = vocabs.filter(category__in=categories)
+
         for source in vocabs:
             source_info = {}
             source_info["vocabulary"] = source.title
@@ -174,7 +176,6 @@ def recommend_dataset(request):
         except EmptyPage:
             records = paginator.page(paginator.num_pages)
     else:
-        print results
         records = results
 
     data = []

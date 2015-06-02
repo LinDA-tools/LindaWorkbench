@@ -1301,6 +1301,26 @@ body.login .row, body.login .form-field {
     font-weight: 300;
 }
 
+.category-tag {
+    background: #5C97BF;
+    color: #fff;
+    padding: 2px 5px;
+    border-radius: 2px;
+}
+
+.vocabulary-category-list .category-tag {
+    padding: 5px 10px;
+    display: inline-block;
+    margin-bottom: 10px;
+    width: 200px;
+    margin-right: 40px;
+}
+
+.category-tag:hover {
+    background: #2574A9;
+    color: #fff;
+}
+
 .vocabulary > .description, .class > .description, .property > .description {
     width: 70%;
     text-align: justify;

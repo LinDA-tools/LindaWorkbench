@@ -60,8 +60,11 @@ urlpatterns = patterns('',
                        # Site search
                        url(r'^find/$', views.site_search, name='site-search'),  # Vocabulary search
                        url(r'^vocabularies/all/$', views.VocabularyListView.as_view()),
+                       url(r'^vocabularies/categories/$', views.VocabularyListView.as_view()),
                        url(r'^classes/all/$', views.ClassListView.as_view()),
                        url(r'^properties/all/$', views.PropertyListView.as_view()),
+
+                       url(r'^vocabularies/categories/all/$', views.categories),
 
                        url(r'^vocabularies/$', views.vocabulary_search),
                        url(r'^autocomplete/', views.autocomplete),

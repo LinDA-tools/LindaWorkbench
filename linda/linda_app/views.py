@@ -473,11 +473,19 @@ class VocabularyListView(ListView):
         if self.request.GET.get('update'):
             context['check_for_updates'] = True
 
+        # in category view
+        category = self.request.GET.get('category')
+        if category:
+            context['category'] = category
+
         return context
 
     def get_queryset(self):
-        qs = super(VocabularyListView, self).get_queryset().order_by('-lodRanking')
-        return qs
+        category = self.request.GET.get('category')
+        qs = super(VocabularyListView, self).get_queryset()
+        if category:
+            qs = qs.filter(category=category)
+        return qs.order_by('-lodRanking')
 
 
 class ClassListView(ListView):
@@ -530,6 +538,14 @@ class PropertyListView(ListView):
         return qs
 
 
+def categories(request):
+    params = {
+        'categories': CATEGORIES,
+    }
+
+    return render(request, 'vocabulary/categories.html', params)
+
+
 from haystack.query import SearchQuerySet
 
 
@@ -568,11 +584,11 @@ def vocabulary_search(request):  # view for search in vocabularies - remembers s
 
     # load the query set
     if tp == "vocabularies":
-        sqs = SearchQuerySet().models(Vocabulary).filter(content=q)
+        sqs = SearchQuerySet().models(Vocabulary).filter(content__contains=q)
     elif tp == "classes":
-        sqs = SearchQuerySet().models(VocabularyClass).filter(content=q)
+        sqs = SearchQuerySet().models(VocabularyClass).filter(content__contains=q)
     elif tp == "properties":
-        sqs = SearchQuerySet().models(VocabularyProperty).filter(content=q)
+        sqs = SearchQuerySet().models(VocabularyProperty).filter(content__contains=q)
     else:
         return Http404
 

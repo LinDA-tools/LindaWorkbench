@@ -7,7 +7,7 @@ from django.views.decorators.csrf import csrf_exempt
 import requests, urllib,re
 
 VISUAL_SERVER = get_configuration().visualization_backend
-VISUAL_PROXY = "/visual/api"
+VISUAL_PROXY = "/visualizations/visual/api"
 
 def visualizations(request):
     params = {}
@@ -19,6 +19,8 @@ def visualizations(request):
 # Proxy calls - exist as middle-mans between LinDA visualizations page and the visual server
 @csrf_exempt
 def get_api_call(request, link):
+    print link
+
     #TO-DO Improve request handler
     link = urllib.quote(link)
     link = re.sub(r"\/", "%2F", link)
