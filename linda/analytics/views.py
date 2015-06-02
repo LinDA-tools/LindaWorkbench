@@ -1,11 +1,13 @@
 from django.shortcuts import render, get_object_or_404,redirect
-from django.http import HttpResponseRedirect, HttpResponse
+from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
 from .forms import AnalyticsForm,DocumentForm
 from django.views import generic
 from django.core.urlresolvers import reverse
 from django.views.generic import ListView, UpdateView, DetailView, DeleteView
 from django.contrib.auth.models import User
 from django.db.models import Q,Count
+
+from django.core import serializers
 
 from django.shortcuts import render_to_response
 from django.template import RequestContext
@@ -67,6 +69,12 @@ def analytics(request):
 		current_time = datetime.datetime.today();
 		new_lindaAnalytics.createdOn = current_time;
 		new_lindaAnalytics.updatedOn = current_time;
+		if not new_lindaAnalytics.description:
+		   applyied_algorithm = Algorithm.objects.filter(id=new_lindaAnalytics.algorithm.id)
+		   alg_name = '';
+		   for alg in applyied_algorithm:
+		     alg_name = alg.name
+		   new_lindaAnalytics.description='Analytics for query'+str(new_lindaAnalytics.trainQuery)+' with algorithm '+str(alg.name)
 		new_lindaAnalytics.save()
 		#try to use params form
 		callRESTfulLINDA(new_lindaAnalytics.pk,'lindaAnalytics_analytics',request)
@@ -209,16 +217,22 @@ class AnalyticsDeleteView(DeleteView):
         return object
 
 
-def reevaluate(request, analytics_id):
+def reevaluate(request, analytics_id,model):
     analytics = get_object_or_404(Analytics, pk=analytics_id)
     analytics_list = Analytics.objects.all()
-    #return render(request, 'lindaAnalytics/detail.html', {'analytics': analytics})
     try:
+        print(analytics_id)
+        print(model)
+        print(int(model))
+        if model=='0':
+           model_int = 0
+        else:
+	   model_int=1
+        Analytics.objects.filter(pk=analytics_id).update(createModel=model_int)
 	callRESTfulLINDA(analytics_id,'lindaAnalytics_analytics',request)
-        analytics = Analytics.objects.get(pk=analytics_id)
+        
     except Analytics.DoesNotExist:
         raise Http404
-    #return render(request, 'analytics/detail.html', {'analytics': analytics,'analytics_list': analytics_list})
     return HttpResponseRedirect(reverse('analytics:detail', args=(analytics_id,)))
   
 def exportreport(request, analytics_id):
@@ -262,11 +276,13 @@ def datasourceCreateRDF(request):
         else:
             rdf_content = request.POST.get("rdfdata")
 
-
+	rdfformat = request.POST.get("format");
+	if rdfformat == 'N-Tripples':
+	   rdfformat = 'text/rdf+n3';
         #Call the corresponding web service
         headers = {'accept': 'application/json'}
         callAdd = requests.post(LINDA_HOME + "api/datasource/create/", headers=headers,
-                                data={"content": rdf_content, "title": request.POST.get("title")})
+                                data={"content": rdf_content, "title": request.POST.get("title"),"format": rdfformat})
 
         j_obj = json.loads(callAdd.text)
         if j_obj['status'] == '200':
@@ -281,6 +297,7 @@ def datasourceCreateRDF(request):
             params['form_error'] = j_obj['message']
             params['title'] = request.POST.get("title")
             params['rdfdata'] = request.POST.get("rdfdata")
+            params['format'] = rdfformat
 
             return render(request, 'datasource/create_rdf.html', params)
     else:
@@ -323,7 +340,82 @@ def popup_query_info(request):
     query = Query.objects.get(id=query_id)
     return render(request, 'analytics/query.html', {'query': query,})
   
+
+
+def site_search(request):
+    if 'search_q' not in request.POST:
+        return Http404
+    
+    current_user = request.user
+    q = request.POST.get('search_q')
+    if not q:
+        print('333')
+        analytics = Analytics.objects.filter(user_id=current_user.id)
+    else:
+        analytics=Analytics.objects.filter(Q(user_id=current_user.id) & Q(description__icontains=q))
+
+    # get pages
+    if 'v_page' in request.POST:
+        try:
+            v_page = int(request.POST['v_page'])
+        except ValueError:
+            v_page = 1
+    else:
+        v_page = 1
+
+    if 'c_page' in request.POST:
+        try:
+            c_page = int(request.POST['c_page'])
+        except ValueError:
+            c_page = 1
+    else:
+        c_page = 1
+
+    if 'p_page' in request.POST:
+        try:
+            p_page = int(request.POST['p_page'])
+        except ValueError:
+            p_page = 1
+    else:
+        p_page = 1
+
+    
+    analytics_list = []
+    for analytic in analytics:
+        analytics_dict = {}
+        analytics_dict['id'] = analytic.id
+        analytics_dict['url'] = 'http://localhost:8000/analytics/'+str(analytic.id)
+        analytics_dict['name'] = '('+str(analytic.algorithm)+')-An.ID : '+str(analytic.id ) 
+        analytics_dict['description'] = analytic.description
+        analytics_list.append(analytics_dict)
+      
+    print(analytics_list)
+    return HttpResponse(json.dumps(analytics_list), content_type='application/json')    
   
+def edit_evaluation_query(request):
+    if request.POST:
+        analytics_id = request.POST.get("anID")
+        evaluationQuery = request.POST.get("evaluationQuery")
+        Analytics.objects.filter(pk=analytics_id).update(evaluationQuery_id=evaluationQuery)
+    return HttpResponseRedirect(reverse('analytics:detail', args=(analytics_id,)))  
+  
+  
+def edit_output_format(request):
+    if request.POST:
+        analytics_id = request.POST.get("anID")
+        expformat = request.POST.get("exportFormat")
+        Analytics.objects.filter(pk=analytics_id).update(exportFormat=expformat)
+    return HttpResponseRedirect(reverse('analytics:detail', args=(analytics_id,)))   
+  
+def  edit_parameters(request):
+    if request.POST:
+        analytics_id = request.POST.get("anID")
+        params = request.POST.get("parameters_display")
+        Analytics.objects.filter(pk=analytics_id).update(parameters=params)
+    return HttpResponseRedirect(reverse('analytics:detail', args=(analytics_id,)))   
+  
+
+ 
 
 def statistics(request):
     return render(request, 'analytics/statistics.html')  
@@ -341,8 +433,6 @@ def statistics_4_drildown_Datasources(request):
         queries_list.append(queries_dict)
         
     n_test = len(queries_list)
-    print('makari')
-    print(n_test)
     return HttpResponse(json.dumps(queries_list), content_type='application/json')    
   
 def statistics_4_drildown_Algorithms(request):
@@ -369,7 +459,6 @@ def statistics4heatmap(request):
         analytics_per_algorithm_per_evaluationQuery = analytics_per_algorithm.values('evaluationQuery_id').annotate(dcount=Count('evaluationQuery_id'))
         for trainQuery in analytics_per_algorithm_per_trainQuery:
 	    analytics_dict = {}
-	    print('aaaaaaaaaaaa')
 	    print(trainQuery)
             analytics_dict['n_of_analytics'] = trainQuery['dcount']
             analytics_dict['query'] = trainQuery['trainQuery_id']

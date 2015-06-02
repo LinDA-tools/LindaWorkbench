@@ -4,14 +4,15 @@ import os
 import datetime
 from django.conf import settings
 from django.contrib.auth.models import User
+import json
 
 
 # Create your models here.
 
 EXPORT_CHOICES = (
-    ('RDFXML', 'rdf/xml'),
+    ('N-Tripples', 'N-Triples'),
     ('TTL', 'Turtle'),
-    ('NTRIPLES', 'N-Triples'),   
+    ('RDFXML', 'rdf/xml'),
     ('csv', 'csv'),
     ('arff', 'arff'),
     ('txt', 'txt'),
@@ -98,6 +99,7 @@ class Analytics(models.Model):
     data_size = models.FloatField(max_length=5000, blank=True,default=0)
     timeToRun_analytics = models.FloatField(max_length=500, blank=True,default=0)
     timeToCreate_RDF = models.FloatField(max_length=500, blank=True,default=0)
+    createModel = models.BooleanField(default=0)
     
     def save(self):
         if not self.id:  # first time saved -- create is not set yet
@@ -106,7 +108,7 @@ class Analytics(models.Model):
 	   super(Analytics, self).save()  # proceed with the default constructor
     
     def __str__(self):
-        return self.name
+        return str(self.id)   
     def display_resultdocument_file(self):
         if os.path.isfile(self.resultdocument.path):
 	   print(self.resultdocument.path);
@@ -141,8 +143,8 @@ class Analytics(models.Model):
          if self.exportFormat=="TTL":
            return "TTL" 
     def isExportFormatNTRIPLES(self):
-         if self.exportFormat=="NTRIPLES":
-           return "NTRIPLES" 	 
+         if self.exportFormat=="N-Tripples":
+           return "N-Tripples" 	 
     def delete(self, *args, **kwargs):
 	    ##delete document file
 	    # You have to prepare what you need before delete the model
