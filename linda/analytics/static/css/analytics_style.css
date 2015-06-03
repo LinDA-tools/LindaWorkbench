@@ -11,7 +11,7 @@ div.analytics-description-visible{
   background: none repeat scroll 0% 0% #DADFE1;
   overflow:auto;
   max-height:300px;
-  width:600px;
+  width:100%;
   padding:20px;
 }
 div.analytics-description-visible-right{

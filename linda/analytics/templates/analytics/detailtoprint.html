@@ -125,8 +125,10 @@ footer{display:none}
              <strong>Report Created From :<strong/><br/>
                     {% if current_user.profile.avatar.photo_original %}
                     <img src="{{ current_user.profile.avatar.photo_original}}" class="user-avatar image-rounded"/>
+                    
                     {% else %}
-                    <img width=150 height=150 src="/static/images/avatar.jpg" class="user-avatar image-rounded"/>
+                    <!--img width=150 height=150 src="/static/images/avatar.jpg" class="user-avatar image-rounded"/-->
+                    <img src="http://localhost/LindaAnalytics/critical_publics_logo.jpg" class="user-avatar image-rounded"/>
                     {% endif %}<br/>
              <strong>From user : <strong/>   {{current_user.first_name}}  {{current_user.last_name}}     
                 </div>
@@ -296,15 +298,16 @@ footer{display:none}
               </div>
           </p>
           {% endif %}
-
+	  
+	  <!--
           {% if analytics.processinfo %}
-          <p style="margin:0px;color:#FC5006;">Process Info  <!--{ { analytics.processinfo } }-->
+          <p style="margin:0px;color:#FC5006;">Process Info  
             <div id="processinfo"  class="description">
                 <pre>{{analytics.display_processinfo_file}}</pre>
               </div>
           </p>
           {% endif %}
-          
+          -->
          
           
           <div id="queries_info" class="analytics-description-hidden" ></div>
