@@ -64,8 +64,8 @@ define('linda-vis-fe/components/data-table', ['exports', 'ember', 'linda-vis-fe/
                                 type: "inline"
                             }
                         },
-                        data: content.slice(1),
-                        columns: columns
+                        "data": content.slice(1),
+                        "columns": columns
                     });
                     self.set("table", table);
                 });
@@ -84,17 +84,19 @@ define('linda-vis-fe/components/draggable-item', ['exports', 'ember'], function 
     'use strict';
 
     exports['default'] = Ember['default'].Component.extend({
-        tagName: "span",
-        classNames: ["draggable-item"],
-        attributeBindings: ["draggable"],
-        draggable: "true",
+        tagName: 'span',
+        classNames: ['draggable-item'],
+        attributeBindings: ['draggable'],
+        draggable: 'true',
         dragStart: function dragStart(event) {
             event.stopPropagation();
-            var data = this.get("data");
+            var data = this.get('data');
             var jsonData = JSON.stringify(data);
-            event.dataTransfer.setData("text/plain", jsonData);
-            event.dataTransfer.effectAllowed = "copy";
-        } });
+            event.dataTransfer.setData('text/plain', jsonData);
+            event.dataTransfer.effectAllowed = 'copy';
+
+        }
+    });
 
 });
 define('linda-vis-fe/components/droppable-area', ['exports', 'ember'], function (exports, Ember) {
@@ -109,8 +111,8 @@ define('linda-vis-fe/components/droppable-area', ['exports', 'ember'], function 
         drop: function drop(event) {
             event.stopPropagation();
             event.preventDefault();
-            var droppableJSON = event.dataTransfer.getData("text/plain");
-            console.log("DROPPED: " + droppableJSON);
+            var droppableJSON = event.dataTransfer.getData('text/plain');
+            console.log('DROPPED: ' + droppableJSON);
 
             var droppable;
             try {
@@ -120,7 +122,7 @@ define('linda-vis-fe/components/droppable-area', ['exports', 'ember'], function 
                 return;
             }
 
-            var inArea = this.get("inArea");
+            var inArea = this.get('inArea');
 
             if (this.isFull()) {
                 return;
@@ -134,23 +136,23 @@ define('linda-vis-fe/components/droppable-area', ['exports', 'ember'], function 
             }
             inArea.pushObject(droppable);
         },
-        classNames: ["droppable-area"],
-        classNameBindings: ["full", "active"],
+        classNames: ['droppable-area'],
+        classNameBindings: ['full', 'active'],
         active: false,
         isFull: function isFull() {
             return false;
         },
         full: (function () {
             return this.isFull();
-        }).property("maxNumItems", "inArea.@each"),
+        }).property('maxNumItems', 'inArea.@each'),
         dragEnter: function dragEnter(event) {
             console.log(event.type);
-            this.set("active", true);
+            this.set('active', true);
         },
         deactivate: (function (event) {
             console.log(event.type);
-            this.set("active", false);
-        }).on("dragLeave", "dragStop", "drop")
+            this.set('active', false);
+        }).on('dragLeave', 'dragStop', 'drop')
     });
 
 });
@@ -161,8 +163,8 @@ define('linda-vis-fe/components/property-item', ['exports', 'ember'], function (
   exports['default'] = Ember['default'].Component.extend({
     actions: {
       remove: function remove() {
-        var collection = this.get("collection");
-        var item = this.get("item");
+        var collection = this.get('collection');
+        var item = this.get('item');
         collection.removeObject(item);
       }
     }
@@ -320,16 +322,21 @@ define('linda-vis-fe/components/tree-selection', ['exports', 'ember'], function 
         },
         hideCheckbox: function hideCheckbox(type) {
             switch (type) {
-                case "Quantitative":
+
+                case "Ratio":
                 case "Interval":
-                case "Categorical":
+
                 case "Nominal":
+                case "Angular":
+                case "Geographic Latitude":
+                case "Geographic Longitude":
                 case "Class":
                     return false;
                 case "Resource":
                 case "Nothing":
                     return true;
             }
+            console.error("Unknown category: '" + type + "'");
             return null;
         }
     });
@@ -394,9 +401,9 @@ define('linda-vis-fe/controllers/index', ['exports', 'ember'], function (exports
     'use strict';
 
     exports['default'] = Ember['default'].ObjectController.extend({
-        needs: ["application"],
+        needs: ['application'],
         datasetsEndpointURI: (function () {
-            return encodeURIComponent(this.get("controllers.application.datasetsEndpoint"));
+            return encodeURIComponent(this.get('controllers.application.datasetsEndpoint'));
         }).property()
     });
 
@@ -432,12 +439,12 @@ define('linda-vis-fe/controllers/visualization', ['exports', 'ember', 'linda-vis
             for (var i = 0; i < propertyInfos.length; i++) {
                 var propertyInfo = propertyInfos[i];
                 var category = propertyInfo.type;
-                var dtype = propertyInfo.datatype;
+                var datatype = propertyInfo.datatype;
 
                 if (!categorizedProperties[category]) {
                     categorizedProperties[category] = {
                         name: category,
-                        datatype: dtype,
+                        datatype: datatype,
                         items: []
                     };
                 }
@@ -452,6 +459,7 @@ define('linda-vis-fe/controllers/visualization', ['exports', 'ember', 'linda-vis
         initializeVisualization: (function () {
             console.log("VISUALIZATION CONTROLLER - INITIALIZE VISUALIZATION ... ");
             this.set("drawnVisualization", null);
+			this.set("isToggled", true);
 
             var selectedVisualization = this.get("selectedVisualization");
             console.log("SELECTED VISUALIZATION");
@@ -554,11 +562,16 @@ define('linda-vis-fe/controllers/visualization', ['exports', 'ember', 'linda-vis
             },
             toggle: function toggle() {
                 var toggled = this.get("isToggled");
-                if (toggled) {
-                    this.set("isToggled", false);
-                } else {
-                    this.set("isToggled", true);
-                }
+				var controller = this;
+                Ember['default'].run(function () {
+                    if (toggled) {
+                        controller.set("isToggled", false);
+
+                    } else {
+                        controller.set("isToggled", true);
+
+                    }
+                });
             }
         }
     });
@@ -635,13 +648,13 @@ define('linda-vis-fe/models/visualization', ['exports', 'ember-data'], function 
     /*The visualization model represents the  initial visualization configuration retrieved from the backend. 
      *And describes the format used for storing the current visualization configuration in the backend.*/
     exports['default'] = DS['default'].Model.extend({
-        visualizationName: DS['default'].attr("string"),
-        configurationName: DS['default'].attr("string"),
+        visualizationName: DS['default'].attr('string'),
+        configurationName: DS['default'].attr('string'),
         structureOptions: DS['default'].attr(),
         layoutOptions: DS['default'].attr(),
-        visualizationThumbnail: DS['default'].attr("string"),
-        valid: DS['default'].attr("boolean"),
-        dataselection: DS['default'].belongsTo("dataselection")
+        visualizationThumbnail: DS['default'].attr('string'),
+        valid: DS['default'].attr('boolean'),
+        dataselection: DS['default'].belongsTo('dataselection')
     });
 
 });
@@ -2497,78 +2510,6 @@ define('linda-vis-fe/templates/index', ['exports'], function (exports) {
         hasRendered: false,
         build: function build(dom) {
           var el0 = dom.createDocumentFragment();
-          var el1 = dom.createTextNode("            19. Bundestagswahlstatistik (statistical dataset; RDF format)\n");
-          dom.appendChild(el0, el1);
-          return el0;
-        },
-        render: function render(context, env, contextualElement) {
-          var dom = env.dom;
-          dom.detectNamespace(contextualElement);
-          var fragment;
-          if (env.useFragmentCache && dom.canClone) {
-            if (this.cachedFragment === null) {
-              fragment = this.build(dom);
-              if (this.hasRendered) {
-                this.cachedFragment = fragment;
-              } else {
-                this.hasRendered = true;
-              }
-            }
-            if (this.cachedFragment) {
-              fragment = dom.cloneNode(this.cachedFragment, true);
-            }
-          } else {
-            fragment = this.build(dom);
-          }
-          return fragment;
-        }
-      };
-    }());
-    var child18 = (function() {
-      return {
-        isHTMLBars: true,
-        revision: "Ember@1.11.3",
-        blockParams: 0,
-        cachedFragment: null,
-        hasRendered: false,
-        build: function build(dom) {
-          var el0 = dom.createDocumentFragment();
-          var el1 = dom.createTextNode("            19. Health Data.gov - Hospital Inpatient Discharges by Facility (statistical dataset; RDF format)\n");
-          dom.appendChild(el0, el1);
-          return el0;
-        },
-        render: function render(context, env, contextualElement) {
-          var dom = env.dom;
-          dom.detectNamespace(contextualElement);
-          var fragment;
-          if (env.useFragmentCache && dom.canClone) {
-            if (this.cachedFragment === null) {
-              fragment = this.build(dom);
-              if (this.hasRendered) {
-                this.cachedFragment = fragment;
-              } else {
-                this.hasRendered = true;
-              }
-            }
-            if (this.cachedFragment) {
-              fragment = dom.cloneNode(this.cachedFragment, true);
-            }
-          } else {
-            fragment = this.build(dom);
-          }
-          return fragment;
-        }
-      };
-    }());
-    var child19 = (function() {
-      return {
-        isHTMLBars: true,
-        revision: "Ember@1.11.3",
-        blockParams: 0,
-        cachedFragment: null,
-        hasRendered: false,
-        build: function build(dom) {
-          var el0 = dom.createDocumentFragment();
           var el1 = dom.createTextNode("            20. TS1 (statistical dataset; RDF format)\n");
           dom.appendChild(el0, el1);
           return el0;
@@ -2688,16 +2629,6 @@ define('linda-vis-fe/templates/index', ['exports'], function (exports) {
         var el3 = dom.createTextNode("\n        ");
         dom.appendChild(el2, el3);
         var el3 = dom.createElement("li");
-        var el4 = dom.createTextNode("  \n");
-        dom.appendChild(el3, el4);
-        var el4 = dom.createComment("");
-        dom.appendChild(el3, el4);
-        var el4 = dom.createTextNode("        ");
-        dom.appendChild(el3, el4);
-        dom.appendChild(el2, el3);
-        var el3 = dom.createTextNode("     \n        ");
-        dom.appendChild(el2, el3);
-        var el3 = dom.createElement("li");
         var el4 = dom.createTextNode("\n");
         dom.appendChild(el3, el4);
         var el4 = dom.createComment("");
@@ -2736,16 +2667,6 @@ define('linda-vis-fe/templates/index', ['exports'], function (exports) {
         dom.appendChild(el3, el4);
         dom.appendChild(el2, el3);
         var el3 = dom.createTextNode("\n        ");
-        dom.appendChild(el2, el3);
-        var el3 = dom.createElement("li");
-        var el4 = dom.createTextNode(" \n");
-        dom.appendChild(el3, el4);
-        var el4 = dom.createComment("");
-        dom.appendChild(el3, el4);
-        var el4 = dom.createTextNode("        ");
-        dom.appendChild(el3, el4);
-        dom.appendChild(el2, el3);
-        var el3 = dom.createTextNode("  \n        ");
         dom.appendChild(el2, el3);
         var el3 = dom.createElement("li");
         var el4 = dom.createTextNode("\n");
@@ -2864,10 +2785,6 @@ define('linda-vis-fe/templates/index', ['exports'], function (exports) {
         var morph15 = dom.createMorphAt(dom.childAt(element0, [31]),1,1);
         var morph16 = dom.createMorphAt(dom.childAt(element0, [33]),1,1);
         var morph17 = dom.createMorphAt(dom.childAt(element0, [35]),1,1);
-        var morph18 = dom.createMorphAt(dom.childAt(element0, [37]),1,1);
-        var morph19 = dom.createMorphAt(dom.childAt(element0, [39]),1,1);
-        block(env, morph0, context, "link-to", ["datasource", "Newspaper%20Articles%20Analysis", get(env, context, "datasetsEndpointURI"), "http%3A%2F%2Fnewspaper.org%2Farticles_2007", "rdf"], {}, child0, null);
-        block(env, morph1, context, "link-to", ["datasource", "World%20Bank%20GDP%20per%20capita", get(env, context, "datasetsEndpointURI"), "http%3A%2F%2Fwww.linda-project.org%2Fexamples%2Fworldbank-slice-5000", "rdf"], {}, child1, null);
         block(env, morph2, context, "link-to", ["datasource", "DepartmentOfAgriculture-Quick%20Stats", get(env, context, "datasetsEndpointURI"), "http%3A%2F%2Fwww.linda-project.org%2Fexamples%2FDepartmentOfAgriculture-QuickStats.nt", "rdf"], {}, child2, null);
         block(env, morph3, context, "link-to", ["datasource", "DepartmentOfDefense-Marital%20Status", get(env, context, "datasetsEndpointURI"), "http%3A%2F%2Fwww.linda-project.org%2Fexamples%2FDepartmentOfDefense-MaritalStatus.nt", "rdf"], {}, child3, null);
         block(env, morph4, context, "link-to", ["datasource", "DepartmentofHealthandHumanServices-OMHClaims%20Listed%20by%20State", get(env, context, "datasetsEndpointURI"), "http%3A%2F%2Fwww.linda-project.org%2Fexamples%2FDepartmentofHealthandHumanServices-OMHClaimsListedbyState.nt", "rdf"], {}, child4, null);
@@ -3894,7 +3811,7 @@ define('linda-vis-fe/templates/visualization', ['exports'], function (exports) {
           dom.setAttribute(el1,"class","glyphicon glyphicon-resize-full");
           dom.setAttribute(el1,"aria-hidden","true");
           dom.appendChild(el0, el1);
-          var el1 = dom.createTextNode(" \n");
+          var el1 = dom.createTextNode("\n");
           dom.appendChild(el0, el1);
           return el0;
         },
@@ -3936,7 +3853,7 @@ define('linda-vis-fe/templates/visualization', ['exports'], function (exports) {
           dom.setAttribute(el1,"class","glyphicon glyphicon-resize-small");
           dom.setAttribute(el1,"aria-hidden","true");
           dom.appendChild(el0, el1);
-          var el1 = dom.createTextNode(" \n");
+          var el1 = dom.createTextNode("\n");
           dom.appendChild(el0, el1);
           return el0;
         },
@@ -4083,10 +4000,11 @@ define('linda-vis-fe/templates/visualization', ['exports'], function (exports) {
         var el9 = dom.createTextNode("\n                            ");
         dom.appendChild(el8, el9);
         dom.appendChild(el7, el8);
-        var el8 = dom.createTextNode("                           \n                        ");
+
+        var el8 = dom.createTextNode("\n                        ");
         dom.appendChild(el7, el8);
         dom.appendChild(el6, el7);
-        var el7 = dom.createTextNode(" \n                    ");
+        var el7 = dom.createTextNode("\n                    ");
         dom.appendChild(el6, el7);
         dom.appendChild(el5, el6);
         var el6 = dom.createTextNode("\n                    ");
@@ -4122,7 +4040,7 @@ define('linda-vis-fe/templates/visualization', ['exports'], function (exports) {
         var el9 = dom.createTextNode("\n                            ");
         dom.appendChild(el8, el9);
         dom.appendChild(el7, el8);
-        var el8 = dom.createTextNode(" \n\n                        ");
+        var el8 = dom.createTextNode("\n\n                        ");
         dom.appendChild(el7, el8);
         dom.appendChild(el6, el7);
         var el7 = dom.createTextNode("\n                    ");
@@ -4206,7 +4124,7 @@ define('linda-vis-fe/templates/visualization', ['exports'], function (exports) {
         dom.appendChild(el4, el5);
         var el5 = dom.createComment("");
         dom.appendChild(el4, el5);
-        var el5 = dom.createTextNode("            \n            ");
+        var el5 = dom.createTextNode("\n            ");
         dom.appendChild(el4, el5);
         dom.appendChild(el3, el4);
         var el4 = dom.createTextNode("\n            ");
@@ -4249,7 +4167,7 @@ define('linda-vis-fe/templates/visualization', ['exports'], function (exports) {
         var el6 = dom.createTextNode("\n                ");
         dom.appendChild(el5, el6);
         var el6 = dom.createElement("div");
-        dom.setAttribute(el6,"class","col-md-4");
+        dom.setAttribute(el6,"class","col-md-6");
         var el7 = dom.createTextNode("\n                    ");
         dom.appendChild(el6, el7);
         var el7 = dom.createComment("");
@@ -4259,8 +4177,8 @@ define('linda-vis-fe/templates/visualization', ['exports'], function (exports) {
         dom.appendChild(el5, el6);
         var el6 = dom.createTextNode("\n                    ");
         dom.appendChild(el5, el6);
-        var el6 = dom.createElement("div");
-        dom.setAttribute(el6,"class","col-md-6");
+
+        var el6 = dom.createComment("<div class=\"col-md-6\"></div>");
         dom.appendChild(el5, el6);
         var el6 = dom.createTextNode("\n            ");
         dom.appendChild(el5, el6);
@@ -4327,7 +4245,7 @@ define('linda-vis-fe/templates/visualization', ['exports'], function (exports) {
         element(env, element5, context, "bind-attr", [], {"class": "isToggled:col-md-7:col-md-12"});
         element(env, element7, context, "action", ["toggle"], {});
         block(env, morph3, context, "if", [get(env, context, "isToggled")], {}, child0, child1);
-        inline(env, morph4, context, "view", ["draw-visualization"], {"id": "visualization", "visualization": get(env, context, "controller.drawnVisualization"), "configurationArray": get(env, context, "controller.visualizationConfiguration")});
+        inline(env, morph4, context, "view", ["draw-visualization"], {"id": "visualization", "visualization": get(env, context, "controller.drawnVisualization"), "configurationArray": get(env, context, "controller.visualizationConfiguration"), "isToggled": get(env, context, "controller.isToggled")});
         inline(env, morph5, context, "partial", ["export-visualization"], {});
         inline(env, morph6, context, "partial", ["save-visualization"], {});
         inline(env, morph7, context, "view", ["visualization-options"], {"options": get(env, context, "controller.layoutOptions"), "config": get(env, context, "controller.visualizationConfiguration")});
@@ -6185,16 +6103,15 @@ define('linda-vis-fe/utils/sparql-data-module', ['exports', 'ember', 'linda-vis-
                 case "http://www.w3.org/2001/XMLSchema#unsignedShort":
                 case "http://www.w3.org/2001/XMLSchema#unsignedByte":
                 case "http://www.w3.org/2001/XMLSchema#positiveInteger":
-                    return "Quantitative";
+                    return "Ratio";
                 case "http://www.w3.org/2001/XMLSchema#dateTime":
                 case "http://www.w3.org/2001/XMLSchema#date":
                 case "http://www.w3.org/2001/XMLSchema#gYear":
                 case "http://www.w3.org/2001/XMLSchema#gYearMonth":
                     return "Interval";
-                case "http://www.w3.org/2001/XMLSchema#string":
-                    return "Nominal";
+                //case "http://www.w3.org/2001/XMLSchema#string":
                 default:
-                    return "Categorical";
+                    return "Nominal";
             }
         }
 
@@ -6295,11 +6212,14 @@ define('linda-vis-fe/utils/sparql-data-module', ['exports', 'ember', 'linda-vis-
                     var datatype = binding.datatype;
                     if (datatype) {
                         return typedLiteralToScalar(value, datatype);
-                    } else {
-                        // if no datatype is given, try same parsing algorithm as for CSV
-                        return util['default'].toScalar(value);
+						
+						if (typeof parsedValue !== "undefined") {
+                            return parsedValue;
+                        }
                     }
-                    break;
+					
+					// if no datatype is given, try same parsing algorithm as for CSV
+                    return util['default'].toScalar(value);
                 case "uri":
                 case "bnode":
                     return simplifyURI(value);
@@ -6328,20 +6248,44 @@ define('linda-vis-fe/utils/sparql-data-module', ['exports', 'ember', 'linda-vis-
                 case "http://www.w3.org/2001/XMLSchema#unsignedByte":
                 case "http://www.w3.org/2001/XMLSchema#positiveInteger":
                     return parseInt(value);
+
+
+                case "http://www.w3.org/2001/XMLSchema#gYear":
+                    var numberRegex = /\d+/;
+                    var firstNumber = numberRegex.exec(value);
+                    var yearDateString;
+                    if (firstNumber && firstNumber.length >= 4) {
+                        yearDateString = firstNumber + "-01-01";
+                    } else {
+                        // No idea what this is, maybe JavaScript knows...
+                        yearDateString = value;
+                    }
+                    return new Date(yearDateString).getFullYear();
+                case "http://www.w3.org/2001/XMLSchema#gYearMonth":
+
+
+                    var twoNumbersWithHyphenRegex = /\d+-\d+/;
+                    var firstTwoNumbers = twoNumbersWithHyphenRegex.exec(value);
+                    var yearMonthDateString;
+                    if (firstTwoNumbers && firstTwoNumbers.length >= 4) {
+                        yearMonthDateString = firstTwoNumbers + "-01";
+                    } else {
+                        yearMonthDateString = value;
+                    }
+                    //prevent long strings
+                    yearMonthDateString = Date(yearMonthDateString);
+                    return yearMonthDateString.getFullYear() + "-" + (yearMonthDateString.getMonth() + 1);
                 case "http://www.w3.org/2001/XMLSchema#dateTime":
                 case "http://www.w3.org/2001/XMLSchema#date":
-                case "http://www.w3.org/2001/XMLSchema#gYear":
-                case "http://www.w3.org/2001/XMLSchema#gYearMonth":
-                    // TODO: Does Date.parse understand the xsd date etc. types?
-                    // TODO: Parse gYear and gYearMonth correctly
-                    return Date.parse(value);
+                    return new Date(value);
                 case "http://www.w3.org/2001/XMLSchema#string":
                     // Can plain literals be returned as xsd:string in newer
                     // versions of RDF/SPARQL? If so, uses toScalar here to handle
                     // datasets with missing types
                     return value;
                 default:
-                    return value;
+
+                    return;
             }
         }
 
@@ -6428,10 +6372,10 @@ define('linda-vis-fe/utils/template-mapping', ['exports'], function (exports) {
                 var structureOptions = editObject.get("structureOptions");
 
                 //invoking an appropriate template for a dimension parameter
-                resultMapping.layoutOptions = mapping(layoutOptions);
+                resultMapping["layoutOptions"] = mapping(layoutOptions);
 
                 //invoking an appropriate template for a tuning parameter
-                resultMapping.structureOptions = mapping(structureOptions);
+                resultMapping["structureOptions"] = mapping(structureOptions);
             }
 
             return resultMapping;
@@ -6442,13 +6386,13 @@ define('linda-vis-fe/utils/template-mapping', ['exports'], function (exports) {
 
             //Assuming there is a baseofmappings {option: template}
             var mapDB = {
-                dimension: "dimension-area",
-                color: "tuning-bgc",
-                string: "textField",
-                boolean: "tuning-check",
-                number: "tuning-numinput",
-                nonNegativeInteger: "tuning-numinput",
-                integer: "tuning-numinput"
+                "dimension": "dimension-area",
+                "color": "tuning-bgc",
+                "string": "textField",
+                "boolean": "tuning-check",
+                "number": "tuning-numinput",
+                "nonNegativeInteger": "tuning-numinput",
+                "integer": "tuning-numinput"
             };
 
             if (options !== null) {
@@ -6520,11 +6464,11 @@ define('linda-vis-fe/utils/tree-selection-data-module', ['exports', 'linda-vis-f
                     }
                 });
 
-                branch[0].expanded = true;
-                branch[0].selected = true;
-                branch[0].lazy = false;
-                branch[0].children = [];
-                branch[0].parent = [{ id: _selectedClassKey, label: _selectedClassTitle }];
+                branch[0]["expanded"] = true;
+                branch[0]["selected"] = true;
+                branch[0]["lazy"] = false;
+                branch[0]["children"] = [];
+                branch[0]["parent"] = [{ id: _selectedClassKey, label: _selectedClassTitle }];
 
                 return restoreTreeContent(previousSelection, branch[0]).then(function () {
                     return treecontent;
@@ -6540,24 +6484,26 @@ define('linda-vis-fe/utils/tree-selection-data-module', ['exports', 'linda-vis-f
 
                 for (var j = 0; j < children.length; j++) {
                     var child = children[j];
-                    child.parent = branch.parent.concat([{ id: child.key, label: child.title }]);
+                    child["parent"] = branch.parent.concat([{ id: child.key, label: child.title }]);
 
                     for (var i = 0; i < previousSelection.length; i++) {
                         var selection = previousSelection[i];
                         var prefix = selection.parent.slice(0, child.parent.length);
 
                         if (_.isEqual(child.parent, prefix) && selection.parent.length > child.parent.length) {
-                            child.expanded = true;
-                            child.selected = true;
-                            child.lazy = false;
-                            child.children = [];
+                            child["expanded"] = true;
+                            child["selected"] = true;
+                            child["lazy"] = false;
+                            child["children"] = [];
                             promises.push(restoreTreeContent(previousSelection, child));
                             break;
                         } else if (_.isEqual(child.parent, prefix)) {
-                            child.selected = true;
-                            child.lazy = true;
+                            child["selected"] = true;
+
+                            child["lazy"] = true;
                             if (!child.grandchildren) {
-                                child.lazy = false;
+
+                                child["lazy"] = false;
                             }
                         }
                     }
@@ -6622,7 +6568,7 @@ define('linda-vis-fe/utils/tree-selection-data-module', ['exports', 'linda-vis-f
 
             for (var i = 0; i < selection.length; i++) {
                 var record = selection[i];
-                dataSelection.propertyInfos.push({
+                dataSelection["propertyInfos"].push({
                     key: record.key,
                     label: record.label,
                     parent: record.parent,
@@ -6638,13 +6584,16 @@ define('linda-vis-fe/utils/tree-selection-data-module', ['exports', 'linda-vis-f
 
         function getCSSClass(record) {
             switch (record) {
-                case "Quantitative":
+                case "Ratio":
                     return "treenode-number-label";
                 case "Interval":
                     return "treenode-date-label";
-                case "Categorical":
+
                 case "Nominal":
                     return "treenode-text-label";
+                case "Geographic Latitude":
+                case "Geographic Longitude":
+                    return "treenode-spatial-label";
                 case "Class":
                     return "treenode-class-label";
                 case "Resource":
@@ -6657,13 +6606,20 @@ define('linda-vis-fe/utils/tree-selection-data-module', ['exports', 'linda-vis-f
 
         function getDataType(record) {
             switch (record) {
-                case "Quantitative":
+                case "Ratio":
                     return "Number";
                 case "Interval":
                     return "Date";
-                case "Categorical":
+
+                case "Ordinal":
+                    return "Ordinal";
                 case "Nominal":
                     return "String";
+                case "Angular":
+                    return "Angle";
+                case "Geographic Latitude":
+                case "Geographic Longitude":
+                    return "Spatial";
                 case "Class":
                 case "Resource":
                 case "Nothing":
@@ -6675,17 +6631,20 @@ define('linda-vis-fe/utils/tree-selection-data-module', ['exports', 'linda-vis-f
 
         function hideCheckbox(record) {
             switch (record) {
-                case "Quantitative":
+                case "Ratio":
                 case "Interval":
-                case "Categorical":
+
                 case "Nominal":
+                case "Angular":
+                case "Geographic Latitude":
+                case "Geographic Longitude":
                 case "Class":
                     return false;
                 case "Resource":
                 case "Nothing":
                     return true;
             }
-            console.error("Unknown category of record  '" + record + "'");
+            console.error("Unknown category '" + record + "'");
             return null;
         }
 
@@ -6777,7 +6736,7 @@ define('linda-vis-fe/utils/util', ['exports'], function (exports) {
             var jsType = typeof value;
             switch (jsType) {
                 case "number":
-                    return "Quantitative";
+                    return "Ratio";
                 case "object":
                     var asString = Object.prototype.toString.call(value);
                     switch (asString) {
@@ -6788,14 +6747,37 @@ define('linda-vis-fe/utils/util', ['exports'], function (exports) {
                     break;
             }
 
-            return "Categorical";
+            return "Nominal";
         }
 
+        var cleanAxis = function cleanAxis(axis, interval) {
+            if (axis.shapes.length > 0) {
+                //first tick
+                var del = 0;
+                if (interval > 1) {
+                    axis.shapes.selectAll("text").each(function (d) {
+                        //remove all but nth label
+                        if (del % interval !== 0) {
+                            this.remove();
+                            //delete a corresponding tick
+                            axis.shapes.selectAll("line").each(function (d2) {
+                                if (d === d2) {
+                                    this.remove();
+                                }
+                            });
+                        }
+                        del += 1;
+                    });
+                }
+            }
+        };
+		
         return {
             predictValueSOM: predictValueSOM,
             toScalar: toScalar,
             transpose: transpose,
-            createRows: createRows
+            createRows: createRows,
+			cleanAxis: cleanAxis
         };
     })();
 
@@ -6912,7 +6894,17 @@ define('linda-vis-fe/views/draw-visualization', ['exports', 'ember', 'linda-vis-
                 console.log(ex);
             }
         }).observes("configurationArray.@each").on("didInsertElement"),
-        redraw: (function () {}).observes("visualization")
+        redraw: (function () {}).observes("visualization"),
+        resize: (function () {
+            //get the controller
+            var self = this;
+
+            //run asynchronous code to ensure that DOM has been changed before rerendering
+            //time window = 500 ms
+            Ember['default'].run.later(function () {
+                self.rerender();
+            }, 500);
+        }).observes("isToggled")
     });
 
     //this.rerender();
@@ -7044,7 +7036,7 @@ catch(err) {
 if (runningTests) {
   require("linda-vis-fe/tests/test-helper");
 } else {
-  require("linda-vis-fe/app")["default"].create({"name":"linda-vis-fe","version":"0.0.0.cf881ece"});
+  require("linda-vis-fe/app")["default"].create({"name":"linda-vis-fe","version":"0.0.0.137afeac"});
 }
 
 /* jshint ignore:end */
