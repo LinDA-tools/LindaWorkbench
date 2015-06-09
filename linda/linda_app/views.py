@@ -1252,7 +1252,7 @@ def api_datasources_list(request):
 @csrf_exempt
 def api_datasource_create(request):
     results = {}
-    if request.POST:  # request must be POST
+    if request.method == "POST":  # request must be POST
         # check if datasource already exists
         if DatasourceDescription.objects.filter(title=request.POST.get("title")).exists():
             results['status'] = '403'
