@@ -460,6 +460,7 @@ App.DrawVisualizationView = Ember.View.extend({
         var element = this.get('element');
 
         try {
+			if(!element) { return; }
             visualization.draw(config, element.id).then(function () {
                 var svg = visualization.get_SVG();
                 self.set('visualizationSVG', svg);
