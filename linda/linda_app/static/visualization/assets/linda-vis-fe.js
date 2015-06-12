@@ -29,7 +29,6 @@ define('linda-vis-fe/app', ['exports', 'ember', 'ember/resolver', 'ember/load-in
   loadInitializers['default'](App, config['default'].modulePrefix);
 
   exports['default'] = App;
-
 });
 define('linda-vis-fe/components/data-table', ['exports', 'ember', 'linda-vis-fe/utils/table-data-module'], function (exports, Ember, table_data_module) {
 
@@ -5131,7 +5130,7 @@ define('linda-vis-fe/utils/csv-data-module', ['exports', 'linda-vis-fe/utils/uti
             return dataPromise.then(function (data) {
                 saved_location = location;
                 saved_data = data;
-                return $.csv.toArrays(data, { onParseValue: util['default'].toScalar });
+                return CSV.toArrays(data, { onParseValue: util['default'].toScalar });
             }).then(function (dataArray) {
                 var columns = [];
                 for (var i = 0; i < selection.length; i++) {
@@ -5158,7 +5157,7 @@ define('linda-vis-fe/utils/csv-data-module', ['exports', 'linda-vis-fe/utils/uti
 
         function queryProperties(location, dummy1, dummy2, _properties) {
             console.log("QUERY PTOPERTIES");
-
+			
             var dfd = new $.Deferred();
 
             if (_properties.length > 0) {
@@ -5166,7 +5165,8 @@ define('linda-vis-fe/utils/csv-data-module', ['exports', 'linda-vis-fe/utils/uti
                 return dfd.promise();
             } else {
                 return $.get(location).then(function (data) {
-                    return $.csv.toArrays(data, { onParseValue: util['default'].toScalar, start: 0, end: 2 });
+					console.log(data);
+                    return CSV.toArrays(data, { onParseValue: util['default'].toScalar, start: 0, end: 2 });
                 }).then(function (dataArray) {
                     var names = dataArray[0];
                     var values = dataArray[1];

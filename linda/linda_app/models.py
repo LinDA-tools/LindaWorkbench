@@ -561,14 +561,14 @@ class Query(models.Model):
         return self.description
 
     def csv_link(self):
-        return '/rdf2any/v1.0/convert/csv-converter.csv?dataset=' + self.endpoint + '&query=' \
-               + urllib.quote_plus(self.sparql)   
+        return '/rdf2any/v1.0/convert/csv-converter.csv?dataset=' + urllib.quote_plus(self.endpoint) + '&query=' \
+               + urllib.quote_plus(self.sparql.replace('\n', ' '))   
 
     def get_datasource(self):
         return datasource_from_endpoint(self.endpoint)
 
     def visualization_link(self):
-        return "/visualizations/#/datasource/Query" + str(self.pk) + "/" + urllib.quote_plus(self.csv_link()) + "/-/csv"
+        return "/visualizations/#/datasource/Query" + str(self.pk) + "/" + urllib.quote_plus(urllib.quote_plus(self.csv_link())) + "/-/csv"
 
     def analytics_link(self):
         return "/analytics?q_id=" + str(self.pk)
