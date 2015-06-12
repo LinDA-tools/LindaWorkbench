@@ -7,27 +7,6 @@
 {% block bodyclass %}analytics{% endblock %}
 
 {% block scripts %}
-<style>
-.ui-autocomplete
-{
-    float : left; 
-    clear : both; /* make sure it doesn't pull the next line up next to it */
-    position : relative;  /* z-index will not work without this */
-    z-index : 50;
-    text-align : left;
-    overflow-y : scroll;
-    overflow-x : scroll;
-    max-height : 200px;
-    max-width : 220px;
-    margin : 0px; /* pull the list items over the left edge */
-    padding : 0px;
-}
-
-#actions td {
-    padding: 8px;
-}
-</style>
-
 
 <script src="/static/js/jquery.bpopup.min.js"></script>
 <script src="/static/js/jquery.blockUI.js"></script>
@@ -225,7 +204,15 @@ $(document).ready(function(){
 	  }
       );
       
-     
+     $('#emotion input:radio').addClass('input_hidden');
+      $('#emotion label').click(function(){
+      $(this).attr('checked', 'checked');
+      $(this).css("border", "3px solid #FD8036"); 
+      //$(this).css("background-color", "white"); 
+      
+      $(this).siblings().css("border", "0px"); 
+      
+      });
      
 });
 </script>
@@ -259,9 +246,9 @@ $(document).ready(function(){
 		 <span><img alt="edit output format" title="edit output format" src="/static/images/remove.png"/></span>
 		 <span class="text" id="anDelete"><a href="/analytics/{{ analytics.id }}/delete">Delete</a></span>
 	      </div>
-	      <div class="designer-button" onclick="show_sparql_download_modal()" title="Download analytics Report">
+	      <div class="designer-button" onclick="show_sparql_download_modal()" title="Download Report">
 		  <span><img alt="edit output format" title="edit output format" src="/static/images/download.png" /></span>
-		  <span class="glyphicon glyphicon-save text-gray"></span><span class="text"><a href="/analytics/report/{{ analytics.id }}/exportreport">Download Analytics Report</a></span>
+		  <span class="glyphicon glyphicon-save text-gray"></span><span class="text"><a href="/analytics/report/{{ analytics.id }}/exportreport">Download Report</a></span>
 	      </div>
           </div>
           
@@ -480,6 +467,55 @@ $(document).ready(function(){
 				    </td>
 				  </tr>				  
                     </table>
+                    
+                    <h2>My evaluation is:</h2>
+                    <div id="emotion" style="border:3px solid #FD8036;font-weight:bold;padding:5px;width:100%px;">
+                    <form action="/analytics/evaluation/" method="post">{% csrf_token %}
+                    <div id="emotion1">                    
+                    <p class="eval_question">The analysis provided you a valuable insight with regards to your business objectives?</p>
+		     <input type="radio" name="emotion1" id="happy1" value="happy" checked="checked"/>
+			  <label for="happy1"><img src="/static/images/happy.png" alt="I am satisfied" /></label> 
+		     <input type="radio" name="emotion1" id="serious1" value="serious" />
+			  <label for="serious1"><img src="/static/images/serious.png" alt="I don't know" /></label>
+		      <input type="radio" name="emotion1" id="sad1"  value="sad"  />
+			  <label for="sad1"><img src="/static/images/sad.png" alt="I'm not satisfied" /></label> 
+		    </div>
+	
+		    <div id="emotion2">
+		     <p class="eval_question">Are you satisfied with the time required for the realisation of the analysis?</p>
+		    <input type="radio" name="emotion2" id="happy2" value="happy" checked="checked"/>
+			  <label for="happy2"><img src="/static/images/happy.png" alt="I am satisfied" /></label> 
+		    <input type="radio" name="emotion2" id="serious2" value="serious" />
+			  <label for="serious2"><img src="/static/images/serious.png" alt="I don't know" /></label>
+		    <input type="radio" name="emotion2" id="sad2"  value="sad"  />
+			  <label for="sad2"><img src="/static/images/sad.png" alt="I'm not satisfied" /></label> 
+		    </div>  
+		      
+		    <div id="emotion3">
+		     <p class="eval_question"> Can you reuse the results produced from the analysis?</p>
+		    <input type="radio" name="emotion3" id="happy3" value="happy" checked="checked"/>
+			  <label for="happy3"><img src="/static/images/happy.png" alt="I am satisfied" /></label> 
+		    <input type="radio" name="emotion3" id="serious3" value="serious" />
+			  <label for="serious3"><img src="/static/images/serious.png" alt="I don't know" /></label>
+		    <input type="radio" name="emotion3" id="sad3"  value="sad"  />
+			  <label for="sad3"><img src="/static/images/sad.png" alt="I'm not satisfied" /></label> 
+		    </div>	  
+		    
+		    <div id="emotion4">
+		     <p class="eval_question">Are you satisfied with the quality of the data provided by the input query?</p>
+		    <input type="radio" name="emotion4" id="happy4" value="happy" checked="checked"/>
+			  <label for="happy4"><img src="/static/images/happy.png" alt="I am satisfied" /></label> 
+		    <input type="radio" name="emotion4" id="serious4" value="serious" />
+			  <label for="serious4"><img src="/static/images/serious.png" alt="I don't know" /></label>
+		    <input type="radio" name="emotion4" id="sad4"  value="sad"  />
+			  <label for="sad4"><img src="/static/images/sad.png" alt="I'm not satisfied" /></label> 
+		    </div>
+		    <input style="display: none;" name="anID" value="{{ analytics.id }}"></input>
+		     <br/>
+		      <input  type="submit" class="nicebutton" style="padding:0px;font-size: 12px;" value="Submit"/>
+		    </form>
+		    </div>
+                    
                      <table>
                                  <tr>
 				    <td>

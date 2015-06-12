@@ -100,6 +100,11 @@ class Analytics(models.Model):
     timeToRun_analytics = models.FloatField(max_length=500, blank=True,default=0)
     timeToCreate_RDF = models.FloatField(max_length=500, blank=True,default=0)
     createModel = models.BooleanField(default=0)
+    evalinsight = models.IntegerField(default=010)
+    evalexectime = models.IntegerField(default=010)
+    evalresuseoutput = models.IntegerField(default=010)
+    evaldataquality = models.IntegerField(default=010)
+    analysisstatus = models.BooleanField(default=False)
     
     def save(self):
         if not self.id:  # first time saved -- create is not set yet
