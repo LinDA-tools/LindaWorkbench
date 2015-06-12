@@ -1269,11 +1269,16 @@ def api_datasources_list(request):
 @login_required
 def api_datasource_create(request):
     results = {}
-    if request.POST:  # request must be POST
+    if request.method == "POST":  # request must be POST
         # check if user is authenticated
         if not request.user.is_authenticated():
             results['status'] = '401'
             results['message'] = "Not authenticated"
+
+        # check if datasource already exists
+        if DatasourceDescription.objects.filter(title=request.POST.get("title")).exists():
+            results['status'] = '403'
+            results['message'] = "Datasource already exists."
         else:
             # check if limit is hit
             if (not request.user.is_superuser) and (get_own_datasources(request.user).count() == MAX_NUMBER_OF_DATASOURCES):
