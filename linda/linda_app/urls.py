@@ -134,6 +134,7 @@ urlpatterns = patterns('',
 
                        # Query Builder
                        url(r'^query/execute_sparql$', views.execute_sparql),
+                       url(r'^query/(?P<pk>\d+)/visualize/', views.query_visualize),
                        url(r'^query/(?P<link>.*)', views.get_qbuilder_call, name='query-builder-proxy'),
                        url(r'^rdf2any/(?P<link>.*)', views.get_rdf2any_call, name='rdf2any-proxy'),
                        url(r'^query-builder/save/(?P<pk>\d+)/$', views.query_update, name='query-builder-update'),

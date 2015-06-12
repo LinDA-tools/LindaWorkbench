@@ -2250,6 +2250,7 @@ input, textarea {
     margin-left: 5px;
     display: inline-block;
     vertical-align: top;
+    color: #888;
 }
 
 .designer-menu .designer-button.checked {
