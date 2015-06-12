@@ -13,7 +13,8 @@
         <a class="designer-button analytics{% if not query %} hidden{% endif %}" href="{% if query %}{{query.analytics_link}}{% else %}#{% endif %}" title="Analyze the results">
             <span class="glyphicon glyphicon-link text-gray"></span><span class="text">Analyze</span>
         </a>
-        <a class="designer-button visualization{% if not query %} hidden{% endif %}" href="{% if query %}{{query.visualization_link}}{% else %}#{% endif %}" title="Visualize the results">
+        <a class="designer-button visualization{% if not query %} hidden{% endif %}" href="{% if query %}{{query.visualization_link}}{% else %}#{% endif %}" title="Visualize the results"
+                onclick="location.reload();">
             <span class="glyphicon glyphicon-stats text-gray"></span><span class="text">Visualize</span>
         </a>
 
