@@ -1154,7 +1154,7 @@ def execute_sparql(request):
 def query_visualize(request, pk):
     q = get_object_or_404(Query, pk=pk)
     return redirect(q.visualization_link())
-    
+
 # Proxy calls - exist as middle-mans between LinDA query builder page and the Query Builder
 @csrf_exempt
 def get_qbuilder_call(request, link):

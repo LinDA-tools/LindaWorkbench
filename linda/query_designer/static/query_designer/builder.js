@@ -602,12 +602,16 @@ var builder = {
 builder.options = new BuilderOptions(builder);
 
 //ajax call to initialize prefixes from the vocabulary repository
-$.ajax({  //make an ajax request to get property return type
-    url: '/api/vocabularies/versions/',
-    type: "GET",
-    success: function(data, textStatus, jqXHR) {
-        for (var i=0; i<data.length; i++) {
-            builder.known_prefixes[data[i].uri] = data[i].prefix;
+$(function() {
+    $.ajax({  //make an ajax request to get property return type
+        url: '/api/vocabularies/versions/',
+        type: "GET",
+        success: function(data, textStatus, jqXHR) {
+            for (var i=0; i<data.length; i++) {
+                builder.known_prefixes[data[i].uri] = data[i].prefix;
+            }
+
+            builder.reset();
         }
-    }
+    });
 });
