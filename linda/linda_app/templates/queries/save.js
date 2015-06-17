@@ -35,7 +35,14 @@
                             builder.saved_query = builder.query;
                         }
 
+                        //query title
                         $('.designer-menu .query-title').html('#' + data.id + ': ' + data.description);
+                        //analytics
+                        $('.designer-menu a.analytics').attr('href', '/analytics?q_id=' + data.id);
+                        $('.designer-menu a.analytics').removeClass('hidden');
+                        //visualization
+                        $('.designer-menu a.visualization').attr('href', '/query/' + data.id + '/visualize/');
+                        $('.designer-menu a.visualization').removeClass('hidden');
                     },
                     error: function (jqXHR, textStatus, errorThrown)
                     {

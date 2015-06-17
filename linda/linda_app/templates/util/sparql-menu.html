@@ -8,6 +8,15 @@
         <div class="designer-button" onclick="show_sparql_download_modal()" title="Download the results">
             <span class="glyphicon glyphicon-save text-gray"></span><span class="text">Download</span>
         </div>
+
+        <!--Links to other tools-->
+        <a class="designer-button analytics{% if not query %} hidden{% endif %}" href="{% if query %}{{query.analytics_link}}{% else %}#{% endif %}" title="Analyze the results">
+            <span class="glyphicon glyphicon-link text-gray"></span><span class="text">Analyze</span>
+        </a>
+        <a class="designer-button visualization{% if not query %} hidden{% endif %}" href="{% if query %}{{query.visualization_link}}{% else %}#{% endif %}" title="Visualize the results">
+            <span class="glyphicon glyphicon-stats text-gray"></span><span class="text">Visualize</span>
+        </a>
+
         <div class="right">
             {% if mode == "designer" %}
                 <span class="query-title">{% if query %}#{{query.pk}}: {{query.description}}{% endif %}</span>
