@@ -7,12 +7,8 @@
 <script src="/static/js/jquery.bpopup.min.js"></script>
 <script src="/static/js/jquery-ui.js"></script>
 <script src="/static/js/jquery.blockUI.js"></script>
-
-
-
 <link rel="stylesheet" type="text/css" href="/static/css/analytics_style.css"/>
-<!--script src="//code.jquery.com/jquery-1.10.2.js"></script-->
-<!--script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script-->
+
 
 
 <script src="//code.jquery.com/ui/1.11.2/jquery-ui.js"></script>
@@ -75,6 +71,8 @@ $(document).ready(function(){
         
         $( "#id_evaluationQuery_label" ).show();
         $( "#id_evaluationQuery_display" ).show();
+        $( "#eval_block" ).show();
+        
         
         }
         else {
@@ -84,6 +82,7 @@ $(document).ready(function(){
        
         $( "#id_evaluationQuery_label" ).hide();
         $( "#id_evaluationQuery_display" ).hide();
+        $( "#eval_block" ).hide();
         }
     });
     
@@ -221,15 +220,66 @@ $(document).ready(function(){
             }, response);
         },
         select: function( event, ui ) {
-         
+        
          $("#id_trainQuery").val(ui.item.value);  
-         //alert(ui.item.value);
-         //alert($("#id_trainQuery").val());
          $("#id_trainQuery_display").val('QueryID:'+ui.item.value+'-->'+ui.item.label);
+         var query_id=+ui.item.value;
+            $.ajax({
+            url : "/analytics/get_query_evaluation_info",
+            type : "POST",
+            dataType: "json",
+            data : {
+            query : query_id,
+            csrfmiddlewaretoken: '{{ csrf_token }}'
+            },
+            success : function(json) {
+
+            $.each(json, function(key, value) {
+	      
+	      if (value.analyticsNum==0){
+	      
+	       $('#train_query_eval_info').html('<h1>About the selected Query:</h1><br/><div style="float:left;"><img src="/static/images/qualityicon2.png" alt="train query quality information"/></div><div style="float:left;width:70%">The selected query has not participated to any process. <br/> Hope we have helped you! Please keep giving us you feedback after using the analytics tool!</div>');
+
+		$('#train_query_eval_icon').html('<img src="/static/images/qualityicon1.png" alt="train query quality information" id="train_quality_info" />');
+
+	      }else if (value.evaldataquality>=0){
+	       $('#train_query_eval_info').html('<h1>About the selected Query:</h1><br/><div style="float:left;"><img src="/static/images/qualityicongreen2.png" alt="train query quality information"/></div><div style="float:left;width:70%">The selected query has already participated in <strong>'+value.analyticsNum 
+	       +' analytic proceses</strong> with a <strong>quality rate '+ value.evaldataquality
+	       + '</strong> and has been analyzes by the following algorithms: <strong>'+ value.algorithms 
+	       +'</strong>.<br/>Hope we have helped you! Please keep giving us you feedback after using the analytics tool!</div>');
+	       
+	      $('#train_query_eval_icon').html('<img src="/static/images/qualityicongreen1.png" alt="train query quality information" id="train_quality_info" />');
+	      }else if (value.evaldataquality<0){
+		
+	       $('#train_query_eval_info').html('<h1>About the selected Query:</h1><br/><div style="float:left;"><img src="/static/images/qualityicon2.png" alt="train query quality information"/></div><div style="float:left;width:70%">The selected query has already participated in <strong>'+value.analyticsNum 
+	       +' analytic proceses</strong> with a <strong>quality rate '+ value.evaldataquality
+	       + '</strong> and has been analyzes by the following algorithms: <strong>'+ value.algorithms 
+	       +'</strong>.<br/>Hope we have helped you! Please keep giving us you feedback after using the analytics tool!</div>');
+		
+		$('#train_query_eval_icon').html('<img src="/static/images/qualityicon1.png" alt="train query quality information" id="train_quality_info" />');
+	      }
+	       
+            });
+            
+
+
+            },
+            error : function(xhr,errmsg,err) {
+            alert(xhr.status + ": " + xhr.responseText);
+            }
+            });
          return false;
         }
  
       });
+      
+      
+      
+        $( "#train_query_eval_icon" ).click(function() {
+	 $("#train_query_eval_info").bPopup();
+        });
+    
+    
       
       $( "#id_evaluationQuery_display" ).autocomplete({
         source: function (request, response) {
@@ -240,10 +290,49 @@ $(document).ready(function(){
         select: function( event, ui ) {
          $("#id_evaluationQuery_display").val('QueryID:'+ui.item.value+'-->'+ui.item.label);
          $("#id_evaluationQuery").val(ui.item.value);
+                  var query_id=+ui.item.value;
+            $.ajax({
+            url : "/analytics/get_query_evaluation_info",
+            type : "POST",
+            dataType: "json",
+            data : {
+            query : query_id,
+            csrfmiddlewaretoken: '{{ csrf_token }}'
+            },
+            success : function(json) {
+
+            $.each(json, function(key, value) {
+	      
+	    
+	    if (value.evaldataquality>0){
+	      
+	       $('#test_query_eval_info').html('<h1>About the selected Query:</h1><br/><div style="float:left;"><img src="/static/images/qualityicongreen2.png" alt="train query quality information"/></div><div style="float:left;width:70%">The selected query has already participated in <strong>'+value.analyticsNum 
+	       +' analytic proceses</strong> with a <strong>quality rate '+ value.evaldataquality
+	       + '</strong> and has been analyzes by the following algorithms: <strong>'+ value.algorithms 
+	       +'</strong>.<br/>Hope we have helped you! Please keep giving us you feedback after usins the analytics tool!</div>');
+	       
+	      
+	      $('#test_query_eval_icon').html('<img src="/static/images/qualityicongreen1.png" alt="train query quality information" id="train_quality_info" />');
+	      }else{
+		$('#test_query_eval_icon').html('<img src="/static/images/qualityicon1.png" alt="train query quality information" id="train_quality_info" />');
+	      }
+	       
+            });
+
+            },
+            error : function(xhr,errmsg,err) {
+            alert(xhr.status + ": " + xhr.responseText);
+            }
+            });
          return false;
         }
  
       });
+      
+        $( "#test_query_eval_icon" ).click(function() {
+	 $("#test_query_eval_info").bPopup();
+        });
+    
       
           var $divA = $('#a'),
 	  $divB = $('#b'),
@@ -379,9 +468,9 @@ $(document).ready(function(){
                     <div id="params_description" width="100px" style= "color:#859596"></div>
                     
                     <p id=parameters class="formitem">If not satisfied with default parameters, please make you sugestions : {{form.parameters}} </p>
-		    <div style=“clear:both”>
+		    <div style=“clear:both”/>
                     <p id=description class="formitem">Insert a breve description of the analytic process : <img src="/static/images/info-button-orange-small.jpg" alt="analytics_description" id="analytics_description" /> 
-                     <div style=“clear:both”>
+                     <div style=“clear:both”/>
                     {{form.description}} 
                     </p>
                     <br/>
@@ -389,31 +478,51 @@ $(document).ready(function(){
                     <div style="border: 2px solid #DADFE1;border-radius: 5px;padding:10px;">
 		      <span id="display_text"></span> | change: <a href="#" id="link" style= "color:#859596"></a>
 		      <img src="/static/images/info-button-orange-small.jpg" alt="analytics_datasets" id="analytics_datasets" /> 
-		      <div id="a">
-			<p id="document" class="formitem">Select a csv or arff file to train the predifined algorithm: {{form.document}} </p>
-			<p id="testdocument" class="formitem" style="display: none;" >Select a csv or arff file to evaluate the predifined algorithm: {{form.testdocument}} </p>
-		      </div>
-		      <div id="b">
-			
-			<p id="id_trainQuery_label" style="float:left;">Select an query to analyze: </p>
-			<input id="id_trainQuery_display" class="formitem" size="50" {% if query %}value="QueryID:{{query.id}} ->{{query.description}}"{% endif %}/></br>
-			
-			<br/>
-			<p id="id_evaluationQuery_label" style="display: none;float:left;">Select a Datasource Query to evaluate the predifined algorithm: </p>
-			<input id="id_evaluationQuery_display" class="formitem" style="display: none;" size="50"/>
-			
-			<p id="trainQuery" class="formitem" style="display: none;">{{form.trainQuery}} </p>
+			<div id="a">
+			  <p id="document" class="formitem">Select a csv or arff file to train the predifined algorithm: {{form.document}} </p>
+			  <p id="testdocument" class="formitem" style="display: none;" >Select a csv or arff file to evaluate the predifined algorithm: {{form.testdocument}} </p>
+			</div>
+			<div id="b">
+			     <p id="id_trainQuery_label">Select an query to analyze: </p>
+			      <table style="height:60px">
+				  <tr>
+				  <td> 
+				    <input id="id_trainQuery_display" class="formitem" size="50" {% if query %}value="QueryID:{{query.id}} ->{{query.description}}"{% endif %}/>
+				  </td>
+				  <td>
+				  <div class="quality" id="train_query_eval_icon"></div>
+				  </td>
+				  </tr>
+			      </table>
+			      
+			      <div id="eval_block" style="display:none;">
+    				<p id="id_evaluationQuery_label">Select a Datasource Query to evaluate the predifined algorithm:</p><br/>
+			         <table style="height:60px">
+			          <tr>
+				    <td>
+				    <input id="id_evaluationQuery_display" class="formitem" style="display: none;" size="50"/>
+				    </td>
+				    <td>
+				      <div class="quality" id="test_query_eval_icon"></div>
+				    </td>
+				  </tr>
+				 </table> 
+			      </div>
+			      
+			</div><!--close div b-->
+		   </div>
+		   <div style=“clear:both”/>
 
+			<p id="trainQuery" class="formitem" style="display: none;">{{form.trainQuery}} </p>
 			<p id="evaluationQuery" class="formitem" style="display: none;">{{form.evaluationQuery}} </p>
-                    </div>  
-		    </div>
-		    </br>
+			 
+		    <br/>
                     <p id="exportFormat" class="formitem" >select an export format: {{form.exportFormat}}</p>
 
                     <input  type="submit" class="nicebutton" value="Submit"/>
                 </fieldset>
               </form>     
-        </div>
+        
         
         <div id="algorithm_description"></div>
         
@@ -443,6 +552,11 @@ $(document).ready(function(){
 	  <li><p style="margin:0px;color:#FC5006;">In case of using a forecasting algorithm make sure dates are the first field of the input dataset/s.</p></li>
 	 </ul>
         </div>
+        
+        
+        <div id="train_query_eval_info" class="analytics-description-hidden"></div>
+        <div id="test_query_eval_info" class="analytics-description-hidden"></div>
+
         
         
     </section>

@@ -1,3 +1,4 @@
+from __future__ import division
 from django.shortcuts import render, get_object_or_404,redirect
 from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
 from .forms import AnalyticsForm,DocumentForm
@@ -26,6 +27,7 @@ from ConfigParser import ConfigParser
 import os.path
 import requests
 import datetime
+from datetime import date;
 
 from linda_app.settings import LINDA_HOME
 
@@ -37,8 +39,6 @@ from reportlab.pdfgen import canvas
 from django.http import HttpResponse
 from tempfile import *
 import csv
-
-
 
 def analytics(request):
     if request.user.is_authenticated():
@@ -110,8 +110,8 @@ def analytics(request):
     
 def __unicode__(self):
         return unicode(self)
-
-
+      
+      
 def uploadView(request):
     upFile = request.FILES["upFile"]
     context = {}
@@ -148,17 +148,19 @@ def callRESTfulLINDA(lindaAnalyticsPK,category_table,request):
 
 
 def detail(request, analytics_id):
-    analytics = get_object_or_404(Analytics, pk=analytics_id)
-    #analytics_list = Analytics.objects.all()
-    current_user = request.user
-    analytics_list = Analytics.objects.filter(user_id=current_user.id)
-    #return render(request, 'lindaAnalytics/detail.html', {'analytics': analytics})
-    try:
-        analytics = Analytics.objects.get(pk=analytics_id)
-    except Analytics.DoesNotExist:
-        raise Http404
-    return render(request, 'analytics/detail.html', {'analytics': analytics,'analytics_list': analytics_list})
-   #return HttpResponse("You're looking at analytics %s." % analytics_id)
+    if request.user.is_authenticated():
+      analytics = Analytics.objects.filter(pk=analytics_id, user_id = request.user.id)
+      if not analytics: 
+	return render(request, 'analytics/noAuthenticatedAccess.html',)
+      current_user = request.user
+      analytics_list = Analytics.objects.filter(user_id=current_user.id)
+      try:
+	  analytics = Analytics.objects.get(pk=analytics_id)
+      except Analytics.DoesNotExist:
+	  raise Http404
+      return render(request, 'analytics/detail.html', {'analytics': analytics,'analytics_list': analytics_list})
+    else: 
+      return render(request, 'analytics/noAuthenticatedAccess.html',)
    
 def detailtoprint(request, analytics_id):
     analytics = get_object_or_404(Analytics, pk=analytics_id)
@@ -335,6 +337,43 @@ def get_evaluationQuery(request):
         #print(queries_list)
     return HttpResponse(json.dumps(queries_list), content_type='application/json')
   
+def get_query_evaluation_info(request):
+    q = request.POST.get('query')   #Get the search term typed by user   
+    print(q)
+    analytics = Analytics.objects.filter(Q(trainQuery_id=q) | Q(evaluationQuery_id=q))
+    print(analytics)
+    analytics_list = []
+    algorithms_list = []
+    algorithms_values = str('')
+    evaldataquality=0;
+    
+    for analytic in analytics:
+        evaldataquality += analytic.evaldataquality
+        if analytic.algorithm_id not in algorithms_list: 
+	  algorithms_list.append(analytic.algorithm_id)
+	  
+    for alg in algorithms_list:
+        algorithms_values += str(Algorithm.objects.get(id=alg).name) + str(' - ')
+            
+          
+    analytics_dict = {}
+    #1.in hoy many analytics processes has participated
+    num_of_analytics = len(analytics)
+    print(num_of_analytics)
+    analytics_dict['analyticsNum'] = num_of_analytics
+    #2.what is the data quality from the analytic processes that has participated
+    if num_of_analytics>0:
+      analytics_dict['evaldataquality'] = evaldataquality/num_of_analytics
+    else:
+      analytics_dict['evaldataquality'] = 0
+    #3.with which algotithms has been analyzed
+    analytics_dict['algorithms'] = algorithms_values
+    analytics_list.append(analytics_dict)
+    print(analytics_list)
+
+    return HttpResponse(json.dumps(analytics_list), content_type='application/json')
+  
+  
 def popup_query_info(request):
     query_id = request.POST['query_id']
     query = Query.objects.get(id=query_id)
@@ -416,6 +455,21 @@ def  edit_parameters(request):
   
 
  
+def  evaluation(request):
+    if request.POST:
+        analytics_id = request.POST.get("anID")
+        evalinsight = convert_emotion_to_integer(request.POST.get("emotion1"))
+        evalexectime = convert_emotion_to_integer(request.POST.get("emotion2"))
+        evalresuseoutput = convert_emotion_to_integer(request.POST.get("emotion3"))
+        evaldataquality = convert_emotion_to_integer(request.POST.get("emotion4"))
+         
+        Analytics.objects.filter(pk=analytics_id).update(evalinsight=evalinsight , evalexectime=evalexectime , evalresuseoutput=evalresuseoutput , evaldataquality = evaldataquality)
+    return HttpResponseRedirect(reverse('analytics:detail', args=(analytics_id,)))   
+
+def convert_emotion_to_integer(emotion):
+    if emotion=='happy': return 1
+    elif emotion=='serious': return 0
+    elif emotion=='sad': return (-1)
 
 def statistics(request):
     return render(request, 'analytics/statistics.html')  
@@ -446,6 +500,23 @@ def statistics_4_drildown_Algorithms(request):
         algorithms_dict['n_of_analytics'] = len(Analytics.objects.filter(algorithm_id=algorithm.id))
         algorithms_list.append(algorithms_dict)
     return HttpResponse(json.dumps(algorithms_list), content_type='application/json')    
+  
+  
+def statistics_4_timeseries(request):
+
+      d1 = datetime.date(2015,1,1)
+      d2 =  date.today()
+      diff = d2 - d1
+      data=[]
+      for i in range(diff.days + 1):  
+	  dateToFilter = (d1 + datetime.timedelta(i)).isoformat()
+	  data.append(len(Analytics.objects.filter(Q(createdOn=dateToFilter) | Q(updatedOn=dateToFilter))))	  
+ 
+      return HttpResponse(json.dumps(data), content_type='application/json')  
+
+
+  
+  
   
 def statistics4heatmap(request):
     algorithms=Algorithm.objects.all()
