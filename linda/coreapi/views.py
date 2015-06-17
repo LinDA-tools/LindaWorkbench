@@ -106,7 +106,7 @@ def recommend_dataset(request):
                 source_info["uri"] = source.uri
             source_info['full_uri'] = source.uri
             source_info['label'] = source.label
-            source_info['ranking'] = source.vocabulary.lodRanking
+            source_info['ranking'] = source.vocabulary.lodRanking - (len(source_info["label"]) - len(property))*50
 
             results.append(source_info)
 
@@ -138,7 +138,7 @@ def recommend_dataset(request):
                 source_info["uri"] = source.uri
             source_info['full_uri'] = source.uri
             source_info["label"] = source.label
-            source_info["ranking"] = int(source.vocabulary.lodRanking)
+            source_info["ranking"] = int(source.vocabulary.lodRanking) - (len(source_info["label"]) - len(class_))*50
 
             results.append(source_info)
 
