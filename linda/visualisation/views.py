@@ -27,7 +27,7 @@ def get_api_call(request, link):
         endpoint = VISUAL_SERVER
 	
     #TO-DO Improve request handler
-    link = urllib.quote(link)
+    link = urllib.parse.quote(link)
     link = re.sub(r"\/", "%2F", link)
     link = re.sub(r"\)", "%29", link)
     link = re.sub(r"\(", "%28", link)

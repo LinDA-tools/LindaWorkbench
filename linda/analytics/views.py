@@ -174,14 +174,14 @@ def detailtoprint(request, analytics_id):
 
 
 def ajax(request):
-    if request.POST.has_key('category'):
+    if 'category' in request.POST:
         category_id = request.POST['category']
         algorithmsPerCategory = Algorithm.objects.filter(category__id=category_id)
         results = [ob.as_json() for ob in algorithmsPerCategory]
         response_dict = {}
         response_dict.update({'algorithmsPerCategory': results })
         return HttpResponse(simplejson.dumps(response_dict), content_type='application/javascript')
-    if request.POST.has_key('algorithm'):
+    if 'algorithm' in request.POST:
         algorithm_id = request.POST['algorithm']
         paramsPerAlgorithm = Params.objects.filter(algorithm__id=algorithm_id)
         results = [ob.as_json() for ob in paramsPerAlgorithm]
