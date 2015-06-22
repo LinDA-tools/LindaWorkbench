@@ -100,25 +100,25 @@ class Analytics(models.Model):
     timeToRun_analytics = models.FloatField(max_length=500, blank=True,default=0)
     timeToCreate_RDF = models.FloatField(max_length=500, blank=True,default=0)
     createModel = models.BooleanField(default=0)
-    evalinsight = models.IntegerField(default=010)
-    evalexectime = models.IntegerField(default=010)
-    evalresuseoutput = models.IntegerField(default=010)
-    evaldataquality = models.IntegerField(default=010)
+    evalinsight = models.IntegerField(default=0o10)
+    evalexectime = models.IntegerField(default=0o10)
+    evalresuseoutput = models.IntegerField(default=0o10)
+    evaldataquality = models.IntegerField(default=0o10)
     analysisstatus = models.BooleanField(default=False)
     
     def save(self):
         if not self.id:  # first time saved -- create is not set yet
-	   self.created = datetime.date.today()
-	   self.updated = datetime.date.today()
-	   super(Analytics, self).save()  # proceed with the default constructor
+            self.created = datetime.date.today()
+            self.updated = datetime.date.today()
+        super(Analytics, self).save()  # proceed with the default constructor
     
     def __str__(self):
         return str(self.id)   
     def display_resultdocument_file(self):
         if os.path.isfile(self.resultdocument.path):
-	   print(self.resultdocument.path);
-           fp = open(self.resultdocument.path);
-           return fp.read()
+            print(self.resultdocument.path);
+            fp = open(self.resultdocument.path);
+            return fp.read()
     def display_resultdocument_title(self):
         if os.path.isfile(self.resultdocument.path):
            return self.resultdocument.name.replace('results/', '');	 

@@ -1,7 +1,7 @@
 var sparql_data_module = function () {
 
     function sparqlProxyQuery(endpoint, query) {
-        var promise = Ember.$.getJSON('http://' + window.location.hostname + ':3002/sparql-proxy/' + encodeURIComponent(endpoint) + "/" + encodeURIComponent(query));
+        var promise = Ember.$.getJSON(VISUALIZATION_BACKEND + '/sparql-proxy/' + encodeURIComponent(endpoint) + "/" + encodeURIComponent(query));
         return promise.then(function (result) {
             console.log("SPARQL DATA MODULE - SPARQL QUERY RESULT");
             console.dir(result);

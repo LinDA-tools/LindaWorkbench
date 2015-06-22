@@ -3,11 +3,11 @@ from django.conf.urls import patterns, include, url
 from django.contrib.auth.decorators import login_required
 from django.views.generic import RedirectView
 
-from forms import AutocompleteModelSearchForm
+from linda_app.forms import AutocompleteModelSearchForm
 from haystack.views import SearchView, search_view_factory
 from linda_app.installer import views as installer_views
 
-import views
+import linda_app.views as views
 
 admin.autodiscover()
 admin.site.site_title = 'LinDA Administration'

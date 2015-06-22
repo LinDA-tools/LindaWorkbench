@@ -1,4 +1,4 @@
-import passwords
+from linda_app import passwords
 
 # Django settings for linda project.
 

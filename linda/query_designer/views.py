@@ -1,11 +1,8 @@
 from datetime import datetime
 import json
-from numbers import Number
 import urllib
-import urllib2
 from django.http import Http404, HttpResponse
 from django.shortcuts import render
-from django.test._doctest import _OutputRedirectingPdb
 from django.utils.http import urlquote
 import requests
 from linda_app.models import DatasourceDescription, VocabularyProperty, Query, get_configuration
@@ -132,7 +129,7 @@ def active_subclasses(request, dt_name):
     if not request.GET.get('parent_class'):
         raise Http404
 
-    parent_class = urllib.unquote(request.GET.get('parent_class'))
+    parent_class = urllib.parse.unquote(request.GET.get('parent_class'))
 
     # get the endpoint of the query
     endpoint = get_endpoint_from_dt_name(dt_name)
@@ -160,7 +157,7 @@ def active_class_properties(request, dt_name):
     if not request.GET.get('class_uri'):
         raise Http404
 
-    class_uri = urllib.unquote(request.GET.get('class_uri'))
+    class_uri = urllib.parse.unquote(request.GET.get('class_uri'))
 
     # get the endpoint of the query
     endpoint = get_endpoint_from_dt_name(dt_name)
@@ -202,7 +199,7 @@ def active_properties(request, dt_name):
 
 def uri_to_label(uri):
     label = uri.split('/')[-1].split('#')[-1].replace('_', ' ').encode('utf-8')
-    return urllib.unquote(label)
+    return urllib.parse.unquote(label)
 
 
 # Suggest entities of a type
@@ -254,7 +251,7 @@ def get_property_type(request, dt_name):
     if not request.GET.get('property_uri'):
         raise Http404
 
-    property_uri = urllib.unquote(request.GET.get('property_uri'))
+    property_uri = urllib.parse.unquote(request.GET.get('property_uri'))
 
     # find type and create json response
     props = VocabularyProperty.objects.filter(uri=property_uri)
@@ -276,7 +273,7 @@ def get_properties_with_domain(request, dt_name):
     if not request.GET.get('class_uri'):
         raise Http404
 
-    class_uri = urllib.unquote(request.GET.get('class_uri'))
+    class_uri = urllib.parse.unquote(request.GET.get('class_uri'))
 
     # find properties and create json response
     # resembles a SparQL response json to ease the client's job
@@ -298,7 +295,7 @@ def class_info(request, dt_name):
     if not request.GET.get('class_uri'):
         raise Http404
 
-    class_uri = urllib.unquote(request.GET.get('class_uri'))
+    class_uri = urllib.parse.unquote(request.GET.get('class_uri'))
 
     # get the endpoint of the query
     endpoint = get_endpoint_from_dt_name(dt_name)

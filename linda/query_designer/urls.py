@@ -2,7 +2,7 @@ __author__ = 'dimitris'
 
 from django.conf.urls import patterns, url
 from query_designer import views
-from docs import views as doc_views
+from query_designer.docs import views as doc_views
 
 urlpatterns = patterns('',
                        # Basic pages
