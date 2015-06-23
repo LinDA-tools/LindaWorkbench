@@ -1310,7 +1310,7 @@ def api_datasource_create(request):
 
     data = json.dumps(results)
     mimetype = 'application/json'
-    return HttpResponse(data, mimetype, status=results['status'])
+    return HttpResponse(data, mimetype, status=int(results['status']))
 
 
 # Retrieve all data from datasource in specified format

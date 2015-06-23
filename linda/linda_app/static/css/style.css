@@ -168,6 +168,10 @@ header .site-title:hover {
     overflow: hidden;
 }
 
+#main-container > .main > .main {
+    padding: 0;
+}
+
 .builder-advanced #main-container > .main,
 .getting-started #main-container > .main{
     padding: 0;
@@ -2945,4 +2949,21 @@ input, textarea {
 .autocomplete-tooltip .json-container > .json-inner {
     margin: 0 0 0 40px;
     display: block;
+}
+
+/* Transformation */
+.transformation .grid > * {
+    box-sizing: border-box;
+}
+
+.transformation #main-container > .main {
+    background-color: #eee;
+}
+
+.transformation .red {
+    background: none;
+}
+
+.transformation input[type="submit"].navigation_button {
+    float: right;
 }

@@ -32,11 +32,8 @@ urlpatterns = patterns('',
                        # Analytics
                        url(r'^analytics/', include('analytics.urls', namespace="analytics")),
 
-                       # Transformations
+                       # Transformation Engine
                        url(r'^transformation/', include('transformation.urls')),
-
-                       # Transformations
-                       url(r'^transformations/', include('r2r.urls')),
 
                        # Query Designer
                        url(r'^query-designer/', include('query_designer.urls')),

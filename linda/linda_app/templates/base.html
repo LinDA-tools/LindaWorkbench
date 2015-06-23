@@ -21,8 +21,12 @@
 
 <div class="wrapper">
     {% include 'util/header.html' %}
-    {% block content %}
-    {% endblock %}
+
+    <div class="main">
+        {% block content %}
+        {% endblock %}
+    </div>
+
     {% include 'util/footer.html' %}
 </div>
 </body>
