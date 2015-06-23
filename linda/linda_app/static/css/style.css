@@ -1535,6 +1535,13 @@ body.login .row, body.login .form-field {
     white-space: nowrap;
 }
 
+.builder-advanced .ui-autocomplete-loading {
+    padding: 5px;
+    background: url('/static/images/loading.gif') no-repeat right center;
+    background-color: #fff;
+    background-size: 16px;
+}
+
 input, textarea {
     font-family: 'Open Sans' !important;
     font-weight: 300;

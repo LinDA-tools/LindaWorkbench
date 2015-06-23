@@ -1709,7 +1709,7 @@ class ConfigurationUpdateView(UpdateView):
 def get_endpoints_from_datahub():
     API_ROOT = 'http://datahub.io/api/'
     result = []
-    datasets = json.loads(requests.get(API_ROOT + 'search/dataset?limit=10000').content)['results']
+    datasets = json.loads(requests.get(API_ROOT + 'search/dataset?limit=10000').content.decode('utf-8'))['results']
     for dataset in datasets:
         try:
             print(API_ROOT + 'action/dataset_show?id=' + dataset)
