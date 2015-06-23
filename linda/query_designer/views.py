@@ -198,7 +198,7 @@ def active_properties(request, dt_name):
 
 
 def uri_to_label(uri):
-    label = uri.split('/')[-1].split('#')[-1].replace('_', ' ').encode('utf-8')
+    label = uri.split('/')[-1].split('#')[-1].replace('_', ' ')
     return urllib.parse.unquote(label)
 
 
@@ -238,7 +238,7 @@ def get_entity_suggestions(request, dt_name):
 
     # make array of results
     results = []
-    res = json.loads(result.content)
+    res = json.loads(result.content.decode('utf8'))
     for b in res['results']['bindings']:
         results.append({"value": b['instance']['value'], "label": uri_to_label(b['instance']['value'])})
 
