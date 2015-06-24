@@ -1181,7 +1181,8 @@ def get_qbuilder_call(request, link):
 
 # middle-mans between LinDA query builder page and the RDF2Any server
 @csrf_exempt
-@cache_page_with_prefix(60*15, lambda request: md5(request.get_full_path()).hexdigest())
+# TODO: Fix cache
+# @cache_page_with_prefix(60*15, lambda request: md5(request.get_full_path()).hexdigest())
 def get_rdf2any_call(request, link):
     total_link = get_configuration().rdf2any_server + 'rdf2any/' + link
     if request.GET:
@@ -1713,13 +1714,19 @@ def get_endpoints_from_datahub():
     for dataset in datasets:
         try:
             print(API_ROOT + 'action/dataset_show?id=' + dataset)
-            dt = json.loads(requests.get(API_ROOT + 'action/dataset_show?id=' + dataset).content)
+            dt = json.loads(requests.get(API_ROOT + 'action/dataset_show?id=' + dataset).content.decode('utf-8'))
             if 'result' in dt:
                 dt = dt['result']
                 for resource in dt['resources']:
-                    if 'sparql' in resource['format']:
-                        print(dt['title'] + ': ' + resource['url'])
-                        result.append({'title': dt['title'], 'description': resource['description'], 'url': resource['url']})
+                    if ('sparql' in resource['format']) or ('rdf' in resource['format']) or ('ntriples' in resource['format']):
+                        print(dt['title'] + ': ' + resource['url'] + ' (' + resource['format'] + ')')
+                        result.append({
+                            'title': dt['title'],
+                            'description': resource['description'],
+                            'url': resource['url'],
+                            'format': resource['format'],
+                        })
+
         except ValueError as KeyError:
             print('<!!!>' + API_ROOT + 'action/dataset_show?id=' + dataset)
 

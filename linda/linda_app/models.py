@@ -592,8 +592,6 @@ class Configuration(models.Model):
     query_builder_server = models.URLField(blank=False, null=False, default='http://localhost:3100/')
     # Rdf2any Server
     rdf2any_server = models.URLField(blank=False, null=False, default='http://localhost:8081/')
-    # R2R Server
-    r2r_server = models.URLField(blank=False, null=False, default='http://localhost:3000/')
     # Visualization backend
     visualization_backend = models.URLField(blank=False, null=False, default='http://localhost:3002/')
 
@@ -606,3 +604,16 @@ def get_configuration():
         return configs[0]
     else:
         return Configuration.objects.create()
+
+
+class DefaultEndpoints(models.Model):
+    # A collection of default endpoints automatically fetched by the http://datahub.io/ project
+    # Created whenever linda_app.views.get_endpoints_from_datahub() is run
+
+    # The title of the datasource
+    title = models.CharField(max_length=1024, blank=False, null=False)
+    # A description of the datasource
+    description = models.CharField(max_length=8128, blank=True, null=True, default='')
+
+    # The SPARQL endpoint URL
+    endpoint = models.URLField(blank=False, null=False, unique=True)
