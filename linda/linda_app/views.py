@@ -776,7 +776,7 @@ def datasourceCreate(request):
 
         if request.POST.get("type") == "private" and (
                         request.POST.get("datatype") == "csv" or request.POST.get("datatype") == "rdb"):
-            return redirect("/transformations/#/" + request.POST.get("datatype"))
+            return redirect("/transformation/csv/step/1")
         elif request.POST.get("type") == "private":
             return redirect("/datasource/create/" + request.POST.get("datatype"))
         else:
