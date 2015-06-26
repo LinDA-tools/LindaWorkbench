@@ -1,5 +1,6 @@
 from operator import attrgetter
 from django.core import serializers
+from django.db import IntegrityError
 from view_cache_utils import cache_page_with_prefix
 from hashlib import md5
 from django.core.paginator import Paginator, EmptyPage
@@ -763,6 +764,16 @@ def datasources(request):
     return render(request, 'datasource/index.html', params)
 
 
+# Default datasources - suggestions
+def datasources_suggest(request):
+    params = {
+        'page': 'Datasources',
+        'suggested_datasources': DefaultDatasources.objects.all(),
+    }
+
+    return render(request, 'datasource/suggest.html', params)
+
+
 def datasourceCreate(request):
     params = {'types': {('public', 'Remote'), ('private', 'Local')},
               'datatypes': {('csv', 'CSV file'), ('rdb', 'Database (relational)'), ('xls', 'Excel file'),
@@ -1138,7 +1149,6 @@ def execute_sparql(request):
 
     # Make the query, add info about the offset and return the results
     response = sparql_query_json(request.POST.get('dataset'), query)
-
     if response.status_code == 200:
         # avoid erroneous \U characters -- invalid json
         response_safe = response.content.decode('unicode_escape')  # .replace(b'\U', '')
@@ -1149,7 +1159,7 @@ def execute_sparql(request):
         try:
             data = json.loads(response_safe)
         except ValueError:
-            return HttpResponse(response.content, status=500)
+            return HttpResponse('Invalid JSON response from server: ' + response.content, status=500)
         data['offset'] = offset
 
         return HttpResponse(json.dumps(data), content_type="application/json")
@@ -1707,27 +1717,67 @@ class ConfigurationUpdateView(UpdateView):
         return get_configuration()
 
 
-def get_endpoints_from_datahub():
+def get_endpoints_from_datahub(offset=0):
     API_ROOT = 'http://datahub.io/api/'
-    result = []
-    datasets = json.loads(requests.get(API_ROOT + 'search/dataset?limit=10000').content.decode('utf-8'))['results']
-    for dataset in datasets:
+    for x in range(0, 10000, 1000):
+        datasets = json.loads(requests.get(API_ROOT + 'search/dataset?limit=1000&offset=' + str(x)).content.decode('utf-8'))['results']
+        # Remove existing
+
+        if offset == 0:
+            DefaultDatasources.objects.filter(defined_at=API_ROOT).delete()
+
+        cnt = x
+        # crawl
+        for dataset in datasets:
+            try:
+                cnt += 1
+                if cnt <= offset:
+                    continue
+                print(str(cnt) + ':\t' + API_ROOT + 'action/dataset_show?id=' + dataset)
+                dt = json.loads(requests.get(API_ROOT + 'action/dataset_show?id=' + dataset).content.decode('utf-8'))
+                if 'result' in dt:
+                    dt = dt['result']
+                    resources = []
+                    for resource in dt['resources']:
+                        if (('sparql' in resource['format']) or ('rdf' in resource['format']) or ('ntriples' in resource['format'])) and (not 'example' in resource['format']):
+                            print(dt['title'] + ': ' + resource['url'] + ' (' + resource['format'] + ')')
+                            resources.append({
+                                'title': dt['title'],
+                                'description': resource['description'],
+                                'url': resource['url'],
+                                'format': resource['format'],
+                            })
+
+                    # if multiple resources where found
+                    # choose which one to add
+                    # prefer SPARQL endpoints
+                    if resources:
+                        to_add = None
+                        for datasource in resources:
+                            if datasource['format'] == 'api/sparql':
+                                to_add = datasource
+                                break
+                        if not to_add:
+                            to_add = resources[0]
+
+                        try:
+                            DefaultDatasources.objects.create(title=to_add['title'],
+                                                              description=to_add['description'],
+                                                              url=to_add['url'], format=to_add['format'],
+                                                              defined_at=API_ROOT)
+                        except IntegrityError:
+                            print('Already added')
+
+            except ValueError as KeyError:
+                print('<!!!>' + API_ROOT + 'action/dataset_show?id=' + dataset)
+
+    for suggestion in DefaultDatasources.objects.filter(format='api/sparql'):
+        print(suggestion.title)
+        query = "SELECT (count(?x) AS ?cnt) WHERE {?x ?y ?z}"
         try:
-            print(API_ROOT + 'action/dataset_show?id=' + dataset)
-            dt = json.loads(requests.get(API_ROOT + 'action/dataset_show?id=' + dataset).content.decode('utf-8'))
-            if 'result' in dt:
-                dt = dt['result']
-                for resource in dt['resources']:
-                    if ('sparql' in resource['format']) or ('rdf' in resource['format']) or ('ntriples' in resource['format']):
-                        print(dt['title'] + ': ' + resource['url'] + ' (' + resource['format'] + ')')
-                        result.append({
-                            'title': dt['title'],
-                            'description': resource['description'],
-                            'url': resource['url'],
-                            'format': resource['format'],
-                        })
-
-        except ValueError as KeyError:
-            print('<!!!>' + API_ROOT + 'action/dataset_show?id=' + dataset)
-
-    return result
+            r = sparql_query_json(suggestion.url, query, timeout=10)
+            suggestion.size = int(json.loads(r.content.decode('utf-8'))['results']['bindings'][0]['cnt']['value'])
+            print('\tSize: ' + str(suggestion.size))
+            suggestion.save()
+        except:
+            pass

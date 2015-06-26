@@ -27,7 +27,12 @@ def designer_defaults():
 # Home page
 def index(request):
     params = designer_defaults()
-    if request.GET.get('dt_id'):
+    endpoint = request.GET.get('endpoint')
+    dt_id = request.GET.get('dt_id')
+
+    if endpoint:
+        params['datasource_default'] = endpoint
+    elif dt_id:
         params['datasource_default'] = DatasourceDescription.objects.get(name=request.GET.get('dt_id'))
         if not params['datasource_default']:
             return Http404
@@ -51,6 +56,7 @@ def load_design(request, pk):
 
 # get endpoint by data source name
 def get_endpoint_from_dt_name(dt_name):
+    '''
     if dt_name != "all":  # search in all private data source
         datasources = DatasourceDescription.objects.filter(name=dt_name)
 
@@ -60,10 +66,12 @@ def get_endpoint_from_dt_name(dt_name):
         return datasources[0].get_endpoint()
     else:
         return get_configuration().private_sparql_endpoint
+    '''
+    return dt_name
 
 
 # Execute a SparQL query on an endpoint and return json response
-def sparql_query_json(endpoint, query):
+def sparql_query_json(endpoint, query, timeout=None):
     # encode the query
     query_enc = urlquote(query, safe='')
 
@@ -71,7 +79,7 @@ def sparql_query_json(endpoint, query):
     # with &output=json we support non-standard endpoints like IMDB & World Factbook
     response = requests.get(
         endpoint + "?Accept=" + urlquote(
-            "application/sparql-results+json") + "&query=" + query_enc + "&format=json&output=json")
+            "application/sparql-results+json") + "&query=" + query_enc + "&format=json&output=json", timeout=timeout)
 
     if response.status_code == 200:
         # return the response

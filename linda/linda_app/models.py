@@ -1,10 +1,12 @@
 from datetime import datetime
 from time import timezone
 import urllib
+from urllib.parse import quote
 from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.template.defaultfilters import slugify, random
+from django.utils.http import urlquote
 from rdflib import Graph, OWL, RDFS
 from rdflib.util import guess_format
 import requests
@@ -606,7 +608,7 @@ def get_configuration():
         return Configuration.objects.create()
 
 
-class DefaultEndpoints(models.Model):
+class DefaultDatasources(models.Model):
     # A collection of default endpoints automatically fetched by the http://datahub.io/ project
     # Created whenever linda_app.views.get_endpoints_from_datahub() is run
 
@@ -614,6 +616,27 @@ class DefaultEndpoints(models.Model):
     title = models.CharField(max_length=1024, blank=False, null=False)
     # A description of the datasource
     description = models.CharField(max_length=8128, blank=True, null=True, default='')
+    # The format of the datasource (e.g api/sparql, application/rdf+xml etc.)
+    format = models.CharField(max_length=128, blank=False, null=False)
+    # Where it was defined by
+    defined_at = models.URLField(blank=False, null=False)
+    # The resource url
+    url = models.URLField(blank=False, null=False, unique=True)
+    # Size of the datasource
+    # For SPARQL endpoints, this represents the number of triples
+    size = models.IntegerField(blank=True, null=True, default=None)
 
-    # The SPARQL endpoint URL
-    endpoint = models.URLField(blank=False, null=False, unique=True)
+    def is_added(self):
+        if self.format == 'api/sparql':
+            return DatasourceDescription.objects.filter(uri=self.url).exists()
+        else:
+            return DatasourceDescription.objects.filter(title=self.title).exists()
+
+    def get_default_action(self):
+        if self.format == 'api/sparql':
+            return '/query-designer/?endpoint=' + quote(self.url, safe='')
+
+        return None
+
+    class Meta:
+        ordering = ['-size']

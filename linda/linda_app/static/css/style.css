@@ -2974,3 +2974,35 @@ input, textarea {
 .transformation input[type="submit"].navigation_button {
     float: right;
 }
+
+/* Datasource suggestions */
+.datasource-suggestion-title {
+    width: 30%;
+}
+.datasource-suggestion-description {
+    width: 20%;
+}
+
+.suggestions-table tr.even {
+    background-color: #eee;
+}
+
+.suggestions-table a {
+    color: #5C97BF;
+}
+
+.suggestions-table .glyphicon {
+    margin-right: 10px;
+}
+
+.datasource-suggestion-size {
+    text-align: right;
+}
+
+.datasource-suggestion-format {
+    width: 10%;
+}
+
+.datasource-suggestions .dataTables_filter input {
+    height: 25px;
+}
