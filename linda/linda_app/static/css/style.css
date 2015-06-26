@@ -2987,8 +2987,9 @@ input, textarea {
     background-color: #eee;
 }
 
-.suggestions-table a {
+.suggestions-table a, .add-suggested-datasource {
     color: #5C97BF;
+    cursor: pointer;
 }
 
 .suggestions-table .glyphicon {
@@ -3001,6 +3002,10 @@ input, textarea {
 
 .datasource-suggestion-format {
     width: 10%;
+}
+
+.suggestions-table span.error {
+    display: block;
 }
 
 .datasource-suggestions .dataTables_filter input {

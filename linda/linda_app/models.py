@@ -626,6 +626,9 @@ class DefaultDatasources(models.Model):
     # For SPARQL endpoints, this represents the number of triples
     size = models.IntegerField(blank=True, null=True, default=None)
 
+    def is_endpoint(self):
+        return self.format == 'api/sparql'
+
     def is_added(self):
         if self.format == 'api/sparql':
             return DatasourceDescription.objects.filter(uri=self.url).exists()
@@ -633,7 +636,7 @@ class DefaultDatasources(models.Model):
             return DatasourceDescription.objects.filter(title=self.title).exists()
 
     def get_default_action(self):
-        if self.format == 'api/sparql':
+        if self.is_endpoint():
             return '/query-designer/?endpoint=' + quote(self.url, safe='')
 
         return None

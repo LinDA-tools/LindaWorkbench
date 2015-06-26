@@ -114,6 +114,7 @@ urlpatterns = patterns('',
                        # Datasources
                        url(r'^datasources/$', views.datasources, name='datasources'),
                        url(r'^datasources/suggest/$', views.datasources_suggest, name='datasources'),
+                       url(r'^datasources/suggestions/(?P<pk>\d+)/add/$', views.datasource_suggestion_add, name='datasources'),
                        url(r'^datasource/create/$', views.datasourceCreate,
                            name='datasource-create'),
                        url(r'^datasource/create/rdf/$', views.datasourceCreateRDF,

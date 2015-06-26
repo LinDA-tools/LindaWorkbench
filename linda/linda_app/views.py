@@ -774,6 +774,24 @@ def datasources_suggest(request):
     return render(request, 'datasource/suggest.html', params)
 
 
+# Add a specific suggestion to the datasources
+def datasource_suggestion_add(request, pk):
+    suggestion = get_object_or_404(DefaultDatasources, pk=pk)
+    if suggestion.is_endpoint():
+        # find the slug
+        sname = slugify(unidecode(suggestion.title))
+        # get user
+        created_by = request.user if request.user.is_authenticated() else None
+
+        dt = DatasourceDescription.objects.create(title=suggestion.title, uri=suggestion.url, is_public=True,
+                                                  name=sname, createdBy=created_by,
+                                                  createdOn=datetime.now(), updatedOn=datetime.now())
+
+        return HttpResponse('Datasource created: ' + str(dt.pk))
+    else:
+        return HttpResponse(content='Operation not supported', content_type='text/plain', status=500)
+
+
 def datasourceCreate(request):
     params = {'types': {('public', 'Remote'), ('private', 'Local')},
               'datatypes': {('csv', 'CSV file'), ('rdb', 'Database (relational)'), ('xls', 'Excel file'),

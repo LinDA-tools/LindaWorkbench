@@ -43,7 +43,7 @@
                         </td>
                         <td class="datasource-suggestion-format">{{suggestion.format}}</td>
                         <td>
-                            {% if suggestion.format == "api/sparql" %}
+                            {% if suggestion.is_endpoint %}
                                 <a href="{{suggestion.get_default_action}}"><span class="glyphicon glyphicon-search" aria-hidden="true"></span>Explore</a>
                             {% else %}
                                 <a href="{{suggestion.url}}" target="_blank"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span>Download</a>
@@ -53,7 +53,7 @@
                             {% if suggestion.is_added %}
                                 <span class="glyphicon glyphicon-check" aria-hidden="true"></span>Added
                             {% else %}
-                                <a href="/datasource/suggestion/{{suggestion.pk}}/add/"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span>Add</a>
+                                <div class="add-suggested-datasource" data-pk="{{suggestion.pk}}"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span>Add</div>
                             {% endif %}
                         </td>
                     </tr>
@@ -79,6 +79,29 @@
                 "infoEmpty": "No suggestoins available",
                 "infoFiltered": "(filtered from _MAX_ total records)"
             }
+        });
+
+        //add suggested datasource
+        CSRF_TOKEN = '{{csrf_token}}';
+
+        $("body").on("click", ".add-suggested-datasource", function(e) {
+            var pk = $(this).data('pk');
+            $(this).find('span.error').remove();
+            var that = this;
+
+            $.ajax({ //make request to add the suggestion
+                url: "/datasources/suggestions/" + pk + "/add/",
+                type: "POST",
+                data: {
+                    csrfmiddlewaretoken: CSRF_TOKEN
+                },
+                success: function(data, textStatus, jqXHR) {
+                    $(that).parent().html('<span class="glyphicon glyphicon-check" aria-hidden="true"></span>Added');
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    $(that).append('<span class="error">Error: ' + jqXHR.responseText + ', please try again in a while</span>');
+                }
+            });
         });
     </script>
 {% endblock %}
