@@ -14,7 +14,7 @@ elasticsearch
 #MySQL-python
 mysqlclient
 xmltodict
-#microsofttranslator
+microsofttranslator
 #pattern
 unidecode
 pdfkit

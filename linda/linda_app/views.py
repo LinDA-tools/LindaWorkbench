@@ -1,6 +1,7 @@
 from operator import attrgetter
 from django.core import serializers
 from django.db import IntegrityError
+from microsofttranslator import Translator
 from view_cache_utils import cache_page_with_prefix
 from hashlib import md5
 from django.core.paginator import Paginator, EmptyPage
@@ -568,13 +569,11 @@ def vocabulary_search(request):  # view for search in vocabularies - remembers s
     if 'translate' in request.GET:
         translate = True
         # create a unique translator object to be used
-        # TODO: Connect with Translator API
-        '''
         translator = Translator(MS_TRANSLATOR_UID, MS_TRANSLATOR_SECRET)
         q = translator.translate(text=q_in, to_lang='en', from_lang=None)
         if q.startswith("TranslateApiException:"):
             q = q_in
-        '''
+
     else:
         translate = False
         q = q_in
