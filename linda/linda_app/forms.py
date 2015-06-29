@@ -1,6 +1,6 @@
 from django import forms
 from django.forms.widgets import Select
-from models import *
+from linda_app.models import *
 
 
 class UserProfileForm(forms.ModelForm):

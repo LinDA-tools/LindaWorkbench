@@ -19,7 +19,7 @@ def visualizations(request):
 # Proxy calls - exist as middle-mans between LinDA visualizations page and the visual server
 @csrf_exempt
 def get_api_call(request, link):
-    print link
+    print(link)
 
     if ('sparql-proxy' in link) or ('dataselection' in link) or ('visualizations' in link):
 	    endpoint = 'http://localhost:3002/'
@@ -27,14 +27,14 @@ def get_api_call(request, link):
         endpoint = VISUAL_SERVER
 	
     #TO-DO Improve request handler
-    link = urllib.quote(link)
+    link = urllib.parse.quote(link)
     link = re.sub(r"\/", "%2F", link)
     link = re.sub(r"\)", "%29", link)
     link = re.sub(r"\(", "%28", link)
     link = re.sub(r"^sparql-proxy%2F", "sparql-proxy/", link)
     link = re.sub(r'^visualizations%2F', 'visualizations/', link)	
     link = re.sub(r"%2FPREFIX", "/PREFIX", link)
-    print 'here is the link:' + link + 'end of link:'
+    print('here is the link:' + link + 'end of link:')
     total_link = endpoint + link	
     if request.GET:
         total_link += "?"
@@ -57,7 +57,7 @@ def get_api_call(request, link):
         if request.method == "POST":
             data = requests.post(total_link, data=d, headers=h)
         else:
-			data = requests.put(total_link, data=d, headers=h)	
+            data = requests.put(total_link, data=d, headers=h)
 
     if 'content-type' in data.headers:		
         return HttpResponse(data, data.headers['content-type'])

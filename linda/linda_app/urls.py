@@ -3,11 +3,11 @@ from django.conf.urls import patterns, include, url
 from django.contrib.auth.decorators import login_required
 from django.views.generic import RedirectView
 
-from forms import AutocompleteModelSearchForm
+from linda_app.forms import AutocompleteModelSearchForm
 from haystack.views import SearchView, search_view_factory
 from linda_app.installer import views as installer_views
 
-import views
+import linda_app.views as views
 
 admin.autodiscover()
 admin.site.site_title = 'LinDA Administration'
@@ -32,11 +32,8 @@ urlpatterns = patterns('',
                        # Analytics
                        url(r'^analytics/', include('analytics.urls', namespace="analytics")),
 
-                       # Transformations
+                       # Transformation Engine
                        url(r'^transformation/', include('transformation.urls')),
-
-                       # Transformations
-                       url(r'^transformations/', include('r2r.urls')),
 
                        # Query Designer
                        url(r'^query-designer/', include('query_designer.urls')),
@@ -116,6 +113,8 @@ urlpatterns = patterns('',
 
                        # Datasources
                        url(r'^datasources/$', views.datasources, name='datasources'),
+                       url(r'^datasources/suggest/$', views.datasources_suggest, name='datasources'),
+                       url(r'^datasources/suggestions/(?P<pk>\d+)/add/$', views.datasource_suggestion_add, name='datasources'),
                        url(r'^datasource/create/$', views.datasourceCreate,
                            name='datasource-create'),
                        url(r'^datasource/create/rdf/$', views.datasourceCreateRDF,

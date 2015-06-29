@@ -109,8 +109,8 @@ class ThumbnailNode(Node):
                 except:
                     #import traceback
                     #traceback.print_stack()
-                    print "ERROR: Using {% thumbnail %} tag with " \
-                          "a regular ImageField instead of ImageWithThumbsField:", self.source_var
+                    print("ERROR: Using {% thumbnail %} tag with " \
+                          "a regular ImageField instead of ImageWithThumbsField:", self.source_var)
                     return ''
             except ValueError:
                 # This file object doesn't actually have a file. Probably

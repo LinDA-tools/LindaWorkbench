@@ -1,6 +1,8 @@
 from operator import attrgetter
 from django.contrib.auth.decorators import login_required
 from django.core import serializers
+from django.db import IntegrityError
+from microsofttranslator import Translator
 from view_cache_utils import cache_page_with_prefix
 from hashlib import md5
 from django.core.paginator import Paginator, EmptyPage
@@ -16,18 +18,19 @@ from django.views.generic import ListView, UpdateView, DetailView, DeleteView, C
 
 import json
 
-from microsofttranslator import Translator
 from analytics.models import Analytics
 from query_designer.views import sparql_query_json
 from query_designer.models import Design
 
-from forms import *
+from linda_app.forms import *
+from linda_app.models import *
+
 from rdflib import Graph
 from datetime import datetime
 
-from installer.views import installation_pending
-from settings import LINDA_HOME, RDF_CHUNK_SIZE, MAX_NUMBER_OF_DATASOURCES
-from passwords import MS_TRANSLATOR_UID, MS_TRANSLATOR_SECRET
+from linda_app.installer.views import installation_pending
+from linda_app.settings import LINDA_HOME, RDF_CHUNK_SIZE, MAX_NUMBER_OF_DATASOURCES
+from linda_app.passwords import MS_TRANSLATOR_UID, MS_TRANSLATOR_SECRET
 
 
 def index(request):
@@ -572,6 +575,7 @@ def vocabulary_search(request):  # view for search in vocabularies - remembers s
         q = translator.translate(text=q_in, to_lang='en', from_lang=None)
         if q.startswith("TranslateApiException:"):
             q = q_in
+
     else:
         translate = False
         q = q_in
@@ -760,6 +764,36 @@ def datasources(request):
 
     return render(request, 'datasource/index.html', params)
 
+# Default datasources - suggestions
+@login_required
+def datasources_suggest(request):
+    params = {
+        'page': 'Datasources',
+        'suggested_datasources': DefaultDatasources.objects.all(),
+    }
+
+    return render(request, 'datasource/suggest.html', params)
+
+
+# Add a specific suggestion to the datasources
+@login_required
+def datasource_suggestion_add(request, pk):
+    suggestion = get_object_or_404(DefaultDatasources, pk=pk)
+    if suggestion.is_endpoint():
+        # find the slug
+        sname = slugify(unidecode(suggestion.title))
+        # get user
+        created_by = request.user if request.user.is_authenticated() else None
+
+        dt = DatasourceDescription.objects.create(title=suggestion.title, uri=suggestion.url, is_public=True,
+                                                  name=sname, createdBy=created_by,
+                                                  createdOn=datetime.now(), updatedOn=datetime.now())
+
+        return HttpResponse('Datasource created: ' + str(dt.pk))
+    else:
+        return HttpResponse(content='Operation not supported', content_type='text/plain', status=500)
+
+
 @login_required
 def datasourceCreate(request):
     params = {'types': {('public', 'Remote'), ('private', 'Local')},
@@ -774,7 +808,7 @@ def datasourceCreate(request):
 
         if request.POST.get("type") == "private" and (
                         request.POST.get("datatype") == "csv" or request.POST.get("datatype") == "rdb"):
-            return redirect("/transformations/#/" + request.POST.get("datatype"))
+            return redirect("/transformation/csv/step/1")
         elif request.POST.get("type") == "private":
             return redirect("/datasource/create/" + request.POST.get("datatype"))
         else:
@@ -790,7 +824,7 @@ def datasourceCreate(request):
             validate = URLValidator()
             try:
                 validate(request.POST.get("endpoint"))
-            except ValidationError, e:
+            except ValidationError as e:
                 params["error"] = "Invalid sparql enpoint (url does not exist) - " + e
                 return render(request, 'datasource/form.html', params)
 
@@ -852,7 +886,7 @@ def datasourceReplace(request, name):
         validate = URLValidator()
         try:
             validate(request.POST.get("endpoint"))
-        except ValidationError, e:
+        except ValidationError as e:
             params["error"] = "Invalid sparql enpoint (url does not exist) - " + e
             return render(request, 'datasource/replace_remote.html', params)
 
@@ -962,7 +996,7 @@ def datasourceCreateRDF(request):
                     break
 
                 i += 1
-                print i
+                print(i)
                 # add the previous remainder & clear again
                 current_chunk, rem = clear_chunk(rem + chunk, newlines)
                 data = {"content": current_chunk}
@@ -982,7 +1016,7 @@ def datasourceCreateRDF(request):
                 callAppend = api_datasource_replace(mock_request, dt_name)
 
             b = datetime.now().replace(microsecond=0)
-            print title + ':'
+            print(title + ':')
             print(b-a)
 
             return redirect("/datasources")
@@ -1065,11 +1099,11 @@ def datasourceReplaceRDF(request, dtname):
 
 
 def datasourceDownloadRDF(request, dtname):
+    mimetype = "text/rdf+n3"
     mock_request = MockRequest(user=request.user)
+    mock_request.GET['format'] = urlquote(mimetype)
     callDatasource = api_datasource_get(mock_request, dtname)
 
-    data = json.loads(callDatasource.content)['content']
-    mimetype = "application/xml+rdf"
     return HttpResponse(data, mimetype)
 
 @login_required
@@ -1149,15 +1183,17 @@ def execute_sparql(request):
 
     # Make the query, add info about the offset and return the results
     response = sparql_query_json(request.POST.get('dataset'), query)
-
     if response.status_code == 200:
         # avoid erroneous \U characters -- invalid json
-        response_safe = response.content.replace('\U', '')
+        response_safe = response.content.decode('unicode_escape')  # .replace(b'\U', '')
 
         if response_safe.startswith("MALFORMED QUERY:"):
             return HttpResponse(response.content, status=500)
 
-        data = json.loads(response_safe)
+        try:
+            data = json.loads(response_safe)
+        except ValueError:
+            return HttpResponse('Invalid JSON response from server: ' + response.content, status=500)
         data['offset'] = offset
 
         return HttpResponse(json.dumps(data), content_type="application/json")
@@ -1189,7 +1225,8 @@ def get_qbuilder_call(request, link):
 
 # middle-mans between LinDA query builder page and the RDF2Any server
 @csrf_exempt
-@cache_page_with_prefix(60*15, lambda request: md5(request.get_full_path()).hexdigest())
+# TODO: Fix cache
+# @cache_page_with_prefix(60*15, lambda request: md5(request.get_full_path()).hexdigest())
 def get_rdf2any_call(request, link):
     total_link = get_configuration().rdf2any_server + 'rdf2any/' + link
     if request.GET:
@@ -1335,7 +1372,7 @@ def api_datasource_create(request):
 
     data = json.dumps(results)
     mimetype = 'application/json'
-    return HttpResponse(data, mimetype, status=results['status'])
+    return HttpResponse(data, mimetype, status=int(results['status']))
 
 
 # Retrieve all data from datasource in specified format
@@ -1354,7 +1391,7 @@ def api_datasource_get(request, dtname):
         # make REST api call to get graph
         headers = {'accept': rdf_format, 'content-type': rdf_format}
         callGet = requests.get(get_configuration().private_sparql_endpoint + '/rdf-graphs/' + dtname, headers=headers)
-
+		
         results['status'] = '200'
         results['message'] = "Datasource retrieved successfully"
         results['content'] = callGet.text
@@ -1364,7 +1401,7 @@ def api_datasource_get(request, dtname):
 
     data = json.dumps(results)
     mimetype = 'application/json'
-    return HttpResponse(data, mimetype, status=results['status'])
+    return HttpResponse(data, mimetype, status=int(results['status']))
 
 # Replace all data from datasource with new rdf data
 @csrf_exempt
@@ -1413,7 +1450,7 @@ def api_datasource_replace(request, dtname):
 
     data = json.dumps(results)
     mimetype = 'application/json'
-    return HttpResponse(data, mimetype, status=results['status'])
+    return HttpResponse(data, mimetype, status=int(results['status']))
 
 
 # Delete an RDF datasource
@@ -1449,7 +1486,7 @@ def api_datasource_delete(request, dtname):
 
     data = json.dumps(results)
     mimetype = 'application/json'
-    return HttpResponse(data, mimetype, status=results['status'])
+    return HttpResponse(data, mimetype, status=int(results['status']))
 
 
 # Get a query for a specific private datasource and execute it
@@ -1462,7 +1499,7 @@ def datasource_sparql(request, dtname):  # Acts as a "fake" seperate sparql endp
     if not q:
         q = request.POST.get("query")
 
-    query = urllib.unquote_plus(q)
+    query = urllib.parse.unquote_plus(q)
 
     if dtname != "all":  # search in all private datasource
         datasources = DatasourceDescription.objects.filter(name=dtname)
@@ -1500,7 +1537,6 @@ def datasource_sparql(request, dtname):  # Acts as a "fake" seperate sparql endp
     query_enc = urlquote(query, safe='')
 
     # get query results
-    print get_configuration().private_sparql_endpoint
     response = requests.get(
         get_configuration().private_sparql_endpoint + "?Accept=" + urlquote(
             "application/sparql-results+" + result_format) + "&query=" + query_enc)
@@ -1748,3 +1784,70 @@ def update_rss(datasource):
         mock_request.GET['append'] = 'false'
 
         api_datasource_replace(mock_request, datasource.name)
+
+
+def get_endpoints_from_datahub(offset=0):
+    API_ROOT = 'http://datahub.io/api/'
+    for x in range(0, 10000, 1000):
+        datasets = json.loads(requests.get(API_ROOT + 'search/dataset?limit=1000&offset=' + str(x)).content.decode('utf-8'))['results']
+        # Remove existing
+
+        if offset == 0:
+            DefaultDatasources.objects.filter(defined_at=API_ROOT).delete()
+
+        cnt = x
+        # crawl
+        for dataset in datasets:
+            try:
+                cnt += 1
+                if cnt <= offset:
+                    continue
+                print(str(cnt) + ':\t' + API_ROOT + 'action/dataset_show?id=' + dataset)
+                dt = json.loads(requests.get(API_ROOT + 'action/dataset_show?id=' + dataset).content.decode('utf-8'))
+                if 'result' in dt:
+                    dt = dt['result']
+                    resources = []
+                    for resource in dt['resources']:
+                        if (('sparql' in resource['format']) or ('rdf' in resource['format']) or ('ntriples' in resource['format'])) and (not 'example' in resource['format']):
+                            print(dt['title'] + ': ' + resource['url'] + ' (' + resource['format'] + ')')
+                            resources.append({
+                                'title': dt['title'],
+                                'description': resource['description'],
+                                'url': resource['url'],
+                                'format': resource['format'],
+                            })
+
+                    # if multiple resources where found
+                    # choose which one to add
+                    # prefer SPARQL endpoints
+                    if resources:
+                        to_add = None
+                        for datasource in resources:
+                            if datasource['format'] == 'api/sparql':
+                                to_add = datasource
+                                break
+                        if not to_add:
+                            to_add = resources[0]
+
+                        try:
+                            DefaultDatasources.objects.create(title=to_add['title'],
+                                                              description=to_add['description'],
+                                                              url=to_add['url'], format=to_add['format'],
+                                                              defined_at=API_ROOT)
+                        except IntegrityError:
+                            print('Already added')
+
+            except ValueError as KeyError:
+                print('<!!!>' + API_ROOT + 'action/dataset_show?id=' + dataset)
+
+    for suggestion in DefaultDatasources.objects.filter(format='api/sparql'):
+        print(suggestion.title)
+        query = "SELECT (count(?x) AS ?cnt) WHERE {?x ?y ?z}"
+        try:
+            r = sparql_query_json(suggestion.url, query, timeout=10)
+            suggestion.size = int(json.loads(r.content.decode('utf-8'))['results']['bindings'][0]['cnt']['value'])
+            print('\tSize: ' + str(suggestion.size))
+            suggestion.save()
+        except:
+            pass
+

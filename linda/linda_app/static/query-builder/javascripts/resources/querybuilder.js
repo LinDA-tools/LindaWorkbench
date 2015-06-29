@@ -19,6 +19,10 @@ QueryBuilder = {
             QueryBuilder.select_body($("#div_select_dataset"),dataset);
             $("#hdn_qb_dataset").attr("value",dataset);
             //Utils.flash.notice("Selected dataset : "+dataset);
+            /////////////////////////////////////////////////////////////////////////////////////////
+            $("#div_all_classes").show("fast");
+            $("#btn_show_all_classes").attr("onclick","QueryBuilder.show_all_classes('"+dataset+"')");
+            /////////////////////////////////////////////////////////////////////////////////////////
         },
         //this method returns the selected dataset
         //return String
@@ -30,15 +34,34 @@ QueryBuilder = {
         element.find(".select-body").first().html(body);
         element.show("fast");
     },
+    /////////////////////////////////////////////////////////////////////////////////////////
+    //This method calls the ajax method to show all classes in dataset
+    show_all_classes: function(dataset){	
+       $("#loading").show();
+	var dataset = $("#hdn_qb_dataset").val();	
+	$.get("/query/show_all_classes.js",{ dataset:dataset});
+    },
+    done_showing_classes : function(){
+    	$("#all_classes_list_modal").modal("hide");
+    },
+    select_class_from_list: function(uri, name){
+    	 $("#div_all_classes").hide("fast");
+    	QueryBuilder.done_showing_classes();    	
+    	QueryBuilder.classes.select(uri, name);
+    },
+    //////////////////////////////////////////////////////////////////////////////////////////
+    
     //This method calls the ajax method to search for the classes
-    search_classes : function(){
+    search_classes : function(){    	
         $("#qb_class_search_loading").show();
         var search_string = $("#hdn_searched_class_value").val();
         var dataset = $("#hdn_qb_dataset").val();
-        $.get("/query/builder_classes.js",{ search: search_string, dataset:dataset});
+	var force_uri_search = $('#force_uri_search').prop('checked');
+        $.get("/query/builder_classes.js",{ search: search_string, dataset:dataset, force_uri_search:force_uri_search});
     },
     reset_searched_class : function(){
         $(".clear-search-class").show("fast");
+        $("#div_all_classes").show("fast");
         $("#tbl_classes_search_result").html("");
         $("#tbl_classes_search_result").show();
         $(".done-search-class").hide("fast");
@@ -61,7 +84,11 @@ QueryBuilder = {
         if(QueryBuilder.properties.will_show_properties_in_preview()){
             properties_map = QueryBuilder.properties.get_checked_properties_map();
             $.each(properties_map, function(k,v){
-                query+= "?" +k +" ";
+				if (search(v, selected_filter_values) == false){
+                	query+= "?" +k +" ";
+				} else {
+					query += getOptionalVariable(v, selected_filter_values)+" ";
+				}
             });
         }
         query += "WHERE \n{ ?concept rdf:type <"+$("#hdn_qb_class").val()+">.\n ?concept rdfs:label ?label.\n";
@@ -69,18 +96,18 @@ QueryBuilder = {
         query += QueryBuilder.properties.get_properties_triples();
         if(QueryBuilder.properties.will_show_properties_in_preview()){
             $.each(properties_map, function(k,v){
-                query+= "OPTIONAL{?concept <"+v+"> ?"+k+"}.\n";
+				if (search(v, selected_filter_values) == false){
+					query+= "OPTIONAL{?concept <"+v+"> ?"+k+"}.\n";
+				}
             });
         }
         query += QueryBuilder.get_equivalent_sparql_filter_values();
         query += "LIMIT "+$("#txt_sparql_query_limit").val();
-
         if (editor) {
             return editor.getSession().setValue(query);
         } else {
             $("#txt_sparql_query").val(query);
         }
-
     }
     ,
     get_equivalent_sparql_filter_values : function(){
@@ -92,6 +119,11 @@ QueryBuilder = {
             else if(v.type == "object" && v.filter_type == "not_equals"){
                 for(i=0;i<v.value.length;i++){
                     result += "\n&& (?o_filter"+k.toString()+" != <"+v.value[i].uri+">)";
+                }
+            }
+            else if(v.type == "object" && v.filter_type == "equals"){
+                for(i=0;i<v.value.length;i++){
+                    result += "\n&& (?o_filter"+k.toString()+" = <"+v.value[i].uri+">)";
                 }
             }
         });
@@ -109,28 +141,31 @@ QueryBuilder = {
         $("#sparql_results_container").hide("fast");
     },
     search_classes_change : function(){
-        var search = $("#txt_search_classes").val();
+        var search = $("#txt_search_classes").val();  
+             
         if(search != undefined){
             search = search.trim();
             if(search.length >= 3){
                  var searched_index = search.substring(0,3);
-                 if(searched_index != $("#hdn_searched_class_value").val()){
+                 $("#div_all_classes").hide("fast");
+                 var force_uri_search = $('#force_uri_search').prop('checked');
+                 if(force_uri_search != $("#hdn_force_uri_search_value").val() || searched_index != $("#hdn_searched_class_value").val()){
                     $("#hdn_searched_class_value").val(searched_index);
+                    $("#hdn_force_uri_search_value").val(force_uri_search);
                     QueryBuilder.search_classes();
                  }else if($("#hdn_done_searching_class").val() == "true"){
                     QueryBuilder.classes.validate();
-                 }
-                
+                 }                
             }
             else{
                 $("#hdn_searched_class_value").val("");
                 $("#tbl_classes_search_result").hide("fast");
                 $("#hdn_done_searching_class").val("false");
                 $("#qb_class_search_error").hide("fast");
+                $("#div_all_classes").show("fast");
             }
         }
     },
-
     //The methods related to classes
     classes : {
         validate : function(){
@@ -148,11 +183,11 @@ QueryBuilder = {
                         var start_index = a_value.indexOf(search_strings[i]);
                         var end_index = start_index + search_strings[i].length ;
                         a_value = a_value.splice(end_index, 0,'$');
-                        a_value = a_value.splice(start_index, 0,  '#');
+                        a_value = a_value.splice(start_index, 0,  '~');
                     }
                 }
                 if(is_present){
-                    $(this).html(a_value.replace(/\#/g,'<strong>').replace(/\$/g,'</strong>'));
+                    $(this).html(a_value.replace(/\~/g,'<strong>').replace(/\$/g,'</strong>'));
                     $(this).show();
                 }
                 else
@@ -179,11 +214,11 @@ QueryBuilder = {
         },
         //this method returns a url to retrieve  examples of a class
         get_examples_action_url : function(class_uri){
-            return "/query/class_examples?class="+class_uri+"&dataset="+QueryBuilder.datasets.get_selected();
+            return "/query/class_examples?dataset="+QueryBuilder.datasets.get_selected()+ "&class="+encodeURIComponent(class_uri);
         },
         //this method returns a url to subclasses  examples of a class
         get_subclasses_action_url : function(class_uri){
-            return "/query/class_subclasses?class="+class_uri+"&dataset="+QueryBuilder.datasets.get_selected();
+            return "/query/class_subclasses?dataset="+QueryBuilder.datasets.get_selected() + "&class="+encodeURIComponent(class_uri);
         },
         select : function(class_uri, class_name){
             $("#btn_show_checked_properties_no").click();
@@ -300,7 +335,7 @@ QueryBuilder = {
         },
         get_subclasses : function(class_uri){
             $("#qb_properties_sub_classes_loading").show();
-            $.get("/query/subclasses.js?dataset="+QueryBuilder.datasets.get_selected()+"&class_uri="+class_uri);
+            $.get("/query/subclasses.js?dataset="+QueryBuilder.datasets.get_selected()+"&class_uri="+encodeURIComponent(class_uri));
         },
         get_subclasses_for_selected_class : function(){
             QueryBuilder.properties.get_subclasses(QueryBuilder.classes.get_selected_class());
@@ -313,15 +348,17 @@ QueryBuilder = {
                 $("#btn_properties_properties_"+type+"_more").hide("fast");
             else
                 $("#btn_properties_properties_"+type+"_more").show("fast");*/
-            $.get("/query/class_properties.js?dataset="+QueryBuilder.datasets.get_selected()+"&class_uri="+QueryBuilder.classes.get_selected_class());
+
+            $.get("/query/class_properties.js?dataset="+QueryBuilder.datasets.get_selected()+"&class_uri="+encodeURIComponent(QueryBuilder.classes.get_selected_class()));
             $(".cb-property-range-all").each(function(index){
                 $(this).prop("checked",true);
+
             });
         },
         get_schema_properties_for_selected_class : function(){
             $("#property_main_schema_properties_group").html("");
             $("#qb_properties_schema_properties_loading").show();
-            $.get("/query/class_schema_properties.js?dataset="+QueryBuilder.datasets.get_selected()+"&class_uri="+QueryBuilder.classes.get_selected_class());
+            $.get("/query/class_schema_properties.js?dataset="+QueryBuilder.datasets.get_selected()+"&class_uri="+encodeURIComponent(QueryBuilder.classes.get_selected_class()));
 
         },
         get_subclasses_triples : function(){
@@ -363,8 +400,12 @@ QueryBuilder = {
                         for(j=0;j<v.value.length;j++){
                             if(j>0)
                                 result += " UNION ";
-                            result += "{ ?concept <"+v.property_uri+"> <"+v.value[j]["uri"]+"> }";
+                            result += "{ ?concept <"+v.property_uri+"> ?o_filter"+k.toString()+ "}";//<"+v.value[j]["uri"]+"> }";
                         }
+												
+												
+												
+												
                     }
                     result += ".\n"
                 }
@@ -457,7 +498,7 @@ QueryBuilder = {
         // type is "object" or "datatype"
         property_click : function(uri, name, type, range_uri, range_name, count){
             show_loading();
-            $.get("/query/property_ranges.js?property_uri="+uri+"&type="+type+"&dataset="+QueryBuilder.datasets.get_selected()+"&property_name="+name+"&range_uri="+range_uri+"&range_name="+range_name+"&count="+count);
+            $.get("/query/property_ranges.js?property_uri="+encodeURIComponent(uri)+"&type="+type+"&dataset="+QueryBuilder.datasets.get_selected()+"&property_name="+name+"&range_uri="+encodeURIComponent(range_uri)+"&range_name="+range_name+"&count="+count);
         },
         //this method returns a comma separated string of selected properties
         // returns "ALL" if all of them are checked
@@ -508,7 +549,7 @@ QueryBuilder = {
                         names += ", ";
                     }
                     uris += data[i].uri;
-                    names += "'"+data[i].name+"'";
+                    names += "'"+data[i].name+"'";	
                 }
                 var div_html = "<div id='qb_properties_properties_selected_filters_list_item_"+identifier+"' class=\"alert alert-warning list-item\" property-uri=\""+property_uri+"\" filter-value=\""+uris+"\" identifier=\""+identifier+"\" filter-type='object'>";
                 div_html += "<div class='row'><div class='col-md-10'>";
@@ -927,6 +968,151 @@ QueryBuilder = {
             QueryBuilder.show_equivalent_sparql_query();
         }
     }
-
 };
-    
+
+
+function getUrlParameter(sParam)
+{
+     var sPageURL = window.location.search.substring(1);
+     var sURLVariables = sPageURL.split('&');
+     for (var i = 0; i < sURLVariables.length; i++)
+     {
+         var sParameterName = sURLVariables[i].split('=');
+         if (sParameterName[0] == sParam)
+         {
+             return sParameterName[1];
+         }
+     }
+ }
+ 
+function hasAllParameters(){	
+	if (getUrlParameter('dataset') == null) return false; 
+	if (getUrlParameter('classURI') == null) return false; 
+	if (getUrlParameter('classLabel') == null) return false; 
+	return true
+}
+
+$(document).ready(function(){
+	if (hasAllParameters()){
+ 		var dataset = getUrlParameter('dataset');
+ 		var classURIParameter = getUrlParameter('classURI');
+		var classLabelParameter = getUrlParameter('classLabel')
+	
+		QueryBuilder.datasets.select(dataset);
+		QueryBuilder.classes.select(classURIParameter,classLabelParameter);
+		
+		//filters and optionals
+		$("input:checkbox").prop('checked', false); //uncheck the range checkbox
+
+
+				
+	}	
+	//http://localhost:3000/query/builder?dataset=http://dbpedia.org/sparql&classURI=http://dbpedia.org/ontology/Actor&classLabel=Actor&optionals=http://dbpedia.org/ontology/birthPlace;http://dbpedia.org/ontology/occupation&filters=http://dbpedia.org/ontology/birthPlace;birthPlace;sp:ne;London;http://dbpedia.org/resource/London;Paris;http://dbpedia.org/resource/Paris
+	
+	//http://localhost:3000/query/builder?dataset=http://dbpedia.org/sparql&classURI=http://dbpedia.org/ontology/Actor&classLabel=Actor&optionals=http://dbpedia.org/ontology/birthPlace;http://dbpedia.org/ontology/occupation&filters=http://dbpedia.org/ontology/birthPlace;birthPlace;sp:ne;London;http://dbpedia.org/resource/London;Paris;http://dbpedia.org/resource/Paris$http://dbpedia.org/ontology/wikiPageRevisionID;WikiPageRevisionID;sp:le;100;100
+})
+
+
+function search(nameKey, myArray){
+	flag = false;
+	 $.each(myArray,function(k,v){
+         if (v.property_uri.toString() === nameKey.toString()) {
+			 flag = true;
+         }
+	 });
+	return flag;
+}
+
+function getOptionalVariable(nameKey, myArray){
+	variable = "";
+	 $.each(myArray,function(k,v){
+         if (v.property_uri.toString() === nameKey.toString()) {			 
+             if(v.type == "data"){
+                 variable = "?d_filter"+k.toString();
+             } else {
+             	variable = "?o_filter"+k.toString();
+             }
+         }
+	 });
+	return variable;
+}
+
+$(window).load(function(){
+	//filters and optionals
+	if (hasAllParameters()){
+		//uncheck all properties
+	 	QueryBuilder.properties.click_check_all('object');
+		QueryBuilder.properties.click_check_all('data');
+		
+		//show optionals in SPARQL query
+		QueryBuilder.equivalent_query.handle_checked_properties('yes');
+		
+		//check optionals
+		var optionals = getUrlParameter('optionals'); //&optionals=http://dbpedia.org/ontology/birthPlace;http://dbpedia.org/ontology/occupation
+		var sOptionals = optionals.split(';');
+		var val = null;
+		var item;
+    for (var i = 0; i < sOptionals.length; i++)
+    {
+			$(".list-group-item").each(function(){
+				var uri = $(this).attr('uri');
+				if (uri == sOptionals[i]){
+					item = $(this).find("div > div > input");
+					$(item).prop('checked',true);
+					
+					QueryBuilder.properties.checkbox_click();
+				}
+			})
+		}
+
+		//add filters
+		//&filters=<appliedOn>;<label>;<type eg. ne>;labelV1;val1;labelV2;val2;val2*<appliedOn2>...
+		//&filters=http://dbpedia.org/ontology/birthPlace;birthPlace;sp:ne;London;http://dbpedia.org/resource/London;Paris;http://dbpedia.org/resource/Paris*http://dbpedia.org/ontology/wikiPageRevisionID;WikiPageRevisionID;sp:le;100;100
+		var filters = getUrlParameter('filters'); 
+		var sFilters = filters.split('$');
+		
+		for (var i =0; i < sFilters.length; i++){
+			var _filter = sFilters[i];
+			var _sFilter = _filter.split(';');
+			
+			var val_uri = _sFilter[0];
+			var val_label = _sFilter[1];
+			
+			var op = _sFilter[2];
+
+			
+
+			if (_sFilter[4].indexOf("://") > 0){
+				//then probably we have a resource
+				if (op.indexOf("ne") > 0)	{
+					var $hiddenInput = $('<input/>',{type:'hidden',id:'hdn_object_selector_filter_type',value:'not_equals'});
+					$hiddenInput.appendTo('body');
+				}
+				else {
+					var $hiddenInput = $('<input/>',{type:'hidden',id:'hdn_object_selector_filter_type',value:'equals'});
+					$hiddenInput.appendTo('body');
+				}
+				
+				var data = [];
+				for (var j = 3; j < _sFilter.length; j+=2) {
+					data.push({name : _sFilter[j], uri : _sFilter[j+1] });
+				}
+				QueryBuilder.properties.filter.add_objects(val_uri,val_label,data);
+			} else {
+				//it is a data object
+				dataFilter = "";
+				
+				if (op.indexOf("ne") > 0)	dataFilter = "!= ";
+				if (op.indexOf("eq") > 0)	dataFilter = "= ";
+				if (op.indexOf("gt") > 0)	dataFilter = "> ";
+				if (op.indexOf("lt") > 0)	dataFilter = "< ";
+				if (op.indexOf("le") > 0)	dataFilter = "<= ";
+				if (op.indexOf("ge") > 0)	dataFilter = ">= ";
+				
+				dataFilter = dataFilter.concat(_sFilter[4]);
+				
+				QueryBuilder.properties.filter.add_data_filter(val_uri,val_label,dataFilter);
+			}			
+		}
+	}
+}); 

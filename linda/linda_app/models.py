@@ -1,11 +1,13 @@
 from datetime import datetime
 from time import timezone
 import urllib
+from urllib.parse import quote
 from django.db import models
 from django.contrib.auth.models import User, AnonymousUser
 from django.db.models import Q
 from django.db.models.signals import post_save
 from django.template.defaultfilters import slugify, random
+from django.utils.http import urlquote
 from rdflib import Graph, OWL, RDFS
 from rdflib.util import guess_format
 import requests
@@ -13,10 +15,9 @@ from lxml import etree as et
 from query_designer.models import Design
 
 import re
-from lists import *
-from pattern.en import pluralize
+from linda_app.lists import *
 
-from settings import LINDA_HOME
+from linda_app.settings import LINDA_HOME
 
 User.profile = property(lambda u: UserProfile.objects.get_or_create(user=u)[0])
 
@@ -510,6 +511,11 @@ def str_extend(array, op_join='and'):
     return result
 
 
+# temporary
+def pluralize(s):
+    return s + 's'
+
+
 # Given an endpoint name and a query it creates a description of the query
 def create_query_description(dtname, query):
     # TODO : Update description constructor to cover more queries and be more descriptive
@@ -596,14 +602,14 @@ class Query(models.Model):
         return self.description
 
     def csv_link(self):
-        return '/rdf2any/v1.0/convert/csv-converter.csv?dataset=' + urllib.quote_plus(self.endpoint) + '&query=' \
-               + urllib.quote_plus(self.sparql.replace('\n', ' '))   
+        return '/rdf2any/v1.0/convert/csv-converter.csv?dataset=' + urllib.parse.quote_plus(self.endpoint) + '&query=' \
+               + urllib.parse.quote_plus(self.sparql.replace('\n', ' '))   
 
     def get_datasource(self):
         return datasource_from_endpoint(self.endpoint)
 
     def visualization_link(self):
-        return "/visualizations/#/datasource/Query" + str(self.pk) + "/" + urllib.quote_plus(urllib.quote_plus(self.csv_link())) + "/-/csv"
+        return "/visualizations/#/datasource/Query" + str(self.pk) + "/" + urllib.parse.quote_plus(urllib.parse.quote_plus(self.csv_link())) + "/-/csv"
 
     def analytics_link(self):
         return "/analytics?q_id=" + str(self.pk)
@@ -628,8 +634,6 @@ class Configuration(models.Model):
     query_builder_server = models.URLField(blank=False, null=False, default='http://localhost:3100/')
     # Rdf2any Server
     rdf2any_server = models.URLField(blank=False, null=False, default='http://localhost:8081/')
-    # R2R Server
-    r2r_server = models.URLField(blank=False, null=False, default='http://localhost:3000/')
     # Visualization backend
     visualization_backend = models.URLField(blank=False, null=False, default='http://localhost:3002/')
 
@@ -642,3 +646,40 @@ def get_configuration():
         return configs[0]
     else:
         return Configuration.objects.create()
+
+
+class DefaultDatasources(models.Model):
+    # A collection of default endpoints automatically fetched by the http://datahub.io/ project
+    # Created whenever linda_app.views.get_endpoints_from_datahub() is run
+
+    # The title of the datasource
+    title = models.CharField(max_length=1024, blank=False, null=False)
+    # A description of the datasource
+    description = models.CharField(max_length=8128, blank=True, null=True, default='')
+    # The format of the datasource (e.g api/sparql, application/rdf+xml etc.)
+    format = models.CharField(max_length=128, blank=False, null=False)
+    # Where it was defined by
+    defined_at = models.URLField(blank=False, null=False)
+    # The resource url
+    url = models.URLField(blank=False, null=False, unique=True)
+    # Size of the datasource
+    # For SPARQL endpoints, this represents the number of triples
+    size = models.IntegerField(blank=True, null=True, default=None)
+
+    def is_endpoint(self):
+        return self.format == 'api/sparql'
+
+    def is_added(self):
+        if self.format == 'api/sparql':
+            return DatasourceDescription.objects.filter(uri=self.url).exists()
+        else:
+            return DatasourceDescription.objects.filter(title=self.title).exists()
+
+    def get_default_action(self):
+        if self.is_endpoint():
+            return '/query-designer/?endpoint=' + quote(self.url, safe='')
+
+        return None
+
+    class Meta:
+        ordering = ['-size']

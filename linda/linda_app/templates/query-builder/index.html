@@ -10,7 +10,6 @@
     <link rel="stylesheet" src="/static/css/query-builder.css" />
 
     <link data-turbolinks-track="true" href="/static/query-builder/stylesheets/_variables.css?body=1" media="all" rel="stylesheet" />
-    <link data-turbolinks-track="true" href="/static/query-builder/stylesheets/bootstrap.css?body=1" media="all" rel="stylesheet" />
     <link data-turbolinks-track="true" href="/static/query-builder/stylesheets/bootstrap.min.css?body=1" media="all" rel="stylesheet" />
     <link data-turbolinks-track="true" href="/static/query-builder/stylesheets/common.css?body=1" media="all" rel="stylesheet" />
     <link data-turbolinks-track="true" href="/static/query-builder/stylesheets/developer.css?body=1" media="all" rel="stylesheet" />
@@ -53,7 +52,11 @@
             </div>
             <div class="col-md-8" id="div_qb_select_class" style="display:none;">
                 <div class="panel panel-default">
-                    <div class="panel-heading"><strong>STEP 2 :</strong> Select Class</div>
+                    <div class="panel-heading"><strong>STEP 2 :</strong> Select Class
+                        <div style="float:right"><label onclick="QueryBuilder.search_classes_change()">
+                            <input type="checkbox" id="force_uri_search"> Extended Search (Including URIs) </label>
+                        </div>
+                    </div>
                     <div class="panel-body">
                         <div class="row clear-search-class">
                             <div class="col-md-12">

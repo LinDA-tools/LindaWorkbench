@@ -2,7 +2,7 @@ __author__ = 'mpetyx'
 
 import datetime
 from haystack import indexes
-from models import Vocabulary, VocabularyClass, VocabularyProperty
+from linda_app.models import Vocabulary, VocabularyClass, VocabularyProperty
 
 
 class VocabularyIndex(indexes.SearchIndex, indexes.Indexable):
@@ -22,6 +22,7 @@ class VocabularyClassIndex(indexes.SearchIndex, indexes.Indexable):
 
     def get_model(self):
         return VocabularyClass
+
 
 class VocabularyPropertyIndex(indexes.SearchIndex, indexes.Indexable):
     text = indexes.CharField(document=True, use_template=True)

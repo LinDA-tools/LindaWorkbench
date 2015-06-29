@@ -1,4 +1,4 @@
-import passwords
+from linda_app import passwords
 
 # Django settings for linda project.
 
@@ -150,7 +150,6 @@ INSTALLED_APPS = (
     'graphdb',
     'coreapi',
     'analytics',
-    'r2r',
     'visualisation',
     'query_designer',
     'transformation',

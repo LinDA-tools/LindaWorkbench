@@ -41,9 +41,9 @@ def monitor_datasources():
 
             # save the test results
             if up:
-                print datasource.title + " [UP] " + str(response_time) + "msec SPARQL 1.1: " + str(supports_minus)
+                print(datasource.title + " [UP] " + str(response_time) + "msec SPARQL 1.1: " + str(supports_minus))
             else:
-                print datasource.title + " [DOWN]"
+                print(datasource.title + " [DOWN]")
 
             EndpointTest.objects.create(datasource=datasource, up=up,
                                         response_time=response_time, supports_minus=supports_minus)

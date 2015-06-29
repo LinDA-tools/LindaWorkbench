@@ -1,11 +1,8 @@
 from datetime import datetime
 import json
-from numbers import Number
 import urllib
-import urllib2
 from django.http import Http404, HttpResponse
 from django.shortcuts import render
-from django.test._doctest import _OutputRedirectingPdb
 from django.utils.http import urlquote
 import requests
 from linda_app.models import DatasourceDescription, VocabularyProperty, Query, get_configuration
@@ -31,7 +28,12 @@ def designer_defaults(request):
 # Home page
 def index(request):
     params = designer_defaults(request)
-    if request.GET.get('dt_id'):
+    endpoint = request.GET.get('endpoint')
+    dt_id = request.GET.get('dt_id')
+
+    if endpoint:
+        params['datasource_default'] = endpoint
+    elif dt_id:
         params['datasource_default'] = DatasourceDescription.objects.get(name=request.GET.get('dt_id'))
         if not params['datasource_default']:
             return Http404
@@ -61,6 +63,7 @@ def load_design(request, pk):
 # API calls
 # get endpoint by data source name
 def get_endpoint_from_dt_name(dt_name):
+    '''
     if dt_name != "all":  # search in all private data source
         datasources = DatasourceDescription.objects.filter(name=dt_name)
 
@@ -70,10 +73,12 @@ def get_endpoint_from_dt_name(dt_name):
         return datasources[0].get_endpoint()
     else:
         return get_configuration().private_sparql_endpoint
+    '''
+    return dt_name
 
 
 # Execute a SparQL query on an endpoint and return json response
-def sparql_query_json(endpoint, query):
+def sparql_query_json(endpoint, query, timeout=None):
     # encode the query
     query_enc = urlquote(query, safe='')
 
@@ -81,7 +86,7 @@ def sparql_query_json(endpoint, query):
     # with &output=json we support non-standard endpoints like IMDB & World Factbook
     response = requests.get(
         endpoint + "?Accept=" + urlquote(
-            "application/sparql-results+json") + "&query=" + query_enc + "&format=json&output=json")
+            "application/sparql-results+json") + "&query=" + query_enc + "&format=json&output=json", timeout=timeout)
 
     if response.status_code == 200:
         # return the response
@@ -139,7 +144,7 @@ def active_subclasses(request, dt_name):
     if not request.GET.get('parent_class'):
         raise Http404
 
-    parent_class = urllib.unquote(request.GET.get('parent_class'))
+    parent_class = urllib.parse.unquote(request.GET.get('parent_class'))
 
     # get the endpoint of the query
     endpoint = get_endpoint_from_dt_name(dt_name)
@@ -167,7 +172,7 @@ def active_class_properties(request, dt_name):
     if not request.GET.get('class_uri'):
         raise Http404
 
-    class_uri = urllib.unquote(request.GET.get('class_uri'))
+    class_uri = urllib.parse.unquote(request.GET.get('class_uri'))
 
     # get the endpoint of the query
     endpoint = get_endpoint_from_dt_name(dt_name)
@@ -208,8 +213,8 @@ def active_properties(request, dt_name):
 
 
 def uri_to_label(uri):
-    label = uri.split('/')[-1].split('#')[-1].replace('_', ' ').encode('utf-8')
-    return urllib.unquote(label)
+    label = uri.split('/')[-1].split('#')[-1].replace('_', ' ')
+    return urllib.parse.unquote(label)
 
 
 # Suggest entities of a type
@@ -248,7 +253,7 @@ def get_entity_suggestions(request, dt_name):
 
     # make array of results
     results = []
-    res = json.loads(result.content)
+    res = json.loads(result.content.decode('utf8'))
     for b in res['results']['bindings']:
         results.append({"value": b['instance']['value'], "label": uri_to_label(b['instance']['value'])})
 
@@ -261,7 +266,7 @@ def get_property_type(request, dt_name):
     if not request.GET.get('property_uri'):
         raise Http404
 
-    property_uri = urllib.unquote(request.GET.get('property_uri'))
+    property_uri = urllib.parse.unquote(request.GET.get('property_uri'))
 
     # find type and create json response
     props = VocabularyProperty.objects.filter(uri=property_uri)
@@ -283,7 +288,7 @@ def get_properties_with_domain(request, dt_name):
     if not request.GET.get('class_uri'):
         raise Http404
 
-    class_uri = urllib.unquote(request.GET.get('class_uri'))
+    class_uri = urllib.parse.unquote(request.GET.get('class_uri'))
 
     # find properties and create json response
     # resembles a SparQL response json to ease the client's job
@@ -305,7 +310,7 @@ def class_info(request, dt_name):
     if not request.GET.get('class_uri'):
         raise Http404
 
-    class_uri = urllib.unquote(request.GET.get('class_uri'))
+    class_uri = urllib.parse.unquote(request.GET.get('class_uri'))
 
     # get the endpoint of the query
     endpoint = get_endpoint_from_dt_name(dt_name)

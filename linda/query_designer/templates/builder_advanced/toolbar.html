@@ -8,10 +8,13 @@
         <select>
             <option value="">{% trans "Choose a data source" %}</option>
             {% for datasource in datasources %}
-            <option value="{{datasource.name}}" {% if default == datasource %}selected="selected"{% endif %}>
-                {{datasource.title|safe}}
-            </option>
+                <option value="{{datasource.get_endpoint|urlencode:""}}" {% if default == datasource %}selected="selected"{% endif %}>
+                    {{datasource.title|safe}}
+                </option>
             {% endfor %}
+            {% if default not in datasources %}
+                <option value="{{default}}" selected="selected">{{default}}</option>
+            {% endif %}
         </select>
 
         <input type="search" placeholder="Search terms"/>

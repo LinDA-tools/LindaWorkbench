@@ -168,6 +168,10 @@ header .site-title:hover {
     overflow: hidden;
 }
 
+#main-container > .main > .main {
+    padding: 0;
+}
+
 .builder-advanced #main-container > .main,
 .getting-started #main-container > .main{
     padding: 0;
@@ -1529,6 +1533,13 @@ body.login .row, body.login .form-field {
 .builder-advanced .ui-autocomplete li {
     font-size: 80%;
     white-space: nowrap;
+}
+
+.builder-advanced .ui-autocomplete-loading {
+    padding: 5px;
+    background: url('/static/images/loading.gif') no-repeat right center;
+    background-color: #fff;
+    background-size: 16px;
 }
 
 input, textarea {
@@ -2945,4 +2956,58 @@ input, textarea {
 .autocomplete-tooltip .json-container > .json-inner {
     margin: 0 0 0 40px;
     display: block;
+}
+
+/* Transformation */
+.transformation .grid > * {
+    box-sizing: border-box;
+}
+
+.transformation #main-container > .main {
+    background-color: #eee;
+}
+
+.transformation .red {
+    background: none;
+}
+
+.transformation input[type="submit"].navigation_button {
+    float: right;
+}
+
+/* Datasource suggestions */
+.datasource-suggestion-title {
+    width: 30%;
+}
+.datasource-suggestion-description {
+    width: 20%;
+}
+
+.suggestions-table tr.even {
+    background-color: #eee;
+}
+
+.suggestions-table a, .add-suggested-datasource {
+    color: #5C97BF;
+    cursor: pointer;
+}
+
+.suggestions-table .glyphicon {
+    margin-right: 10px;
+}
+
+.datasource-suggestion-size {
+    text-align: right;
+}
+
+.datasource-suggestion-format {
+    width: 10%;
+}
+
+.suggestions-table span.error {
+    display: block;
+}
+
+.datasource-suggestions .dataTables_filter input {
+    height: 25px;
 }

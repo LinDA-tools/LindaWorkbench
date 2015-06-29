@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+{% load url from future %}
+{% load humanize %}
+{% load i18n %}
+{% block title %}{% trans "Suggested data sources"%} | LinDA{% endblock %}
+{% block bodyclass %}datasource-suggestions{% endblock %}
+
+{% block css %}
+    <link rel="stylesheet" href="/static/css/jquery.datatables.min.css"/>
+    <link rel="stylesheet" href="/static/css/jquery.contextMenu.css"/>
+    <link data-turbolinks-track="true" href="/static/query-builder/stylesheets/bootstrap.min.css?body=1" media="all" rel="stylesheet" />
+{% endblock %}
+
+{% block content %}
+    <h1 class="title">Suggested datasources</h1>
+    <p>The following datasources contain useful data gathered from different providers like <a href="http://datahub.io/" target="_blank">Datahub</a> and the <a href="http://www.engagedata.eu/" target="_blank">Engage</a> EU project.</p>
+    <p>You can immediately add them to your datasources, or download standalone files to review the data they contain.</p>
+    <p>You can also query remote endpoints before adding them to the workbench to make sure they contain data you need.</p>
+
+    {% if suggested_datasources %}
+        <table class="suggestions-table">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Title</th>
+                    <th>Description</th>
+                    <th>Size (triples)</th>
+                    <th>Format</th>
+                    <th>Actions</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for suggestion in suggested_datasources %}
+                    <tr>
+                        <td>{{suggestion.pk}}</td>
+                        <td class="datasource-suggestion-title">{{suggestion.title}}</td>
+                        <td class="datasource-suggestion-description">{{suggestion.description}}</td>
+                        <td class="datasource-suggestion-size">
+                            {% if suggestion.size %}
+                                {{suggestion.size|intcomma}}
+                            {% endif %}
+                        </td>
+                        <td class="datasource-suggestion-format">{{suggestion.format}}</td>
+                        <td>
+                            {% if suggestion.is_endpoint %}
+                                <a href="{{suggestion.get_default_action}}"><span class="glyphicon glyphicon-search" aria-hidden="true"></span>Explore</a>
+                            {% else %}
+                                <a href="{{suggestion.url}}" target="_blank"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span>Download</a>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if suggestion.is_added %}
+                                <span class="glyphicon glyphicon-check" aria-hidden="true"></span>Added
+                            {% else %}
+                                <div class="add-suggested-datasource" data-pk="{{suggestion.pk}}"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span>Add</div>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No suggested datasources found</p>
+    {% endif %}
+{% endblock %}
+
+{% block scripts %}
+    <script src="/static/js/jquery.contextMenu.js"></script>
+    <script src="/static/js/jquery.datatables.min.js"></script>
+
+    <script>
+        //create the data tables
+        $(".suggestions-table").dataTable({
+            "iDisplayLength": 10,
+            "order": [],
+            "language": {
+                "info": "Showing _START_ to _END_ of _TOTAL_ suggestions",
+                "infoEmpty": "No suggestoins available",
+                "infoFiltered": "(filtered from _MAX_ total records)"
+            }
+        });
+
+        //add suggested datasource
+        CSRF_TOKEN = '{{csrf_token}}';
+
+        $("body").on("click", ".add-suggested-datasource", function(e) {
+            var pk = $(this).data('pk');
+            $(this).find('span.error').remove();
+            var that = this;
+
+            $.ajax({ //make request to add the suggestion
+                url: "/datasources/suggestions/" + pk + "/add/",
+                type: "POST",
+                data: {
+                    csrfmiddlewaretoken: CSRF_TOKEN
+                },
+                success: function(data, textStatus, jqXHR) {
+                    $(that).parent().html('<span class="glyphicon glyphicon-check" aria-hidden="true"></span>Added');
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    $(that).append('<span class="error">Error: ' + jqXHR.responseText + ', please try again in a while</span>');
+                }
+            });
+        });
+    </script>
+{% endblock %}

@@ -107,6 +107,9 @@
         {% for datasource in datasources %}
             total_endpoints['{{datasource.name}}'] = '{{datasource|get_endpoint}}';
         {% endfor %}
+        {% if not datasource_default in datasources %}
+            total_endpoints['{{datasource_default}}'] = '{{datasource_default}}';
+        {% endif %}
 
     </script>
 

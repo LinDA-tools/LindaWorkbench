@@ -29,7 +29,7 @@ SPARQL = {
            Utils.alert("The PRINT feature has not been implemented yet."); 
         }
     },
-    get_query: function() {
+	get_query: function() {
         if (editor) {
             return editor.getSession().getValue();
         } else {
@@ -40,13 +40,7 @@ SPARQL = {
         is_valid : function(){
             var query = SPARQL.get_query();
             if(query == undefined || query.trim() == ''){
-
-                //Utils.alert("No SPARQL query input specified.")
-                $("#alert_modal .modal-title").html('Error');
-                $("#alert_modal .modal-body").html("No SPARQL query input specified.");
-                $("#alert_modal .modal-footer .btn-default").html('OK');
-
-                $("#alert_modal").show();
+                Utils.alert("No SPARQL query inputted in the text box.")
                 return false;
             }
             return true;
@@ -60,7 +54,7 @@ SPARQL = {
                 query = SPARQL.get_query();
                 $("#btn_show_checked_properties_yes").click();
             }
-            var download_url = Utils.rdf2any.actions.convert+"rdb-converter.sql?dataset="+QueryBuilder.datasets.get_selected()+"&query="+encodeURIComponent(query);
+            var download_url = Utils.rdf2any.server+Utils.rdf2any.actions.convert+"rdb-converter.sql?dataset="+QueryBuilder.datasets.get_selected()+"&query="+encodeURIComponent(SPARQL.get_query())+"&generateOntology=true";
             var selected_class = QueryBuilder.classes.get_selected_class();
             if(selected_class != undefined && selected_class != ''){
                download_url += "&for_class="+selected_class;
@@ -75,7 +69,22 @@ SPARQL = {
                 query = SPARQL.get_query();
                 $("#btn_show_checked_properties_yes").click();
             }
-            var download_url = Utils.rdf2any.actions.convert+"csv-converter.csv?dataset="+QueryBuilder.datasets.get_selected()+"&query="+encodeURIComponent(query);
+            var download_url = Utils.rdf2any.server+Utils.rdf2any.actions.convert+"csv-converter.csv?dataset="+QueryBuilder.datasets.get_selected()+"&query="+encodeURIComponent(SPARQL.get_query())+"&generateOntology=true";
+            var selected_class = QueryBuilder.classes.get_selected_class();
+            if(selected_class != undefined && selected_class != ''){
+               download_url += "&for_class="+selected_class;
+               download_url += "&properties="+encodeURIComponent(QueryBuilder.properties.get_checked_properties()); 
+            }
+            window.open(download_url);
+        },
+        rdf : function(){
+            var query = SPARQL.get_query();
+            if(QueryBuilder.properties.will_show_properties_in_preview() == true){
+                $("#btn_show_checked_properties_no").click();
+                query = SPARQL.get_query();
+                $("#btn_show_checked_properties_yes").click();
+            }
+            var download_url = Utils.rdf2any.server+Utils.rdf2any.actions.convert+"rdf-converter.ttl?dataset="+QueryBuilder.datasets.get_selected()+"&query="+encodeURIComponent(SPARQL.get_query())+"&generateOntology=true";
             var selected_class = QueryBuilder.classes.get_selected_class();
             if(selected_class != undefined && selected_class != ''){
                download_url += "&for_class="+selected_class;
@@ -91,27 +100,30 @@ SPARQL = {
                 var query = SPARQL.get_query();
                 if(QueryBuilder.properties.will_show_properties_in_preview() == false){
                     $("#btn_show_checked_properties_yes").click();
+                    query = SPARQL.get_query();
                     $("#btn_show_checked_properties_no").click();
                 }
-                var download_url = Utils.rdf2any.actions.convert+"json?dataset="+QueryBuilder.datasets.get_selected()+"&query="+encodeURIComponent(query)+"&json_output_format=sesame";
+                var download_url = Utils.rdf2any.server+Utils.rdf2any.actions.convert+"json?dataset="+QueryBuilder.datasets.get_selected()+"&query="+encodeURIComponent(SPARQL.get_query())+"&json_output_format=sesame"+"&generateOntology=true";
                 window.open(download_url);
             },
             virtuoso : function(){
                 var query = SPARQL.get_query();
                 if(QueryBuilder.properties.will_show_properties_in_preview() == false){
                     $("#btn_show_checked_properties_yes").click();
+                    query = SPARQL.get_query();
                     $("#btn_show_checked_properties_no").click();
                 }
-                var download_url = Utils.rdf2any.actions.convert+"json?dataset="+QueryBuilder.datasets.get_selected()+"&query="+encodeURIComponent(query);
+                var download_url = Utils.rdf2any.server+Utils.rdf2any.actions.convert+"json?dataset="+QueryBuilder.datasets.get_selected()+"&query="+encodeURIComponent(SPARQL.get_query())+"&generateOntology=true";
                 window.open(download_url);
             },
             for_class : function(){
                 var query = SPARQL.get_query();
                 if(QueryBuilder.properties.will_show_properties_in_preview() == true){
                     $("#btn_show_checked_properties_no").click();
+                    query = SPARQL.get_query();
                     $("#btn_show_checked_properties_yes").click();
                 }
-                var download_url = Utils.rdf2any.actions.convert+"json?dataset="+QueryBuilder.datasets.get_selected()+"&query="+encodeURIComponent(query)+"&for_class="+QueryBuilder.classes.get_selected_class();
+                var download_url = Utils.rdf2any.server+Utils.rdf2any.actions.convert+"json?dataset="+QueryBuilder.datasets.get_selected()+"&query="+encodeURIComponent(SPARQL.get_query())+"&for_class="+QueryBuilder.classes.get_selected_class()+"&generateOntology=true";
                 download_url += "&properties="+encodeURIComponent(QueryBuilder.properties.get_checked_properties()); 
                 window.open(download_url);
             }
@@ -121,10 +133,10 @@ SPARQL = {
             var query = SPARQL.get_query();
             if(QueryBuilder.properties.will_show_properties_in_preview() == true){
                 $("#btn_show_checked_properties_no").click();
-                query = SPARQL.get_query();;
+                query = SPARQL.get_query();
                 $("#btn_show_checked_properties_yes").click();
             }
-            var download_url = Utils.rdf2any.actions.convert+"configured-converter?dataset="+QueryBuilder.datasets.get_selected()+"&query="+encodeURIComponent(query);
+            var download_url = Utils.rdf2any.server+Utils.rdf2any.actions.convert+"configured-converter?dataset="+QueryBuilder.datasets.get_selected()+"&query="+encodeURIComponent(SPARQL.get_query())+"&generateOntology=true";
             download_url += "&for_class="+QueryBuilder.classes.get_selected_class();
             download_url += "&properties="+encodeURIComponent(QueryBuilder.properties.get_checked_properties()); 
             var str_variable_dictionary = "";
@@ -146,4 +158,8 @@ SPARQL = {
     flash_error : function(msg){
         $.gritter.add({title: "ERROR in SPARQL query execution",text: msg, sticky:true});
     }
+
+
+
+
 };
