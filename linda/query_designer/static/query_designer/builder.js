@@ -364,7 +364,7 @@ var builder = {
         var i_name = this.instance_names[i];
 
         //check if resource comes from a remote endpoint
-        var endpoint = total_endpoints[ w.instances[i].dt_name ];
+        var endpoint = w.instances[i].dt_name;
 
         //add class constraint -- local copy of total where clause
         wh_c += '\t?' + i_name + ' a <' + inst.uri + '>.';
@@ -479,7 +479,7 @@ var builder = {
                     instance_endpoints[w.instances[i].dt_name] = new Array();
 
                     if (this.endpoint == "") {
-                        this.endpoint = total_endpoints[ w.instances[i].dt_name ];
+                        this.endpoint = w.instances[i].dt_name;
                     }
                 }
 
@@ -492,9 +492,9 @@ var builder = {
         for (var k in instance_endpoints){ //foreach endpoint
             if (instance_endpoints.hasOwnProperty(k)) {
                 //check if accessing remote endpoint
-                var remote = total_endpoints[ w.instances[instance_endpoints[k][0]].dt_name ] != this.endpoint;
+                var remote =  w.instances[instance_endpoints[k][0]].dt_name  != this.endpoint;
                 if (remote) { //use SERVICE keyword
-                    result += '\n  SERVICE <' + total_endpoints[ w.instances[instance_endpoints[k][0]].dt_name ] + '> {\n';
+                    result += '\n  SERVICE <' +  w.instances[instance_endpoints[k][0]].dt_name  + '> {\n';
                 }
 
                 for (var i=0; i<instance_endpoints[k].length; i++) {

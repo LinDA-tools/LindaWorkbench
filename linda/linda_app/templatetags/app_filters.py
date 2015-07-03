@@ -91,7 +91,7 @@ def get_datasources(query):
     if dt_source:
         datasources = [dt_source.title]
     else:
-        datasources = [label_from_uri(query.endpoint)]
+        datasources = [query.endpoint]
 
     # search for additional endpoints
     lines = query.sparql.split('\n')
