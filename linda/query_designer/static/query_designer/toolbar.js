@@ -223,14 +223,15 @@ var toolbar = {
 };
 
 /*On select change load active classes in dataset*/
-$( "#toolbar > select" ).change(on_datasource_select);
+$( "#toolbar select" ).change(on_datasource_select);
     function on_datasource_select() {
         var that = $("#toolbar select");
-        var name = that.val();
-
+        var endpoint = that.val();
+		$("#hdn_qb_dataset").val(decodeURIComponent(endpoint));
+		
         toolbar.started_loading = false;
         toolbar.finished_loading = false;
-        if (name == "") return;
+        if (endpoint == "") return;
 
         update_tree_toolbar();
         
@@ -239,10 +240,10 @@ $( "#toolbar > select" ).change(on_datasource_select);
         toolbar.clear();
 
         $.ajax({ //make request for properties
-            url: ADVANCED_BUILDER_API_URI + "object_properties/" +  name + "/",
+            url: ADVANCED_BUILDER_API_URI + "object_properties/" +  endpoint + "/",
             type: "GET",
             success: function(data, textStatus, jqXHR) {
-                if (that.val() != name) { //check if datasource has changed
+                if (that.val() != endpoint) { //check if datasource has changed
                     return;
                 }
 
@@ -267,7 +268,7 @@ $( "#toolbar > select" ).change(on_datasource_select);
         });
 
         //load first page of classes
-        toolbar.load_classes(that, name, 1, true);
+        toolbar.load_classes(that, endpoint, 1, true);
 
         //set a timeout so after 10 seconds loading starts without distinct
         setTimeout(function() {
@@ -275,7 +276,7 @@ $( "#toolbar > select" ).change(on_datasource_select);
                 return;
             }
 
-            toolbar.load_classes(that, name, 1, false);
+            toolbar.load_classes(that, endpoint, 1, false);
         }, 15000);
     }
 

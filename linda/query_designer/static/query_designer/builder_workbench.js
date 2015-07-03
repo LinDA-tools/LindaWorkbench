@@ -30,11 +30,33 @@
                 }
             },
 
+            /* Get the name of an endpoint*/
+            endpoint_to_name: function(endpoint) {
+                var result = undefined;
+
+                $.each(total_endpoints, function (name, e) {
+                    if (total_endpoints[e] === endpoint) {
+                        result = name;
+                    }
+                });
+
+                if (result === undefined) {
+                    result = endpoint;
+                }
+
+                return result;
+            },
+
+            /* Get the endpoint based on a datasource name */
+            name_to_endpoint(name) {
+                return total_endpoints[name];
+            },
+
             /*Adds an instance of a class*/
             add_instance: function(dt_name, uri, x,y, default_properties) {
                 var new_id = this.instances.length;
                 $('.help-prompt').remove();
-                var new_instance = $.parseHTML('<div id="class_instance_' + new_id + '" class="class-instance" data-n="' + new_id + '"style="left: ' + x + 'px; top: ' + y + 'px;"><div class="title"><h3>' + uri_to_label(uri) + '</h3><span class="subquery-select empty"></span><span class="uri">&lt;' + uri + '&gt;</span><span class="delete" data-about="' + new_id + '">x</span><span class="dataset">' + dt_name + '</span></div><div class="properties"><span class="loading">Loading properties...</span></div></div>');
+                var new_instance = $.parseHTML('<div id="class_instance_' + new_id + '" class="class-instance" data-n="' + new_id + '"style="left: ' + x + 'px; top: ' + y + 'px;"><div class="title"><h3>' + uri_to_label(uri) + '</h3><span class="subquery-select empty"></span><span class="uri">&lt;' + uri + '&gt;</span><span class="delete" data-about="' + new_id + '">x</span><span class="dataset">' + this.endpoint_to_name(dt_name) + '</span></div><div class="properties"><span class="loading">Loading properties...</span></div></div>');
                 $("#builder_workspace").append(new_instance);
                 $(new_instance).draggable({cancel : '.subquery-select', handle: '.title', cursor: 'move', drag: function() {
                     builder_workbench.reset_height($(this));
@@ -262,7 +284,8 @@
                 for(var i=0; i<data.instances.length; i++) { //foreach instance
                     var inst = data.instances[i];
 
-                    this.add_instance(inst.dt_name, inst.uri, inst.position.x, inst.position.y, inst.selected_properties);
+                    var endpoint = this.name_to_endpoint(inst.dt_name) || inst.dt_name;
+                    this.add_instance(endpoint, inst.uri, inst.position.x, inst.position.y, inst.selected_properties);
                     sub_Q.set_subquery(i, data.instances[i].subquery);
                 }
 

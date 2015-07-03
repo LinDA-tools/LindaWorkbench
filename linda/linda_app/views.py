@@ -1561,7 +1561,13 @@ class QueryListView(ListView):
 def query_save(request):
     # get POST variables
     endpoint = request.POST.get("endpoint")
-    endpoint_name = request.POST.get("endpointName", datasource_from_endpoint(endpoint).title)
+    dt = datasource_from_endpoint(endpoint)
+
+    if dt:
+        endpoint_name = request.POST.get("endpointName", dt.title)
+    else:
+        endpoint_name = request.POST.get("endpointName", endpoint)
+
     query = request.POST.get("query")
     description = request.POST.get("description", create_query_description(endpoint_name, query))
     design_json = request.POST.get("design")
