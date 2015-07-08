@@ -1618,6 +1618,8 @@ input, textarea {
 
 #vocabulary-search-text {
     vertical-align: top;
+	width: 300px;
+	max-width: 100%;
 }
 
 .vocabulary-search-form #localization-label {
