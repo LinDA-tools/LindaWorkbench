@@ -680,6 +680,7 @@ def rateDataset(request, pk, vt):
                                                                    vote=voteSubmitted)
                         ranking.save()
                         # Edit vocabulary ranking
+                        vocabulary.prevent_default_make = True
                         vocabulary.votes = vocabulary.votes + 1
                         vocabulary.score = vocabulary.score + voteSubmitted
                         vocabulary.save()
