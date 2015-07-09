@@ -19,7 +19,7 @@ Utils = {
 		$("#alert_modal").modal("show");
 	},
 	rdf2any : {
-		/*server : rdf2any_server, "http:" + document.domain.toString() + "/",*/
+		server : ""/*rdf2any_server, "http:" + document.domain.toString() + "/"*/,
 		actions : {
 			convert : "/rdf2any/v1.0/convert/"
 		} 
