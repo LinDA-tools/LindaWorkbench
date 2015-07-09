@@ -48,7 +48,7 @@
             },
 
             /* Get the endpoint based on a datasource name */
-            name_to_endpoint(name) {
+            name_to_endpoint: function(name) {
                 return total_endpoints[name];
             },
 
