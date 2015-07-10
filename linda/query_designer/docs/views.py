@@ -113,6 +113,8 @@ def vocabulary_property_docs(request, vocabulary):
 
 
 def active_classes(request, dt_name):
+    dt_name = urllib.parse.unquote(dt_name)
+
     # get class
     q = request.GET.get('q', None)
     if not q:
@@ -140,7 +142,7 @@ def active_classes(request, dt_name):
         return HttpResponse(result.content, status=result.status_code)
 
     # create the class object
-    res = json.loads(result.content)
+    res = json.loads(result.content.decode('utf-8'))
 
     properties = []
     bindings = res['results']['bindings']
@@ -154,6 +156,8 @@ def active_classes(request, dt_name):
 
 
 def active_properties(request, dt_name):
+    dt_name = urllib.parse.unquote(dt_name)
+
     # get class
     q = request.GET.get('q', None)
     if not q:
@@ -180,7 +184,7 @@ def active_properties(request, dt_name):
         return HttpResponse(result.content, status=result.status_code)
 
     # create the class object
-    res = json.loads(result.content)
+    res = json.loads(result.content.decode('utf-8'))
 
     if len(res['results']['bindings']) == 0:
         return HttpResponse('<p>Docs not found.</p>')

@@ -82,6 +82,7 @@ jQuery(function () {
 		        if (in_vocabulary == "") { //look inside the data source
 		        	var dt_name = $("#datasource-select").val();
 		        	if (dt_name !== "") { // in a datasource
+		        		dt_name = encodeURIComponent(datasource_endpoints[dt_name]);
 						$(editor_selector).css('cursor', 'wait');
 						editor.recommendation = 'active-classes';
 
@@ -126,6 +127,7 @@ jQuery(function () {
 			    if (in_vocabulary == "") { //look inside the data source
 			    	var dt_name = $("#datasource-select").val();
 					if (dt_name !== "") { // in a datasource
+						dt_name = encodeURIComponent(datasource_endpoints[dt_name]);
 						$(editor_selector).css('cursor', 'wait');
 						editor.recommendation = 'active-properties';
 						editor.recommendation_from = dt_name;
