@@ -21,6 +21,9 @@
 {% block content %}
 <div class="main sparql">
     <h1 class="page-title">{% trans "Query Builder" %}</h1>
+    <div id="loading" style="display: none;">
+        	<img alt="Jar loading" class="ajax-loader" src="/assets/jar-loading.gif">
+    	</div>
     <div class="panel panel-default main-container">
     <div class="panel-heading"><strong>Query Builder</strong> : Please follow the steps to build your query</div>
     <div class="panel-body">
@@ -40,8 +43,16 @@
                                     {% for datasource in datasources %}
                                            <li role="presentation"><a role="menuitem" tabindex="-1" onclick="select_dataset('{{datasource.name}}', '{{datasource | get_endpoint}}');">{{datasource.title}}</a></li>
                                         {% endfor %}
+                                      <li role="presentation"><a role="menuitem" tabindex="-1" onclick="$('#user_input').show()">Add your own SPARQL Endpoint</a></li>
                                   </ul>
                                 </div>
+
+                                <div class="input-group" id="user_input" style="display: none">
+								      <input type="text" id="usr_ep" class="form-control" placeholder="Add your own SPARQL Endpoint">
+								      <span class="input-group-btn">
+								        <button class="btn btn-default" type="button" onclick="QueryBuilder.datasets.select($('#usr_ep').val()); $('#hdn_qb_dataset').val($('#usr_ep').val());$('#user_input').hide()">OK</button>
+								      </span>
+								</div>
                                 {% with hidden_value_id="hdn_qb_dataset" div_classes="done-dataset" div_id="div_select_dataset" remove_function="QueryBuilder.datasets.reset()" hidden_value_value="" %}
                                     {% include 'query-builder/selector.html' %}
                                 {% endwith %}
@@ -79,6 +90,11 @@
                                 <div class="alert alert-danger" style="margin-top:20px;"></div>
                             </div>
                         </div>
+                        <div class="row" id="div_all_classes" >
+												       <div class="col-md-12">
+																 <button class="btn btn-warning col-md-12" type="button" id="btn_show_all_classes">Show All Classes </button>
+															 </div>
+												</div>
                         <div class="row" id="div_classes_search_result">
                             <div class="col-md-12">
 
@@ -231,6 +247,27 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Done</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade in" id="all_classes_list_modal" tabindex="-1" role="dialog" aria-labelledby="allClassesModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="width:100%">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" ></h4>
+            </div>
+            <div class="modal-body">
+               <table class="table table-striped" id="all_classes_table" width="auto">
+                    <thead>
+                    </thead>
+                    <tbody id="all_classes_table_body">
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal" onclick="QueryBuilder.done_showing_classes()">Done</button>
             </div>
         </div>
     </div>
