@@ -1186,8 +1186,7 @@ def execute_sparql(request):
     response = sparql_query_json(request.POST.get('dataset'), query)
     if response.status_code == 200:
         # avoid erroneous \U characters -- invalid json
-        response_safe = response.content.decode('unicode_escape')  # .replace(b'\U', '')
-
+        response_safe = response.content.decode('utf-8')  # .replace(b'\U', '')
         if response_safe.startswith("MALFORMED QUERY:"):
             return HttpResponse(response.content, status=500)
 

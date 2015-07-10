@@ -171,7 +171,7 @@ class Vocabulary(models.Model):
 
         # Load the rdf
         g = Graph()
-        document = urllib.urlopen(self.downloadUrl)
+        document = urllib.request.urlopen(self.downloadUrl)
 
         if document.getcode() == 404:  # not found
             return

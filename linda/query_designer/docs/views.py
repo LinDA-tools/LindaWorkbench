@@ -62,7 +62,7 @@ def sparql_core_docs(request, keyword):
 
 # Get vocabulary from namespace uri
 def get_voc_from_uri(v_uri_enc):
-    v_uri = urllib.unquote(v_uri_enc).decode('utf8')
+    v_uri = urllib.parse.unquote(v_uri_enc)
     v = Vocabulary.objects.get(preferredNamespaceUri=v_uri)
     if not v:
         return None
@@ -89,7 +89,7 @@ def vocabulary_class_docs(request, vocabulary):
         raise Http404
 
     # get class
-    c_uri = urllib.unquote(q).decode('utf8')
+    c_uri = urllib.parse.unquote(q)
     c = VocabularyClass.objects.get(uri=c_uri)
     if not c:
         raise Http404
@@ -104,7 +104,7 @@ def vocabulary_property_docs(request, vocabulary):
         raise Http404
 
     # get class
-    p_uri = urllib.unquote(q).decode('utf8')
+    p_uri = urllib.parse.unquote(q)
     p = VocabularyProperty.objects.get(uri=p_uri)
     if not p:
         raise Http404
@@ -113,11 +113,13 @@ def vocabulary_property_docs(request, vocabulary):
 
 
 def active_classes(request, dt_name):
+    dt_name = urllib.parse.unquote(dt_name)
+
     # get class
     q = request.GET.get('q', None)
     if not q:
         raise Http404
-    q = urllib.unquote(q).decode('utf8')
+    q = urllib.parse.unquote(q)
 
     # try to locate in the repository first
     c_from_db = VocabularyClass.objects.filter(uri=q)
@@ -140,7 +142,7 @@ def active_classes(request, dt_name):
         return HttpResponse(result.content, status=result.status_code)
 
     # create the class object
-    res = json.loads(result.content)
+    res = json.loads(result.content.decode('utf-8'))
 
     properties = []
     bindings = res['results']['bindings']
@@ -154,11 +156,13 @@ def active_classes(request, dt_name):
 
 
 def active_properties(request, dt_name):
+    dt_name = urllib.parse.unquote(dt_name)
+
     # get class
     q = request.GET.get('q', None)
     if not q:
         raise Http404
-    q = urllib.unquote(q).decode('utf8')
+    q = urllib.parse.unquote(q)
 
     # try to locate in the repository first
     p_from_db = VocabularyProperty.objects.filter(uri=q)
@@ -180,7 +184,7 @@ def active_properties(request, dt_name):
         return HttpResponse(result.content, status=result.status_code)
 
     # create the class object
-    res = json.loads(result.content)
+    res = json.loads(result.content.decode('utf-8'))
 
     if len(res['results']['bindings']) == 0:
         return HttpResponse('<p>Docs not found.</p>')
