@@ -423,7 +423,7 @@ class VocabularyVisualize(DetailView):
 
         # Parse rdf
         g = Graph()
-        n3data = urllib.urlopen(context['vocabulary'].downloadUrl).read()
+        n3data = urllib.request.urlopen(context['vocabulary'].downloadUrl).read()
         g.parse(data=n3data, format=guess_format(context['vocabulary'].downloadUrl))
 
         # Load subjects
@@ -745,7 +745,7 @@ def downloadRDF(request, pk, type):
 
     # Convert rdf to the appropriate type
     g = Graph()
-    n3data = urllib.urlopen(voc.downloadUrl).read()
+    n3data = urllib.request.urlopen(voc.downloadUrl).read()
     g.parse(data=n3data, format=guess_format(voc.downloadUrl))
 
     # Return response
