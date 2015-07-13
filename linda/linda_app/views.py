@@ -980,7 +980,7 @@ def datasourceCreateRDF(request):
         callAdd = requests.post(LINDA_HOME + "api/datasource/create/", headers=headers,
                                 data=data)
 
-        j_obj = json.loads(callAdd.text)
+        j_obj = json.loads(callAdd.content.decode('utf-8'))
         if j_obj['status'] == '200':
             # get new datasource name
             dt_name = j_obj['name']
@@ -1070,7 +1070,7 @@ def datasourceReplaceRDF(request, dtname):
         callReplace = requests.post(LINDA_HOME + "api/datasource/" + dtname + "/replace/" + append_str, headers=headers,
                                     data=data)
 
-        j_obj = json.loads(callReplace.text)
+        j_obj = json.loads(callReplace.content.decode('utf-8'))
         if j_obj['status'] == '200':
             # update data source information
             dt_object = DatasourceDescription.objects.filter(name=dtname)[0]
@@ -1108,7 +1108,7 @@ def datasourceDelete(request, dtname):
         else:  # also remove data from the sesame
             headers = {'accept': 'application/json'}
             callDelete = requests.post(LINDA_HOME + "api/datasource/" + dtname + "/delete/", headers=headers)
-            j_obj = json.loads(callDelete.text)
+            j_obj = json.loads(callDelete.content.decode('utf-8'))
             if j_obj['status'] == '200':
                 return redirect("/datasources/")
             else:
