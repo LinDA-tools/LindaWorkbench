@@ -964,7 +964,7 @@ def datasourceCreateRDF(request):
         if "rdffile" in request.FILES:
             # get the first chunk
             inp_file = request.FILES["rdffile"].file
-            current_chunk = inp_file.read(RDF_CHUNK_SIZE)
+            current_chunk = inp_file.read(RDF_CHUNK_SIZE).decode('utf-8')
             if len(current_chunk) == RDF_CHUNK_SIZE:
                 current_chunk, rem = clear_chunk(current_chunk, newlines)
         else:
@@ -987,7 +987,7 @@ def datasourceCreateRDF(request):
 
             i = 0
             while inp_file:  # read all additional chunks
-                chunk = inp_file.read(RDF_CHUNK_SIZE)
+                chunk = inp_file.read(RDF_CHUNK_SIZE).decode('utf-8')
                 if chunk == "":  # end of file
                     break
 
@@ -1050,7 +1050,7 @@ def datasourceReplaceRDF(request, dtname):
         # Get the posted rdf data
         if "rdffile" in request.FILES:
             inp_file = params['rdffile'].file
-            current_chunk = inp_file.read(RDF_CHUNK_SIZE)
+            current_chunk = inp_file.read(RDF_CHUNK_SIZE).decode('utf-8')
             current_chunk, rem = clear_chunk(current_chunk, newlines)
         else:
             current_chunk = params['rdfdata']
