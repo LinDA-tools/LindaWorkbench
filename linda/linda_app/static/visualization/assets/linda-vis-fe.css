@@ -337,6 +337,16 @@ span.fancytree-title {
   content: 'number';
   background-color: #92B5F2;
 }
+.treenode-spatial-label .fancytree-title::after {
+  margin-left: 3px;
+  padding: 1px 6px;
+  border-radius: 6px;
+  font-size: 7pt;
+  font-weight: bold;
+  vertical-align: middle;
+  content: 'spatial';
+  background-color: tan;
+}
 .treenode-text-label .fancytree-title::after {
   margin-left: 3px;
   padding: 1px 6px;
@@ -509,5 +519,23 @@ span.fancytree-node.fancytree-selected span.fancytree-title {
   background-color: #FFFFFF;
   padding: 0px 3px 3px 10px;
   background-color: #FFEBCC;
+}
+.Spatial {
+  margin-bottom: 0.5ex;
+  margin-top: 0.5ex;
+  border: 1px dotted black;
+  list-style-position: inside;
+  background-color: #FFFFFF;
+  padding: 0px 3px 3px 10px;
+  background-color: tan;
+}
+.layout-width {
+  width: 50%;
+}
+.layout-inline {
+  display: inline;
+}
+.layout-width-save {
+  width: 43%;
 }
 /*# sourceMappingURL=/assets/linda-vis-fe.css.map */

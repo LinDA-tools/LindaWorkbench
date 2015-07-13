@@ -1,12 +1,12 @@
 /*!
- * QUnit 1.18.0
+ * QUnit 1.17.1
  * http://qunitjs.com/
  *
  * Copyright jQuery Foundation and other contributors
  * Released under the MIT license
  * http://jquery.org/license
  *
- * Date: 2015-04-03T10:23Z
+ * Date: 2015-01-20T19:39Z
  */
 
 /** Font Family and Sizes */
@@ -116,13 +116,7 @@
 
 #qunit-tests.hidepass li.running,
 #qunit-tests.hidepass li.pass {
-	visibility: hidden;
-	position: absolute;
-	width:   0px;
-	height:  0px;
-	padding: 0;
-	border:  0;
-	margin:  0;
+	display: none;
 }
 
 #qunit-tests li strong {
@@ -137,11 +131,6 @@
 	padding: 0.5em;
 	color: #C2CCD1;
 	text-decoration: none;
-}
-
-#qunit-tests li p a {
-	padding: 0.25em;
-	color: #6B6464;
 }
 #qunit-tests li a:hover,
 #qunit-tests li a:focus {
@@ -291,7 +280,7 @@
 }
 
 #ember-testing-container {
-  position: absolute;
+  position: relative;
   background: white;
   bottom: 0;
   right: 0;
@@ -300,6 +289,7 @@
   overflow: auto;
   z-index: 9999;
   border: 1px solid #ccc;
+  margin: 0 auto;
 }
 #ember-testing {
   zoom: 50%;

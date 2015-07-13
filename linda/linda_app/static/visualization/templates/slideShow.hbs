@@ -1,3 +1,0 @@
-{{#each visualization in view.slides}}
-<div><a {{action 'chooseVisualization' visualization}}> <span {{bind-attr data-visualization-name="visualization.visualizationName"}} {{bind-attr class="visualization.valid:valid-suggestion:invalid-suggestion :visualization-thumbnail"}}> </span> </a></div>
-{{/each}}
