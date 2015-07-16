@@ -287,6 +287,9 @@ class VocabularyClass(models.Model):  # A class inside an RDF vocabulary
     def __unicode__(self):
         return self.label
 
+    def get_absolute_url(self):
+        return u'/class/%d/' % self.id
+
     def domain_of(self, limit=None):
         return VocabularyProperty.objects.filter(domain=self.uri)
 
@@ -305,6 +308,9 @@ class VocabularyProperty(models.Model):  # A property inside an RDF vocabulary
 
     def __unicode__(self):
         return self.label
+
+    def get_absolute_url(self):
+        return u'/property/%d/' % self.id
 
     # Gets the domain of the property
     # For sub-properties without a domain defined, it returns the domain of its parent
