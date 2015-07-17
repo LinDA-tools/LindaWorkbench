@@ -75,6 +75,10 @@ def sparql_query_json(endpoint, query, timeout=None):
     # encode the query
     query_enc = urlquote(query, safe='')
 
+    # ClioPatria bugfix
+    if endpoint[-1] != '/':
+        endpoint += '/'
+
     # get query results and turn them into json
     # with &output=json we support non-standard endpoints like IMDB & World Factbook
     response = requests.get(
