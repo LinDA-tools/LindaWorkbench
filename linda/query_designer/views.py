@@ -66,10 +66,8 @@ def get_endpoint_from_dt_name(dt_name):
     '''
     if dt_name != "all":  # search in all private data source
         datasources = DatasourceDescription.objects.filter(name=dt_name)
-
         if not datasources:  # data source not found by name
             raise Http404
-
         return datasources[0].get_endpoint()
     else:
         return get_configuration().private_sparql_endpoint

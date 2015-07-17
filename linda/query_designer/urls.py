@@ -1,16 +1,13 @@
 __author__ = 'dimitris'
 
 from django.conf.urls import patterns, url
-from query_designer import views
-from query_designer.docs import views as doc_views
+from . import views
+from .docs import views as doc_views
 
 urlpatterns = patterns('',
                        # Basic pages
                        url(r'^$', views.index, name='advanced-builder-index'),
                        url(r'^(?P<pk>\d+)/$', views.load_design),
-
-                       # Tutorials
-                       url(r'^tutorials/(?P<tutorial>[\w-]+)/$', views.tutorials, name='tutorials'),
 
                        # API calls
                        url(r'^api/active_classes/(?P<dt_name>.*)/$', views.active_classes),

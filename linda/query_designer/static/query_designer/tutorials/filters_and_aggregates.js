@@ -1,9 +1,9 @@
 
     //automatically choose linked geodata
     $().ready(function() {
-        $("#toolbar select").val('eurostat').trigger("chosen:updated");
-        on_datasource_select();
+        $("#toolbar select").val('http%3A%2F%2Fwifo5-04.informatik.uni-mannheim.de%2Feurostat%2Fsparql').trigger("chosen:updated");
         update_tree_toolbar();
+        on_datasource_select();
     });
 
     //#1: Welcome users to the tutorial

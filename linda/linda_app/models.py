@@ -317,6 +317,8 @@ class VocabularyClass(models.Model):  # A class inside an RDF vocabulary
     def __unicode__(self):
         return self.label
 
+    def get_absolute_url(self):
+        return u'/class/%d/' % self.id
     def domain_of(self, limit=None):
         return VocabularyProperty.objects.filter(domain=self.uri)
 
@@ -336,6 +338,8 @@ class VocabularyProperty(models.Model):  # A property inside an RDF vocabulary
     def __unicode__(self):
         return self.label
 
+    def get_absolute_url(self):
+        return u'/property/%d/' % self.id
     # Gets the domain of the property
     # For sub-properties without a domain defined, it returns the domain of its parent
     def domain_uri(self):
@@ -484,6 +488,13 @@ class DatasourceDescription(models.Model):
         else:
             return LINDA_HOME + "sparql/" + self.name + "/"
 
+    def update_rss(self):
+        if self.rss_info:
+            # replace the local rdf copy
+            headers = {'accept': 'application/json'}
+            data = {"content": rss2rdf(self.rss_info.url)}
+            callReplace = requests.post(LINDA_HOME + "api/datasource/" + self.name +
+                                           "/replace/?append=false", headers=headers, data=data)
 
 # Get datasources accessible by user
 def get_datasources(user):
@@ -510,11 +521,11 @@ def str_extend(array, op_join='and'):
 
     return result
 
-
+	
 # temporary
 def pluralize(s):
     return s + 's'
-
+	
 
 # Given an endpoint name and a query it creates a description of the query
 def create_query_description(dtname, query):
@@ -603,7 +614,7 @@ class Query(models.Model):
 
     def csv_link(self):
         return '/rdf2any/v1.0/convert/csv-converter.csv?dataset=' + urllib.parse.quote_plus(self.endpoint) + '&query=' \
-               + urllib.parse.quote_plus(self.sparql.replace('\n', ' '))   
+               + urllib.parse.quote_plus(self.sparql.replace('\n', ' '))
 
     def get_datasource(self):
         return datasource_from_endpoint(self.endpoint)
@@ -647,7 +658,7 @@ def get_configuration():
     else:
         return Configuration.objects.create()
 
-
+		
 class DefaultDatasources(models.Model):
     # A collection of default endpoints automatically fetched by the http://datahub.io/ project
     # Created whenever linda_app.views.get_endpoints_from_datahub() is run

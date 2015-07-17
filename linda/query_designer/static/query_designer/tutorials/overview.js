@@ -29,7 +29,7 @@
 
             var that = this;
             setTimeout(function() {
-                if ($(that).val() == "imdb") {
+                if ($(that).val() == "http%3A%2F%2Fdata.linkedmdb.org%2Fsparql") {
                     tooltip('#toolbar',
                             'When you select a data source, the different types of objects in the datasource start to appear in the above area (named <i>toolbar</i>).<br />Buttons such as "<span class=\"green-text\">Film</span>" and "<span class=\"green-text\">Actor</span>" should have appeared by now in the toolbar.<br />Drag and drop the "<span class=\"green-text\">Film</span>" button in the white are bellow to find films in IMDB.',
                             'bottom'

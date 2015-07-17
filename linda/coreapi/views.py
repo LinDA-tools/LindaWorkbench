@@ -106,6 +106,7 @@ def recommend_dataset(request):
                 source_info["uri"] = source.uri
             source_info['full_uri'] = source.uri
             source_info['label'] = source.label
+            source_info['read_more'] = source.get_absolute_url()
             source_info['ranking'] = source.vocabulary.lodRanking - (len(source_info["label"]) - len(property))*50
 
             results.append(source_info)
@@ -138,6 +139,7 @@ def recommend_dataset(request):
                 source_info["uri"] = source.uri
             source_info['full_uri'] = source.uri
             source_info["label"] = source.label
+            source_info["read_more"] = source.get_absolute_url()
             source_info["ranking"] = int(source.vocabulary.lodRanking) - (len(source_info["label"]) - len(class_))*50
 
             results.append(source_info)
@@ -158,6 +160,7 @@ def recommend_dataset(request):
             source_info = {}
             source_info["vocabulary"] = source.title
             source_info["uri"] = source.preferredNamespaceUri
+            source_info["read_more"] = source.get_absolute_url()
             source_info["prefix"] = source.preferredNamespacePrefix
             source_info["description"] = source.description
             source_info["ranking"] = int(source.lodRanking)

@@ -21,16 +21,16 @@ import json
 from analytics.models import Analytics
 from query_designer.views import sparql_query_json
 from query_designer.models import Design
-
-from linda_app.forms import *
-from linda_app.models import *
+from .forms import *
+from .models import *
 
 from rdflib import Graph
 from datetime import datetime
 
-from linda_app.installer.views import installation_pending
-from linda_app.settings import LINDA_HOME, RDF_CHUNK_SIZE, MAX_NUMBER_OF_DATASOURCES
-from linda_app.passwords import MS_TRANSLATOR_UID, MS_TRANSLATOR_SECRET
+from .installer.views import installation_pending
+from .settings import LINDA_HOME, RDF_CHUNK_SIZE, MAX_NUMBER_OF_DATASOURCES
+from .passwords import MS_TRANSLATOR_UID, MS_TRANSLATOR_SECRET
+
 
 
 def index(request):
@@ -946,6 +946,7 @@ def clear_chunk(c, newlines):
         return c, ''
 
 
+@login_required
 def datasourceCreateRDF(request):
     if request.POST:
         params = {
@@ -969,7 +970,7 @@ def datasourceCreateRDF(request):
         if "rdffile" in request.FILES:
             # get the first chunk
             inp_file = request.FILES["rdffile"].file
-            current_chunk = inp_file.read(RDF_CHUNK_SIZE)
+            current_chunk = inp_file.read(RDF_CHUNK_SIZE).decode('utf-8')
             if len(current_chunk) == RDF_CHUNK_SIZE:
                 current_chunk, rem = clear_chunk(current_chunk, newlines)
         else:
@@ -984,15 +985,15 @@ def datasourceCreateRDF(request):
 
         mock_request = MockRequest(user=request.user, post=request.POST, data=data, accept='application/json')
         callAdd = api_datasource_create(mock_request)
+        j_obj = json.loads(callAdd.content.decode('utf-8'))
 
-        j_obj = json.loads(callAdd.content)
         if j_obj['status'] == '200':
             # get new datasource name
             dt_name = j_obj['name']
 
             i = 0
             while inp_file:  # read all additional chunks
-                chunk = inp_file.read(RDF_CHUNK_SIZE)
+                chunk = inp_file.read(RDF_CHUNK_SIZE).decode('utf-8')
                 if chunk == "":  # end of file
                     break
 
@@ -1056,7 +1057,7 @@ def datasourceReplaceRDF(request, dtname):
         # Get the posted rdf data
         if "rdffile" in request.FILES:
             inp_file = params['rdffile'].file
-            current_chunk = inp_file.read(RDF_CHUNK_SIZE)
+            current_chunk = inp_file.read(RDF_CHUNK_SIZE).decode('utf-8')
             current_chunk, rem = clear_chunk(current_chunk, newlines)
         else:
             current_chunk = params['rdfdata']
@@ -1079,8 +1080,8 @@ def datasourceReplaceRDF(request, dtname):
             mock_request.GET['append'] = 'true'
 
         callReplace = api_datasource_replace(mock_request, dtname)
+        j_obj = json.loads(callReplace.content.decode('utf-8'))
 
-        j_obj = json.loads(callReplace.content)
         if j_obj['status'] == '200':
             # update data source information
             dt_object = get_own_datasources(request.user).filter(name=dtname)[0]
@@ -1105,7 +1106,8 @@ def datasourceDownloadRDF(request, dtname):
     mock_request.GET['format'] = urlquote(mimetype)
     callDatasource = api_datasource_get(mock_request, dtname)
 
-    return HttpResponse(data, mimetype)
+    return HttpResponse(callDatasource.content, mimetype)
+
 
 @login_required
 def datasourceDelete(request, dtname):
@@ -1124,7 +1126,8 @@ def datasourceDelete(request, dtname):
             mock_request = MockRequest(user=request.user, post=request.POST, accept='application/json')
             callDelete = api_datasource_delete(mock_request, dtname)
 
-            j_obj = json.loads(callDelete.content)
+            j_obj = json.loads(callDelete.content.decode('utf-8'))
+
             if j_obj['status'] == '200':
                 datasource.delete()
                 return redirect("/datasources/")

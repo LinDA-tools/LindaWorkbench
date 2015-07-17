@@ -6,7 +6,6 @@ from django.conf import settings
 from django.contrib.auth.models import User
 import json
 
-
 # Create your models here.
 
 EXPORT_CHOICES = (
