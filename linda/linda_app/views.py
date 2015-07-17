@@ -1103,10 +1103,11 @@ def datasourceReplaceRDF(request, dtname):
 def datasourceDownloadRDF(request, dtname):
     mimetype = "text/rdf+n3"
     mock_request = MockRequest(user=request.user)
-    mock_request.GET['format'] = urlquote(mimetype)
+    mock_request.GET['format'] = mimetype
     callDatasource = api_datasource_get(mock_request, dtname)
+    data = json.loads(callDatasource.content.decode('utf-8'))['content']
 
-    return HttpResponse(callDatasource.content, mimetype)
+    return HttpResponse(data, mimetype)
 
 
 @login_required
@@ -1505,7 +1506,6 @@ def datasource_sparql(request, dtname):  # Acts as a "fake" seperate sparql endp
 
     if dtname != "all":  # search in all private datasource
         datasources = DatasourceDescription.objects.filter(name=dtname)
-
         if not datasources:  # datasource not found by name
             results['status'] = '404'
             results['message'] = "Datasource does not exist."

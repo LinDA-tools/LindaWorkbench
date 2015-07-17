@@ -125,7 +125,7 @@ TEMPLATE_DIRS = (
 )
 
 # LinDA url
-LINDA_HOME = 'http://localhost:8000/'
+LINDA_HOME = 'http://localhost:8585/'
 
 # apache-tomcat url
 LINDA_APACHE_ANALYTICS = 'http://linda.epu.ntua.gr/LindaAnalytics/'
