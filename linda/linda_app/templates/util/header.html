@@ -1,0 +1,95 @@
+{% load i18n inbox %}
+{% load app_filters %}
+{% inbox_count as inbox_count %}
+
+<header id="header">
+
+	<!-- header info -->
+	<div class="banner clearfix" role="banner">
+		<a href="/">
+			<img src="/static/images/logo.png" class="site-logo" alt="LinDA logo">
+			<h2 class="site-description hidden">LinDa is a ...</h2>
+            <h1 class="site-title">LinDA Playground</h1>
+		</a>
+
+        <ul class="header-menu">
+                <li {%if page == "Datasources" %}class="selected"{% endif %}><a href="/datasources/">{% trans "Data Sources" %}</a>
+                    <ul class="submenu">
+                        <li><a href="/datasources/">{% trans "View data Sources" %}</a></li>
+                        <li><a href="/datasource/create/rdf/">{% trans "Upload RDF file" %}</a></li>
+                        <li><a href="/transformations/#/csv">{% trans "Upload CSV file " %}</a></li>
+                        <li><a href="/datasource/create/">{% trans "New endpoint" %}</a></li>
+                    </ul>
+                </li>
+                <li {%if page == "Queries" %}class="selected"{% endif %}><a href="/queries/">{% trans "Queries" %}</a>
+                    <ul class="submenu">
+                        <li><a href="/queries/">{% trans "View queries" %}</a></li>
+                        <li><a href="/query-designer/">{% trans "New query" %}</a></li>
+                        <li><a href="/sparql/">{% trans "SPARQL editor" %}</a></li>
+                    </ul>
+                </li>
+                <li {%if page == "Visualizations" %}class="selected"{% endif %}><a href="/visualizations/saved-visualizations">{% trans "Visualizations" %}</a></li>
+                <li {%if page == "Analytics" %}class="selected"{% endif %}><a href="/analytics">{% trans "Analytics" %}</a></li>
+                <li {%if page == "Transformations" %}class="selected"{% endif %}><a href="/transformation">{% trans "Transformations" %}</a></li>
+                <li {%if page == "Vocabularies" %}class="selected"{% endif %}><a href="/vocabularies/all/">{% trans "Vocabularies" %}</a>
+                    <ul class="submenu">
+                        <li><a href="/vocabularies/all/">{% trans "Explore vocabularies" %}</a></li>
+                        <li><a href="/classes/all/">{% trans "Classes" %}</a></li>
+                        <li><a href="/properties/all/">{% trans "Properties" %}</a></li>
+                    </ul>
+                </li>
+        </ul>
+
+		<div class="username right">
+		{% if user.is_authenticated %}
+			{% trans "Welcome back" %}, <a href="/profile/{{user.id}}">{{user|nice_name}}</a>.
+			<a href="/messages/inbox" class="unread-counter">
+				{% if inbox_count %} {% inbox_count %} {% endif %}<img src="/static/images/mail.png" class="admin-icon"/>
+			</a> 
+            
+			<a href="/accounts/logout"><img src="/static/images/logout.png" class="admin-icon"/></a>
+		{% else %}
+			<a href="/accounts/login">{% trans "Sign in" %}</a>
+		{% endif %}
+		</div>
+			
+	</div>
+	
+	<!-- menu -->
+
+</header>
+
+<div class="orange" id="menu-toggle"><div></div></div>
+
+
+    <div id="main-container">
+        <!--<div id="menu" class="clearfix">
+            <ul>
+                <li>
+                    <form class="form menu-search" method="GET" action="/find/" class="form">
+                        <input type="text" name="search_q" class="site-search-input" placeholder="Search LinDA" title="Search LinDA"/>
+                        <input type="submit" value=""/>
+                    </form>
+                </li>
+                <li {%if page == "Datasources" %}class="selected"{% endif %}><a href="/datasources">{% trans "Data Sources" %}</a></li>
+                <li {%if page == "Queries" %}class="selected"{% endif %}><a href="/queries/">{% trans "Queries" %}</a></li>
+                <li {%if page == "Visualizations" %}class="selected"{% endif %}><a href="/visualizations/saved-visualizations">{% trans "Visualizations" %}</a></li>
+                <li {%if page == "Analytics" %}class="selected"{% endif %}><a href="/analytics">{% trans "Analytics" %}</a></li>
+                <li {%if page == "Transformations" %}class="selected"{% endif %}><a href="/transformations">{% trans "Transformations" %}</a></li>
+                <li {%if page == "Vocabularies" %}class="selected"{% endif %}><a href="/vocabularies/all/">{% trans "Vocabularies" %}</a></li>
+            </ul>
+
+            <div class="secondary-menu">
+
+                <ul>
+                    {% if user.is_superuser %}
+                        <li><a href="/settings">{% trans "Settings" %}</a></li>
+                    {% endif %}
+                    <li><a href="http://linda-project.eu/wiki/index.php?title=Main_Page" target="_blank">{% trans "Documentation" %}</a></li>
+                    <li><a href="/sparql">{% trans "SPARQL Editor"%}</a></li>
+                </ul>
+
+            </div>
+        </div>-->
+
+        {% include "util/menu-responsive.html" %}

@@ -1,0 +1,8 @@
+.result-removable, .result-removable td {
+    background: #D64541 !important;
+    color: #fff;
+}
+
+.result-removable, .result-removable td a {
+    color: #eee;
+}

@@ -1,0 +1,578 @@
+{% extends "base.html" %}
+
+{% load staticfiles %}
+{% load url from future %}
+{% load i18n %}
+{% block title %}LinDA | {% trans "Analytics" %}{% endblock %}
+{% block bodyclass %}analytics{% endblock %}
+
+{% block scripts %}
+
+<script src="/static/js/jquery.bpopup.min.js"></script>
+<script src="/static/js/jquery.blockUI.js"></script>
+
+<link rel="stylesheet" type="text/css" href="/static/css/analytics_style.css" />
+
+
+<script src="/static/js/jquery-ui.js"></script>
+
+<script>
+$(document).ready(function(){
+    $( "#toggleCategoryDescription" ).click(function() {
+        $('#categoryDescription').bPopup();
+    });
+    
+    $( "#toggleAlgorithmDescription" ).click(function() {
+       $('#algorithmDescription').bPopup();
+    });    
+    
+    $( "#toggleAnalyticsDescription" ).click(function() {
+       $( "#analyticsDescription" ).bPopup();
+    });
+    
+    $( "#toggleAnalyticsModel" ).click(function() {
+        $( "#model" ).toggle();
+    });
+    
+    $( "#toggleResultDocument" ).click(function() {
+        $( "#resultdocument" ).toggle();
+    });
+    
+    $( "#toggleplot1info" ).click(function() {
+        $( "#plot1info" ).toggle();
+    });
+    
+     $( "#toggleplot2info" ).click(function() {
+        $( "#plot2info" ).toggle();
+    });
+    
+    
+    
+    $( "#toggleprocessinfo" ).click(function() {
+        $( "#processinfo" ).toggle();
+    });
+    
+    $( "#toggleTrainQueryDescription" ).click(function() {
+	$.ajax({
+	url : "/analytics/popup_query_info",
+	type : "POST",
+	dataType: "html",
+	data : {
+	query_id : {{analytics.trainQuery_id}},
+	csrfmiddlewaretoken: '{{ csrf_token }}'
+	},
+	success : function(data) {
+	  $('#queries_info').html(data);
+	  $( "#queries_info" ).bPopup();
+	},
+	error : function(xhr,errmsg,err) {
+	alert(xhr.status + ": " + xhr.responseText);
+	}
+	});
+      return false;
+   });
+  
+   $( "#toggleEvaluationQueryDescription" ).click(function() {
+	$.ajax({
+	url : "/analytics/popup_query_info",
+	type : "POST",
+	dataType: "html",
+	data : {
+	query_id : {{analytics.evaluationQuery_id}},
+	csrfmiddlewaretoken: '{{ csrf_token }}'
+	},
+	success : function(data) {
+	  $('#queries_info').html(data);
+	  $( "#queries_info" ).bPopup();
+	},
+	error : function(xhr,errmsg,err) {
+	alert(xhr.status + ": " + xhr.responseText);
+	}
+	});
+      return false;
+   });
+   
+    $('.reevaluateButton').click(function() { 
+        $.blockUI({ css: { 
+            border: 'none', 
+            padding: '15px', 
+            backgroundColor: '#000', 
+            '-webkit-border-radius': '10px', 
+            '-moz-border-radius': '10px', 
+            opacity: .5, 
+            color: '#fff' 
+        } }); 
+         
+    }); 
+    
+    $('#edit_icon_evaluation_query').click(function() { 
+       $('#edit_evaluation_query_form').show();
+      
+    });  
+    
+    $('#edit_icon_output').click(function() { 
+       $('#edit_output_format_form').show();
+      
+    });
+    
+    $('#edit_parameters').click(function() { 
+      $('#edit_parameters_form').show();  
+    });
+    
+    
+    $("#resetEvaluationQuery").click( function()
+	  {
+	    $('#edit_evaluation_query_form').hide();
+	  }
+      );
+      
+    $("#resetOutputFormat").click( function()
+	  {
+	    $('#edit_output_format_form').hide();
+	  }
+      );
+      
+     $("#resetParameters").click( function()
+	  {
+	    $('#edit_parameters_form').hide();
+	  }
+      );
+    
+    $( "tr" ).hover(
+         function() {
+	  $(this).find(".anDescription").show();
+	}, function() {
+	  $(this).find(".anDescription").hide();
+        }
+    );
+    
+    
+    $('#browse-analytics-form').on('submit', function(event){
+    event.preventDefault();
+            $.ajax({
+            url : "/analytics/find/",
+            type : "POST",
+            dataType: "json",
+            data : {
+            search_q : $('#search_q').val(),
+            csrfmiddlewaretoken: '{{ csrf_token }}'
+            },
+            success : function(json) {
+             $('#myAnalytics').empty();
+             
+              $.each(json, function(index, element) {
+                $('#myAnalytics').append('<tr class="fade"><td><a href="'+element.url+'">'+element.name+'</a><br/><p class="anDescription" style="display:none">'+element.description+'</p></td></tr>');
+              });
+              
+             $( "tr" ).hover(
+              function() {
+	        $(this).find(".anDescription").show();
+	      }, function() {
+	     $(this).find(".anDescription").hide();
+	     }
+             );
+              
+            },
+            error : function(xhr,errmsg,err) {
+            alert(xhr.status + ": " + xhr.responseText);
+            }
+            });
+    });
+    
+     
+     $( "#id_evaluationQuery_display" ).autocomplete({
+        source: function (request, response) {
+            $.getJSON("/analytics/get_evaluationQuery", {
+            q: request.term
+            }, response);
+        },
+        select: function( event, ui ) {
+         $("#id_evaluationQuery_display").val('QueryID:'+ui.item.value+'-->'+ui.item.label);
+         $('#evaluationQuery').val(ui.item.value);
+         $("#id_evaluationQuery").val(ui.item.value);
+         return false;
+        }
+ 
+      });
+      
+          $("#anDelete").click( function()
+	  {
+	    $("#DeleteAnalytics").submit(function( event ) {
+	     alert( "Handler for .submit() called." );
+	    });
+	    
+	  }
+      );
+      
+     $('#emotion input:radio').addClass('input_hidden');
+      $('#emotion label').click(function(){
+      $(this).attr('checked', 'checked');
+      $(this).css("border", "3px solid #FD8036"); 
+      //$(this).css("background-color", "white"); 
+      
+      $(this).siblings().css("border", "0px"); 
+      
+      });
+     
+});
+</script>
+{% endblock %}
+
+{% block content %}
+<div class="main content-sidebar">
+   <content>
+    
+           {% if messages %}
+            <div style="border:3px solid #FD8036;font-weight:bold">
+	      <ul class="messages">
+		{% for message in messages %}
+		  <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+		{% endfor %}
+	      </ul>
+	    </div>  
+	   {% endif %}
+   
+   
+        <div class="designer-menu">
+	      <div class="designer-button run-button" title="Re-Evaluate All">
+		  <span><img alt="edit output format" title="edit output format" src="/static/images/play.png"/></span>
+		  <span class="text"><a class="reevaluateButton" href="/analytics/{{ analytics.id }}/reevaluate/0">Re-Evaluate</a></span>
+	      </div>
+	      <div class="designer-button run-button" title="Re-Evaluate keeping trained model">
+		  <span><img alt="edit output format" title="edit output format" src="/static/images/play.png"/></span>
+		  <span class="text"><a class="reevaluateButton" href="/analytics/{{ analytics.id }}/reevaluate/1">Re-Evaluate keeping trained model</a></span>
+	      </div>
+	      <div class="designer-button" title="Delete">
+		 <span><img alt="edit output format" title="edit output format" src="/static/images/remove.png"/></span>
+		 <span class="text" id="anDelete"><a href="/analytics/{{ analytics.id }}/delete">Delete</a></span>
+	      </div>
+	      <div class="designer-button" onclick="show_sparql_download_modal()" title="Download Report">
+		  <span><img alt="edit output format" title="edit output format" src="/static/images/download.png" /></span>
+		  <span class="glyphicon glyphicon-save text-gray"></span><span class="text"><a href="/analytics/report/{{ analytics.id }}/exportreport">Download Report</a></span>
+	      </div>
+          </div>
+          
+          <table>
+	    <tr>
+	      <td><h1 class="page-title inline">Analytic ID: {{ analytics.id }} - V: {{ analytics.version }}</h1></td>
+	    </tr>
+          </table>
+          <br/>
+          
+           {% if analytics.resultdocument %}
+          <p style="margin:0px;color:#FC5006;">Result document  <!--{ { analytics.resultdocument.name } }-->
+          
+	     {% if analytics.loadedRDFContext|length > 0 %}
+             <p style= "border:3px solid #FD8036;font-weight:bold">{{ analytics.loadedRDFContext|safe }}</p>
+             {% endif %}
+             <button id="toggleResultDocument" type="button">see/hide Info</button>
+             <a href="{{analytics.display_linda_apache_analytics}}{{analytics.resultdocument}}" TARGET="_blank">
+	      <img border="0" alt="openfile" src="/static/images/eye-view-icon.jpg"/>
+             </a>
+             {% if  analytics.publishedToTriplestore|lower == 'false' %}
+		{% if  analytics.isExportFormatRDFXML|lower == 'rdfxml' or  analytics.isExportFormatTTL|lower == 'ttl'   or  analytics.isExportFormatNTRIPLES|lower == 'n-tripples' %}  
+		    <form class="form rdf-form datasource-create-form" method="post" action="/analytics/datasourceCreateRDF/" enctype="multipart/form-data">{% csrf_token %}		    
+			 {% if form_error %}
+			  <p class="error">{{form_error}}</p>
+			{% endif %}
+			<input class="hidden" type="text" name="analytics_id" id="analytics_id" value="{{ analytics.id }}"/>
+			<input class="hidden" type="text" name="title" id="id_title" value="{{ analytics.display_resultdocument_title }}"/>
+			<input class="hidden" type="text" name="format" id="format" value="{{ analytics.exportFormat}}"/>
+			<textarea class="hidden" name="rdfdata">{{analytics.display_resultdocument_file}}</textarea>
+			
+			<input type="submit" class="button blue create-datasource-submit" value='{% trans "Save as LinDa Datasource"%}'/>
+		  </form>
+		{% endif %}
+             {% endif %}
+            <div id="resultdocument"  class ="analytics-description-visible">
+                <pre>{{analytics.display_resultdocument_file}}</pre>
+            </div>
+           </p>
+           {% endif %}
+          
+          {% if analytics.processMessage|length > 0 %}
+            <pre><p style= "border:3px solid #FD8036;font-weight:bold">{{ analytics.processMessage|safe }}</p></pre>
+          {% endif %}
+          
+          {% if analytics.plot1 %}
+	      {% if analytics.exists_plot1_file %}
+		<p style="margin:0px;color:#FC5006;">{{ analytics.plot1.description }} 
+		<button id="toggleplot1info">see/hide Plot</button>
+		  <div id="plot1info"  >
+		  <img src="{{analytics.display_linda_apache_analytics}}plots/plotid{{analytics.plot1.id}}.png"></img>
+		    
+		  </div>
+		</p>
+	      {% else %}
+	       <p style="margin:0px;color:#FC5006;">No Plot generated for this analytics process.</p>
+	      {% endif %}
+           {% endif %}
+           
+          
+          
+          {% if analytics.plot2 %}
+             {% if analytics.exists_plot2_file %}
+	      <p style="margin:0px;color:#FC5006;">{{ analytics.plot2.description }} 
+		<button id="toggleplot2info">see/hide Plot</button>
+		<div id="plot2info"  >
+		  <img src="{{analytics.display_linda_apache_analytics}}plots/plotid{{analytics.plot2.id}}.png"></img>
+		    
+		  </div>
+	      </p>
+             {% else %}
+             <p style="margin:0px;color:#FC5006;">No Plot generated for this analytics process.</p>
+	     {% endif %}
+           {% endif %}
+
+          {% if analytics.modelReadable %}
+          <p style="margin:0px;color:#FC5006;">Analytics model file 
+          <!--{ { analytics.modelReadable } }-->
+             <button id="toggleAnalyticsModel">see/hide Info</button>
+            <div id="model"   class="analytics-description-visible">
+                <pre>{{analytics.display_model_file}}</pre>
+              </div>
+          </p>
+          {% endif %}
+
+          {% if analytics.processinfo %}
+          <p style="margin:0px;color:#FC5006;">Process Info  <!--{ { analytics.processinfo } }-->
+             <button id="toggleprocessinfo">see/hide Info</button>
+            <div id="processinfo"  class="analytics-description-visible">
+                <pre>{{analytics.display_processinfo_file}}</pre>
+              </div>
+          </p>
+          {% endif %}
+          
+         
+          
+          <div id="queries_info" class="analytics-description-hidden" ></div>
+    </content>
+<aside1>
+       <div class="sidebar-block" id="analytics_general_info">
+            <h3 class="sidebar-title">{% trans "Current Analytic Info" %}</h3>
+                     <table>
+                                 <tr>
+				    <td>
+					<p> Analytics Category :</br>{{ analytics.category }}
+					  <input type="image" src="/static/images/info-button-orange-small.jpg" name="toggleCategoryDescription"  id="toggleCategoryDescription" />
+					  <div id="categoryDescription" class="analytics-description-hidden" >
+					    <h1>{{ analytics.category }} Description: </h1></br>
+					    {{analytics.display_category_description|safe}}
+					  </div>
+					</p>				    
+				    </td>
+				  </tr>
+				  <tr>
+				    <td>
+					<p> Analytics Algorithm : </br> {{ analytics.algorithm }}	    
+					  <input type="image" src="/static/images/info-button-orange-small.jpg" name="toggleAlgorithmDescription"  id="toggleAlgorithmDescription" />
+					  <div id="algorithmDescription" class="analytics-description-hidden" >
+					    <h1>{{ analytics.algorithm }} Description: </h1></br>
+					    {{analytics.display_algorithm_description|safe}}
+					  </div>
+					</p>			    
+				    </td>
+				  </tr>
+				  <tr>
+				    <td>
+				      {% if analytics.parameters %}
+					<p>Algorithm Parameters : </br> {{ analytics.parameters }}
+				        <img alt="edit parameters" title="edit parameters" src="/static/images/edit.png" name="edit_parameters"  id="edit_parameters"  height="20" width="20"/>
+					</p>
+					<form id="edit_parameters_form" action="/analytics/edit_parameters" method="post" style="display: none;">{% csrf_token %}
+						  <p id="id_parameters_label" style="float:left;">Pass new parameters:: </p>
+						  <input id="parameters_display" name="parameters_display" class="formitem" size="20" value=""/>						  
+						  <input class="formitem" style="display: none;" name="anID" value="{{ analytics.id }}"></input>
+						  <div style=“clear:both”>
+					          <input  type="submit" class="nicebutton" style="padding:0px;font-size: 12px;" value="Submit"/>
+					          <input id="resetParameters" type="reset" class="nicebutton" style="padding:0px;font-size: 12px;" value="Reset!">
+					</form>  
+				      {% endif %}		    
+				    </td>
+				  </tr>
+				  <tr>
+				    <td>     
+				      <p>Analytic process Description 
+				        <input type="image" src="/static/images/info-button-orange-small.jpg" name="toggleAnalyticsDescription"  id="toggleAnalyticsDescription" />
+					  <div id="analyticsDescription" class="analytics-description-hidden" >
+					    <h1>Analytic Process Description: </h1></br>
+					    {{analytics.description}}
+					  </div>
+				      </p>		    
+				    </td>
+				  </tr>
+				  <tr>
+				    <td>     
+				       <p>Export Format : {{ analytics.exportFormat }}
+					<img alt="edit output format" title="edit output format" src="/static/images/edit.png" name="edit_icon_output"  id="edit_icon_output"  height="20" width="20"/>
+				       </p>
+				        <form id="edit_output_format_form" action="/analytics/edit_output_format" method="post" style="display: none;">{% csrf_token %}
+						 <p id="exportFormat" class="formitem">select a different export format: <select id="id_exportFormat" maxlength="10" name="exportFormat">
+						    <option value="N-Tripples">N-Triples</option>
+						    <option value="TTL">Turtle</option>
+						    <option value="RDFXML">rdf/xml</option>
+						    <option value="csv">csv</option>
+						    <option value="arff">arff</option>
+						    <option value="txt">txt</option>
+						    </select></p>
+						    <div style=“clear:both”>
+						  <input class="formitem" style="display: none;" name="anID" value="{{ analytics.id }}"></input>  
+					          <input  type="submit" class="nicebutton" style="padding:0px;font-size: 12px;" value="Submit"/>
+					          <input id="resetOutputFormat" type="reset" class="nicebutton" style="padding:0px;font-size: 12px;" value="Reset!">
+					</form> 
+				    </td>
+				  </tr>
+				  <tr>
+				    <td> 
+				     {% if analytics.document and not analytics.trainQuery %}
+				       <p>Analytics train dataset :<div class="analytics-description-visible-right">{{ analytics.document }}</div><p>
+				     {% endif %} 
+				     
+				     {% if analytics.trainQuery and analytics.evaluationQuery %}
+				       <p style="float:left;">Analytics train Query :<p>
+				     {% endif %} 
+				     {% if analytics.trainQuery and  not analytics.evaluationQuery %}
+				       <p style="float:left;">Analytics input Query :<p>
+				     {% endif %} 
+				     {% if analytics.trainQuery %}
+				      <input type="image" src="/static/images/info-button-orange-small.jpg" name="toggleTrainQueryDescription"  id="toggleTrainQueryDescription" />
+				      <div class="analytics-description-visible-right">{{ analytics.trainQuery }}</div>
+				     {% endif %} 
+				     </br>
+				    </td>
+				  </tr>
+				  <tr>
+				    <td>     
+				      {% if analytics.testdocument and not analytics.evaluationQuery %}
+				      <p>Analytics evaluation dataset :<div class="analytics-description-visible-right">{{ analytics.testdocument }}</div><p>	
+				      {% endif %}
+				      {% if analytics.evaluationQuery %}
+				       <p style="float:left;">Analytics evaluation Query :<p>
+				       <input type="image" src="/static/images/info-button-orange-small.jpg" name="toggleEvaluationQueryDescription"  id="toggleEvaluationQueryDescription" />
+				      
+				       <div class="analytics-description-visible-right">
+				        {{ analytics.evaluationQuery }} 
+				        <img alt="edit evaluation query" title="edit evaluation query" src="/static/images/edit.png" name="edit_icon_evaluation_query"  id="edit_icon_evaluation_query"  height="20" width="20"/>
+				       </div>
+				        <form id="edit_evaluation_query_form" action="/analytics/edit_evaluation_query" method="post" style="display: none;">{% csrf_token %}
+						  <p id="id_evaluationQuery_label" style="float:left;">Select a new evaluation Query: </p>
+						  <input id="id_evaluationQuery_display" class="formitem" size="20" value=""/>						  
+						  <input id="evaluationQuery" class="formitem" style="display: none;" name="evaluationQuery" value=""></input>
+						  <input class="formitem" style="display: none;" name="anID" value="{{ analytics.id }}"></input>
+						  <div style=“clear:both”>
+					          <input  type="submit" class="nicebutton" style="padding:0px;font-size: 12px;" value="Submit"/>
+					          <input id="resetEvaluationQuery" type="reset" class="nicebutton" style="padding:0px;font-size: 12px;" value="Reset!">
+					</form>     
+				      {% endif %} 
+				    </td>
+				  </tr>				  
+                    </table>
+                    
+                    <h2>My evaluation is:</h2>
+                    <div id="emotion" style="border:3px solid #FD8036;font-weight:bold;padding:5px;width:100%px;">
+                    <form action="/analytics/evaluation/" method="post">{% csrf_token %}
+                    <div id="emotion1">                    
+                    <p class="eval_question">The analysis provided you a valuable insight with regards to your business objectives?</p>
+		     <input type="radio" name="emotion1" id="happy1" value="happy" checked="checked"/>
+			  <label for="happy1"><img src="/static/images/happy.png" alt="I am satisfied" /></label> 
+		     <input type="radio" name="emotion1" id="serious1" value="serious" />
+			  <label for="serious1"><img src="/static/images/serious.png" alt="I don't know" /></label>
+		      <input type="radio" name="emotion1" id="sad1"  value="sad"  />
+			  <label for="sad1"><img src="/static/images/sad.png" alt="I'm not satisfied" /></label> 
+		    </div>
+	
+		    <div id="emotion2">
+		     <p class="eval_question">Are you satisfied with the time required for the realisation of the analysis?</p>
+		    <input type="radio" name="emotion2" id="happy2" value="happy" checked="checked"/>
+			  <label for="happy2"><img src="/static/images/happy.png" alt="I am satisfied" /></label> 
+		    <input type="radio" name="emotion2" id="serious2" value="serious" />
+			  <label for="serious2"><img src="/static/images/serious.png" alt="I don't know" /></label>
+		    <input type="radio" name="emotion2" id="sad2"  value="sad"  />
+			  <label for="sad2"><img src="/static/images/sad.png" alt="I'm not satisfied" /></label> 
+		    </div>  
+		      
+		    <div id="emotion3">
+		     <p class="eval_question"> Can you reuse the results produced from the analysis?</p>
+		    <input type="radio" name="emotion3" id="happy3" value="happy" checked="checked"/>
+			  <label for="happy3"><img src="/static/images/happy.png" alt="I am satisfied" /></label> 
+		    <input type="radio" name="emotion3" id="serious3" value="serious" />
+			  <label for="serious3"><img src="/static/images/serious.png" alt="I don't know" /></label>
+		    <input type="radio" name="emotion3" id="sad3"  value="sad"  />
+			  <label for="sad3"><img src="/static/images/sad.png" alt="I'm not satisfied" /></label> 
+		    </div>	  
+		    
+		    <div id="emotion4">
+		     <p class="eval_question">Are you satisfied with the quality of the data provided by the input query?</p>
+		    <input type="radio" name="emotion4" id="happy4" value="happy" checked="checked"/>
+			  <label for="happy4"><img src="/static/images/happy.png" alt="I am satisfied" /></label> 
+		    <input type="radio" name="emotion4" id="serious4" value="serious" />
+			  <label for="serious4"><img src="/static/images/serious.png" alt="I don't know" /></label>
+		    <input type="radio" name="emotion4" id="sad4"  value="sad"  />
+			  <label for="sad4"><img src="/static/images/sad.png" alt="I'm not satisfied" /></label> 
+		    </div>
+		    <input style="display: none;" name="anID" value="{{ analytics.id }}"></input>
+		     <br/>
+		      <input  type="submit" class="nicebutton" style="padding:0px;font-size: 12px;" value="Submit"/>
+		    </form>
+		    </div>
+                    
+                     <table>
+                                 <tr>
+				    <td>
+					 </br><p style="margin:0px;color:#FC5006;"><b>Performance Numbers :</b></p>				    
+				    </td>
+				  </tr>
+				  <tr>
+				    <td>
+					 Time To Get Data: {{analytics.timeToGet_data}} sec
+				    </td>
+				  </tr>
+				  <tr>
+				    <td>
+					 Size Of Analyzed Data : {{analytics.data_size}} B
+				    </td>
+				  </tr>
+				  <tr>
+				    <td>
+					 Time To Run analytics: {{analytics.timeToRun_analytics}} sec
+				    </td>
+				  </tr>
+				   <tr>
+				    <td>
+					Time To Result Document:   {{analytics.timeToCreate_RDF}} sec    
+				    </td>
+				  </tr>
+		    </table>
+        </div>
+        <div class="sidebar-block" id="analytics_list">
+            <h3 class="sidebar-title">{% trans "My Analytics" %}</h3>
+                    <ul>
+                      <li>
+                        <form class="form menu-search" action="/analytics/find/" method="POST" id="browse-analytics-form">
+                          <input type="text" id="search_q" name="search_q" class="site-search-input" placeholder="Search My Analytics" />
+			  <input type="submit" name="Submit" value=""/> 
+			 </form>
+                      </li>
+                    </ul>
+                     <table id="myAnalytics"> 
+                        {% if analytics_list %}
+
+                            {% for analytics in analytics_list %}
+                                 <tr>
+				    <td>
+                                    <a href="/analytics/{{ analytics.id }}/">({{ analytics.algorithm }})-AnID : {{ analytics.id }} </a>
+                                    <p class="anDescription" style="display:none">{{ analytics.description }}</p>
+				    </td>
+				  </tr>
+                            {% endfor %}
+
+                        {% else %}
+                            <p>No analytics are available.</p>
+                        {% endif %}
+                    </table>
+       </div>
+</aside1>
+
+</div>
+{% endblock %}
+

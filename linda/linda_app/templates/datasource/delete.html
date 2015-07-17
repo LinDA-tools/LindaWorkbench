@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% load url from future %}
+{% load i18n thumbnail2 %}
+{% load app_filters %}
+{% block title %}{% trans "Delete datasource"%} | LinDA{% endblock %}
+{% block bodyclass %}datasource-delete{% endblock %}
+
+{% block content %}
+<div class="main">
+    <h1 class="page-title inline">{% trans "Delete datasource"%}</h1>
+
+    <form class="form rdf-form datasource-delete-form" method="post" action="." enctype="multipart/form-data">{% csrf_token %}
+        {% if form_error %}
+            <p class="error">{{form_error}}</p>
+        {% endif %}
+
+        <p>{% trans "Are you sure you want to delete"%} {{title}} ?</p>
+
+        <input type="submit" class="button red delete-datasource-submit" value='{% trans "Delete datasource"%}'/>
+        <a class="button blue" href="/datasources/">{%trans "Cancel"%}</a>
+
+    </form>
+</div>
+{% endblock %}

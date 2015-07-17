@@ -1,0 +1,88 @@
+
+    <div id="property-filters">
+        <div class="filter-prototype">
+            <select>
+                <option value="and" selected="selected">All filters must be true</option>
+                <option value="or">At least one filter needs to be true</option>
+                <option value="nand">All filters must be false</option>
+                <option value="nor">At least one filter needs to be false</option>
+
+                <option value="custom">Specify a custom boolean expression</option>
+            </select>
+
+            <input type="text" id="filter-prototype-str" placeholder="e.g [1] && ([2] || [3])" />
+        </div>
+
+        <div id="all-filters">
+
+        </div>
+
+        <div class="select-filter-type">
+            <span>Select filter type:</span>
+            <select>
+                <option value=""></option>
+                <option value="str">String</option>
+                <option value="num">Number</option>
+                <option value="date">Date</option>
+                <option value="value">URL</option>
+            </select>
+            <span id="filters-clear" class="button gray right">Clear filters</span>
+        </div>
+
+        <div class="filter-type filter-type-str">
+            <span>Value </span>
+            <select>
+                <option value="contains">contains</option>
+                <option value="eq">is equal to</option>
+                <option value="neq">not equal to</option>
+                <option value="starts">starts with</option>
+                <option value="ends">ends with</option>
+                <option value="language">in language (if given): </option>
+                <option value="regex">follows the regular expression:</option>
+            </select>
+
+            <input type="text" placeholder="value"/>
+
+            <div class="right control-case-sensitive">
+                <input type="checkbox" id="case-sensitive" default="false" />
+                <label for="case-sensitive">Case sensitive</label>
+            </div>
+        </div>
+
+        <div class="filter-type filter-type-num">
+            <span>Value </span>
+            <select>
+                <option value="eq">=</option>
+                <option value="neq">!=</option>
+                <option value="lt">&lt;</option>
+                <option value="lte">&lt;=</option>
+                <option value="gt">&gt;</option>
+                <option value="gte">&gt;=</option>
+            </select>
+
+            <input type="number" placeholder="value"/>
+        </div>
+
+        <div class="filter-type filter-type-date">
+            <span>Value </span>
+            <select>
+                <option value="eq">=</option>
+                <option value="neq">!=</option>
+                <option value="lt">&lt;</option>
+                <option value="lte">&lt;=</option>
+                <option value="gt">&gt;</option>
+                <option value="gte">&gt;=</option>
+            </select>
+
+            <input type="date" placeholder="value"/>
+        </div>
+
+        <div class="filter-type filter-type-value">
+            <input type="url" placeholder="search for an entity">
+        </div>
+
+        <div class="clearfix">
+            <span class="done button orange right">Save & close</span>
+            <span class="add-filter button blue right">+Add filter</span>
+        </div>
+    </div>

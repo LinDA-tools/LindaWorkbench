@@ -1,0 +1,101 @@
+{% extends 'base.html' %}
+
+{% load i18n %}
+{% load url from future %}
+{% load app_filters %}
+{% block title %}{% trans "Search" %} | LinDA{% endblock %}
+{% block bodyclass %}site-search{% endblock %}
+
+{% block css %}
+    <link rel="stylesheet" href="/static/css/jquery.contextMenu.css" />
+    <link rel="stylesheet" href="/static/css/jquery.modal.css" />
+    <link rel="stylesheet" href="/static/css/jquery.datatables.min.css" />
+{% endblock %}
+
+{% block content %}
+    <div class="main">
+		<h1 class="page-title">{% trans "Search results for" %} {{search_q}}</h1>
+
+        <div class="search-results">
+            {% if datasources %}
+                <h2>{% trans "Data sources" %}</h2>
+                {% with datasources=datasources out="html" %}
+                    {% include "datasource/table.html" %}
+                {% endwith %}
+            {% endif %}
+
+            {% if queries %}
+                <h2>{% trans "Queries" %}</h2>
+                {% with queries=queries out="html" %}
+                    {% include "queries/table.html" %}
+                {% endwith %}
+            {% endif %}
+
+            {% if analytics %}
+                <h2>{% trans "Analytics" %}</h2>
+                {% for analytic in analytics %}
+                    <a href="/analytics/{{analytic.id}}">({{ analytic.algorithm }}) -- #{{ analytic.id }} </a>
+                    <p>{{analytic.description}}</p>
+                {% endfor %}
+            {% endif %}
+
+            {% if vocabularies_list %}
+                <h2>{% trans "Vocabularies" %}</h2>
+                {% with vocabularies=vocabularies_list %}
+                    {% include "vocabulary/list.html" %}
+                {% endwith %}
+
+                {% with current_url=request.get_full_path page_param='v_page' page_obj=vocabularies_page %}
+                    {% include 'util/paginator.html' %}
+                {% endwith %}
+            {% endif %}
+
+            {% if classes_list %}
+                <h2>{% trans "Classes" %}</h2>
+                {% with classes=classes_list %}
+                    {% include "vocabulary/list.html" %}
+                {% endwith %}
+
+                {% with current_url=request.get_full_path page_param='c_page' page_obj=classes_page %}
+                    {% include 'util/paginator.html' %}
+                {% endwith %}
+            {% endif %}
+
+            {% if properties_list %}
+                <h2>{% trans "Properties" %}</h2>
+                {% with properties=properties_list %}
+                    {% include "vocabulary/list.html" %}
+                {% endwith %}
+
+                {% with current_url=request.get_full_path page_param='p_page' page_obj=properties_page %}
+                    {% include 'util/paginator.html' %}
+                {% endwith %}
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    <script src="/static/js/jquery.contextMenu.js"></script>
+    <script src="/static/js/jquery.datatables.min.js"></script>
+
+    <script src="/static/js/jquery-ui.min.js"></script>
+    <script src="/static/js/jquery.modal.min.js"></script>
+    <script src="/static/js/jquery.confirm.js"></script>
+
+    {% if datasources %}
+        {% with datasources=datasources out="js" paginate_by=-1 %}
+            {% include "datasource/table.html" %}
+        {% endwith %}
+    {% endif %}
+
+    {% if queries %}
+        {% with queries=queries out="js" paginate_by=-1 %}
+            {% include "queries/table.html" %}
+        {% endwith %}
+    {% endif %}
+
+    <script>
+        $(".site-search-input").val("{{search_q}}");
+    </script>
+{% endblock %}

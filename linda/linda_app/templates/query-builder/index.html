@@ -1,0 +1,347 @@
+{% extends "base.html" %}
+
+{% load i18n %}
+{% load app_filters %}
+{% block title %}{% trans "Query Builder"%} | LinDa{% endblock %}
+{% block bodyclass %}qbuilder{% endblock %}
+
+
+{%block css %}
+    <link rel="stylesheet" src="/static/css/query-builder.css" />
+
+    <link data-turbolinks-track="true" href="/static/query-builder/stylesheets/_variables.css?body=1" media="all" rel="stylesheet" />
+    <link data-turbolinks-track="true" href="/static/query-builder/stylesheets/bootstrap.min.css?body=1" media="all" rel="stylesheet" />
+    <link data-turbolinks-track="true" href="/static/query-builder/stylesheets/common.css?body=1" media="all" rel="stylesheet" />
+    <link data-turbolinks-track="true" href="/static/query-builder/stylesheets/developer.css?body=1" media="all" rel="stylesheet" />
+    <link data-turbolinks-track="true" href="/static/query-builder/stylesheets/query.css?body=1" media="all" rel="stylesheet" />
+    <link data-turbolinks-track="true" href="/static/query-builder/stylesheets/application.css?body=1" media="all" rel="stylesheet" />
+    <link data-turbolinks-track="true" href="/static/query-builder/stylesheets/gritter.css?body=1" media="all" rel="stylesheet" />
+{% endblock %}
+
+{% block content %}
+<div class="main sparql">
+    <h1 class="page-title">{% trans "Query Builder" %}</h1>
+    <div id="loading" style="display: none;">
+        	<img alt="Jar loading" class="ajax-loader" src="/assets/jar-loading.gif">
+    	</div>
+    <div class="panel panel-default main-container">
+    <div class="panel-heading"><strong>Query Builder</strong> : Please follow the steps to build your query</div>
+    <div class="panel-body">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="panel panel-default" >
+                    <div class="panel-heading"><strong>STEP 1 :</strong> Select Dataset</div>
+                    <div class="panel-body">
+                        <div class="row ">
+                            <div class="col-md-12">
+                                <div class="dropdown clear-dataset">
+                                  <button class="btn btn-default dropdown-toggle clear-dataset col-md-12" type="button" id="dd_select_dataset" data-toggle="dropdown">
+                                    Choose a Dataset&nbsp;
+                                    <span class="caret"></span>
+                                  </button>
+                                  <ul class="dropdown-menu col-md-12" role="menu" aria-labelledby="dd_select_dataset">
+                                    {% for datasource in datasources %}
+                                           <li role="presentation"><a role="menuitem" tabindex="-1" onclick="select_dataset('{{datasource.name}}', '{{datasource | get_endpoint}}');">{{datasource.title}}</a></li>
+                                        {% endfor %}
+                                      <li role="presentation"><a role="menuitem" tabindex="-1" onclick="$('#user_input').show()">Add your own SPARQL Endpoint</a></li>
+                                  </ul>
+                                </div>
+
+                                <div class="input-group" id="user_input" style="display: none">
+								      <input type="text" id="usr_ep" class="form-control" placeholder="Add your own SPARQL Endpoint">
+								      <span class="input-group-btn">
+								        <button class="btn btn-default" type="button" onclick="QueryBuilder.datasets.select($('#usr_ep').val()); $('#hdn_qb_dataset').val($('#usr_ep').val());$('#user_input').hide()">OK</button>
+								      </span>
+								</div>
+                                {% with hidden_value_id="hdn_qb_dataset" div_classes="done-dataset" div_id="div_select_dataset" remove_function="QueryBuilder.datasets.reset()" hidden_value_value="" %}
+                                    {% include 'query-builder/selector.html' %}
+                                {% endwith %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-8" id="div_qb_select_class" style="display:none;">
+                <div class="panel panel-default">
+                    <div class="panel-heading"><strong>STEP 2 :</strong> Select Class
+                        <div style="float:right"><label onclick="QueryBuilder.search_classes_change()">
+                            <input type="checkbox" id="force_uri_search"> Extended Search (Including URIs) </label>
+                        </div>
+                    </div>
+                    <div class="panel-body">
+                        <div class="row clear-search-class">
+                            <div class="col-md-12">
+                                <div class="row">
+                                  <div class="col-lg-12">
+                                      <input type="text" class="form-control" placeholder="eg, Actor, City ..." id="txt_search_classes" required >
+                                      <input type="hidden" id="hdn_searched_class_value" />
+                                      <input type="hidden" id="hdn_done_searching_class" value="false"/>
+                                  </div><!-- /.col-lg-6 -->
+                                </div><!-- /.row -->
+                            </div>
+                        </div>
+                        <div class="row" id="qb_class_search_loading" style="display:none;">
+                            <div class="col-md-12">
+                                <center><img src="/static/query-builder/images/jar-loading.gif" class="builder-loading"/></center>
+                            </div>
+                        </div>
+                        <div class="row" id="qb_class_search_error"  style="display:none;">
+                            <div class="col-md-12 ">
+                                <div class="alert alert-danger" style="margin-top:20px;"></div>
+                            </div>
+                        </div>
+                        <div class="row" id="div_all_classes" >
+												       <div class="col-md-12">
+																 <button class="btn btn-warning col-md-12" type="button" id="btn_show_all_classes">Show All Classes </button>
+															 </div>
+												</div>
+                        <div class="row" id="div_classes_search_result">
+                            <div class="col-md-12">
+
+                                {% with hidden_value_id="hdn_qb_class" div_classes="done-search-class" div_id="div_selected_class" remove_function="QueryBuilder.reset_searched_class()" hidden_value_value="" %}
+                                    {% include 'query-builder/selector.html' %}
+                                {% endwith %}
+                            </div>
+                        </div>
+                        <div class="row" id="div_classes_search_more" style="display:none;">
+                            <div class="col-md-12">
+                                <button class="btn btn-warning col-md-12" type="button" id="btn_classes_search_more">More details on </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="list-group" id="tbl_classes_search_result"></div>
+                </div>
+            </div>
+
+        </div>
+        <div class="row" style="display:none;" id="div_qb_properties">
+            <div class="col-md-12"  >
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <strong>STEP 3 :</strong> FILTER Properties
+                    </div>
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <p>
+                                    <small>You can filter properties from various options here</small>
+                                </p>
+                                <p>
+                                    <small>Please note that these properties won't be displayed in the preview mode, but will be displayed in the final serialization download option you choose. If you want to have the exact view of these properties in the preview also, then please check the option from below.</small>
+                                </p>
+
+                            </div>
+                        </div>
+                        <div class="row">
+
+
+                            <div class="col-md-8">
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">
+                                        <div class="row">
+                                            <div class="col-md-9">
+                                                Properties Histogram
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="panel-body">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <small> Filter some specific properties of the selected class</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="panel-heading alert" style="display:none;" id="qb_properties_properties_selected_filters_header">
+                                        Selected filters
+                                    </div>
+                                    <div class="list-group" id="qb_properties_properties_selected_filters_list" style="display:none;">
+                                    </div>
+                                    <div class="panel-heading alert">
+                                        <div class="row">
+                                            <div class="col-md-11">
+                                                Object Properties
+                                            </div>
+                                            <div class="col-md-1">
+                                                <input type='checkbox' id='cb_property_range_all_object'  class='cb-property-range-all'  checked='checked' onclick="QueryBuilder.properties.click_check_all('object')"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="list-group properties-list-group" id="property_main_properties_object_group" >
+
+                                    </div>
+                                    <div class="row" id="qb_properties_properties_object_loading">
+                                        <div class="col-md-12">
+                                            <center><img src="/static/query-builder/images/jar-loading.gif" class="builder-loading"/></center>
+                                        </div>
+                                    </div>
+                                    <div class="panel-heading alert">
+                                        <div class="row">
+                                            <div class="col-md-11">
+                                                Data type Properties
+                                            </div>
+                                            <div class="col-md-1">
+                                                <input type='checkbox' id='cb_property_range_all_data'  class='cb-property-range-all'  checked='checked' onclick="QueryBuilder.properties.click_check_all('data')"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="list-group properties-list-group" id="property_main_properties_datatype_group" >
+
+                                    </div>
+                                    <div class="row" id="qb_properties_properties_datatype_loading">
+                                        <div class="col-md-12">
+                                            <center><img src="/static/query-builder/images/jar-loading.gif" class="builder-loading"/></center>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="panel panel-default" id="property_main_subclasses">
+                                    <div class="panel-heading  property-subclass-header" uri="" id="property_main_subclass_header">
+                                        <div class="row">
+                                            <div class="col-md-9">
+                                                Sub-Classes
+                                            </div>
+                                            <div class="col-md-3">
+                                                <button type="button" class="btn btn-primary btn-xs pull-right" onclick="QueryBuilder.properties.get_subclasses_for_selected_class()"><span class="glyphicon glyphicon-plus"></span>&nbsp;more</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="list-group" id="property_main_subclasses_group" subclasses="all">
+                                        <a class="list-group-item property-subclass-group" href="javascript:void(0)" onclick="QueryBuilder.properties.select_subclass('all')" uri="all" clicked='true' display-name="All"><span class="glyphicon glyphicon-ok"></span>&nbsp;&nbsp;<strong>All</strong></a>
+                                    </div>
+                                    <div class="row" id="qb_properties_sub_classes_loading" style="display:none;">
+                                        <div class="col-md-12">
+                                            <center><img src="/static/query-builder/images/jar-loading.gif" class="builder-loading"/></center>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <div class="row qb-equivalent-query-main" style="display:none;">
+            <div class="col-md-12">
+                {% include 'query-builder/sparql-query-editor.html' %}
+            </div>
+        </div>
+
+        {% with in_query_builder_action=True %}
+            {% include 'query-builder/search-results.html' %}
+        {% endwith %}
+    </div>
+
+</div>
+<div class="modal fade in" id="class_selector_modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" ></h4>
+            </div>
+            <div class="modal-body">
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Done</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade in" id="all_classes_list_modal" tabindex="-1" role="dialog" aria-labelledby="allClassesModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="width:100%">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" ></h4>
+            </div>
+            <div class="modal-body">
+               <table class="table table-striped" id="all_classes_table" width="auto">
+                    <thead>
+                    </thead>
+                    <tbody id="all_classes_table_body">
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal" onclick="QueryBuilder.done_showing_classes()">Done</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+    {% include 'query-builder/alert.html' %}
+    {% include 'query-builder/uri-viewer.html' %}
+</div>
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        rdf2any_server = "{{RDF2ANY_SERVER}}";
+	</script>
+
+    {% include "builder_advanced/ace-editor.html" %}
+
+    <script data-turbolinks-track="true" src="/static/query-builder/javascripts/jquery_ujs.js?body=1"></script>
+    <script data-turbolinks-track="true" src="/static/query-builder/javascripts/turbolinks.js?body=1"></script>
+    <script data-turbolinks-track="true" src="/static/query-builder/javascripts/bootstrap.js?body=1"></script>
+    <script data-turbolinks-track="true" src="/static/query-builder/javascripts/bootstrap.min.js?body=1"></script>
+    <script data-turbolinks-track="true" src="/static/query-builder/javascripts/developer.js?body=1"></script>
+    <script data-turbolinks-track="true" src="/static/query-builder/javascripts/query.js?body=1"></script>
+    <script data-turbolinks-track="true" src="/static/query-builder/javascripts/resources/variables.js?body=1"></script>
+    <script data-turbolinks-track="true" src="/static/query-builder/javascripts/resources/common.js?body=1"></script>
+    <script data-turbolinks-track="true" src="/static/query-builder/javascripts/resources/querybuilder.js?body=1"></script>
+    <script data-turbolinks-track="true" src="/static/query-builder/javascripts/resources/sparql.js?body=1"></script>
+    <script data-turbolinks-track="true" src="/static/query-builder/javascripts/resources/utilities.js?body=1"></script>
+    <script data-turbolinks-track="true" src="/static/query-builder/javascripts/codemirror.js?body=1"></script>
+    <script data-turbolinks-track="true" src="/static/query-builder/javascripts/gritter.js?body=1"></script>
+    <script data-turbolinks-track="true" src="/static/query-builder/javascripts/application.js?body=1"></script>
+
+    <script>
+        $(function () {
+            $('.dropdown-toggle').dropdown();
+        });
+        $("#txt_search_classes").bind('input',function(){QueryBuilder.search_classes_change();});
+    </script>
+
+    <script>
+        {% with query=query %}
+            {% include 'queries/save.js' %}
+        {% endwith %}
+    </script>
+
+    <script>
+        function select_dataset(dtn, endp) {
+            dt_name = dtn;
+            endpoint_uri = endp;
+            QueryBuilder.datasets.select(endp, dtn);
+        }
+
+        jQuery(function () {
+            jQuery('.dropdown-toggle').dropdown();
+        });
+        jQuery("#txt_search_classes").bind('input',function(){QueryBuilder.search_classes_change();});
+    </script>
+
+    {% if datasource_default %}
+        <script>
+            /*Select the predefined datasource if it's specified*/
+            QueryBuilder.datasets.select('{{datasource_default | get_endpoint}}', '{{datasource_default.name}}')
+        </script>
+    {% endif %}
+
+    <script>
+        $(function () {
+            $('.dropdown-toggle').dropdown();
+            document.getElementById('configured_template_files').addEventListener('change', QueryBuilder.convert.configured.handle_file_upload, false);
+        });
+        $("#txt_search_classes").bind('input',function(){QueryBuilder.search_classes_change();});
+
+        $("#txt_sparql_query_limit").change(function(){
+			QueryBuilder.show_equivalent_sparql_query();
+		});
+    </script>
+{% endblock %}

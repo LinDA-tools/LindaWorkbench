@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+{% load url from future %}
+{% load i18n thumbnail2 %}
+{% load app_filters %}
+{% block title %}{% if action == "create"%}Create a new datasource{% else %}Replace an existing datasource{% endif%} | LinDA{% endblock %}
+{% block bodyclass %}datasource-create{% endblock %}
+
+{% block content %}
+<div class="main">
+    <h1 class="page-title inline">{% if action == "create"%}Create a new datasource{% else %}Replace an existing datasource{% endif%}</h1>
+
+    <form class="form datasource-create-form" method="post" action="." enctype="multipart/form-data">{% csrf_token %}
+
+        {% if error %}
+            <p class="error">{{error}}</p>
+        {% endif %}
+
+        <div>
+            <label for="type">{% trans "Type"%}:</label>
+
+            {% with field=typeSelect id="type" options=types default="Choose location" %}
+                {% include 'util/prettydropdown.html' %}
+            {% endwith %}
+
+        </div>
+
+        <div class="endpoint-container" style="display: none;">
+            <label for="title">{% trans "Title"%}:</label>
+            <input type="text" name="title" {%if datasource%}value="{{datasource.title}}"{% endif %}/><br />
+
+            <label for="endpoint">{% trans "Endpoint uri"%}:</label>
+            <input type="url" name="endpoint" placeholder="http://www.example.com/sparql" {%if datasource and datasource.is_public%}value="{{datasource.uri}}"{% endif %}/>
+
+            <div class="rss">
+                <input type="checkbox" name="is_rss" />
+                <label for="is_rss">{% trans "is RSS feed"%}</label>
+            </div>
+        </div>
+
+        <div class="datatype-container" style="display: none;">
+            <label for="datatype">{% trans "Data type"%}:</label>
+
+            {% with field=datatypeSelect id="datatype" options=datatypes default="Select a data source type"%}
+                {% include 'util/prettydropdown.html' %}
+            {% endwith %}
+
+        </div>
+
+        <div class="submit-box">
+            <label for="datatype"></label>
+            <input type="submit" class="button blue create-datasource-submit" value='{% if action == "create"%}Create{% else %}Replace{% endif%}'/>
+        </div>
+    </form>
+</div>
+{% endblock %}
+
+{% block scripts %}
+    {% with field=typeSelect id="type" teaser=True %}
+        {% include 'util/prettydropdown_js.html' %}
+    {% endwith %}
+
+    {% with field=datatypeSelect id="datatype" teaser=True %}
+        {% include 'util/prettydropdown_js.html' %}
+    {% endwith %}
+
+    <script>
+        $("#id_type").on('change', function (e) { //show the appropriate input each time
+            var optionSelected = $("#id_type option:selected", this);
+            var valueSelected = this.value;
+
+            if (valueSelected == "public") {
+                $(".datatype-container").hide();
+                $(".endpoint-container").show();
+
+                {% if action == "create"%}
+                    $(".submit-box input").val( '{% trans "Create" %}' );
+                {% else %}
+                    $(".submit-box input").val( '{% trans "Replace" %}' );
+                {% endif%}
+            } else {
+                $(".endpoint-container").hide();
+                $(".datatype-container").show();
+
+                $(".submit-box input").val( '{% trans "Continue" %}' );
+            }
+        });
+    </script>
+{% endblock %}

@@ -1,0 +1,70 @@
+div.analytics-description-hidden{
+  background: none repeat scroll 0% 0% #DADFE1;
+  overflow:auto;
+  max-height:500px;
+  width:700px;
+  display:none;
+  padding:20px;
+}
+
+div.analytics-description-visible{
+  background: none repeat scroll 0% 0% #DADFE1;
+  overflow:auto;
+  max-height:300px;
+  width:100%;
+  padding:20px;
+}
+div.analytics-description-visible-right{
+  background: none repeat scroll 0% 0% #DADFE1;
+  overflow:auto;
+  width:100%;
+}
+
+.ui-autocomplete
+{
+    float : left; 
+    clear : both; /* make sure it doesn't pull the next line up next to it */
+    position : relative;  /* z-index will not work without this */
+    z-index : 50;
+    text-align : left;
+    overflow-y : scroll;
+    overflow-x : scroll;
+    max-height : 200px;
+    max-width : 220px;
+    margin : 0px; /* pull the list items over the left edge */
+    padding : 0px;
+}
+
+#actions td {
+    padding: 8px;
+}
+.input_hidden {
+    position: absolute;
+    left: -9999px;
+}
+
+.selected {
+    background-color: #ccc;
+}
+
+#emotion label {
+    display: inline-block;
+    cursor: pointer;
+}
+
+#emotion label img {
+    padding: 3px;
+}
+
+p.eval_question{
+  font-weight: bold !important;
+  font-size: 100%  !important;
+}
+
+div.quality{
+  float:left;
+}
+
+table, tr, th, td {
+    vertical-align: none !important;
+}

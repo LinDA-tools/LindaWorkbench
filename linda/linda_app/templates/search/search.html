@@ -1,0 +1,148 @@
+{% extends 'base.html' %}
+
+{% load i18n %}
+{% load app_filters %}
+{% block title %}{% trans "Vocabularies" %} | LinDA{% endblock %}
+
+{% block content %}
+    <div class="main">
+		<h2 class="page-title">LinDA - {% trans "Vocabulary search" %}{% if request.GET.definedBy %} {% trans "inside"%} {{vocabulary_define.title}}{% endif %}</h2>
+
+		<div class="home-search">
+			<form method="get" action="/vocabularies" class="form vocabulary-search-form">
+                <input style="display:none;" type="text" name="type" value="{{type}}" title="Search type"/>
+                {% if request.GET.definedBy %}
+                    <input style="display:none;" type="number" name="definedBy" value="{{request.GET.definedBy}}"/>
+                {% endif %}
+                <input id="vocabulary-search-text" type="text" name="q" title="Search here" required="required" placeholder='{% trans "Search" %}' value="{% if q %}{{q}}{% endif %}"/>
+                <input type="submit" value=""/>
+                {% if query or request.GET.definedBy %}
+                    <a href="/{{type}}/all" class="button delete-button clear-search" title='Clear search'></a>
+                {% endif %}
+
+                <div id="localize" class="right">
+                    <label id="localization-label">Localization {% if translate %}ON{% else %}OFF{% endif %}</label>
+                    <a href="#" alt='{% trans "By enabling localization, you can search in your local language and let LinDA translate terms in English!"%}'><img id="translate-icon" class="icon-translate {% if translate %}enabled{% endif %}" src="/static/images/localize.png" alt="Localization"/></a>
+                    <input id="id_translate" type="checkbox" name="translate" {% if translate %}checked="checked"{% endif %} title="Localization"/>
+                </div>
+                {% if not check_for_updates %}
+                    {% if user.is_authenticated and type == "vocabularies" %}
+                        <br />
+                        <div class="right">
+                            <a href="/vocabulary/create/" class="button green">{% trans "Create a new vocabulary" %}</a>
+                            {% if user.is_superuser %}
+                                <a href="?update=True" class="button orange">{% trans "Check for updates now" %}</a>
+                            {% endif %}
+                        </div>
+                    {% endif %}
+                {% endif %}
+			</form>
+
+            {% if user.is_superuser and check_for_updates %}
+                {% include "vocabulary/run-updates.html" %}
+            {% endif %}
+
+            {% if category %}
+                <p class="upload-info">{% trans "Category" %}: <span class="category-tag">{{category|category_display_name}}</span></p>
+            {% else %}
+
+                {% if query %}
+                    <div class="search-filters">
+                        {% if not request.GET.definedBy %}<a href="/vocabularies/?q={{q}}&type=vocabularies&definedBy=" class='button white {% if type == "vocabularies" %}active{% endif %}'>Vocabularies</a>{% endif %}
+                        <a href="/vocabularies/?q={{q}}&type=classes{% if request.GET.definedBy %}&definedBy={{request.GET.definedBy}}{% endif %}" class='button white {% if type == "classes" %}active{% endif %}'>Classes</a>
+                        <a href="/vocabularies/?q={{q}}&type=properties{% if request.GET.definedBy %}&definedBy={{request.GET.definedBy}}{% endif %}" class='button white {% if type == "properties" %}active{% endif %}'>Properties</a>
+                    </div>
+                {% else %}
+                    <div class="search-filters">
+                        {% if not request.GET.definedBy %}<a href="/vocabularies/all/{% if request.GET.definedBy %}?definedBy={{request.GET.definedBy}}{% endif %}" class="button white {% if vocabularies %}active{% endif %}">Vocabularies</a>{% endif %}
+                        <a href="/classes/all/{% if request.GET.definedBy %}?definedBy={{request.GET.definedBy}}{% endif %}" class="button white {% if classes %}active{% endif %}">Classes</a>
+                        <a href="/properties/all/{% if request.GET.definedBy %}?definedBy={{request.GET.definedBy}}{% endif %}" class="button white {% if properties %}active{% endif %}">Properties</a>
+                    </div>
+                {% endif %}
+
+            {% endif %}
+            <a href="/vocabularies/categories/all/" class="right button orange">Browse vocabulary categories</a>
+
+            {% if query %}
+                <div class="search-results">
+                    <div class="result-vocabularies" {% if not type == "vocabularies" %}style="display: none;"{% endif %}>
+                        {% for vocabulary in page_obj.object_list %}
+
+                            {% with vocabulary=vocabulary.object %}
+                                {% include "vocabulary/teasers/vocabulary.html" %}
+                            {% endwith %}
+
+                        {% empty %}
+                            <p>{% trans "No vocabularies match this query." %}</p>
+                        {% endfor %}
+                    </div>
+
+                    <div class="result-classes" {% if not type == "classes" %}style="display: none;"{% endif %}>
+                        {% for class in page_obj.object_list %}
+
+                            {% with class=class.object %}
+                                {% include "vocabulary/teasers/class.html" %}
+                            {% endwith %}
+
+                        {% empty %}
+                            <p>{% trans "No classes match this query." %}</p>
+                        {% endfor %}
+                    </div>
+
+                    <div class="result-properties" {% if not type == "properties" %}style="display: none;"{% endif %}>
+                        {% for property in page_obj.object_list %}
+
+                            {% with property=property.object %}
+                                {% include "vocabulary/teasers/property.html" %}
+                            {% endwith %}
+
+                        {% empty %}
+                            <p>{% trans "No properties match this query." %}</p>
+                        {% endfor %}
+                    </div>
+
+                    {% with current_url=url has_get_variables=True %}
+                        {% include 'util/paginator.html' %}
+                    {% endwith %}
+
+                </div>
+
+            {% else %}
+                <div class="search-results">
+                    {% with vocabularies=vocabularies classes=classes properties=properties %}
+                        {% include 'vocabulary/list.html' %}
+                    {% endwith %}
+
+                    {% with current_url=request.get_full_path has_get_variables=True %}
+                        {% include 'util/paginator.html' %}
+                    {% endwith %}
+                </div>
+            {% endif %}
+
+
+
+		</div>
+	</div>
+
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+    $("#translate-icon").on('click', function() {
+        var value = !$("#id_translate").attr('checked');
+        $("#id_translate").attr('checked', value);
+        if (value) {
+            $("#translate-icon").addClass("enabled");
+            $("#localization-label").html("Localization ON");
+        } else {
+            $("#translate-icon").removeClass("enabled");
+            $("#localization-label").html("Localization OFF");
+        }
+    });
+
+    {% if user.is_superuser and check_for_updates %}
+        {% include "vocabulary/run-updates.js" %}
+    {% endif %}
+</script>
+{% endblock %}

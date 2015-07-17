@@ -1,0 +1,268 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load app_filters %}
+{% block title %}{% trans "Query Designer | LinDA" %}{% endblock %}
+{% block bodyclass %}builder-advanced{% endblock %}
+
+{%block css %}
+    <link rel="stylesheet" href="/static/css/jquery-ui.min.css" />
+    <link rel="stylesheet" href="/static/css/jquery.modal.css" />
+
+    <link data-turbolinks-track="true" href="/static/css/chosen.min.css" media="all" rel="stylesheet" />
+    <link rel="stylesheet" href="/static/css/jquery.contextMenu.css"/>
+
+    <link data-turbolinks-track="true" href="/static/query-builder/stylesheets/_variables.css?body=1" media="all" rel="stylesheet" />
+    <link data-turbolinks-track="true" href="/static/query-builder/stylesheets/bootstrap.css?body=1" media="all" rel="stylesheet" />
+    <link data-turbolinks-track="true" href="/static/query-builder/stylesheets/bootstrap.min.css?body=1" media="all" rel="stylesheet" />
+    <link data-turbolinks-track="true" href="/static/query-builder/stylesheets/common.css?body=1" media="all" rel="stylesheet" />
+    <link data-turbolinks-track="true" href="/static/query-builder/stylesheets/developer.css?body=1" media="all" rel="stylesheet" />
+    <link data-turbolinks-track="true" href="/static/query-builder/stylesheets/query.css?body=1" media="all" rel="stylesheet" />
+    <link data-turbolinks-track="true" href="/static/query-builder/stylesheets/application.css?body=1" media="all" rel="stylesheet" />
+    <link data-turbolinks-track="true" href="/static/query-builder/stylesheets/gritter.css?body=1" media="all" rel="stylesheet" />
+
+    <link rel="stylesheet" href="/static/css/tooltipster.css"/>
+    {% if tutorial %}
+        <link rel="stylesheet" href="/static/query_designer/tutorials/tutorials.css"/>
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+    <div class="main">
+        {% with default=datasource_default query=query %}
+            {% include "builder_advanced/toolbar.html" %}
+        {% endwith %}
+
+        <div id="builder_workspace">
+            <span class="help-prompt">{% trans "Drag and drop items here to create a query"%}</span>
+            <canvas id="builder-canvas"></canvas>
+        </div>
+
+        <div id="tree_toolbar">
+            <span class="ui-icon tree-toolbar-close ui-icon-triangle-1-e"></span>
+            <div id="tree_toolbar_objects"></div>
+        </div>
+
+        <div class="row qb-equivalent-query-main" style="display:none;">
+            <div class="col-md-12">
+                {% with designer=True %}
+                    {% include 'query-builder/sparql-query-editor.html' %}
+                {% endwith %}
+            </div>
+        </div>
+
+        {% with in_designer=True in_query_builder_action=True %}
+            {% include 'query-builder/search-results.html' %}
+        {% endwith %}
+
+        {% include "query-builder/alert.html" %}
+
+        <input type="hidden" id="hdn_qb_dataset" value="">
+
+        {% include "builder_advanced/filters.html" %}
+        {% include "builder_advanced/options.html" %}
+        {% include "builder_advanced/property-options.html" %}
+    </div>
+
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        rdf2any_server = "{{RDF2ANY_SERVER}}";
+	</script>
+
+    {% with designer=True %}
+        {% include "builder_advanced/ace-editor.html" %}
+    {% endwith %}
+
+    <script src="/static/js/jquery-ui.min.js"></script>
+    <script src="/static/js/jquery.confirm.js"></script>
+    <script src="/static/js/jquery.smartresize.js"></script>
+    <script src="/static/js/jquery.contextMenu.js"></script>
+
+    <script src="/static/js/chosen.jquery.min.js"></script>
+    <script src="/static/js/sparql-menu.js"></script>
+
+    <script src="/static/query_designer/arrows.js"></script>
+    <script>
+        $().ready(function() {
+            $("#builder-canvas").attr({'width':$("#builder_workspace").width(), 'height':$("#builder_workspace").height()});
+            arrows.set_canvas("builder-canvas");
+
+            //show the sparql query
+            $(".qb-equivalent-query-main").show();
+
+            {% if query.design %}
+                builder_workbench.from_json($.parseJSON( '{{query.design.data|safe}}' ));
+                builder.saved_query = '{{query.sparql|escapejs}}';
+            {% endif %}
+        });
+    </script>
+
+    <script src="/static/query_designer/util/uri_to_label.js"></script>
+    <script>
+        var ADVANCED_BUILDER_API_URI = "/query-designer/api/";
+
+        //set data source endpoints
+        var total_endpoints = {};
+        {% for datasource in datasources %}
+            total_endpoints['{{datasource.name}}'] = '{{datasource|get_endpoint}}';
+        {% endfor %}
+
+    </script>
+
+    <script src="/static/query_designer/builder_workbench.js"></script>
+    
+	<script>
+         /*Drag & Dropping*/
+        $("#builder_workspace").mouseup(function(e) {
+            if ((e.which == 1) && builder_workbench.selection) { //only for left click and when a class selection has been made
+                if (builder_workbench.selection.type == "class") {
+                    builder_workbench.add_instance(builder_workbench.selection.dt_name, builder_workbench.selection.uri, e.pageX - $(this).position().left, e.pageY - $(this).position().top);
+                } else {
+                    var i_num = builder_workbench.instances.length;
+
+                    builder_workbench.add_instance(builder_workbench.selection.dt_name, builder_workbench.selection.domain, e.pageX - $(this).position().left - 300, e.pageY - $(this).position().top, [builder_workbench.selection.uri]);
+                    builder_workbench.add_instance(builder_workbench.selection.dt_name, builder_workbench.selection.range, e.pageX - $(this).position().left + 300, e.pageY - $(this).position().top);
+
+                    arrows.add_arrow('#class_instance_' + i_num, 1, '#class_instance_' + (i_num+1), 0);
+                }
+
+                builder_workbench.selection = undefined;
+                $(this).removeClass("accepting-instance");
+                $(".toolbar, #tree_toolbar").removeClass("accepting-instance");
+            }
+        });
+
+        $("#builder_workspace, .toolbar, #tree_toolbar").mouseover(function(e) {
+            if (builder_workbench.selection) {
+                $(this).addClass("accepting-instance");
+            }
+        });
+
+        $("#builder_workspace, .toolbar, #tree_toolbar").mouseleave(function(e) {
+            if (builder_workbench.selection) {
+                $(this).removeClass("accepting-instance");
+            }
+        });
+
+        /*Handle hover on arrows*/
+        $("#builder-canvas").on('mousemove', function(e) {
+            if (!builder_workbench.connection_from) {
+                var x = e.pageX - $(this).offset().left;
+                var y = e.pageY - $(this).offset().top;
+
+                arrows.over_arrows(x, y);
+            }
+        });
+
+        /*Handle clicks on arrows*/
+        $("#builder-canvas").click(function(e) {
+            if (!builder_workbench.connection_from) {
+                arrows.in_arrows(e.screenX - $(this).offset().left, e.screenY - $(this).offset().top - 60 + $(document).scrollTop());
+            }
+        });
+
+        /*Handle workbench resize*/
+        $( window ).smartresize(function() {
+            //canvas resize
+            $("#builder-canvas").attr('width', $('#builder_workspace').width());
+            arrows.ctx.width = $('#builder_workspace').width();
+
+            $("#builder-canvas").attr('height', $('#builder_workspace').height());
+            arrows.ctx.height = $('#builder_workspace').height();
+
+            arrows.draw();
+
+            //toolbar position
+            $("#tree_toolbar").css('top', $("#toolbar").position().top + $("#toolbar").height() + 30);
+        });
+
+        $("body").on('keyup', function(e) {
+            if (e.keyCode == 46) { //DELETE key pressed
+                arrows.delete_selected();
+                builder.reset();
+            }
+        });
+    </script>
+
+    <script src="/static/query_designer/toolbar.js"></script>
+    <script src="/static/query_designer/filters.js"></script>
+    <script src="/static/query_designer/property_select.js"></script>
+    <script src="/static/query_designer/subqueries.js"></script>
+
+    <script>
+        {% with query=query %}
+            {% include 'queries/save.js' %}
+        {% endwith %}
+    </script>
+
+    <script>
+        function save_design() {
+            //store endpoint & dt_name
+            endpoint_uri = builder.endpoint;
+            for( var prop in total_endpoints ) {
+                if( total_endpoints[ prop ] === endpoint_uri ) {
+                    dt_name = prop;
+                    break;
+                }
+            }
+
+            if (editor.changed === true) {
+                $.confirm({
+                    title: "Save Query",
+                    text: "There seem to be manual changes in the SPARQL query. If you save the design, those changes will be overwritten. Do you want to save the design or store it as a plain SPARQL query?",
+                    className: "warning-dialog",
+                    confirmButton: "Save the design and drop changes",
+                    cancelButton: "Save as a plain text query",
+                    confirm: function(button) {
+                        builder.reset();
+                        save_query(true);
+                    },
+                    cancel: function(button) {
+                        save_query(false);
+                    }
+                });
+            } else {
+                save_query(true);
+            }
+        }
+    </script>
+
+    <script src="/static/query_designer/builder_options.js"></script>
+    <script src="/static/query_designer/builder.js"></script>
+    <script src="/static/query_designer/property-options.js"></script>
+    <script src="/static/query_designer/ace-editor-warning.js"></script>
+
+    <script>
+        rdf2any_server = "{{RDF2ANY_SERVER}}";
+	</script>
+
+
+    <script data-turbolinks-track="true" src="/static/query-builder/javascripts/jquery_ujs.js?body=1"></script>
+    <script data-turbolinks-track="true" src="/static/query-builder/javascripts/turbolinks.js?body=1"></script>
+    <script data-turbolinks-track="true" src="/static/query-builder/javascripts/bootstrap.js?body=1"></script>
+    <script data-turbolinks-track="true" src="/static/query-builder/javascripts/bootstrap.min.js?body=1"></script>
+    <script data-turbolinks-track="true" src="/static/query-builder/javascripts/developer.js?body=1"></script>
+    <script data-turbolinks-track="true" src="/static/query-builder/javascripts/query.js?body=1"></script>
+    <script data-turbolinks-track="true" src="/static/query-builder/javascripts/resources/common.js?body=1"></script>
+
+    <script data-turbolinks-track="true" src="/static/query-builder/javascripts/resources/querybuilder.js?body=1"></script>
+    <script data-turbolinks-track="true" src="/static/query-builder/javascripts/resources/sparql.js?body=1"></script>
+    <script data-turbolinks-track="true" src="/static/query-builder/javascripts/resources/utilities.js?body=1"></script>
+    <script data-turbolinks-track="true" src="/static/query-builder/javascripts/codemirror.js?body=1"></script>
+    <script data-turbolinks-track="true" src="/static/query-builder/javascripts/gritter.js?body=1"></script>
+    <script data-turbolinks-track="true" src="/static/query-builder/javascripts/application.js?body=1"></script>
+    <script src="/static/js/jquery.tooltipster.min.js"></script>
+    {% if datasource_default %}
+        <script>
+            $().ready(function() {
+                on_datasource_select();
+            });
+        </script>
+    {% endif %}
+
+    {% if tutorial %}
+		<script src="/static/query_designer/tutorials/tutorials.js"></script>
+        <script src="/static/query_designer/tutorials/{{tutorial}}.js"></script>
+    {% endif %}
+{% endblock %}

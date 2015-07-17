@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+{% load url from future %}
+{% load i18n thumbnail2 %}
+{% load app_filters %}
+{% block title %}{% if create %}{% trans "Create a vocabulary"%}{% else %}{{vocabulary.title}}{% endif %} | LinDA{% endblock %}
+{% block bodyclass %}vocabulary{% endblock %}
+
+{% block content %}
+<div class="main">
+    <h1 class="page-title inline">{% if create %}{% trans "Create a vocabulary"%}{% else %}{% trans "Edit vocabulary"%}{% endif %}</h1>
+
+    <form class="vocabulary-edit-form" method="post" action="{% if create %}/vocabulary/create/{% else %}/vocabulary/{{vocabulary.id}}/edit/{% endif %}"
+          class="vocabulary-edit-form" enctype="multipart/form-data">{% csrf_token %}
+
+        {% if form.non_field_errors %}
+            <p class="error">{{ form.non_field_errors }}</p>
+        {% endif %}
+
+        <div>
+            <label for="title">{% trans "Title"%}:</label>
+            {{form.title}}
+            {% if form.title.errors %}
+            <span class="error">{{ form.title.errors.as_text }}</span>
+            {% endif %}
+        </div>
+
+        <div>
+            <label for="category">{% trans "Category"%}:</label>
+
+            {% with field=form.category id="category" options=categories %}
+                {% include 'util/prettydropdown.html' %}
+            {% endwith %}
+
+        </div>
+
+        <label for="description">{% trans "Vocabulary description"%}:</label>
+
+        <p class="description">
+            {{form.description}}
+            {% if form.description.errors %}
+            <span class="error">{{ form.description.errors.as_text }}</span>
+            {% endif %}
+        </p>
+
+        <div>
+            <label for="description">{% trans "Priority"%}:</label>
+            {{form.lodRanking}}
+            {% if form.lodRanking.errors %}
+            <span class="error">{{ form.lodRanking.errors.as_text }}</span>
+            {% endif %}
+        </div>
+
+		<div>
+            <label for="originalUrl">{% trans "Preferred namespace URI"%}:</label>
+            {{form.preferredNamespaceUri}}
+            {% if form.preferredNamespaceUri.errors %}
+            <span class="error">{{ form.preferredNamespaceUri.errors.as_text }}</span>
+            {% endif %}
+        </div>
+        <div>
+            <label for="downloadUrl">{% trans "Preferred namespace prefix"%}:</label>
+            {{form.preferredNamespacePrefix}}
+            {% if form.preferredNamespacePrefix.errors %}
+            <span class="error">{{ form.preferredNamespacePrefix.errors.as_text }}</span>
+            {% endif %}
+        </div>
+		
+        <div>
+            <label for="originalUrl">{% trans "Reference page"%}:</label>
+            {{form.originalUrl}}
+            {% if form.originalUrl.errors %}
+            <span class="error">{{ form.originalUrl.errors.as_text }}</span>
+            {% endif %}
+        </div>
+        <div>
+            <label for="downloadUrl">{% trans "Download link (link to the definition document)"%}:</label>
+            {{form.downloadUrl}}
+            {% if form.downloadUrl.errors %}
+            <span class="error">{{ form.downloadUrl.errors.as_text }}</span>
+            {% endif %}
+        </div>
+
+        <div>
+            <label for="example" style="vertical-align: top;">{% trans "Usage example"%}:</label>
+            {{form.example}}
+            {% if form.example.errors %}
+            <span class="error">{{ form.example.errors.as_text }}</span>
+            {% endif %}
+        </div>
+
+        {% if user.is_superuser %}
+            <div>
+            <label for="version" style="vertical-align: top;">{% trans "Version"%}:</label>
+            {{form.version}}
+            {% if form.version.errors %}
+            <span class="error">{{ form.version.errors.as_text }}</span>
+            {% endif %}
+        </div>
+        {% else %}
+            <div class="hidden">{{form.version}}</div>
+        {% endif %}
+        <div class="action-buttons">
+            <a href="{% if create %}/vocabularies/all/{% else %}/vocabulary/{{vocabulary.id}}{% endif %}" class="button blue right">{% trans "Cancel" %}</a>
+            <input type="submit" value='{% if create %}{% trans "Create vocabulary" %}{% else %}{% trans "Update vocabulary" %}{% endif %}' class="button green left"/>
+        </div>
+
+    </form>
+</div>
+{% endblock %}
+
+{% block scripts %}
+    {% with field=form.category id="category" %}
+        {% include 'util/prettydropdown_js.html' %}
+    {% endwith %}
+{% endblock %}

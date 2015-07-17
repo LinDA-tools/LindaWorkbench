@@ -1,0 +1,38 @@
+{% load i18n %}
+{% load app_filters %}
+
+{%if page_obj.paginator.num_pages > 1 %}
+    <div class="pagination centered">
+        {%if page_obj.has_previous %}
+        <span class="prev align-left"><a href="?{% url_replace request page_param|default:'page' page_obj.number|add:'-1' %}"
+                                         title="{% trans 'previous' %}">&lsaquo;</a></span>
+        {% endif %}
+        <ul class="inline">
+            {% for curpage in D %}
+
+
+            {% if page_obj.number == curpage %}
+            <li><span class="current">{{curpage}}</span></li>
+            {% elif forloop.first %}
+            <li><a href="?{% url_replace request page_param|default:'page' curpage %}">{{curpage}}</a></li>
+            {% if page_obj.number|add:"-4" > 1 and forloop.first %}
+            <li>...</li>
+            {% endif %}
+            {% elif forloop.last %}
+            {% if page_obj.number|add:"4" < curpage %}
+            <li>...</li>
+            {% endif %}
+            <li><a href="?{% url_replace request page_param|default:'page' curpage %}">{{curpage}}</a></li>
+            {% elif page_obj.number|add:"3" < curpage or page_obj.number|add:"-3" > curpage %}
+            {% else %}
+            <li><a href="?{% url_replace request page_param|default:'page' curpage %}">{{curpage}}</a></li>
+            {% endif %}
+
+            {% endfor %}
+        </ul>
+        {%if page_obj.has_next %}
+        <span class="next align-right"><a href="?{% url_replace request page_param|default:'page' page_obj.number|add:'1' %}"
+                                          title="{% trans 'next' %}">&rsaquo;</a></span>
+        {% endif %}
+    </div><!-- pagination -->
+{% endif %}

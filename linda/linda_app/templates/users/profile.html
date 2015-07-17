@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+{% load url from future %}
+{% load i18n thumbnail2 %}
+{% load app_filters %}
+{% block title %}User profile | LinDA{% endblock %}
+{% block bodyclass %}profile{% endblock %}
+
+{% block content %}
+<div class="main">
+    {% if userModel.profile.avatar.photo_original %}
+    {% thumbnail userModel.profile.avatar.photo_original "150x150" as avatar %}
+    <img width=150 height=150 src="{{ avatar }}" class="right"/>
+    {% else %}
+    <img width=150 height=150 src="/static/images/avatar.jpg" class="right"/>
+    {% endif %}
+    <h1 class="page-title inline">{{userModel|nice_name}}</h1>
+
+    <h2 class="info">{% trans "Basic information" %}</h2>
+
+    <div class="profile-info container">
+        <div>
+            <label>{% trans "Username" %}: </label>
+            <span>{{userModel.username}}</span>
+        </div>
+        <div>
+            <label>{% trans "First name" %}: </label>
+            <span>{{userModel.first_name}}</span>
+        </div>
+        <div>
+            <label>{% trans "Last name" %}: </label>
+            <span>{{userModel.last_name}}</span>
+        </div>
+        <div>
+            <label>{% trans "Background" %}: </label>
+            <span>{% if userModel.profile.scientific_background != "--"%} {{userModel.profile.get_scientific_background_display}} {% endif %}</span>
+        </div>
+        <div>
+            <label>{% trans "Country" %}: </label>
+            <span>{% if userModel.profile.country != "--" %} {{userModel.profile.get_country_display}} {% endif %}</span>
+        </div>
+    </div>
+
+    <h2 class="info">{% trans "Contact" %}</h2>
+
+    <div class="profile-info container">
+        <div>
+            <label>{% trans "E-Mail" %}: </label>
+            <span><a href="mailto:{{userModel.email}}" target="_blank">{{userModel.email}}</a></span>
+        </div>
+        {% if userModel.profile.facebookUrl %}
+        <div>
+            <label>{% trans "Facebook profile" %}: </label>
+            <span><a href="{{userModel.profile.facebookUrl}}"
+                     target="_blank">{{userModel.profile.facebookUrl}}</a></span>
+        </div>
+        {% endif %}
+        {% if userModel.profile.twitterUrl %}
+        <div>
+            <label>{% trans "Twitter page" %}: </label>
+            <span><a href="{{userModel.profile.twitterUrl}}" target="_blank">{{userModel.profile.twitterUrl}}</a></span>
+        </div>
+        {% endif %}
+        {% if userModel.profile.linkedInUrl %}
+        <div>
+            <label>{% trans "Linked-in profile" %}: </label>
+            <span><a href="{{userModel.profile.linkedInUrl}}"
+                     target="_blank">{{userModel.profile.linkedInUrl}}</a></span>
+        </div>
+        {% endif %}
+        {% if userModel.profile.googleUrl %}
+        <div>
+            <label>{% trans "Google+ profile" %}: </label>
+            <span><a href="{{userModel.profile.googleUrl}}" target="_blank">{{userModel.profile.googleUrl}}</a></span>
+        </div>
+        {% endif %}
+        {% if userModel.profile.websiteUrl %}
+        <div>
+            <label>{% trans "Personal Website" %}: </label>
+            <span><a href="{{userModel.profile.websiteUrl}}" target="_blank">{{userModel.profile.websiteUrl}}</a></span>
+        </div>
+        {% endif %}
+    </div>
+
+    <div class="actions">
+        {% if userModel.id == user.id %}
+        <a class="button red" href="edit">{% trans "Edit profile" %}</a>
+        {% else %}
+        <a class="button green" href="/messages/compose/{{userModel.username}}/">{% trans "Send message" %}</a>
+        {% endif %}
+    </div>
+</div>
+
+{% endblock %}

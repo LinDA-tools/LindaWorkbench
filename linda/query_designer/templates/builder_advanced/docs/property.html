@@ -1,0 +1,41 @@
+{% load app_filters %}
+
+{% if property.description %}
+    <p>{{property.description}}</p>
+{% endif %}
+
+{% if not from_json %}
+    {% with domain=property.get_domain_object domain_uri=property.domain_uri range=property.get_range_object range_uri=property.range_uri %}
+        {% if domain %}
+            <div class="functional"><a href="/class/{{domain.pk}}/" target="_blank">{{domain.label}}</a>.{{property.label}}
+                {% if range %}
+                    &rarr; <a href="/class/{{range.pk}}/" target="_blank">{{range.label}}</a>
+                {% elif range_uri %}
+                    &rarr; <a href="range_uri" target="_blank">{{range_uri|label_from_uri}}</a>
+                {% endif %}
+            </div>
+        {% else %}
+            {% if domain_uri %}
+                <p>Domain: <a href="domain_uri" target="_blank">&lt;{{domain_uri}}&gt;</a></p>
+            {% endif %}
+
+            {% if range %}
+                <p>Range: <a href="/class/{{range.pk}}/" target="_blank">{{range.label}}</a></p>
+            {% elif range_uri %}
+                <p>Range: <a href="range_uri" target="_blank">&lt;{{range_uri}}&gt;</a></p>
+            {% endif %}
+        {% endif %}
+    {% endwith %}
+
+    <p>Property defined in <a href="/vocabulary/{{property.vocabulary.pk}}/" target="_blank">{{property.vocabulary.title}}</a>.</p>
+    <a href="/property/{{property.pk}}/" class="button orange right" target="_blank">Read more</a>
+{% else %}
+    {% with domain=property.domain range=property.range %}
+        <div class="functional">
+            <a href="{{property.domain}}" target="_blank">{{domain|label_from_uri}}</a>.{{property.uri|label_from_uri}}
+            &rarr; <a href="{{property.range}}" target="_blank">{{range|label_from_uri}}</a>
+        </div>
+
+        <a href="{{property.uri}}" class="button orange right" target="_blank">Read more</a>
+    {% endwith %}
+{% endif %}

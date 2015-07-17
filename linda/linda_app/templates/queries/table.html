@@ -1,0 +1,98 @@
+{% load i18n %}
+{% load app_filters %}
+
+{% if out == "html" %}
+    <table class="queries-table">
+        <thead>
+        <tr>
+            <th>{% trans "ID" %}</th>
+            <th>{% trans "Datasource" %}</th>
+            <th>{% trans "Description"%}</th>
+            <th>{% trans "Query" %}</th>
+            <th>{% trans "Updated on" %}</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for query in queries %}
+        <tr id="query_{{query.id}}" class="query-row" {% if query.design %}data-design="true"{% endif %}>
+            <td class="query-id">#{{query.id}}
+                <div class="operations">
+                    <p>{{query.csv_link}}</p>
+                    <a href="#">Run</a><br/>
+                    <a href="#">Analyze</a>
+                </div>
+            </td>
+            <td>{{query|get_datasources}}</td>
+            <td class="description"><p>{{query.description}}</p></td>
+            <td class="sparql-query"><p>{{query.sparql|linebreaksbr}}</p></td>
+            <td>{{query.updatedOn}}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% elif out == "js" %}
+    <script>
+        $(".queries-table").dataTable({
+            "iDisplayLength": {{paginate_by}},
+            "order": [],
+            "language": {
+                "info": "Showing _START_ to _END_ of _TOTAL_ queries",
+                "infoEmpty": "No datasources available",
+                "infoFiltered": "(filtered from _MAX_ total records)"
+            }
+        });
+
+        /*ignore click on textarea to avoid open/close query row*/
+        $(".queries-table").on('click', '.description textarea.enabled', function (e) {
+            e.stopPropagation();
+            e.preventDefault();
+        });
+
+        /*change description -- textarea o as input*/
+        function change_description(o) {
+            //change cursor to wait
+            $(o).css('cursor', 'wait');
+
+            //get the new description
+            var desc = $(o).val();
+
+            $.ajax({ //make ajax request to update the description
+                url: "/query-builder/save/" + $(o).data('id')  + "/",
+                type: "POST",
+                data: {
+                csrfmiddlewaretoken: '{{ csrf_token }}',
+                description: desc,
+                design: 'DEFAULT'
+                },
+                success: function(data, textStatus, jqXHR) {
+                    var p = $(o).parent();
+                    $(p).html('<p>' + desc + '</p>');
+                },
+                error: function (jqXHR, textStatus, errorThrown)
+                {
+                    $(o).css('cursor', 'auto');
+                    alert(textStatus + ': ' + errorThrown);
+                }
+            });
+        }
+
+        /*on enter save the textarea description*/
+        $(".queries-table").on('keypress', '.description textarea.enabled', function (e) {
+            if(e.keyCode == 13){ //key enter
+                change_description(this);
+
+                e.stopPropagation();
+                e.preventDefault();
+            }
+        });
+
+        /*on text area lose focus also save the description*/
+        $(".queries-table").on('focusout', '.description textarea.enabled', function (e) {
+            change_description(this);
+        });
+
+        {% with queries=queries option_rename=True %}
+            {% include "queries/context-menu.html" %}
+        {% endwith %}
+    </script>
+{% endif %}

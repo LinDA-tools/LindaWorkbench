@@ -1,0 +1,80 @@
+{% load i18n %}
+
+<!DOCTYPE html>
+
+<html lang="en-US">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}LinDA{% endblock %}</title>
+
+    {% block css %}{% endblock %}
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="/static/css/playground.css">
+    <link rel="shortcut icon" type="image/ico" href="/static/images/favicon.ico"/>
+</head>
+
+<body class="{% block bodyclass %}home{% endblock %}" {% block bodytype %}{% endblock %}>
+
+<noscript>
+    <p class="warning">Please enable JavaScript in your browser to view this website properly.</p>
+</noscript>
+
+<div class="wrapper">
+    {% include 'util/header.html' %}
+    {% block content %}
+    {% endblock %}
+    {% include 'util/footer.html' %}
+</div>
+</body>
+
+<script src="/static/js/jquery.min.js"></script>
+
+<script>
+    /* mobile menu script */
+    $( "#menu-select option" ).on('click', (function() {
+        window.location = $(this).val();
+    }));
+
+    $( "#menu-select" ).on('input', (function() {
+        window.location = $(this).val();
+    }));
+
+    $( "#menu-select" ).on('change', (function() {
+        window.location = $(this).val();
+    }));
+
+    /* toggle menu */
+    $("#menu-toggle").on('click', (function() {
+        $("#menu").toggle(function(){
+            $(window).trigger('resize');
+            if (!$("#menu").is( ":visible" )) {
+                $("#main-container > .main").addClass('full');
+            }
+        });
+
+        if ($("#menu").is( ":visible" )) {
+                $("#main-container > .main").removeClass('full');
+        }
+    }));
+</script>
+
+<script id="_webengage_script_tag" type="text/javascript">
+    var _weq = _weq || {};
+    _weq['webengage.licenseCode'] = '14507c5b3';
+    _weq['webengage.widgetVersion'] = "4.0";
+
+    (function(d){
+        var _we = d.createElement('script');
+        _we.type = 'text/javascript';
+        _we.async = true;
+        _we.src = (d.location.protocol == 'https:' ? "https://ssl.widgets.webengage.com" : "http://cdn.widgets.webengage.com") + "/js/widget/webengage-min-v-4.0.js";
+        var _sNode = d.getElementById('_webengage_script_tag');
+        _sNode.parentNode.insertBefore(_we, _sNode);
+    })(document);
+</script>
+
+{% block scripts %}{% endblock %}
+
+
+</html>

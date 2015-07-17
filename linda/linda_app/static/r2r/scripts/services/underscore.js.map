@@ -1,0 +1,10 @@
+{
+  "version": 3,
+  "file": "underscore.js",
+  "sourceRoot": "",
+  "sources": [
+    "underscore.coffee"
+  ],
+  "names": [],
+  "mappings": "AAAA;AAAA,EAAA,YAAA,CAAA;AAAA,EAEA,OAAO,CAAC,MAAR,CAAe,YAAf,EAA6B,EAA7B,CACE,CAAC,OADH,CACW,GADX,EACgB,SAAA,GAAA;WAAG,MAAM,CAAC,EAAV;EAAA,CADhB,CAFA,CAAA;AAAA"
+}

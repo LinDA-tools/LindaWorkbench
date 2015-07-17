@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% load i18n thumbnail2 app_filters %}
+{% block title %}Queries | LinDA{% endblock %}
+{% block bodyclass %}queries{% endblock %}
+
+{% block css %}
+    <link rel="stylesheet" href="/static/css/jquery.contextMenu.css" />
+    <link rel="stylesheet" href="/static/css/jquery.modal.css" />
+    <link rel="stylesheet" href="/static/css/jquery.datatables.min.css" />
+{% endblock %}
+
+{% block content %}
+<div class="main">
+    <div class="datasource-index-title">
+        <h2 class="queries-index-title">{% trans "Queries" %}</h2>
+
+    </div>
+
+    <h3>{% trans "Use LinDA tools to create a new Query" %}</h3>
+        <a class="button green q-designer-button" href="/query-designer/">+{%trans "New query" %} | <span>{% trans "Create complex queries by linking different data sources in the Query Designer"%}</span></a>
+
+    {% if queries %}
+        {% with queries=queries out="html" %}
+            {% include "queries/table.html" %}
+        {% endwith %}
+    {% else %}
+        <p>{% trans "No queries found."%}</p>
+    {% endif %}
+
+</div>
+{% endblock %}
+
+{% block scripts %}
+    <script src="/static/js/jquery.datatables.min.js"></script>
+    <script src="/static/js/jquery-ui.min.js"></script>
+    <script src="/static/js/jquery.modal.min.js"></script>
+    <script src="/static/js/jquery.contextMenu.js"></script>
+    <script src="/static/js/jquery.confirm.js"></script>
+
+    {% if queries %}
+        {% with queries=queries out="js" paginate_by=10 %}
+            {% include "queries/table.html" %}
+        {% endwith %}
+    {% endif %}
+
+{% endblock %}

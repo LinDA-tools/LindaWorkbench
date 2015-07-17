@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% load url from future %}
+{% load i18n thumbnail2 %}
+{% load app_filters %}
+{% block title %}{{vocabulary.title}} | LinDA{% endblock %}
+{% block bodyclass %}vocabulary{% endblock %}
+
+{% block content %}
+<div class="main">
+    <h2 class="page-title inline">{{vocabulary.title}}</h2>
+
+    <div>
+        <a href="/vocabulary/{{vocabulary.id}}" class="button blue">{% trans "Back to info" %}</a>
+    </div>
+
+    <canvas id="viewport" style="background: #fff;" width="1600" height="900"></canvas>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="/static/js/arbor/arbor.js"></script>
+<script src="/static/js/arbor/graphics.js"></script>
+<script src="/static/js/arbor/renderer.js"></script>
+<script>
+    var sys = arbor.ParticleSystem(3000, 400, 0.5);
+    sys.parameters({gravity: true});
+    sys.renderer = Renderer("#viewport");
+
+        {% for key, value in objects.items %}
+            sys.addNode("{{key}}", {'color': '#d2d7d5', 'shape': 'circle', 'label': "{{value}}"});
+        {% endfor %}
+
+        {% for key, value in subjects.items %}
+            sys.addNode("{{key}}", {'color': '#00B16A', 'shape': 'square', 'label': "{{value}}"});
+        {% endfor %}
+
+            
+        {% for predicate in predicates %}
+            sys.addEdge("{{predicate.0}}", "{{predicate.2}}");
+        {% endfor %}
+
+</script>
+{% endblock %}

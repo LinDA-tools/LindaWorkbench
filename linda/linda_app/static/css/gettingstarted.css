@@ -1,0 +1,35 @@
+#linda-concept-image {
+    background-image: url('/static/images/whatislinda.jpg');
+    background-size: 100%;
+    height:300px;
+    width:300px;
+}
+
+
+#linda-enterprise-image {
+    background-image: url('/static/images/enterprises.jpg');
+    background-size: 100%;
+    height:400px;
+    width:138px;
+}
+#linda-steps-image {
+    margin-top:100px;
+    background-image: url('/static/images/threesteps.jpg');
+    background-size: 100%;
+    height:828px;
+    width:535px;
+}
+
+.what-is-linda-bg {
+	background:#F3F3F3;
+	padding: 0px 0px 40px 0px;
+}
+
+.whatislinda_inner_text{
+font-size:18px;
+}
+
+#why-enterprises, #simplesteps{
+padding-top:50px;
+padding-bottom:50px;
+}

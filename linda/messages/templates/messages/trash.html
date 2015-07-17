@@ -1,0 +1,62 @@
+{% extends "messages/base.html" %}
+{% load i18n %}
+{% block title %}Trash{% endblock %}
+{% block content %}
+<div class="wrapper-content">
+    <div class="clear-all-30"></div>
+    <div class="clmn-12" id='show-hide'>
+        <h1>{% trans "Deleted Messages" %}</h1>
+        <table class="tablesorter">
+            <thead>
+            <tr>
+                <th>{% trans "Sender" %}</th>
+                <th>{% trans "Subject" %}</th>
+                <th>{% trans "Date" %}</th>
+                <th>{% trans "Action" %}</th>
+            </tr>
+            </thead>
+            {% if message_list %}
+            <tbody>
+            {% for message in message_list %}
+            <tr>
+                <td>{{ message.sender }}</td>
+                <td>
+                    {{ message.subject }}
+                </td>
+                <td>{{ message.sent_at|date:_("DATETIME_FORMAT") }}</td>
+                <td><a href="{% url messages_undelete message.id %}">{% trans "undelete" %}</a></td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        </table>
+        <p>{% trans "No messages." %}</p>
+        {% endif %}
+        <br/>
+
+        <p>{% trans "Deleted Messages are removed from the trash at unregular intervals, don't rely on this feature for
+            long-time storage." %}</p>
+    </div>
+    <div class="clmn-12 pagination">
+        <div class="green">
+            {%if page_obj.has_previous %}
+            <a class="next" href="{%url 'messages_delete'%}?page={{page_obj.number|add:"-1"}}"> « Previous</a>
+            {%endif%}
+            {% for curpage in page_obj.paginator.page_range %}
+            {% if page_obj.number != curpage %}
+            <a href="{%url 'messages_delete'%}?page={{curpage}}">{{curpage}}</a>
+            {%else%}
+            <span class="current">{{curpage}}</span>
+            {%endif%}
+            {%endfor%}
+            {%if page_obj.has_next %}
+            <a class="next" href="{%url 'messages_delete'%}?page={{page_obj.number|add:"1"}}">Next »</a>
+            {%endif%}
+        </div>
+    </div>
+    <a href='/messages/inbox'>
+        <div class='button bigrounded'>Back</div>
+    </a>
+</div><!-- END of wrapper-content -->
+{% endblock %}

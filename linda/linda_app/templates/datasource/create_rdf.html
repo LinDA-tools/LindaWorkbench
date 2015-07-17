@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% load url from future %}
+{% load i18n thumbnail2 %}
+{% load app_filters %}
+{% block title %}{% trans "Create datasource"%} | LinDA{% endblock %}
+{% block bodyclass %}datasource-create{% endblock %}
+
+{% block content %}
+<div class="main">
+    <h1 class="page-title inline">{% trans "RDF private datasource"%}</h1>
+
+    <form class="form rdf-form datasource-create-form" method="post" action="." enctype="multipart/form-data">{% csrf_token %}
+        {% if form_error %}
+            <p class="error">{{form_error}}</p>
+        {% endif %}
+
+        <div>
+            <label for="title">{% trans "Title"%}:</label>
+            <input type="text" name="title" id="id_title" value="{{title}}" required="required"/>
+        </div>
+
+        <div>
+            <label>Input format</label>
+            <select id="format" name="format">
+                <option {% if format == "application/rdf+xml" %} selected="selected" {% endif %} value="application/rdf+xml">RDF/XML</option>
+                <option {% if format == "text/rdf+n3" %} selected="selected" {% endif %} value="text/rdf+n3">N3</option>
+                <option {% if format == "text/plain" %} selected="selected" {% endif %} value="text/plain">N-Tripples</option>
+                <option {% if format == "application/x-turtle" %} selected="selected" {% endif %} value="application/x-turtle">Turtle</option>
+                <option {% if format == "application/trix" %} selected="selected" {% endif %} value="application/trix">TriX</option>
+                <option {% if format == "application/x-trig" %} selected="selected" {% endif %} value="application/x-trig">TriG</option>
+                <option {% if format == "application/x-binary-rdf" %} selected="selected" {% endif %} value="application/x-binary-rdf">SesameBinary RDF</option>
+            </select>
+        </div>
+
+        <div>
+            <label for="id_file">{% trans "Upload an RDF"%}:</label>
+            <div id="file-uploader" class="button green">{% if rdffile %}{{rdffile}}{% else %}{% trans "Choose file" %}{% endif %}</div>
+            <input id="id_file" type="file" class="hidden" name="rdffile" value="{{rdffile}}"/>
+
+        </div>
+        <div>
+            <label for="rdfdata">{% trans "or manually insert RDF data"%}:</label>
+            <textarea id="rdfdata" name="rdfdata">{{rdfdata}}</textarea>
+        </div>
+
+        <div class="newline" {%if format == "text/rdf+n3" or format == "text/plain" or format == "application/x-turtle" %}{% else %}style="display: none;"{% endif %}}>
+            <label for="newline">{% trans "Tripples end with newlines<br />(will upload faster)" %}</label>
+            <input type="checkbox" id="newline" name="newline" value="{% if newlines %}true{% else %}false{% endif %}" />
+        </div>
+
+        <div class="submit-box">
+            <label for="datatype"></label>
+            <input id="datatype" type="submit" class="button blue create-datasource-submit" value='{% trans "Create datasource"%}'/>
+        </div>
+    </form>
+</div>
+{% endblock %}
+
+{% block scripts %}
+        <script>
+
+        $('#id_file').change(function(){
+            $('#file-uploader').html($(this).val().split('\\').pop());
+        })
+
+        $('#file-uploader').click(function(){
+            $('#id_file').click();
+        }).show();
+
+        $('#format').change(function() {
+            var v = $(this).val();
+
+            if ((v == "text/rdf+n3") || (v == "text/plain") || (v == "application/x-turtle")) {
+                $("div.newline").show();
+            } else {
+                $("div.newline").hide();
+            }
+        });
+        </script>
+{% endblock %}

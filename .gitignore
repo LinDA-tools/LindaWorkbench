@@ -1,0 +1,81 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*.*~
+# C extensions
+*.so
+
+# Distribution / packaging
+.Python
+env/
+bin/
+build/
+develop-eggs/
+#dist/
+eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.coverage
+.cache
+nosetests.xml
+coverage.xml
+
+# Translations
+*.mo
+
+# Mr Developer
+.mr.developer.cfg
+.project
+.pydevproject
+
+# Rope
+.ropeproject
+
+# Django stuff:
+*.log
+*.pot
+
+# Sphinx documentation
+docs/_build/
+
+
+#Migrations
+migrations/
+
+.idea/*
+jsonLDdump/LindaDump.json
+jsonLDdump/LindaCustom.xml
+jsonLDdump/tmp2/LindaDump.jsonld
+jsonLDdump/deepGraphFile_321763af3ed32e1bb47233944ef6bc74_140512_191741
+
+jsonLDdump/koukli
+
+#Database
+linda/linda.db
+linda/graphdb/deepGraphFile_321763af3ed32e1bb47233944ef6bc74_140512_191741
+
+#Passwords
+linda/linda_app/passwords.py
+
+#Migrations
+
+#ElasticSearch
+linda/elasticsearch-0.90.1/data/*
+linda/.idea/workspace.xml
+data
+/linda/elasticsearch-0.90.1/logs
+/linda/elasticsearch-0.90.1

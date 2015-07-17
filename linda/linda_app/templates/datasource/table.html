@@ -1,0 +1,68 @@
+{% load i18n %}
+{% load app_filters %}
+
+{% if out == "html" %}
+    <table class="datasources-table">
+        <thead>
+        <tr>
+            <th>{% trans "Name" %}</th>
+            <th>{% trans "Type" %}</th>
+            <th>{% trans "SparQL Endpoint"%}</th>
+            <th>{% trans "Created" %}</th>
+            <th>{% trans "Last modified" %}</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for datasource in datasources %}
+        <tr id="{{datasource.name}}" class="datasource {% if datasource.is_public %}public{% else %}private{% endif %}">
+            <td>
+                {% if datasource.is_public %}
+                    <img src="/static/images/public-endpoint.png" alt="SPARQL endpoint"/>
+                {% elif datasource.rss_info %}
+                    <img src="/static/images/rss.png" alt="RSS datasource"/>
+                {% else %}
+                    <img src="/static/images/rdf.png" alt="Local datasource"/>
+                {% endif %}
+                {{datasource.title}}
+
+            </td>
+            {% if datasource.is_public %}
+            <td>{% trans "Remote" %}</td>
+            <td>{{datasource.uri}}</td>
+            {% elif datasource.rss_info %}
+                <td>{% trans "RSS Feed" %}</td>
+                <td>{{datasource.rss_info.url}}</td>
+            {% else %}
+                <td>{% trans "Local" %}</td>
+                <td></td>
+            {% endif %}
+            <td>{{datasource.createdOn}}</td>
+            <td>
+                {% if datasource.rss_info %}
+                    {{datasource.rss_info.lastDataFetchOn}}
+                {% else %}
+                    {{datasource.updatedOn}}
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% elif out == "js" %}
+        <script>
+            //create the data tables
+            $(".datasources-table").dataTable({
+                "iDisplayLength": {{paginate_by}},
+                "order": [],
+                "language": {
+                    "info": "Showing _START_ to _END_ of _TOTAL_ datasources",
+                    "infoEmpty": "No datasources available",
+                    "infoFiltered": "(filtered from _MAX_ total records)"
+                }
+            });
+
+            {% with datasources=datasources %}
+                {% include "datasource/context-menu.html" %}
+            {% endwith %}
+    </script>
+{% endif %}
