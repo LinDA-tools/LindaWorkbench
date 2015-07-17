@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% load staticfiles %}
+
+{% block title %}Transformation | LinDA{% endblock %}
+{% block bodyclass %}transformation{% endblock %}
+
+{% block css %}
+    <link rel="stylesheet" href="{% static 'css/transformation.css' %}">
+    <link rel="stylesheet" href="{% static 'font-awesome-4.3.0/css/font-awesome.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/bb_select.css' %}">
+{% endblock %}
+
+{% block scripts %}
+    <script type="text/javascript" src="{% static 'js/common.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/wz_tooltip.js' %}"></script>
+
+    {% block extra_scripts %}
+    {% endblock %}
+{% endblock %}
+

@@ -1,0 +1,44 @@
+{% extends "transformation-base.html" %}
+
+{% block content %}
+<div class="title">
+	<h2>Transformation: Data Source Choice</h2>
+
+</div>
+
+<div class="content no-minimize">	
+	<h3>Choose your data</h3>
+	<p>This ist the LinDA transformation tool.</p>
+	<p>It will help you to morph your structures or relational data into RDF triples.</p>
+</div>
+
+<form enctype="multipart/form-data" method="post" action="">
+	{% csrf_token %}
+	<div class="grid content">
+		<div class="col-5-10 left-side-box">
+			<h3>CREATE NEW</h3>
+			<p>Choose a data type which you want to transform to RDF.</p>
+			<p>
+				<input type="button" value="CSV / Excel" class="datachoice" OnClick="window.location.href = 'csv/step/1';">
+			</p>
+			<p>
+				<input type="button" value="Relational DB" class="datachoice" OnClick="alert('Not implemented yet')">
+			</p>
+
+
+		</div>
+		<div class="col-5-10 right-side-box">
+			<h3>CHOOSE EXISTING</h3>
+			<p>Alternatively, choose an existing transformation.</p>
+			<p>{{ form.fileList }}</p>
+
+			<input type="submit" value="Choose">
+
+		</div>
+	</div>
+</form>
+
+{% endblock %}
+
+{% block extra_scripts %}
+{% endblock %}

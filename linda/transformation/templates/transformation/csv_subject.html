@@ -1,0 +1,294 @@
+{% extends "transformation-base.html" %}
+
+
+{% block content %}
+
+{% load modelview_tags %}
+
+    {% include "transformation/snippets/title_snippet.html" with format='CSV' %}
+
+    <!-- http://stackoverflow.com/questions/13666852/how-to-debug-a-django-multivaluedictkeyerror-on-formset-post -->
+    {% for hidden in form.hidden_fields %}
+        {{ hidden }}
+    {% endfor %}
+
+    <input type="hidden" name="hidden_rdf_array_field" id="id_hidden_rdf_array_field" value="{{ rdfArray }}">
+    <input type="hidden" name="hidden_model" id="id_hidden_model" value="{{ rdfModel }}">
+
+<div class="minimizable">
+    <div class="content grid">
+        <h3>Specify the RDF Subject</h3>
+        <div class="col-5-10 left-side-box">
+
+            <p>In this step, you can specify the RDF subject. It can be constructed from a base URL and a combination of
+                the content of one or multiple column names (i.e. the first row of your CSV file).</p>
+
+            <p>The base URL may be the one of your organization. You can also leave it blank.</p>
+
+            <p>Note that you can also add characters like e.g. hyphens or underscores to construct your subject URI.</p>
+
+            <p>If you do not want to construct an URI, you can also use Blank Nodes instead by marking the respective
+                checkbox on the right hand menu.</p>
+        </div>
+
+        <div class="col-5-10 right-side-box">
+
+            <p>
+                <input type="checkbox" name="blanknodes_only" id="id_blanknodes_only"> I don't want to provide a
+                subject! Use Blank Nodes only!
+            </p>
+
+            <div id="id_uri_container">
+                <p>
+                    Base URL: <input type="url" id="id_base_url" placeholder="e.g. http://example.net/">
+                </p>
+
+                <p>
+                    To build you subject URI, drag and drop the column name fields below into the subject URI field.
+                </p>
+
+                <p>
+                    {% for col in rdfModel.columns %}
+                    {% if col.col_num_new > -1%}
+
+
+                            <span class="uribuilder" draggable="true" ondragstart="drag(event)"
+                                  id="id_dragme_{{ line.col_num_orig }}" name="dragme_{{ line.col_num_orig }}"
+                                  onmouseover="Tip('Drag this column name to the URI text field below.')"
+                                  onmouseout="UnTip()">{{ col.header.orig_val }}</span>
+
+                    {% endif %}
+                    {% endfor %}
+                </p>
+
+                <p>
+                    Subject URI: <span id="id_base_url_insert"></span><input type="text" class="drop-box"
+                                                                             name="subject_uri" id="id_subject_uri"
+                                                                             ondrop="drop(event)"
+                                                                             ondragover="allowDrop(event)">
+                    <br>
+                    <span class="warning-text red" id="base_url_insert_warning" style="visibility:hidden;">Wrong formatting. Build the URI template using terms like '{columnName}' surrounded by single brackets.</span>
+                    <br><span class="warning-text red" id="subject_url_insert_warning" style="visibility:hidden;">Please make sure the URIs are valid in the file.</span>
+
+                </p>
+            </div>
+
+
+        </div>
+
+    </div>
+</div>
+
+<div class="minimizable">
+    <div class="content scrollit">
+        <h3>DATA VIEW</h3>
+        <div>
+        File: <b>{{ filename }}</b> (10 rows example)
+        {{ rdfModel | model_as_table | safe }}
+        </div>
+    </div>
+</div>
+
+    <div class="content" id="rdf_view">
+        <h3>RDF VIEW</h3>
+
+    </div>
+
+    </form>
+
+
+
+{% endblock %}
+
+{% block extra_scripts %}<script>
+
+function isUrl(s) {
+    var regexp = /(http:\/\/)?(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/
+    return regexp.test(s);
+}
+
+function allowDrop(ev) {
+    ev.preventDefault();
+}
+
+function drag(ev) {
+    ev.dataTransfer.setData("text", ev.target.innerHTML);
+}
+
+function drop(ev) {
+    //var curser_pos = ev.target.selectionStart;
+    ev.preventDefault();
+    var data = ev.dataTransfer.getData("text");
+    //alert(data);
+    //ev.target.appendChild(document.getElementById(data));
+    //ev.target.value = ev.target.value.substr(0, curser_pos) + "{" + data + "}" + ev.target.value.substr(curser_pos, ev.target.value.length);
+    $("#id_subject_uri").insertAtCaret("{" + data + "}");
+    changeURI();
+}
+
+function insert_into_uri(s, widget) {
+    var curser_pos = widget.selectionStart;
+    widget.value = widget.value.substr(0, curser_pos) + "{" + s + "}" + widget.value.substr(curser_pos, widget.value.length);
+}
+
+var base_url = $("#id_base_url");
+var base_url_insert = $("#id_base_url_insert");
+var subject_uri = $("#id_subject_uri");
+var base_url_insert_warning = $("#base_url_insert_warning");
+var subject_url_insert_warning = $("#subject_url_insert_warning");
+var blanknodes_only = $("#id_blanknodes_only");
+var uri_container = $("#id_uri_container");
+var csv_content = document.getElementById("id_hidden_csv_content_field");
+var rdf_content = document.getElementById("id_hidden_rdf_array_field");
+var rdf_view = document.getElementById("rdf_view");
+
+
+
+
+
+function base_url_change() {
+    var base_url = $("#id_base_url");
+    var base_url_insert = $("#id_base_url_insert");
+    trailing_slash = "";
+    if (base_url.val()[base_url.val().length - 1] != "/")
+        trailing_slash = "/";
+    if (isUrl(base_url.val()))
+        base_url_insert.html(base_url.val() + trailing_slash);
+    else if (base_url.val()=="")
+        base_url_insert.html("");
+    else base_url_insert.html(" [ Invalid Base URL ] ");
+
+    adapt_RDF_preview();
+}
+
+
+
+function adapt_RDF_preview() {
+
+    var subject_uri = $("#id_subject_uri");
+    var base_url_insert = $("#id_base_url_insert");
+
+    add_model_subject("skeleton",subject_uri.val());
+    add_model_subject("base_url",base_url_insert.text());
+
+    var rdf_view = $("#rdf_view");
+    var tbl = model_to_table(get_model());
+    rdf_view.find("table").remove();
+    rdf_view.append(tbl);
+
+}
+
+
+function changeURI() {
+    var subject_uri = $("#id_subject_uri");
+    var base_url_insert_warning = $("#base_url_insert_warning");
+    var subject_url_insert_warning = $("#subject_url_insert_warning");
+    base_url_insert_warning.css("visibility", "hidden");
+    subject_url_insert_warning.css("visibility", "hidden");
+    var last_bracket = "}";
+    var warning = false;
+    for (var i = 0; i < subject_uri.val().length; i++) {
+
+        if (subject_uri.val()[i] == last_bracket) {
+            base_url_insert_warning.css("visibility", "visible");
+            base_url_insert_warning.innerHTML = "Wrong formatting: Open '{' and closed '}' brackets must come in pairs."
+        }
+        if (subject_uri.val()[i] == "}" || subject_uri.val()[i] == "{") {
+            last_bracket = subject_uri.val()[i];
+        }
+    }
+    if (last_bracket == "{") {
+        base_url_insert_warning.css("visibility", "visible");
+        base_url_insert_warning.text("Wrong formatting: Open '{' bracket not closed.");
+    }
+    if (!lindaGlobals.validURL) {
+        subject_url_insert_warning.css("visibility", "visible");
+    }
+
+    adapt_RDF_preview();
+}
+
+
+
+
+
+function addToUri(ev) {
+    ev.preventDefault();
+    var column_name = ev.target.parentNode.childNodes[1].innerHTML;
+    insert_into_uri(column_name, subject_uri);
+    //subject_uri.value = subject_uri.value.substr(0, curser_pos) + "{"+data+"}" + ev.target.value.substr(curser_pos, ev.target.value.length);
+    adapt_RDF_preview();
+}
+
+
+
+$( document ).ready(function() {
+
+    add_model_filename($("#id_hidden_filename_field").val());
+
+    //check if subject uri has a valid formatting / open and closed curly brackets {} pairs
+    var subject_uri = $("#id_subject_uri");
+    subject_uri.on('keyup', changeURI);
+    subject_uri.on('drop', changeURI);
+    subject_uri.on('select', changeURI);
+
+
+    //base_url_insert.innerHTML = base_url.value;
+    var tipText = "'Add to subject URI'";
+    //onclick="addToUri(event)"
+    var addToUriButton = ' <a href="" onmouseover="Tip('+tipText+')" onmouseout="UnTip()"> <i class="fa fa-plus-square"></i></a>'
+    $("td[id^='id_table_head_']").each(function(){
+        $(this).html($(this).html()+addToUriButton);
+        $(this).find("a").first().on("click", function(event){
+            event.preventDefault();
+            var column_name = $(this).parent().contents().first().text().trim();
+            $("#id_subject_uri").insertAtCaret("{"+column_name+"}");
+            adapt_RDF_preview();
+        });
+    });
+    $("span[id^='id_dragme_']").each(function(){
+        $(this).on("click", function(){
+            $("#id_subject_uri").insertAtCaret("{"+$(this).text()+"}");
+        });
+    });
+
+
+var base_url = $("#id_base_url");
+base_url.on('keyup', base_url_change);
+base_url.on('select', base_url_change);
+
+$("#id_blanknodes_only").on('change', function () {
+    var uri_container = $("#id_uri_container");
+    if ($(this).is(':checked')){
+        uri_container.css("visibility", "hidden");
+        add_model_subject("blank_nodes","true");
+    }
+    else{
+        uri_container.css("visibility", "visible");
+        add_model_subject("blank_nodes","false");
+    }
+    adapt_RDF_preview();
+});
+
+//predefine form from model
+var model = get_model();
+if(model['subject'] && model['subject']['base_url'])
+    $("#id_base_url").val(model['subject']['base_url']);
+
+if(model['subject'] && model['subject']['skeleton'])
+    $("#id_subject_uri").val(model['subject']['skeleton']);
+
+if(model['subject'] && model['subject']['blank_nodes'] && model['subject']['blank_nodes'] == "true")
+    $("#id_blanknodes_only").click();//prop('checked', true);
+
+$("#button_back").prop('disabled', true);
+
+
+base_url_change();
+adapt_RDF_preview();
+
+
+});
+
+    </script>
+{% endblock %}

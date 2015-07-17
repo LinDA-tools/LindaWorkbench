@@ -1,0 +1,303 @@
+	{% extends "transformation-base.html" %}
+
+
+{% block content %}
+
+{% load modelview_tags %}
+
+{% include "transformation/snippets/title_snippet.html" with format='CSV' %}
+
+<!-- http://stackoverflow.com/questions/13666852/how-to-debug-a-django-multivaluedictkeyerror-on-formset-post -->
+{% for hidden in form.hidden_fields %}
+	{{ hidden }}
+{% endfor %}
+
+<input type="hidden" name="hidden_rdf_array_field" id ="id_hidden_rdf_array_field" value="{{ rdfArray }}">
+<input type="hidden" name="hidden_rdf_prefix_field" id ="id_hidden_rdf_prefix_field" value="{{ rdfPrefix }}">
+<input type="hidden" name="hidden_model" id="id_hidden_model" value="{{ rdfModel }}">
+
+<div class="minimizable">
+<div class="content grid">
+	<h3>Specify the RDF Predicate</h3>
+	<div class="col-6-10 left-side-box">
+		<p>In the last step, you constructed a RDF subject URI for each row of your data. As every row represents data for one single real world entity (e.g. a customer, an accounting information, ...), the single fields in that row represent are this entities characteristics (e.g. customer name, date of money transferal, ...). The table's top row though contains information that should describe these characteristics.</p>
+	<p>In this step, we try and find a suitable RDF class that can represent data in one column. We use the column header to find information first, but you also can type in your own search terms if the listed proposals are of no use. Click on a proposal to see the results in the RDF view at the page bottom.</p>
+	</div>
+
+	<div class="col-4-10 right-side-box">
+		
+	</div>
+</div>
+</div>
+
+<div class="minimizable">
+<div class="content scrollit">
+	<h3>DATA VIEW</h3>
+	<div>
+		File: <b>{{ filename }}</b> (10 rows example)
+		{{ rdfModel | model_as_table_predicate | safe }}
+	</div>
+</div></div>
+
+
+<div class="content" id="rdf_view">
+	<h3>RDF VIEW</h3>
+
+
+
+</div>
+
+</form>
+
+
+{% endblock %}
+
+{% block extra_scripts %}
+	<script>
+
+	/* vocab selection widgets
+	can be provided in simple html like
+	<div class="bb_select">
+	 <div>item1</div>
+	 <div>item2</div>
+	</div>
+	This function does a lot of dom manipulation to transform it into a cool widget :)
+	*/
+	function addInnerDiv(elem) {
+
+		var id_array = elem.attr("id").split("_");
+		var column_num = id_array[id_array.length-1];
+
+		var kids = elem.children();
+
+		elem.empty();
+	elem.css("height", "5em");
+
+		var innerDiv = jQuery('<div/>', {
+			class: "bb_select_inner"
+		}).appendTo(elem);
+
+		var selectionDiv = jQuery('<div/>', {
+			class: "bb_select_selection",
+			text: "please chose"
+		}).appendTo(innerDiv);
+
+	selectionDiv.css("position","relative");
+
+	//font awesome arrow down
+		var caretDown = jQuery('<i/>', {
+			class: "fa fa-caret-square-o-down fa-2x"
+		}).appendTo(selectionDiv);
+
+		caretDown.css("position","absolute");
+		caretDown.css("top",".1em");
+		caretDown.css("right",".2em");
+		caretDown.css("color","#888");
+
+		elem.on("mouseover", function() {
+			$(this).find("i:last-child").css("opacity","1");
+		$(this).find("div div").css("z-index", 999999);
+		});
+
+		elem.on("mouseout", function() {
+			$(this).find("i:last-child").css("opacity",".3");
+		$(this).find("div div").css("z-index", "auto");
+		});
+
+		var elementsDiv = jQuery('<div/>', {
+			class: "bb_select_elements"
+		}).appendTo(innerDiv);
+		/*elementsDiv.css("position","fixed");
+		elementsDiv.css("width","inherit");*/
+
+		elementsDiv.append(kids);
+
+		kids.each(function (i) {
+			$(this).on("click", function () {
+				$(this).parent().siblings().first().html($(this).html());
+				$(this).addClass("bb_select_clicked");
+				$(this).siblings().removeClass("bb_select_clicked");
+				caretDown.appendTo(selectionDiv);
+				var vocab_name = $(this).find(".oracle_label em").text()
+				var href = $(this).find("a").attr("href")
+				var vocab_description = $(this).find("span.vocab_description").text();
+				var vocab_score = $(this).find("span.vocab_score").text();
+				//var search_term = ""; // TODO
+				elem.attr("value", '{"url":"'+href+'", "prefix": '+JSON.stringify(replacePrefix(href))+', "label": "'+vocab_name+'", "vocab_description": "'+vocab_description+'", "score": "'+vocab_score+'"}');
+				adapt_RDF_preview(column_num);
+			});
+		});
+
+		innerDiv.on("mouseover", function () {
+			elementsDiv.css("top", selectionDiv.offset().top + selectionDiv.outerHeight() - $(window).scrollTop());
+			elementsDiv.css("left", selectionDiv.offset().left);
+			elementsDiv.css("visibility", "visible");
+		});
+
+		innerDiv.on("mouseout", function () {
+			elementsDiv.css("visibility", "hidden");
+
+		});
+
+		//avoid the dropdown staying open when scrolling
+		$(window).on("scroll", function(){
+        	elementsDiv.css("visibility", "hidden");
+        });
+
+		elementsDiv.trigger("mouseout");
+	}
+
+
+var recent_result = null;
+var recent_textinput = null;
+var recent_text = null;
+
+
+
+function askOracle(widget_num){
+	recent_result = document.getElementById("search_result_"+widget_num);
+	recent_textinput = document.getElementById("search_textinput_"+widget_num);
+	recent_icon = document.getElementById("icon_"+widget_num);
+
+	recent_icon.className = "fa fa-refresh fa-spin";
+
+	var request = $.ajax({
+		type: 'GET',
+		dataType: 'jsonp',
+		data: { 'property': recent_textinput.value },
+		url: "http://linda.epu.ntua.gr:8000/coreapi/recommend/",
+	});
+
+	request.fail(function (jqXHR, textStatus, errorThrown) {
+			recent_icon = document.getElementById("icon_"+widget_num);
+			recent_icon.className = "fa fa-exclamation-triangle";
+			console.log(jqXHR);
+			console.log(textStatus);
+			console.log(errorThrown);
+		}
+	);
+
+	request.success(function (data) {
+			recent_result = $("#search_result_"+widget_num);
+			recent_icon = $("#icon_"+widget_num);
+			recent_icon.attr("class", "fa fa-check");
+			recent_result.empty();
+			if(data.length===0){
+				recent_icon.attr("class", "fa fa-meh-o");
+				recent_result.append("No results found.<br>Please modify the search term.");
+				adapt_RDF_preview(widget_num);
+				return;
+			}
+			//recent_text.innerHTML = "please choose from list";
+			for(var i = 0; i < data.length; i++){
+
+				//shorten uri
+				var short_uri = "no uri";
+				if(data[i].full_uri)
+					short_uri = shortenURI(data[i].full_uri, 40);
+				else if(data[i].uri)
+					short_uri = shortenURI(data[i].uri, 40);
+
+				//css class star symbol for ranking
+				var star ="fa ";
+				if(data[i].ranking>80)
+					star += "fa-star";
+				else if(data[i].ranking>50)
+					star += "fa-star-half-o";
+				else
+					star += "fa-star-o";
+
+				recent_result.append("<div id=\"oracle_result_"+widget_num+"_"+i+"\"><span class=\"oracle_label\">(<i class=\""+star+"\"></i><span class=\"vocab_score\">"+data[i].ranking+"</span>) <em>"+data[i].label+"</em><br><span class=\"vocab_description\">"+data[i].vocabulary+"</span></span><br><a href=\""+data[i].full_uri+"\" target=\"_blank\" onmouseover=\"Tip('Open in external window')\" onmouseout=\"UnTip()\"><i class=\"fa fa-external-link-square additl_vert_pad\"></i></a>"+short_uri+"</div>");
+			}
+
+			addInnerDiv($("#search_result_"+widget_num));
+
+			//auto-select first element after oracle call
+			$("#search_result_"+widget_num+" * .bb_select_elements").children().first().trigger("click");
+		}
+
+	);
+	return request;
+}
+
+
+
+
+//only request ajax if no typing for 1 second
+var typingTimer;
+var doneTypingInterval = 1000;
+function delayedOracleCall(widget_num) {
+	clearTimeout(typingTimer);
+	typingTimer = setTimeout(function(){askOracle(widget_num);}, doneTypingInterval);
+}
+
+
+
+function adapt_RDF_preview(column_num) {
+	var begin = 0;
+	var until = get_num_selected_cols_model();
+	if(typeof column_num !== "undefined"){
+
+		var begin = column_num-1;
+		var until = column_num;
+
+	}
+	//used_prefixes = [];
+	
+
+	var found_one_undefined = false; // nothing could be retrieved via oracle api call
+
+	for(var j=begin; j<until; j++) {
+		var data_string = $("#search_result_"+(j+1)).attr("value");
+		if(typeof data_string !== "undefined"){
+			var data = jQuery.parseJSON(data_string);
+			add_to_model_predicate(data, (j+1));//, "html":$(this).html()
+
+		}else{
+			found_one_undefined = true;
+		}
+	}
+
+
+	//enables or disabled next button depending on rdf graph completeness
+	if(!found_one_undefined) {
+		$("#button_next").removeAttr("disabled");
+	}
+	else {
+		$("#button_next").attr("disabled", "disabled");
+	}
+
+	var rdf_view = $("#rdf_view");
+	var tbl = model_to_table(get_model());
+	rdf_view.find("table").remove();
+	rdf_view.append(tbl);
+
+}
+
+
+
+used_prefixes = [];
+
+
+$( document ).ready(function() {
+
+	// do an oracle lookup on page load
+
+	$("div[id^='search_result_']").each( function(i, obj){
+		askOracle(i+1);
+	});
+
+	$("#button_next").attr("disabled", "disabled");
+
+	$("#button_back").on("click", function () {
+		var form = $("#main_form");
+		form.attr("action", "3");
+		form.submit();
+	});
+
+});
+
+
+
+</script>
+{% endblock %}

@@ -1,0 +1,115 @@
+	{% extends "transformation-base.html" %}
+
+{% block content %}
+
+{% include "transformation/snippets/title_snippet.html" with format='CSV' %}
+
+<!-- http://stackoverflow.com/questions/13666852/how-to-debug-a-django-multivaluedictkeyerror-on-formset-post -->
+{% for hidden in form.hidden_fields %}
+	{{ hidden }}
+{% endfor %}
+
+<input type="hidden" name="hidden_csv_raw_field" id ="id_hidden_csv_raw_field" value="{{ csvRaw }}">
+<input type="hidden" name="hidden_model" id="id_hidden_model" value="{{ rdfModel }}">
+
+<div class="minimizable">
+<div class="content grid">
+	<h3>CSV Column Selection</h3>
+	<div class="col-10-10">
+		<p>
+		Please select the colums you want to transfer from the table view below.
+		</p>
+	</div>
+
+</div>
+</div>
+
+<div class="content scrollit">
+	<h3>DATA VIEW</h3>
+	<div>
+	File: <b>{{ filename }}</b> (10 rows example)
+	<input type="button" id="id_select_all_rows" value="deselect all">
+	<table class="table_view">
+	<thead>
+
+		{% for line in csvContent|slice:":1" %}
+		<tr>
+			{% for field in line %}
+			<td id="id_table_head_{{ forloop.counter }}">
+				<input type="checkbox" name="rowselect{{ forloop.counter }}" value="{{ field }}" id="id_rowselect{{ forloop.counter}}" checked=false> {{ field }}
+			</td>
+			{% endfor %}
+		</tr>
+		{% endfor %}
+
+
+	</thead>
+	<tbody>
+		{% for line in csvContent|slice:"1:" %}
+		<tr>
+			{% for field in line %}
+				<td>
+					<span>{{ field }}</span>
+				</td>
+			{% endfor %}
+		</tr>
+		{% endfor %}	
+	</tbody>
+	</table>
+	</div>
+</div>
+
+</form>
+
+
+
+{% endblock %}
+
+{% block extra_scripts %}
+	<script>
+$( document ).ready(function() {
+	var select_status = false;
+	var rowselect_button = document.getElementById('id_select_all_rows');
+	rowselect_button.addEventListener('click', toggle_select_all);
+	function toggle_select_all(){
+		if(select_status)
+			rowselect_button.value="deselect all";
+		else
+			rowselect_button.value="select all";
+
+		$('[id^=id_rowselect]').prop("checked", select_status);
+		select_status = !select_status;
+
+		toggle_next_button();
+	}
+
+	function toggle_next_button(){
+
+		// toggle next button in case no column is selected
+		var one_selected = false;
+		$('[id^=id_rowselect]').each(function(){
+			if($(this).prop("checked")) {
+				one_selected = true;
+				return;
+			}
+		});
+
+		if(one_selected) {
+			$("#button_next").removeAttr("disabled");
+		}
+		else {
+			$("#button_next").attr("disabled", "disabled");
+		}
+	}
+
+	$('[id^=id_rowselect]').on("change", toggle_next_button);
+
+	toggle_next_button();
+
+	$("#button_back").prop('disabled', true);
+
+
+
+});
+</script>
+{% endblock %}

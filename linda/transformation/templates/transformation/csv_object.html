@@ -1,0 +1,435 @@
+	{% extends "transformation-base.html" %}
+
+{% block content %}
+
+{% load modelview_tags %}
+
+{% include "transformation/snippets/title_snippet.html" with format='CSV' %}
+
+<!-- http://stackoverflow.com/questions/13666852/how-to-debug-a-django-multivaluedictkeyerror-on-formset-post -->
+{% for hidden in form.hidden_fields %}
+    {{ hidden }}
+{% endfor %}
+
+<input type="hidden" name="hidden_rdf_array_field" id ="id_hidden_rdf_array_field" value="{{ rdfArray }}">
+<input type="hidden" name="hidden_rdf_prefix_field" id ="id_hidden_rdf_prefix_field" value="{{ rdfPrefix }}">
+<input type="hidden" name="hidden_model" id="id_hidden_model" value="{{ rdfModel }}">
+
+<div class="minimizable">
+<div class="content grid">
+	<h3>Specify the RDF Object</h3>
+	<div class="col-5-10 left-side-box">
+
+		<p>In this step, you can either choose a datatype (such as "Text", "Floating Point Number", "Integer", ...) for a table row or try and let us reconsiliate your data against the DBPedia triple store. That is, we will automatically look up an URI in the DBPedia-Project that might represent the data within each of your table rows.</p>
+		<p>As always, the results can be seen in the RDF preview at the page bottom.</p>
+	</div>
+
+	<div class="col-5-10 right-side-box">
+
+	</div>
+</div>
+</div>
+
+<div class="minimizable">
+    <div class="content scrollit">
+        <h3>DATA VIEW</h3>
+        <div>
+        File: <b>{{ filename }}</b> (10 rows example)
+        {{ rdfModel | model_as_table_object | safe }}
+        </div>
+    </div>
+</div>
+
+<div class="content" id="rdf_view">
+	<h3>RDF VIEW</h3>
+
+</div>
+
+</form>
+
+
+
+{% endblock %}
+
+{% block extra_scripts %}
+
+	<script>
+	// Attention: different from the function used for predicate
+    function addInnerDiv(elem) {
+
+        var kids = elem.children();
+
+        elem.empty();
+
+        var innerDiv = jQuery('<div/>', {
+            class: "bb_select_inner"
+        }).appendTo(elem);
+
+        var selectionDiv = jQuery('<div/>', {
+            class: "bb_select_selection",
+            text: "please chose"
+        }).appendTo(innerDiv);
+
+	selectionDiv.css("position","relative");
+
+	//font awesome arrow down
+        var caretDown = jQuery('<i/>', {
+            class: "fa fa-caret-square-o-down fa-2x"
+        }).appendTo(selectionDiv);
+
+        caretDown.css("position","absolute");
+        caretDown.css("top",".1em");
+        caretDown.css("right",".2em");
+        caretDown.css("color","#888");
+
+        elem.on("mouseover", function() {
+        	$(this).find("i:last-child").css("opacity","1");
+		$(this).find("div div").css("z-index", 999999);
+        });
+
+        elem.on("mouseout", function() {
+        	$(this).find("i:last-child").css("opacity",".3");
+		$(this).find("div div").css("z-index", "auto");
+        });
+
+        var elementsDiv = jQuery('<div/>', {
+            class: "bb_select_elements"
+        }).appendTo(innerDiv);
+
+        elementsDiv.append(kids);
+
+        kids.each(function (i) {
+            $(this).on("click", function () {
+                $(this).parent().siblings().first().html($(this).html());
+                $(this).addClass("bb_select_clicked");
+                $(this).siblings().removeClass("bb_select_clicked");
+                caretDown.appendTo(selectionDiv);
+				var vocab_name = $(this).find(".oracle_label em").text()
+				var href = $(this).find("a").attr("href")
+				var vocab_description = $(this).find("span.vocab_description").text();
+				var vocab_score = $(this).find("span.vocab_score").text();
+				//var search_term = ""; // TODO
+				elem.attr("value", '{"url":"'+href+'", "prefix": '+JSON.stringify(replacePrefix(href))+', "label": "'+vocab_name+'", "vocab_description": "'+vocab_description+'", "score": "'+vocab_score+'"}');
+                adapt_RDF_preview();
+            });
+        });
+
+        innerDiv.on("mouseover", function () {
+            //necessary because the element must overlap its scrolling container
+            elementsDiv.css("top", selectionDiv.offset().top + selectionDiv.outerHeight() - $(window).scrollTop());
+            elementsDiv.css("left", selectionDiv.offset().left);
+            elementsDiv.css("visibility", "visible");
+        });
+
+        innerDiv.on("mouseout", function () {
+            elementsDiv.css("visibility", "hidden");
+        });
+
+        elementsDiv.trigger("mouseout");
+
+        //avoid the dropdown staying open when scrolling
+        $(window).on("scroll", function(){
+        	elementsDiv.css("visibility", "hidden");
+        });
+    }
+
+
+//http://localhost:8000/transformation/lookup/place/Berlin/
+
+
+// e.g. domain = bird; term = sparrow, tit, ..
+function askOracle(widget, domain, term){
+	//console.log('http://lookup.dbpedia.org/api/search/KeywordSearch?QueryClass=' + domain + '&QueryString=' + term);
+	var request = $.ajax({
+		type: 'GET',
+		dataType: 'json',
+		//url: "http://localhost:8000/transformation/lookup/"+domain+"/"+term+"/",
+		url: 'http://lookup.dbpedia.org/api/search/KeywordSearch?QueryClass=' + domain + '&QueryString=' + term,
+	});
+
+	request.fail(function (xhr, ajaxOptions, thrownError) {
+		widget.html(widget.text()+ " (ERROR<br>"+thrownError+")");
+
+	});
+
+	var new_id = "search_result_"+widget.attr("id");
+	request.success(function (data) {
+
+		if(data.results.length===0){
+			widget.html(widget.html()+"<br><span class=\"red\" onmouseover=\"Tip('We were unable to find results in DBPedia which match this table cell.')\" onmouseout=\"UnTip()\">No reconciliation results.</span>");
+		}else{
+			var list = "<div class=\"bb_select\" id=\""+new_id+"\">";
+			for(var i=0; i<data.results.length; i++){
+				var link = "<a href=\""+data.results[i].uri+"\" target=\"_blank\" onmouseover=\"Tip('Open in external window')\" onmouseout=\"UnTip()\"><i class=\"fa fa-external-link-square additl_vert_pad\"></i></a>"
+				list += "<div>"+link+data.results[i].uri+"</div>";
+
+			}
+			list += "</div>";
+			widget.html(widget.html()+"<br>"+list);
+			addInnerDiv($("#"+new_id));
+			//auto-select first element after oracle call
+			$(widget).find("* .bb_select_elements").children().first().trigger("click");
+		}
+
+	});
+
+	return request;
+}
+
+function guessType(column){
+	column = typeof column !== 'undefined' ? column : "";
+
+	//http://www.sitepoint.com/jquery-basic-regex-selector-examples/
+//baseUris = ['Prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>', 'Prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>', 'Prefix xsd: <http://www.w3.org/2001/XMLSchema#>', 'Prefix fn: <http://aksw.org/sparqlify/>'];
+
+
+	//select integers only
+	var intRegex = /[0-9 -()+]+$/;
+	//match any ip address
+	var ipRegex = 'bd{1,3}.d{1,3}.d{1,3}.d{1,3}b';
+	//match number in range 0-255
+	var num0to255Regex = '^([01][0-9][0-9]|2[0-4][0-9]|25[0-5])$';
+	//match number in range 0-999
+	var num0to999Regex = '^([0-9]|[1-9][0-9]|[1-9][0-9][0-9])$';
+	//match ints and floats/decimals
+	var floatRegex = '[-+]?([0-9]*.[0-9]+|[0-9]+)';
+	//Match Any number from 1 to 50 inclusive
+	var number1to50Regex = /(^[1-9]{1}$|^[1-4]{1}[0-9]{1}$|^50$)/gm;
+	//match email address
+
+	var emailRegex = '^[A-Z0-9._%+-]+@[A-Z0-9.-]+.[A-Z]{2,4}$';
+	//match credit card numbers
+	var creditCardRegex = '^(?:4[0-9]{12}(?:[0-9]{3})?|5[1-5][0-9]{14}|6(?:011|5[0-9][0-9])[0-9]{12}|3[47][0-9]{13}|3(?:0[0-5]|[68][0-9])[0-9]{11}|(?:2131|1800|35d{3})d{11})$';
+	//match username
+	var usernameRegex = '/^[a-z0-9_-]{3,16}$/';
+	//match password
+	var passwordRegex = '/^[a-z0-9_-]{6,18}$/';
+	//Match 8 to 15 character string with at least one upper case letter, one lower case letter, and one digit (useful for passwords).
+	var passwordStrengthRegex = /((?=.*d)(?=.*[a-z])(?=.*[A-Z]).{8,15})/gm;
+	//match elements that could contain a phone number
+	var phoneNumber = /[0-9-()+]{3,20}/;
+
+	//MatchDate (e.g. 21/3/2006)
+	//var dateRegex = /(d{1,2}/d{1,2}/d{4})/gm;
+	//match date in format MM/DD/YYYY
+	var dateMMDDYYYRegex = '^(0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01])[- /.](19|20)dd$';
+	//match date in format DD/MM/YYYY
+	var dateDDMMYYYRegex = '^(0[1-9]|[12][0-9]|3[01])[- /.](0[1-9]|1[012])[- /.](19|20)dd$';
+
+	//match a url
+	//var urlRegex = '/^(https?://)?([da-z.-]+).([a-z.]{2,6})([/w .-]*)*/?$/';
+	//match a url slug (letters/numbers/hypens)
+	var urlslugRegex = '/^[a-z0-9-]+$/';
+	//match a url string (Fixes spaces and querystrings)
+	var urlRegex = '/(https?://)?([da-z.-]+).([a-z.]{2,6})([/w.-=?]*)*/?/';
+
+	//match domain name (with HTTP)
+	var domainRegex = '/(.*?)[^w{3}.]([a-zA-Z0-9]([a-zA-Z0-9-]{0,65}[a-zA-Z0-9])?.)+[a-zA-Z]{2,6}/igm';
+	//match domain name (www. only)
+	var domainRegex = '/[^w{3}.]([a-zA-Z0-9]([a-zA-Z0-9-]{0,65}[a-zA-Z0-9])?.)+[a-zA-Z]{2,6}/igm';
+	//match domain name (alternative)
+	var domainRegex = '/(.*?).(com|net|org|info|coop|int|com.au|co.uk|org.uk|ac.uk|)/igm';
+	//match sub domains: www, dev, int, stage, int.travel, stage.travel
+	var subDomainRegex = '/(http://|https://)?(www.|dev.)?(int.|stage.)?(travel.)?(.*)+?/igm';
+
+
+	//http://www.w3.org/TR/xmlschema11-2/#built-in-primitive-datatypes
+	var datatypes = {
+
+
+	"decimal": {"url": "http://www.w3.org/2001/XMLSchema#decimal",
+		"regex": /^(\+|-)?([0-9]+(\.[0-9]*)?|\.[0-9]+)$/},
+	"double": {"url": "http://www.w3.org/2001/XMLSchema#double",
+		"regex":  /^(\+|-)?([0-9]+(\.[0-9]*)?|\.[0-9]+)([Ee](\+|-)?[0-9]+)?|(\+|-)?INF|NaN$/},
+	"float": {"url": "http://www.w3.org/2001/XMLSchema#float",
+		"regex":  /^(\+|-)?([0-9]+(\.[0-9]*)?|\.[0-9]+)([Ee](\+|-)?[0-9]+)?|(\+|-)?INF|NaN$/},
+	"string": {"url": "http://www.w3.org/2001/XMLSchema#string",
+		"regex": ".*"},
+/*
+	"boolean": {"url": "http://www.w3.org/2001/XMLSchema#boolean",
+		"regex": "true|false|0|1"},
+	"duration": {"url": "http://www.w3.org/2001/XMLSchema#duration",
+		"regex": floatRegex},
+	"dateTime": {"url": "http://www.w3.org/2001/XMLSchema#dateTime",
+		"regex": floatRegex},
+	"time": {"url": "http://www.w3.org/2001/XMLSchema#time",
+		"regex": floatRegex},
+	"date": {"url": "http://www.w3.org/2001/XMLSchema#date",
+		"regex": floatRegex},
+	"gYearMonth": {"url": "http://www.w3.org/2001/XMLSchema#gYearMonth",
+		"regex": floatRegex},
+	"gYear": {"url": "http://www.w3.org/2001/XMLSchema#gYear",
+		"regex": floatRegex},
+	"gMonthDay": {"url": "http://www.w3.org/2001/XMLSchema#gMonthDay",
+		"regex": floatRegex},
+	"gDay": {"url": "http://www.w3.org/2001/XMLSchema#gDay",
+		"regex": floatRegex},
+	"gMonth": {"url": "http://www.w3.org/2001/XMLSchema#gMonth",
+		"regex": floatRegex},
+	"hexBinary": {"url": "http://www.w3.org/2001/XMLSchema#hexBinary",
+		"regex": floatRegex},
+	"base64Binary": {"url": "http://www.w3.org/2001/XMLSchema#base64Binary",
+		"regex": floatRegex},
+	"anyURI": {"url": "http://www.w3.org/2001/XMLSchema#anyURI",
+		"regex": floatRegex},
+	"QName": {"url": "http://www.w3.org/2001/XMLSchema#QName",
+		"regex": floatRegex},
+	"NOTATION": {"url": "http://www.w3.org/2001/XMLSchema#NOTATION",
+		"regex": floatRegex},
+*/
+
+	};
+
+	var matching = {};
+	var all_fields = $("td[id^='id_table_field_"+column+"']");
+	var num_fields = all_fields.length;
+	all_fields.each( function(i){
+	var recent_field = $(this);
+		$.each(datatypes, function(key, value){
+
+			//var repl = replacePrefix(value.url);
+			var repl = value.url;
+			if(recent_field.text().trim().match(value.regex)){
+				if(typeof matching[repl] == 'undefined'){
+					matching[repl] = 1;
+				}
+				else{
+					matching[repl] += 1;
+				}
+			}
+		});
+
+	});
+
+	var select = "<br><select class=\"type_guessing\">";
+	$.each(matching, function(k,v){
+		if(v == num_fields){
+			select += "<option>"+k+"</option>";
+		}
+	});
+	select += "</select>";
+	var table_header = $("td[id^='id_table_head_"+column+"']");
+	table_header.html(table_header.html()+select);
+	table_header.find(".type_guessing").on("change", function(){
+		adapt_RDF_preview(column);
+	});
+
+	adapt_RDF_preview(column);
+
+}
+
+function noAction(column){
+
+	column = typeof column !== 'undefined' ? column : "";
+
+	//remove data type select field from table header
+	$("td[id^='id_table_head_"+column+"']").find("select").remove();
+	$("td[id^='id_table_head_"+column+"']").find("br").remove();
+
+	var csv_content = eval($("#id_hidden_csv_content_field").val());
+	$("td[id^='id_table_field_"+column+"']").each( function(i){
+		var id = $(this).attr("id");
+		//get row and column field as included in table td id field
+		id_as_array = id.split("_");
+		var row = id_as_array[id_as_array.length-1];
+		var col = id_as_array[id_as_array.length-2];
+		$(this).text(csv_content[row][col-1]);
+	});
+	adapt_RDF_preview(column);
+}
+
+
+function adapt_RDF_preview(column) {
+	column = typeof column !== 'undefined' ? column : "";
+
+
+//TODO this is done each time anything is clicked, bad performance
+	$("td[id^='id_table_field_"+column+"']").each(function(i){
+
+		var id_as_array = $(this).attr("id").split("_");
+		var row = id_as_array[id_as_array.length-1];
+		var col = id_as_array[id_as_array.length-2];
+
+		var recon_result = $(this).find(".bb_select_selection").text();
+
+		if($(this).find(".bb_select").length>0) { // has reconsiliation result (dropbox)
+			var recon_result_prefixed = replacePrefix(recon_result);
+			//recon_result = recon_result['prefix'];
+			if(recon_result_prefixed['suffix'].slice(-1)==".") { // problems with trailing dots, cant be saved in triple store
+				recon_result_prefixed['suffix'] = recon_result_prefixed['suffix'].substring(0, recon_result_prefixed['suffix'].length-1);
+				recon_result_prefixed['url'] = recon_result_prefixed['url'].substring(0, recon_result_prefixed['url'].length-1);
+			}
+
+		add_to_model_field_where_col_and_row("reconciliation", {"url":recon_result,"prefix": recon_result_prefixed}, col, row);
+		add_to_content_where_col("object_method", "reconciliation", col);
+
+		}else if($("#id_table_head_"+col).find("select.type_guessing").length>0) { // has guessed types
+
+			var data_type = $("#id_table_head_"+col).find("select.type_guessing option:selected").text();
+		
+			add_to_content_where_col("data_type", replacePrefix(data_type), col);
+			add_to_content_where_col("object_method", "data type", col);
+
+
+		}else{ // no action
+
+			add_to_content_where_col("object_method", "no action", col);
+		}
+	});
+
+	var rdf_view = $("#rdf_view");
+	var tbl = model_to_table(get_model());
+	rdf_view.find("table").remove();
+	rdf_view.append(tbl);
+
+}
+
+//check whether to to auto type guessing, econciliation or nothing (select dropbox)
+//when providing no param, all fields are checked
+function calculateCells(column){
+	column = typeof column !== 'undefined' ? column : "";
+
+	var opt = $("#id_table_settings_" + column).find("select option:selected").text();
+	if(opt == "auto inference") {
+		noAction(column); //clear field
+		var topic_field = "id_table_head_" + column;
+		var topic = $("#"+topic_field).text().trim();
+		$("td[id^='id_table_field_"+column+"']").each( function(i){
+			askOracle($(this), topic, $(this).text().trim());
+		});
+	}
+	else if(opt == "auto type guessing") {
+		noAction(column); //clear field
+		guessType(column);
+	}
+	else if(opt == "no action") {
+		noAction(column);
+	}
+}
+
+
+var rdf_content = $("#id_hidden_rdf_array_field");
+
+
+$( document ).ready(function() {
+
+	$("#button_back").on("click", function () {
+		var form = $("#main_form");
+		form.attr("action", "4");
+		form.submit();
+	});
+
+	adapt_RDF_preview();
+
+	$("td[id^='id_table_settings_'] select").each(function(){
+		$(this).on("change", function(){
+			var id = $(this).parent().attr("id");
+			calculateCells(column=id.substring(id.lastIndexOf("_")+1));
+		});
+	});
+
+	calculateCells();
+});
+
+</script>
+{% endblock %}

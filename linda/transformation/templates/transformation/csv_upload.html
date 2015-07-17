@@ -1,0 +1,212 @@
+{% extends "transformation-base.html" %}
+
+{% block content %}
+
+    {% include "transformation/snippets/title_snippet.html" with format='CSV' %}
+
+    <input type="hidden" name="hidden_csv_raw_field" id="id_hidden_csv_raw_field" value="{{ csvRaw }}">
+    <input type="hidden" name="hidden_model" id="id_hidden_model" value="{{ rdfModel }}">
+
+<div class="minimizable">
+    <div class="grid content">
+        <h3>CSV Upload</h3>
+        <div class="col-5-10 left-side-box">
+
+            <p>Please select a CSV file. We will try and guess the CSV parameters for you.</p>
+
+            <p>After loading, if the file below looks peculiar, please try other parameters on the right and try
+                again.</p>
+
+        </div>
+
+        <div class="col-5-10 right-side-box">
+
+
+            <p>
+                <!--
+			 http://www.quirksmode.org/dom/inputfile.html
+				<div class="fileinputs">
+					{{ form.file }}
+					<div class="fakefile">
+						<input type="button" value="select CSV file">
+			
+					</div>
+				</div>-->
+                Select a file: <br>{{ form.upload_file }}
+            </p>
+
+            <p class="red">
+                {{ form.upload_file.errors.as_text }}
+            </p>
+            <hr>
+
+
+            <table>
+                <tr>
+                    <td>
+                        <label for="{{ form.line_end.id_for_label }}">Line End</label>
+                    </td>
+                    <td>
+                        {{ form.line_end }}
+                    </td>
+                    <td>
+                        {% if csvDialect.line_end %}
+                            <span class="csv_proposal">proposed: {{ csvDialect.line_end }}</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="{{ form.quotechar.id_for_label }}">Quote Char</label>
+                    </td>
+                    <td>
+                        {{ form.quotechar }}
+                    </td>
+                    <td>
+                        {% if csvDialect.quotechar %}
+                            <span class="csv_proposal">proposed: {{ csvDialect.quotechar }}</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="{{ form.delimiter.id_for_label }}">Delimiter</label>
+                    </td>
+                    <td>
+                        {{ form.delimiter }}
+                    </td>
+                    <td>
+                        {% if csvDialect.delimiter %}
+                            <span class="csv_proposal">proposed: {{ csvDialect.delimiter }}</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="{{ form.escape.id_for_label }}">Escape</label>
+                    </td>
+                    <td>
+                        {{ form.escape }}
+                    </td>
+                    <td>
+                        {% if csvDialect.escape %}
+                            <span class="csv_proposal">proposed: {{ csvDialect.escape }}</span>
+                        {% endif %}
+                    </td>
+                </tr>
+            </table>
+            <hr>
+            <div class="center">
+                <input type="submit" value="Upload file" name="button_upload" id="id_button_upload" class="center">
+            </div>
+
+        </div>
+
+
+        <!--div class="col-5-10 left-side-button">
+        </div>
+        <div class="col-5-10 right-side-button">
+            <input type="submit" value="Upload file" name="button_upload">
+        </div-->
+
+
+    </div>
+</div>
+
+
+    <div class="content scrollit">
+        <h3>DATA VIEW</h3>
+        <div>
+        File: <b>{{ filename }}</b> (10 rows example)
+        <table class="table_view">
+            <thead>
+
+            {% for line in csvContent|slice:":1" %}
+                <tr>
+                    {% for field in line %}
+                        <td id="id_table_head_{{ forloop.counter }}">{{ field }}
+                        </td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+
+
+            </thead>
+            <tbody>
+            {% for line in csvContent|slice:"1:" %}
+                <tr>
+                    {% for field in line %}
+                        <td>{{ field }}
+                        </td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        </div>
+
+    </div>
+
+    </form>
+
+    <!--div id="processing">
+    processing...
+    </div-->
+
+
+
+
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+
+
+$(document).ready(function () {
+
+
+    var upload_button = document.getElementById('id_button_upload');
+    var upload_widget = document.getElementById('id_upload_file');
+    var next_button = document.getElementById('button_next');
+    var filename = document.getElementById('id_hidden_filename_field');
+    var form = document.getElementById('main_form');
+
+    function toggle_buttons() {
+        if (upload_widget.files.length == 0) { // no file selected
+
+            if (filename == null) { // nothing happened so far, no uploads
+                upload_button.disabled = true;
+                upload_button.value = "Upload file";
+                next_button.disabled = true;
+            }
+            else { // file was uploaded and submitted via form / html post in the previous step
+                upload_button.disabled = false;
+                upload_button.value = "Apply";
+                next_button.disabled = false;
+            }
+        }
+        else { // file selected for upload
+            upload_button.disabled = false;
+            upload_button.value = "Upload file";
+            next_button.disabled = true;
+        }
+
+    }
+
+    toggle_buttons();
+
+    upload_widget.addEventListener('change', toggle_buttons);
+
+    // add an alternative target page (i.e. form action) (itself) when clicking the file upload button
+    upload_button.onclick = function () {
+        form.action = '1';
+        form.submit();
+    }
+
+    $("#button_back").prop('disabled', true);
+
+});
+
+
+    </script>
+{% endblock %}
