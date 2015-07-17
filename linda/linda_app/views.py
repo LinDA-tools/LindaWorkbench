@@ -1125,7 +1125,6 @@ def datasourceDelete(request, dtname):
         else:  # also remove data from the sesame
             mock_request = MockRequest(user=request.user, post=request.POST, accept='application/json')
             callDelete = api_datasource_delete(mock_request, dtname)
-
             j_obj = json.loads(callDelete.content.decode('utf-8'))
 
             if j_obj['status'] == '200':
