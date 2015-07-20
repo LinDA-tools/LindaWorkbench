@@ -169,6 +169,16 @@ def recommend_dataset(request):
 
     results = sorted(results, key=itemgetter('ranking'), reverse=True)
 
+    if results:
+        high = results[0]['ranking']
+        low = results[-1]['ranking']
+        if high > low:
+            for result in results:
+                result['ranking'] = (result['ranking'] - low)/(high - low)*100
+        else:
+            for result in results:
+                result['ranking'] = 100
+
     if page != "all":
         paginator = Paginator(results, 20)
 
