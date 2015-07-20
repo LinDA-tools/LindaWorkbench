@@ -50,6 +50,23 @@
                         }
                     }
                     else
+                    if (key == "Clone") {
+                        $.ajax({
+                            url: "/query-builder/clone/" + q_id + '/',
+                            type: "POST",
+                            data: {
+                                csrfmiddlewaretoken: '{{ csrf_token }}'
+                            },
+                            success: function(data, textStatus, jqXHR)
+                            {
+                                document.location.reload();
+                            },
+                            error: function (jqXHR, textStatus, errorThrown)
+                            {
+                                console.log(textStatus + ': ' + errorThrown);
+                            }
+                        });
+                    } else
                     if (key == "Delete") {
                         $.confirm({
                             title: "Delete Query #" + q_id,
@@ -92,6 +109,7 @@
                     {% if option_rename %}
                         "Rename": {name: "Rename", icon: "pencil"},
                     {% endif %}
+                    "Clone": {name: "Create a copy", icon: "copy"},
                     "Delete": {name: "Delete", icon: "delete"},
                 }
             });

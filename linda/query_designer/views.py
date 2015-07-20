@@ -71,12 +71,12 @@ def get_endpoint_from_dt_name(dt_name):
 
 
 # Execute a SparQL query on an endpoint and return json response
-def sparql_query_json(endpoint, query, timeout=None):
+def sparql_query_json(endpoint, query, timeout=None, append_slash=False):
     # encode the query
     query_enc = urlquote(query, safe='')
 
     # ClioPatria bugfix
-    if endpoint[-1] != '/':
+    if append_slash and endpoint[-1] != '/':
         endpoint += '/'
 
     # get query results and turn them into json
@@ -84,6 +84,13 @@ def sparql_query_json(endpoint, query, timeout=None):
     response = requests.get(
         endpoint + "?Accept=" + urlquote(
             "application/sparql-results+json") + "&query=" + query_enc + "&format=json&output=json", timeout=timeout)
+
+    # ClioPatria bugfix
+    if not append_slash:
+        try:
+            json.loads(response.text)
+        except:
+            return sparql_query_json(endpoint, query, timeout, append_slash=True)
 
     if response.status_code == 200:
         # return the response

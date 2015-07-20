@@ -1556,10 +1556,7 @@ def query_save(request):
 # Update an existing query
 def query_update(request, pk):
     # get query object
-    obj_list = Query.objects.filter(pk=pk)
-    if not obj_list:
-        return Http404
-    q_obj = obj_list[0]
+    q_obj = get_object_or_404(Query, pk=pk)
 
     # get changed fields
     endpoint = request.POST.get("endpoint", q_obj.endpoint)
@@ -1595,14 +1592,36 @@ def query_update(request, pk):
     return HttpResponse(json.dumps({'id': q_obj.id, 'description': q_obj.description}), 'application/json')
 
 
+# Clone an existing query
+def query_clone(request, pk):
+    q_obj = get_object_or_404(Query, pk=pk)
+
+    # set key to None to save again
+    q_obj.pk = None
+
+    # set new description
+    cnt = 1
+    desc = q_obj.description + ' (Copy 1)'
+    while Query.objects.filter(description=desc):
+        cnt += 1
+        desc = q_obj.description + ' (Copy ' + str(cnt) + ')'
+
+    q_obj.description = desc
+    # for queries from query designer also replicate the design
+    if q_obj.design:
+        q_obj.design.pk = None
+        q_obj.design.save()
+
+    # save the clone
+    q_obj.save()
+
+    return HttpResponse('')
+
+
 # Delete an existing query
 def query_delete(request, pk):
-    obj_list = Query.objects.filter(pk=pk)
-    if not obj_list:
-        return Http404
-
     # get query object and delete it
-    q_obj = obj_list[0]
+    q_obj = get_object_or_404(Query, pk=pk)
     q_obj.delete()
 
     return HttpResponse('')
