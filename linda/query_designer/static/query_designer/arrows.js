@@ -155,7 +155,7 @@ var arrows = {
 
     in_path: function(x, y, p) {
         for (var i=0; i<p.length-1; i++) {
-            if (this.in_segment(p[i].x, p[i].y, p[i+1].x, p[i+1].y, x, y, 10)) {
+            if (this.in_segment(p[i].x, p[i].y, p[i+1].x, p[i+1].y, x, y, 5)) {
                 return true;
             }
         }
@@ -186,13 +186,20 @@ var arrows = {
     },
 
     in_arrows: function(x, y) {
+        var found_clicked = false;
+
         for (var i=0; i<this.connections.length; i++) {
             if (this.in_path(x, y, this.paths[i])) {
                 this.connections[i].clicked = true;
+                found_clicked = true;
                 this.show_delete_arrow(x + 20, y + 20);
             } else {
                 this.connections[i].clicked = false;
             }
+        }
+
+        if (!found_clicked) {
+            $('.delete-arrow-link').remove();
         }
 
         this.draw();
