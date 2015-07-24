@@ -8,7 +8,7 @@
                                          title="{% trans 'previous' %}">&lsaquo;</a></span>
         {% endif %}
         <ul class="inline">
-            {% for curpage in D %}
+            {% for curpage in page_obj.paginator.page_range %}
 
 
             {% if page_obj.number == curpage %}
