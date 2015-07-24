@@ -189,12 +189,20 @@ var arrows = {
         for (var i=0; i<this.connections.length; i++) {
             if (this.in_path(x, y, this.paths[i])) {
                 this.connections[i].clicked = true;
+                this.show_delete_arrow(x + 20, y + 20);
             } else {
                 this.connections[i].clicked = false;
             }
         }
 
         this.draw();
+    },
+
+    show_delete_arrow: function (x, y) {
+        $('.delete-arrow-link').remove();
+        $('#builder_workspace').append('<div class="delete-arrow-link button red">Remove connection<div>');
+        $('.delete-arrow-link').css('left', x);
+        $('.delete-arrow-link').css('top', y);
     },
 
     delete_selected: function() {
@@ -326,3 +334,11 @@ var arrows = {
         }
     }
 };
+
+$(function() {
+    /* On remove connection click */
+    $('#builder_workspace').on('click', '.delete-arrow-link', function() {
+        $(this).remove();
+        arrows.delete_selected();
+    });
+});

@@ -2766,6 +2766,12 @@ input, textarea {
     border-radius: 0;
 }
 
+.delete-arrow-link {
+    position: absolute;
+    z-index: 10000;
+    color: #fff;
+}
+
 .class-instance .property-control .sort-frequency {
     display: none;
     cursor: pointer;
