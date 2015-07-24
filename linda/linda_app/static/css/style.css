@@ -1911,25 +1911,34 @@ input, textarea {
     background: #eee;
 }
 
-.queries-table .description textarea {
+textarea.rename {
     resize: none;
     width: calc(100% - 30px);
     height: 100%;
 }
 
-.queries-table .description textarea:focus {
+textarea.rename:focus {
     outline: none;
     border: #ddd;
 }
 
-.queries-table .description textarea.disabled {
+textarea.rename.disabled {
     background: none;
     border: none;
 }
 
-.queries-table .description textarea.enabled {
+textarea.rename.enabled {
     background: #eee;
     border: #ddd;
+}
+
+.datasources-table .dt-title {
+    width: calc(100% - 20px);
+}
+
+.datasources-table textarea.rename {
+    height: 20px;
+    width: 100%;
 }
 
 .queries .modal-dialog, .builder-advanced .modal-dialog {

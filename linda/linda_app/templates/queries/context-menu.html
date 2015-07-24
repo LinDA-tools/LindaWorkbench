@@ -37,7 +37,7 @@
                     else
                     if (key == "Rename") {
                         var description = $('#query_' + q_id + ' .description p').text();
-                        $('#query_' + q_id + ' .description').html('<textarea class="enabled" data-id="' + q_id  +'">' + description + '</textarea>');
+                        $('#query_' + q_id + ' .description').html('<textarea class="rename enabled" data-id="' + q_id  +'">' + description + '</textarea>');
                         var t = $('#query_' + q_id + ' .description').find('textarea');
                         $(t).focus();
                     }
