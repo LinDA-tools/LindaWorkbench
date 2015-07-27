@@ -183,10 +183,11 @@ jQuery(function () {
 	/*F9 to run query*/
 	$("body").on('keyup', function(e) {
     	if (e.keyCode == 120) { //F9 key pressed
-        	execute_sparql_query();
-
-			e.preventDefault();
-			e.stopPropagation();
+    		if ($(".designer-button.run-button").length > 0) {
+    			$(".designer-button.run-button").click();
+    		} else {
+    			execute_sparql_query();
+    		}
         }
     });
 

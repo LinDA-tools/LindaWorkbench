@@ -132,8 +132,8 @@ this.execute_sparql_query = function(offset, callback) {
         }
       }
     },
-    error: function(error) {
-      if (typeof(SPARQL.jqXHR) == "undefined") {
+    error: function(error, text_status) {
+      if (text_status != "abort") {
           $("#alert_modal .modal-title").html('SPARQL error');
 
           $("#alert_modal .modal-body").html('<pre>' + error.responseText.replace(/<style>.*<\/style>/g, "").replace(/<script>.*<\/script>/g, "") + '</pre>');

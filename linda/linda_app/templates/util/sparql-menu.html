@@ -17,6 +17,16 @@
             <span class="glyphicon glyphicon-stats text-gray"></span><span class="text">Visualize</span>
         </a>
 
+        <div class="run-query-info hidden">
+            <span>Waiting for remote server: </span>
+            <span class="time-info"></span>
+            <div class="bs-component">
+              <div class="progress progress-striped active">
+                <div class="progress-bar" style="width: 100%"></div>
+              </div>
+            </div>
+        </div>
+
         <div class="right">
             {% if mode == "designer" %}
                 <span class="query-title">{% if query %}#{{query.pk}}: {{query.description}}{% endif %}</span>
