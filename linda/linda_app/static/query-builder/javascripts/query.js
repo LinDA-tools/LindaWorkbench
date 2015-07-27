@@ -56,11 +56,14 @@ this.execute_sparql_query = function(offset, callback) {
     } else {
       q = $("#txt_sparql_query").val()
     }
-    $.post(get_server_address() + "/query/execute_sparql", {
-      query: q,
-      dataset: QueryBuilder.datasets.get_selected(),
-      offset: offset
-    }, function(data) {
+    var jqXHR = $.ajax(get_server_address() + "/query/execute_sparql", {
+      method: 'POST',
+      data: {
+        query: q,
+        dataset: QueryBuilder.datasets.get_selected(),
+        offset: offset
+      },
+    success: function(data) {
       var result_columns, result_rable_rows, result_rows, result_table, result_table_header, row_counter;
       if (data.error !== void 0) {
         if (callback) {
@@ -128,19 +131,28 @@ this.execute_sparql_query = function(offset, callback) {
             callback();
         }
       }
-    }).fail(function(error) {
-		$("#alert_modal .modal-title").html('SPARQL error');
-		console.log(error);
-		$("#alert_modal .modal-body").html('<pre>' + error.responseText.replace(/<style>.*<\/style>/g, "").replace(/<script>.*<\/script>/g, "") + '</pre>');
-		$("#alert_modal").show();
+    },
+    error: function(error) {
+      if (typeof(SPARQL.jqXHR) == "undefined") {
+          $("#alert_modal .modal-title").html('SPARQL error');
+
+          $("#alert_modal .modal-body").html('<pre>' + error.responseText.replace(/<style>.*<\/style>/g, "").replace(/<script>.*<\/script>/g, "") + '</pre>');
+          $("#alert_modal").show();
+        }
+
         if (callback) {
             callback();
         }
-	});;
+      }
+	});
+
+	return jqXHR;
   } else {
       if (callback) {
         callback();
       }
+
+    return undefined;
   }
 };
 

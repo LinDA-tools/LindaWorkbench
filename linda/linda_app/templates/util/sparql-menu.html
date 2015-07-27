@@ -21,8 +21,8 @@
             {% if mode == "designer" %}
                 <span class="query-title">{% if query %}#{{query.pk}}: {{query.description}}{% endif %}</span>
 
-                <div class="designer-button text-gray" id="show-source" title="View source">
-                    &lt;/&gt;
+                <div class="designer-button text-gray" id="show-source" title="View SPARQL">
+                    <span class="source-icon">&lt;/&gt;</span> View SPARQL
                 </div>
 
                 <div class="designer-button" id="show-query-options" title="Advanced options of the query">

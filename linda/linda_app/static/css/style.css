@@ -2280,13 +2280,17 @@ textarea.rename.enabled {
     background: #ccc;
 }
 
-.designer-menu #show-source {
+.designer-menu #show-source .source-icon {
     font-family: Consolas;
     font-weight: 600;
 }
 
 .text-green {
     color: #00B16A;
+}
+
+.text-red {
+    color: #D64541;
 }
 
 .text-white {
