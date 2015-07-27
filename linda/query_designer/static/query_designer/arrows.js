@@ -14,6 +14,20 @@ var arrows = {
         this.draw();
     },
 
+    check_remove_connection_button: function() {
+        var clicked_connection = false;
+        for (var i=0; i<this.connections.length; ) {
+            if (this.connections[i].clicked) {
+                clicked_connection = true;
+                break;
+            }
+        }
+
+        if (!clicked_connection) {  //remove the "Remove connection" button
+            $('.delete-arrow-link').remove();
+        }
+    },
+
     remove_arrow: function(instance_from, n_of_property_from, instance_to, n_of_property_to) {
         for (var i=0; i<this.connections.length; ) {
             var c = this.connections[i];
@@ -24,6 +38,7 @@ var arrows = {
             }
         }
 
+        this.check_remove_connection_button();
         this.draw();
     },
 
@@ -36,6 +51,7 @@ var arrows = {
             }
         }
 
+        this.check_remove_connection_button();
         this.draw();
     },
 
@@ -77,6 +93,7 @@ var arrows = {
             }
         }
 
+        this.check_remove_connection_button();
         this.draw();
     },
 
@@ -277,7 +294,7 @@ var arrows = {
             if (c.s == "dashed") {
                 this.ctx.setLineDash([5,5]);
             } else {
-                this.ctx.setLineDash([0,0]);
+                this.ctx.setLineDash([]);
             }
 
             if (c.clicked) {
@@ -289,9 +306,9 @@ var arrows = {
                 this.ctx.strokeStyle = '#000000';
             }
 
-            var p1 = {x: $(c.f).position().left, y: $(c.f).position().top + 90 + c.fp*35, w: $(c.f).width()};
+            var p1 = {x: $(c.f).position().left, y: $(c.f).position().top + 120 + c.fp*35, w: $(c.f).width()};
             if (c.tp != builder_workbench.get_uri_position(c.t)) { //specific property
-                var p2 = {x: $(c.t).position().left, y: $(c.t).position().top + 90 + c.tp*35, w: $(c.t).width()};
+                var p2 = {x: $(c.t).position().left, y: $(c.t).position().top + 120 + c.tp*35, w: $(c.t).width()};
             } else { //whole instance
                 var p2 = {x: $(c.t).position().left, y: $(c.t).position().top + 20, w: $(c.t).width()};
             }

@@ -2279,6 +2279,12 @@ textarea.rename.enabled {
     margin-top: 5px;
     position: absolute;
     color: #6C7A89;
+    font-size: 80%;
+    text-align: center;
+}
+
+.main.sparql .run-query-info {
+    margin-top: 0;
 }
 
 .run-query-info > span {
@@ -2286,7 +2292,7 @@ textarea.rename.enabled {
 }
 
 .run-query-info .bs-component {
-    width: 225px;
+    width: 185px;
     height: 10px;
 }
 
