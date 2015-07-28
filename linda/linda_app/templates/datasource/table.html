@@ -102,7 +102,7 @@
                 change_description(this);
             });
 
-            {% with datasources=datasources %}
+            {% with datasources=datasources option_rename=True %}
                 {% include "datasource/context-menu.html" %}
             {% endwith %}
     </script>

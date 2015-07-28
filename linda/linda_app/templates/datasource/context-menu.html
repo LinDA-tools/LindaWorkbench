@@ -62,7 +62,9 @@ if (url)
             "sep1": "---------",
             "Edit": {name: "Edit", icon: "edit"},
             "Rename": {name: "Rename", icon: "pencil"},
-            "Delete": {name: "Delete", icon: "delete"},
+            {% if option_rename %}
+                "Delete": {name: "Delete", icon: "delete"},
+            {% endif %}
             "sep2": "---------",
             "Download": {name: "Download", icon: "download"},
         }
@@ -97,7 +99,9 @@ if (url)
             "Explore": {name: "Explore", icon: "explore"},
             "sep1": "---------",
             "Edit": {name: "Edit", icon: "edit"},
-            "Rename": {name: "Rename", icon: "pencil"},
+            {% if option_rename %}
+                "Rename": {name: "Rename", icon: "pencil"},
+            {% endif %}
             "Delete": {name: "Delete", icon: "delete"},
 
         }
