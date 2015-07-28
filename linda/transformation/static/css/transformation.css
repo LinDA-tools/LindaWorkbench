@@ -395,6 +395,21 @@ a .fa {
     position: relative;
 }
 
+.additional-help, .show-additional-help {
+    padding-left: 2em;
+    font-size : 80%;
+}
+
+.show-additional-help {
+    text-decoration: underline;
+    width: 100%;
+    text-align: right;
+    cursor: pointer;
+}
+
+
+
+
 /* BEGIN http://www.quirksmode.org/dom/inputfile.html 
 div.fileinputs {
 	position: relative;

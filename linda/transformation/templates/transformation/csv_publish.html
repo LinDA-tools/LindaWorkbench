@@ -22,19 +22,19 @@
 			<p>In this last step, you can either store your freshly forged RDF data in the LinDA Workbench data sources or download an RDF dump of it.</p>
 		</div>
 
-		<div class="col-5-10 right-side-box">
-			<p>Please enter a name for your publication:<br><input type="text" name="name_publish" id="name_publish" value="{{rdfModel.file_name|n3}}"></p>
-			<p><input type="submit" name="button_publish" id="button_publish" value="Publish to triple store"></p>
-			<p><input type="submit" name="button_download" id="button_download" value="Download RDF"></p>
-		</div>
+        <div class="col-5-10 right-side-box">
+            <p>Please enter a name for your publication:<br><input type="text" name="name_publish" id="name_publish" value="{{rdfModel.file_name}}" size="35"></p>
+            <p><input type="submit" name="button_publish" id="button_publish" value="Publish to triple store"></p>
+            <p><input type="submit" name="button_download" id="button_download" value="Download RDF"></p>
+            <p><input type="submit" name="button_r2rml" id="button_r2rml" value="Download R2RML"></p>
+        </div>
 
 	</div>
 
 
-	<div class="content" id="rdf_view">
-		<h3>RDF VIEW</h3>
-
-	</div>
+<div class="content" id="rdf_view">
+	<h3 style="display: inline">RDF VIEW</h3><span>(complete data)</span>
+</div>
 
 	</form>
 

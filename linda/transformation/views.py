@@ -13,6 +13,7 @@ from django.core.files.base import ContentFile
 from .forms import *
 from django.conf import settings
 from .settings import API_HOST
+import ast
 
 
 # ###############################################
@@ -43,7 +44,6 @@ def csv_upload(request):
             form = UploadFileForm(request.POST)
             if request.POST and form.is_valid() and form != None:
                 print("PATH 1.1 - no file uploaded")
-                # print(str(form.cleaned_data))
                 # content  is passed on via hidden html input fields
                 if form.cleaned_data['hidden_csv_raw_field']:
                     csv_raw = form.cleaned_data['hidden_csv_raw_field']
@@ -93,12 +93,13 @@ def csv_upload(request):
 
         if 'button_upload' in request.POST:
             print("UPLOAD BUTTON PRESSED")
-            csv_rows = csv_rows[:11] if csv_rows else None
+            csv_rows = csv_rows if csv_rows else None
 
             request.session['csv_dialect'] = csv_dialect
             request.session['csv_rows'] = csv_rows
             request.session['csv_raw'] = csv_raw
-            request.session['file_name'] = uploadFileName
+            if 'upload_file' in request.FILES:
+                request.session['file_name'] = request.FILES['upload_file'].name
             #return redirect(reverse('csv-column-choice-view'))
             html_post_data = {
                 'action': form_action,
@@ -147,7 +148,7 @@ def csv_subject(request):
         if form.cleaned_data['hidden_model']:
         #if 'hidden_model' in form.cleaned_data:
             print('model existing')
-            request.session['model'] = json.loads(form.cleaned_data['hidden_model'].replace("'",'"').replace("\\",""))
+            request.session['model'] = ast.literal_eval(form.cleaned_data['hidden_model'])
 
         else:
             print('creating model')
@@ -210,7 +211,7 @@ def csv_predicate(request):
             request.session['rdf_prefix'] = ""
 
         if 'hidden_model' in form.cleaned_data:
-            request.session['model'] = json.loads(form.cleaned_data['hidden_model'].replace("'",'"').replace("\\",""))
+            request.session['model'] = ast.literal_eval(form.cleaned_data['hidden_model'])
         else:
             request.session['model'] = ""
 
@@ -218,7 +219,7 @@ def csv_predicate(request):
     html_post_data = {
         'action': form_action,
         'rdfModel': request.session['model'], 
-        'csvContent': csv_rows_selected_columns[:11],
+        'csvContent': csv_rows_selected_columns,
         'filename': request.session['file_name'],
         'rdfArray': request.session['rdf_array'],
 	    'rdfPrefix': request.session['rdf_prefix']
@@ -243,7 +244,7 @@ def csv_object(request):
             request.session['rdf_prefix'] = ""
 
         if 'hidden_model' in form.cleaned_data:
-            request.session['model'] = json.loads(form.cleaned_data['hidden_model'].replace("'",'"').replace("\\",""))
+            request.session['model'] = ast.literal_eval(form.cleaned_data['hidden_model'])
         else:
             request.session['model'] = ""
 
@@ -276,7 +277,7 @@ def csv_enrich(request):
             request.session['rdf_prefix'] = ""
 
         if 'hidden_model' in form.cleaned_data:
-            request.session['model'] = json.loads(form.cleaned_data['hidden_model'].replace("'",'"').replace("\\",""))
+            request.session['model'] = ast.literal_eval(form.cleaned_data['hidden_model'])
         else:
             request.session['model'] = ""
 
@@ -284,7 +285,7 @@ def csv_enrich(request):
     html_post_data = {
         'action': form_action,
         'rdfModel': request.session['model'], 
-        'csvContent': csv_rows_selected_columns[:11],
+        'csvContent': csv_rows_selected_columns,
         'filename': request.session['file_name'],
         'rdfArray': request.session['rdf_array'],
 	    'rdfPrefix': request.session['rdf_prefix']
@@ -302,7 +303,7 @@ def csv_publish(request):
 
         if form.cleaned_data['hidden_rdf_array_field']:
             request.session['rdf_array'] = form.cleaned_data['hidden_rdf_array_field']
-            for row in eval(request.session['rdf_array']):
+            for row in ast.literal_eval(request.session['rdf_array']):
                 for elem in row:
                     elem = elem.replace(",","\\,"); # escape commas
                     if elem[-1:] == ".": # cut off as we had problems when uploading some uri like xyz_inc. with trailing dot
@@ -313,9 +314,7 @@ def csv_publish(request):
             request.session['rdf_array'] = ""
 
         if 'hidden_model' in form.cleaned_data:
-            request.session['model'] = json.loads(form.cleaned_data['hidden_model'].replace("'",'"').replace("\\",""))
-
-        print("rdfn3 "+str(rdf_n3))
+            request.session['model'] = ast.literal_eval(form.cleaned_data['hidden_model'])
 
         if 'button_publish' in request.POST:
             print("PUBLISH BUTTON PRESSED")
@@ -328,12 +327,22 @@ def csv_publish(request):
             publish_massage = j["message"]
 
         if 'button_download' in request.POST:
+            new_fname = request.session['model']['file_name'].rsplit(".", 1)[0]+".n3"
             rdf_string = rdf_n3
             rdf_file = ContentFile(rdf_string.encode('utf-8'))
             response = HttpResponse(rdf_file, 'application/force-download')
             response['Content-Length'] = rdf_file.size
-            response['Content-Disposition'] = 'attachment; filename="generatedRDF.n3"'
+            response['Content-Disposition'] = 'attachment; filename="'+new_fname+'"'
             #print(rdf_n3)
+            return response
+
+        if 'button_r2rml' in request.POST:
+            new_fname = request.session['model']['file_name'].rsplit(".", 1)[0]+"_R2RML.ttl"
+            r2rml_string = transform2r2rml(request.session['model'])
+            r2rml_file = ContentFile(r2rml_string.encode('utf-8'))
+            response = HttpResponse(r2rml_file, 'application/force-download')
+            response['Content-Length'] = r2rml_file.size
+            response['Content-Disposition'] = 'attachment; filename="'+new_fname+'"'
             return response
 
     csv_rows_selected_columns = get_selected_rows_content(request.session)
@@ -341,11 +350,13 @@ def csv_publish(request):
         'publish_massage': publish_massage,
         'action': form_action,
         'rdfModel': request.session['model'], 
-        'csvContent': csv_rows_selected_columns[:11],
+        'csvContent': csv_rows_selected_columns,
         'filename': request.session['file_name'],
         'rdfArray': request.session['rdf_array'],
 	    'rdfPrefix': request.session['rdf_prefix']
     }
+    print("Model:")
+    print(request.session['model'])
     return render(request, 'transformation/csv_publish.html', html_post_data)
 
 
@@ -360,7 +371,7 @@ def lookup(request, queryClass, queryString, callback):
 
 
 # ###############################################
-#  OTHER FUNCTIONS 
+#  OTHER FUNCTIONS
 # ###############################################
 
 # returns only the contents of the columns that were chosen in the html form from the session data
@@ -371,7 +382,6 @@ def get_selected_rows_content(session):
     col_nums = []
     for col_num in session['selected_columns']:
         col_nums.append(col_num.get("col_num_orig"))
-    #print("colnums ", col_nums)
 
     for row in session['csv_rows']:
         tmp_row = []
@@ -388,7 +398,6 @@ def mark_selected_rows_in_model(session):
         col_nums.append(col_num.get("col_num_orig"))
     session['model']['num_cols_selected'] = len(col_nums)
     counter = 1;
-    print(col_nums)
     for i, col in enumerate(session['model']['columns']):
         if col["col_num_orig"] in col_nums:
             col["col_num_new"] = counter
@@ -419,7 +428,7 @@ def process_csv(csvfile, form):
     csv_dialect['quotechar'] = dialect.quotechar
     csv_dialect['line_end'] = dialect.lineterminator.replace('\r', 'cr').replace('\n', 'lf')
 
-    # use csv params / dialect chosen by user if specified 
+    # use csv params / dialect chosen by user if specified
     # to avoid '"delimiter" must be an 1-character string' error, I encoded to utf-8
     # http://stackoverflow.com/questions/11174790/convert-unicode-string-to-byte-string
     if form.cleaned_data['delimiter'] != "":
@@ -431,8 +440,6 @@ def process_csv(csvfile, form):
     if form.cleaned_data['line_end'] != "":
         dialect.lineterminator = form.cleaned_data['line_end']  #.encode('utf-8')
 
-    #print(dir(dialect))
-    #print(dialect.delimiter)
     csvreader = csv.reader(csvfile, dialect)
 
 
@@ -447,3 +454,36 @@ def process_csv(csvfile, form):
 
     return [csv_rows, csv_dialect]
 
+def transform2r2rml(jsonmodel):
+    #head = json.load(jsonmodel)
+
+    subject = jsonmodel["subject"]
+    columns = jsonmodel["columns"]
+    ourprefix = "demo"
+    subjtypes = []
+    output = ""
+
+    if "enrich" in jsonmodel:
+        for enr in jsonmodel["enrich"]:
+            subjtypes.append(enr["url"])
+
+    output = "@prefix rr: <http://www.w3.org/ns/r2rml#>.\n" \
+             "@prefix " + ourprefix + ": <" + subject["base_url"] + ">.\n\n" + ourprefix + ":TriplesMap a rr:TriplesMapClass;\n" \
+                "\trr:logicalTable [ rr:tableName \"" + jsonmodel["file_name"] + "\" ];\n\n\trr:subjectMap [ rr:template \"" + \
+             subject["base_url"] + subject["skeleton"] + "\""
+
+    for sutp in subjtypes:
+        output += ";\n\t\trr:class " + sutp
+
+    output += "\n\t];  # of columns selected: " + str(jsonmodel["num_cols_selected"])
+
+    for column in columns:
+        if (column["col_num_new"] >= 0) and ("predicate" in column):
+            predicate = column["predicate"]
+            header = column["header"]
+            output += ";\n\trr:predicateObjectMap [\n\t\trr:predicateMap [ rr:predicate " + predicate["url"] + " ];\n\t\t" \
+                        "rr:ObjectMap [ rr:column \"" + header["orig_val"] + "\" ]\n\t]"
+
+    output += "."
+
+    return output

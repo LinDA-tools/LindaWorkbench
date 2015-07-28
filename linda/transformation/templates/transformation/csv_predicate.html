@@ -17,16 +17,21 @@
 <input type="hidden" name="hidden_model" id="id_hidden_model" value="{{ rdfModel }}">
 
 <div class="minimizable">
-<div class="content grid">
-	<h3>Specify the RDF Predicate</h3>
-	<div class="col-6-10 left-side-box">
-		<p>In the last step, you constructed a RDF subject URI for each row of your data. As every row represents data for one single real world entity (e.g. a customer, an accounting information, ...), the single fields in that row represent are this entities characteristics (e.g. customer name, date of money transferal, ...). The table's top row though contains information that should describe these characteristics.</p>
-	<p>In this step, we try and find a suitable RDF class that can represent data in one column. We use the column header to find information first, but you also can type in your own search terms if the listed proposals are of no use. Click on a proposal to see the results in the RDF view at the page bottom.</p>
-	</div>
+<div class="content">
 
-	<div class="col-4-10 right-side-box">
-		
-	</div>
+	<h3>Specify the RDF Predicate</h3>
+		<div>
+		<p>In the last step, you constructed a RDF subject URI for each line of your data. As every line represents data for one single real world entity (e.g. a customer, accounting information ...), the single fields in that line represent characteristics of these entities (e.g. customer name, date of money transfer ...). </p>
+		<p>In this step, we try and find a suitable RDF property that can represent data in one column. We use the column names to find suitable candidates. If the results are unsatisfactory, do type in your own search term to receive more adequate results. The RDF view below is automatically updated with the selected property.</p>
+
+		<div class="show-additional-help">show more</div>
+		<div class="additional-help">
+		<p><em>What is it about?</em><br>
+		In this step, the RDF properties are specified that link the subject URI of each line to the values in the individual columns. Hence, for every selected column, a property needs to be specified. These properties should express the meaning the column values have for the subject. These meanings may be hinted at by the columns headers, but be aware that they often just express the type of the data instead of their meaning for the subject. – In contrast to the lines´ subject URIs, these properties should be selected from public sources whenever possible, so as to promote world-wide uniform semantic formalizations.</p>
+		</div>
+		</div>
+
+
 </div>
 </div>
 
@@ -35,16 +40,13 @@
 	<h3>DATA VIEW</h3>
 	<div>
 		File: <b>{{ filename }}</b> (10 rows example)
-		{{ rdfModel | model_as_table_predicate | safe }}
+		{{ rdfModel | model_as_table_predicate:10 | safe }}
 	</div>
 </div></div>
 
 
 <div class="content" id="rdf_view">
-	<h3>RDF VIEW</h3>
-
-
-
+	<h3 style="display: inline">RDF VIEW</h3><span>(10 rows example)</span>
 </div>
 
 </form>
@@ -95,12 +97,12 @@
 		caretDown.css("color","#888");
 
 		elem.on("mouseover", function() {
-			$(this).find("i:last-child").css("opacity","1");
+			$(this).find("i.fa-caret-square-o-down").css("opacity","1");
 		$(this).find("div div").css("z-index", 999999);
 		});
 
 		elem.on("mouseout", function() {
-			$(this).find("i:last-child").css("opacity",".3");
+			$(this).find("i.fa-caret-square-o-down").css("opacity",".3");
 		$(this).find("div div").css("z-index", "auto");
 		});
 
@@ -118,12 +120,14 @@
 				$(this).addClass("bb_select_clicked");
 				$(this).siblings().removeClass("bb_select_clicked");
 				caretDown.appendTo(selectionDiv);
-				var vocab_name = $(this).find(".oracle_label em").text()
-				var href = $(this).find("a").attr("href")
+				var vocab_name = $(this).find(".oracle_label em").text();
+				var extern_uri = $(this).find("a.extern_uri").attr("href");
+				var intern_uri = $(this).find("a.intern_uri").attr("href");
 				var vocab_description = $(this).find("span.vocab_description").text();
 				var vocab_score = $(this).find("span.vocab_score").text();
-				//var search_term = ""; // TODO
-				elem.attr("value", '{"url":"'+href+'", "prefix": '+JSON.stringify(replacePrefix(href))+', "label": "'+vocab_name+'", "vocab_description": "'+vocab_description+'", "score": "'+vocab_score+'"}');
+				var search_term = $("#search_textinput_"+column_num).val();
+				console.log(search_term);
+				elem.attr("value", '{"url":"'+extern_uri+'", "url_intern":"'+intern_uri+'", "prefix": '+JSON.stringify(replacePrefix(extern_uri))+', "label": "'+vocab_name+'", "vocab_description": "'+vocab_description+'", "score": "'+vocab_score+'", "search_term": "'+search_term+'"}');
 				adapt_RDF_preview(column_num);
 			});
 		});
@@ -155,21 +159,19 @@ var recent_text = null;
 
 
 function askOracle(widget_num){
-	recent_result = document.getElementById("search_result_"+widget_num);
-	recent_textinput = document.getElementById("search_textinput_"+widget_num);
+	$("#result_from_model_"+widget_num).remove();
+	recent_textinput = $("#search_textinput_"+widget_num);
 	recent_icon = document.getElementById("icon_"+widget_num);
-
 	recent_icon.className = "fa fa-refresh fa-spin";
 
 	var request = $.ajax({
 		type: 'GET',
 		dataType: 'jsonp',
-		data: { 'property': recent_textinput.value },
-		url: "http://linda.epu.ntua.gr:8000/coreapi/recommend/",
+		data: { 'property': recent_textinput.val() },
+		url: lindaGlobals.server_url+"/coreapi/recommend/",
 	});
 
 	request.fail(function (jqXHR, textStatus, errorThrown) {
-			recent_icon = document.getElementById("icon_"+widget_num);
 			recent_icon.className = "fa fa-exclamation-triangle";
 			console.log(jqXHR);
 			console.log(textStatus);
@@ -178,7 +180,12 @@ function askOracle(widget_num){
 	);
 
 	request.success(function (data) {
+			var result_container = $("#result_area_"+widget_num);
+			result_container.html('<div class="bb_select" id="search_result_'+widget_num+'"></div>');
 			recent_result = $("#search_result_"+widget_num);
+
+
+
 			recent_icon = $("#icon_"+widget_num);
 			recent_icon.attr("class", "fa fa-check");
 			recent_result.empty();
@@ -191,12 +198,21 @@ function askOracle(widget_num){
 			//recent_text.innerHTML = "please choose from list";
 			for(var i = 0; i < data.length; i++){
 
+				var uri = false;
+				var uri_intern = false;
+				if(typeof data[i].read_more !== "undefined" && data[i].read_more !== "undefined" && data[i].read_more){
+					uri_intern = lindaGlobals.server_url+data[i].read_more;
+				}
+				if(typeof data[i].full_uri !== "undefined" && data[i].full_uri !== "undefined" &&data[i].full_uri){
+						uri = data[i].full_uri;
+				}else if(data[i].uri){
+						uri = data[i].uri;
+				}
+
 				//shorten uri
 				var short_uri = "no uri";
-				if(data[i].full_uri)
-					short_uri = shortenURI(data[i].full_uri, 40);
-				else if(data[i].uri)
-					short_uri = shortenURI(data[i].uri, 40);
+				if(uri)
+					short_uri = shortenURI(uri, 40);
 
 				//css class star symbol for ranking
 				var star ="fa ";
@@ -207,7 +223,15 @@ function askOracle(widget_num){
 				else
 					star += "fa-star-o";
 
-				recent_result.append("<div id=\"oracle_result_"+widget_num+"_"+i+"\"><span class=\"oracle_label\">(<i class=\""+star+"\"></i><span class=\"vocab_score\">"+data[i].ranking+"</span>) <em>"+data[i].label+"</em><br><span class=\"vocab_description\">"+data[i].vocabulary+"</span></span><br><a href=\""+data[i].full_uri+"\" target=\"_blank\" onmouseover=\"Tip('Open in external window')\" onmouseout=\"UnTip()\"><i class=\"fa fa-external-link-square additl_vert_pad\"></i></a>"+short_uri+"</div>");
+				var url_intern_html = "";
+				if(uri_intern)
+					url_intern_html = "<br><a class=\"intern_uri\" href=\""+uri_intern+"\" target=\"_blank\" onmouseover=\"Tip('Open in external window')\" onmouseout=\"UnTip()\"><i class=\"fa fa-external-link-square additl_vert_pad\"></i></a>lookup in LinDA dictionary";
+
+				var url_extern_html = "";
+				if(uri)
+					url_extern_html = "<br><a class=\"extern_uri\" href=\""+uri+"\" target=\"_blank\" onmouseover=\"Tip('Open in external window')\" onmouseout=\"UnTip()\"><i class=\"fa fa-external-link-square additl_vert_pad\"></i></a>"+short_uri;
+
+				recent_result.append("<div id=\"oracle_result_"+widget_num+"_"+i+"\"><span class=\"oracle_label\">(<i class=\""+star+"\"></i><span class=\"vocab_score\">"+data[i].ranking+"</span>) <em>"+data[i].label+"</em><br><span class=\"vocab_description\">"+data[i].vocabulary+"</span></span>"+url_intern_html+url_extern_html+"</div>");
 			}
 
 			addInnerDiv($("#search_result_"+widget_num));
@@ -233,28 +257,15 @@ function delayedOracleCall(widget_num) {
 
 
 
-function adapt_RDF_preview(column_num) {
-	var begin = 0;
-	var until = get_num_selected_cols_model();
-	if(typeof column_num !== "undefined"){
-
-		var begin = column_num-1;
-		var until = column_num;
-
-	}
-	//used_prefixes = [];
-	
-
-	var found_one_undefined = false; // nothing could be retrieved via oracle api call
-
-	for(var j=begin; j<until; j++) {
-		var data_string = $("#search_result_"+(j+1)).attr("value");
-		if(typeof data_string !== "undefined"){
-			var data = jQuery.parseJSON(data_string);
-			add_to_model_predicate(data, (j+1));//, "html":$(this).html()
-
-		}else{
-			found_one_undefined = true;
+//checks if all ajax calls were successful and maybe enables next button
+function checkEnableNextButton(){
+	var found_one_undefined = false;
+	for(var j=1; j<=get_num_selected_cols_model(); j++) {
+		if($("#search_result_"+(j)).length > 0){ // if from oracle
+			var data_string = $("#search_result_"+(j)).attr("value");
+			if(typeof data_string === "undefined"){
+				found_one_undefined = true;
+			}
 		}
 	}
 
@@ -266,17 +277,67 @@ function adapt_RDF_preview(column_num) {
 	else {
 		$("#button_next").attr("disabled", "disabled");
 	}
+}
+
+function adapt_RDF_preview(column_num) {
+	var begin = 1;
+	var until = get_num_selected_cols_model();
+	if(typeof column_num !== "undefined"){
+
+		var begin = column_num-1;
+		var until = column_num;
+
+	}
+
+	for(var j=begin; j<=until; j++) {
+		if($("#search_result_"+(j)).length > 0){ // if from oracle
+			var data_string = $("#search_result_"+(j)).attr("value");
+			if(typeof data_string !== "undefined"){
+				var data = jQuery.parseJSON(data_string);
+				add_to_model_predicate(data, (j));//, "html":$(this).html()
+
+			}
+		}
+	}
+
+	checkEnableNextButton();
 
 	var rdf_view = $("#rdf_view");
-	var tbl = model_to_table(get_model());
+	var tbl = model_to_table(get_model(), 10);
 	rdf_view.find("table").remove();
 	rdf_view.append(tbl);
 
 }
 
 
+//get predicate data that is stored in json model and display on page
+function populate_from_model(widget_num, predicate){
 
-used_prefixes = [];
+	//build a bb_select dropdown without dropdown functionality
+
+/*
+	var star ="fa ";
+	if(enrich[i].score>80)
+		star += "fa-star";
+	else if(enrich[i].score>50)
+		star += "fa-star-half-o";
+	else
+		star += "fa-star-o";
+*/
+	var short_uri = predicate.url;
+	if(predicate.url)
+			short_uri = shortenURI(predicate.url, 40);
+
+
+	var predicate_div = "<div class=\"bb_select_nodropdown\" id=\"result_from_model_"+widget_num+"\"><span class=\"oracle_label\"><em>"+predicate.label+"</em><br><span class=\"vocab_description\">"+predicate.vocab_description+"</span></span><br><a href=\""+predicate.url_intern+"\" target=\"_blank\" onmouseover=\"Tip('Open in external window')\" onmouseout=\"UnTip()\"><i class=\"fa fa-external-link-square additl_vert_pad\"></i></a>lookup in LinDA dictionary<br><a href=\""+predicate.url+"\" target=\"_blank\" onmouseover=\"Tip('Open in external window')\" onmouseout=\"UnTip()\"><i class=\"fa fa-external-link-square additl_vert_pad\"></i></a>"+short_uri+"</div>";
+
+	var parent = $("#search_result_"+widget_num).parent();
+	$("#search_result_"+widget_num).remove();
+	$("#result_from_model_"+widget_num).remove();
+	$("#search_textinput_"+widget_num).val(predicate.search_term);
+	parent.html(parent.html()+predicate_div);
+}
+
 
 
 $( document ).ready(function() {
@@ -284,7 +345,12 @@ $( document ).ready(function() {
 	// do an oracle lookup on page load
 
 	$("div[id^='search_result_']").each( function(i, obj){
-		askOracle(i+1);
+		var predicate = get_model_predicate_of_col(i+1);
+		if(typeof predicate === 'undefined'){//} || get_model_predicate_of_col(i+1) === 'false'){
+			askOracle(i+1);
+		}else{
+			populate_from_model((i+1), predicate);
+		}
 	});
 
 	$("#button_next").attr("disabled", "disabled");
@@ -294,6 +360,8 @@ $( document ).ready(function() {
 		form.attr("action", "3");
 		form.submit();
 	});
+
+	adapt_RDF_preview();
 
 });
 

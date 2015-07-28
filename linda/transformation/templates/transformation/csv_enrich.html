@@ -18,23 +18,27 @@
 <div class="minimizable">
 <div class="content grid">
 	<h3>Enrich the RDF graph</h3>
-	<div class="col-3-10 left-side-box">
+	<div class="col-4-10 left-side-box">
 
-		<p>In this step you can add one or several classes that match your data (e.g. 'Person', 'table rows', ...).</p>
-		<p>You can search for classes in the search bar and then choose from the dropdown list by double clicking an entry.</p>
-		<p>You can unwanted remove classes from the list again by clicking <i class="fa fa-times"></i>.</p>
+		<p>In this step you can add one or several classes that match your data (e.g. 'Person', ‘Employee’, ‘GDP’ ...). You can search for classes in the search bar and then choose from the dropdown list by double clicking an entry. You can remove unwanted classes from the list by clicking the <i class="fa fa-times"></i>.</p>
+
+		<div class="show-additional-help">show more</div>
+		<div class="additional-help">
+		<p><em>What is it about?</em><br>
+		In the conversion towards RDF, you can add additional semantics to your Linked Data, i.e. describing what your data is about. Initially, for every line of data, a subject URI is generated, which was specified three steps ago. In this step, a common type (or several types) for all the subject URIs may be selected. This type should describe a line of your data in its entirety.</p>
+		</div>
 
 	</div>
 	
 
 
-	<div class="col-7-10 right-side-box">
+	<div class="col-6-10 right-side-box">
 		<div class="col-5-10">
 			<p>
 			Search for Classes here:<br>Double click to choose.
 			</p>
 			<p>
-			<input type="text" id="search_textinput_1" onkeyup="delayedOracleCall(1)">
+			<input type="text" id="search_textinput_1" onkeyup="delayedOracleCall(1)" autocomplete="off">
 			<i id="icon_1" class="fa fa-search" onclick="askOracle(1)"></i>
 			<br>
 				<div class="bb_select" id="search_result_1">
@@ -52,16 +56,14 @@
     <div class="content scrollit">
         <h3>DATA VIEW</h3>
         <div>
-        <span>File: {{ filename }} (10 rows example)</span>
-        {{ rdfModel | model_as_table | safe }}
+        File: <b>{{ filename }}</b> (10 row example)
+        {{ rdfModel | model_as_table:10 | safe }}
         </div>
     </div>
 </div>
 
 <div class="content" id="rdf_view">
-
-	<h3>RDF VIEW</h3>
-
+	<h3 style="display: inline">RDF VIEW</h3><span>(10 rows example)</span>
 </div>
 
 </form>
@@ -137,7 +139,7 @@ function askOracle(widget_num){
 		type: 'GET',
 		dataType: 'jsonp',
 		data: { 'class': recent_textinput.value },
-		url: "http://linda.epu.ntua.gr:8000/coreapi/recommend/",
+		url: lindaGlobals.server_url+"/coreapi/recommend/",
 	});
 
 	request.fail(function (jqXHR, textStatus, errorThrown) {
@@ -202,6 +204,7 @@ function populate_from_model(){
 	var enrich_list = "";
 	for(var i=0; i<enrich.length; i++){
 
+/*
 		//build a bb_select dropdown wothout dropdown funtionality
 		var star ="fa ";
 		if(enrich[i].score>80)
@@ -210,7 +213,7 @@ function populate_from_model(){
 			star += "fa-star-half-o";
 		else
 			star += "fa-star-o";
-
+*/
 		var short_uri = enrich[i].url;
 		if(enrich[i].url)
 				short_uri = shortenURI(enrich[i].url, 40);
@@ -236,7 +239,7 @@ function to_enrich(widget_id){
 function adapt_RDF_preview() {
 
     var rdf_view = $("#rdf_view");
-    var tbl = model_to_table(get_model());
+    var tbl = model_to_table(get_model(), 10);
     rdf_view.find("table").remove();
     rdf_view.append(tbl);
 

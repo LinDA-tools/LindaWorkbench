@@ -16,17 +16,24 @@
 <input type="hidden" name="hidden_model" id="id_hidden_model" value="{{ rdfModel }}">
 
 <div class="minimizable">
-<div class="content grid">
+<div class="content">
 	<h3>Specify the RDF Object</h3>
-	<div class="col-5-10 left-side-box">
 
+		<div>
 		<p>In this step, you can either choose a datatype (such as "Text", "Floating Point Number", "Integer", ...) for a table row or try and let us reconsiliate your data against the DBPedia triple store. That is, we will automatically look up an URI in the DBPedia-Project that might represent the data within each of your table rows.</p>
 		<p>As always, the results can be seen in the RDF preview at the page bottom.</p>
-	</div>
 
-	<div class="col-5-10 right-side-box">
+		<div class="show-additional-help">show more</div>
+		<div class="additional-help">
+		<p><em>Background:</em><br>
+		The objects of the RDF statements are generated from the entries in the file below the header line. Objects in RDF triples are either literals or URIs. Of these, URIs are to be preferred, because they resolve ambiguities and link to further information. For this reason, LinDA offers to convert literals to URIs, by invoking an appropriate web service. This is called “AutoInference” and is invoked on a per-column basis. Otherwise, see Datatypes.</p>
+		<p><em>AutoInference:</em><br>
+		When this is invoked, LinDA tries to replace the literals in the respective column by URIs. Often, this involves some kind of ambiguities; LinDA tries to resolve them by considering the column header. (Technically, this is done by invoking a dedicated web service.) However, it is up to you to finally check the correctness of the result.</p>
+		<p><em>Datatypes:</em><br>
+		RDF literals may be attributed with a datatype. So if you choose not to convert literals to URIs, you should invoke their automatic attribution with datatypes, in the same menu.</p>
+		</div>
+		</div>
 
-	</div>
 </div>
 </div>
 
@@ -34,15 +41,14 @@
     <div class="content scrollit">
         <h3>DATA VIEW</h3>
         <div>
-        File: <b>{{ filename }}</b> (10 rows example)
+        File: <b>{{ filename }}</b> (complete data)
         {{ rdfModel | model_as_table_object | safe }}
         </div>
     </div>
 </div>
 
 <div class="content" id="rdf_view">
-	<h3>RDF VIEW</h3>
-
+	<h3 style="display: inline">RDF VIEW</h3><span>(10 row example)</span>
 </div>
 
 </form>
@@ -83,12 +89,12 @@
         caretDown.css("color","#888");
 
         elem.on("mouseover", function() {
-        	$(this).find("i:last-child").css("opacity","1");
+        	$(this).find("i.fa-caret-square-o-down").css("opacity","1");
 		$(this).find("div div").css("z-index", 999999);
         });
 
         elem.on("mouseout", function() {
-        	$(this).find("i:last-child").css("opacity",".3");
+        	$(this).find("i.fa-caret-square-o-down").css("opacity",".3");
 		$(this).find("div div").css("z-index", "auto");
         });
 
@@ -110,7 +116,10 @@
 				var vocab_score = $(this).find("span.vocab_score").text();
 				//var search_term = ""; // TODO
 				elem.attr("value", '{"url":"'+href+'", "prefix": '+JSON.stringify(replacePrefix(href))+', "label": "'+vocab_name+'", "vocab_description": "'+vocab_description+'", "score": "'+vocab_score+'"}');
-                adapt_RDF_preview();
+				var id_as_array = $(this).closest("[id^='search_result_id_table_field']").attr("id").split("_");
+				var col = id_as_array[id_as_array.length-2];
+
+                adapt_RDF_preview(col);
             });
         });
 
@@ -304,13 +313,14 @@ function guessType(column){
 	var select = "<br><select class=\"type_guessing\">";
 	$.each(matching, function(k,v){
 		if(v == num_fields){
-			select += "<option>"+k+"</option>";
+			select += '<option value="'+k+'">'+replacePrefix(k)["suffix"]+'</option>';
 		}
 	});
 	select += "</select>";
 	var table_header = $("td[id^='id_table_head_"+column+"']");
 	table_header.html(table_header.html()+select);
 	table_header.find(".type_guessing").on("change", function(){
+
 		adapt_RDF_preview(column);
 	});
 
@@ -318,9 +328,11 @@ function guessType(column){
 
 }
 
-function noAction(column){
+//adaptRDF (boolean) tells wether or not to update RDF view, (update if undefined
+function noAction(column, adaptRDF){
 
 	column = typeof column !== 'undefined' ? column : "";
+	adaptRDF = typeof adaptRDF !== 'undefined' ? adaptRDF : true;
 
 	//remove data type select field from table header
 	$("td[id^='id_table_head_"+column+"']").find("select").remove();
@@ -335,13 +347,15 @@ function noAction(column){
 		var col = id_as_array[id_as_array.length-2];
 		$(this).text(csv_content[row][col-1]);
 	});
-	adapt_RDF_preview(column);
+
+	if(adaptRDF)
+		adapt_RDF_preview(column);
 }
 
 
 function adapt_RDF_preview(column) {
-	column = typeof column !== 'undefined' ? column : "";
 
+	column = typeof column !== 'undefined' ? column : "";
 
 //TODO this is done each time anything is clicked, bad performance
 	$("td[id^='id_table_field_"+column+"']").each(function(i){
@@ -349,6 +363,13 @@ function adapt_RDF_preview(column) {
 		var id_as_array = $(this).attr("id").split("_");
 		var row = id_as_array[id_as_array.length-1];
 		var col = id_as_array[id_as_array.length-2];
+
+		var method = $("#id_table_settings_"+col+" select option:selected").text();
+		if(method == "add URIs")
+			method = "reconciliation";
+		else if(method == "add data type")
+			method = "data type";
+		add_to_content_where_col("object_method", method, col);
 
 		var recon_result = $(this).find(".bb_select_selection").text();
 
@@ -365,20 +386,17 @@ function adapt_RDF_preview(column) {
 
 		}else if($("#id_table_head_"+col).find("select.type_guessing").length>0) { // has guessed types
 
-			var data_type = $("#id_table_head_"+col).find("select.type_guessing option:selected").text();
+			var data_type = $("#id_table_head_"+col).find("select.type_guessing option:selected").attr("value");
 		
 			add_to_content_where_col("data_type", replacePrefix(data_type), col);
-			add_to_content_where_col("object_method", "data type", col);
+			//add_to_content_where_col("object_method", "data type", col);
 
 
-		}else{ // no action
-
-			add_to_content_where_col("object_method", "no action", col);
 		}
 	});
 
 	var rdf_view = $("#rdf_view");
-	var tbl = model_to_table(get_model());
+	var tbl = model_to_table(get_model(), 10);
 	rdf_view.find("table").remove();
 	rdf_view.append(tbl);
 
@@ -390,16 +408,16 @@ function calculateCells(column){
 	column = typeof column !== 'undefined' ? column : "";
 
 	var opt = $("#id_table_settings_" + column).find("select option:selected").text();
-	if(opt == "auto inference") {
-		noAction(column); //clear field
+	if(opt == "add URIs") {
+		noAction(column, false); //clear field
 		var topic_field = "id_table_head_" + column;
 		var topic = $("#"+topic_field).text().trim();
 		$("td[id^='id_table_field_"+column+"']").each( function(i){
 			askOracle($(this), topic, $(this).text().trim());
 		});
 	}
-	else if(opt == "auto type guessing") {
-		noAction(column); //clear field
+	else if(opt == "add data type") {
+		noAction(column, false); //clear field
 		guessType(column);
 	}
 	else if(opt == "no action") {
@@ -408,10 +426,71 @@ function calculateCells(column){
 }
 
 
+//get object reconcilation data that is stored in json model and display on page
+function populate_from_model_reconciliation(widget, recon){
+
+	//build a bb_select dropdown without dropdown functionality
+
+/*
+	var star ="fa ";
+	if(enrich[i].score>80)
+		star += "fa-star";
+	else if(enrich[i].score>50)
+		star += "fa-star-half-o";
+	else
+		star += "fa-star-o";
+*/
+
+	var short_uri = recon.url;
+	if(recon.url)
+			short_uri = shortenURI(recon.url, 35);
+
+
+	var obj_div = "<div class=\"bb_select_nodropdown\"><a href=\""+recon.url+"\" target=\"_blank\" onmouseover=\"Tip('Open in external window: "+recon.url+"')\" onmouseout=\"UnTip()\"><i class=\"fa fa-external-link-square additl_vert_pad\"></i></a>"+short_uri+"</div>";
+
+	widget.find(":not(span)").remove();
+	widget.html(widget.html()+obj_div);
+
+}
+
+
 var rdf_content = $("#id_hidden_rdf_array_field");
 
 
 $( document ).ready(function() {
+
+	//get information about reconciliation, type guessing etc from model and show in page
+	//RECONCILIATION
+	$("[id^='id_table_field_']").each( function(i){
+		var id_as_array = $(this).attr("id").split("_");
+		var col = id_as_array[id_as_array.length-2];
+		var row = id_as_array[id_as_array.length-1];
+
+		var recon = get_model_reconciliation(col, row);
+
+		if(recon){
+			populate_from_model_reconciliation($(this), recon);
+			$("#id_table_settings_"+col+" select").val("add URIs");
+		}
+	});
+
+	//DATA TYPE
+	$("[id^='id_table_settings_']").each( function(i){
+
+		var id_as_array = $(this).attr("id").split("_");
+		var col = id_as_array[id_as_array.length-1];
+
+		var data_type = get_model_data_type(col);
+
+		if(data_type){
+			$("#id_table_settings_"+col+" select").val("add data type");
+			calculateCells(column=col);
+			$("#id_table_head_"+col+" select.type_guessing").val(data_type.url+data_type.suffix);
+		}
+
+	});
+
+
 
 	$("#button_back").on("click", function () {
 		var form = $("#main_form");

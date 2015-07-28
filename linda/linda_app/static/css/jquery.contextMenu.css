@@ -100,6 +100,7 @@
 .context-menu-item.icon-delete { background-image: url(/static/images/remove.png); }
 .context-menu-item.icon-download { background-image: url(/static/images/download.png); }
 .context-menu-item.icon-pencil { background-image: url(/static/images/pencil.png); }
+.context-menu-item.icon-copy { background-image: url(/static/images/copy.png); }
 
 /* vertically align inside labels */
 .context-menu-input > label > * { vertical-align: top; }

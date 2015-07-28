@@ -20,15 +20,24 @@
         <h3>Specify the RDF Subject</h3>
         <div class="col-5-10 left-side-box">
 
-            <p>In this step, you can specify the RDF subject. It can be constructed from a base URL and a combination of
-                the content of one or multiple column names (i.e. the first row of your CSV file).</p>
+            <p>In this step, you can specify the RDF subject. It can be constructed from a base URL and a combination of the content of one or multiple column names.</p>
 
-            <p>The base URL may be the one of your organization. You can also leave it blank.</p>
+            <div class="show-additional-help">show more</div>
+            <div class="additional-help">
+            <p><em>What is waiting for you:</em><br>You will be confronted with instructing the converter how to generate meaningful unique subject URIs for the individual lines of your data. In order to do so, you will
+            <ul>
+            <li>have to know your own web address (e.g. http://myNiceCompany.com)</li>
+            <li>have to know which columns of your data constitute their "primary key" (in the database parlance)</li>
+            </ul>
+            Note that you can also add special characters (e.g. _ ‘) to construct your subject URI.</p>
 
-            <p>Note that you can also add characters like e.g. hyphens or underscores to construct your subject URI.</p>
+            <p><em>How it typically works:</em><br>
+            The URIs of the subjects of the generated RDF statements are typically composed of (i) a base part – something that begins with your own Web address, and (ii) an individual part, which makes the URIs mutually distinct. For convenience, the individual part is composed of the content of some of the columns of an individual line, separated by some punctuation characters. In order to get different URIs for distinct line, at least those columns should be employed that constitute – in database parlance – the Primary Key of that table. A Primary Key is something that uniquely describes the contents of a line.</p>
 
-            <p>If you do not want to construct an URI, you can also use Blank Nodes instead by marking the respective
-                checkbox on the right hand menu.</p>
+            <p><em>Simple setting:</em><br>
+            If the typical procedure is too cumbersome to you, you may want to get the subject URIs automatically set to blank nodes without meaningful names, by checking the box 'use blank nodes'. Please note that the advantage of having expressive subject URIs is lost in this case.</p>
+            </div>
+
         </div>
 
         <div class="col-5-10 right-side-box">
@@ -40,7 +49,7 @@
 
             <div id="id_uri_container">
                 <p>
-                    Base URL: <input type="url" id="id_base_url" placeholder="e.g. http://example.net/">
+                    Base URL: <input type="url" id="id_base_url" placeholder="e.g. http://example.net/" autocomplete="off" size="35">
                 </p>
 
                 <p>
@@ -62,10 +71,7 @@
                 </p>
 
                 <p>
-                    Subject URI: <span id="id_base_url_insert"></span><input type="text" class="drop-box"
-                                                                             name="subject_uri" id="id_subject_uri"
-                                                                             ondrop="drop(event)"
-                                                                             ondragover="allowDrop(event)">
+                    Subject URI: <span id="id_base_url_insert"></span><input type="text" class="drop-box" name="subject_uri" id="id_subject_uri" ondrop="drop(event)" ondragover="allowDrop(event)"  autocomplete="off" size="45">
                     <br>
                     <span class="warning-text red" id="base_url_insert_warning" style="visibility:hidden;">Wrong formatting. Build the URI template using terms like '{columnName}' surrounded by single brackets.</span>
                     <br><span class="warning-text red" id="subject_url_insert_warning" style="visibility:hidden;">Please make sure the URIs are valid in the file.</span>
@@ -84,15 +90,14 @@
         <h3>DATA VIEW</h3>
         <div>
         File: <b>{{ filename }}</b> (10 rows example)
-        {{ rdfModel | model_as_table | safe }}
+        {{ rdfModel | model_as_table:10 | safe }}
         </div>
     </div>
 </div>
 
-    <div class="content" id="rdf_view">
-        <h3>RDF VIEW</h3>
-
-    </div>
+<div class="content" id="rdf_view">
+    <h3 style="display: inline">RDF VIEW</h3><span>(10 rows example)</span>
+</div>
 
     </form>
 
@@ -172,7 +177,7 @@ function adapt_RDF_preview() {
     add_model_subject("base_url",base_url_insert.text());
 
     var rdf_view = $("#rdf_view");
-    var tbl = model_to_table(get_model());
+    var tbl = model_to_table(get_model(), 10);
     rdf_view.find("table").remove();
     rdf_view.append(tbl);
 

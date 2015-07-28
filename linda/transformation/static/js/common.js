@@ -1,4 +1,5 @@
 lindaGlobals = {
+	"server_url": "http://linda.epu.ntua.gr:8000",
 	"prefixes": {},
 	"validUrl": false,
 	"used_prefixes": {},
@@ -2262,21 +2263,32 @@ function replacePrefix(uri){
 };
 
 
+Array.prototype.clean = function(deleteValue) {
+  for (var i = 0; i < this.length; i++) {
+    if (this[i] == deleteValue) {         
+      this.splice(i, 1);
+      i--;
+    }
+  }
+  return this;
+};
+
 function shortenURI(uri, maxlength){
 	if(uri.length <= maxlength)
 		return uri;
 
 	maxlength = maxlength -3; //because we include "..."
-
-	var parts = uri.split("/");
+	var parts = uri.split("/").clean("");
 	var head = parts[0];
+	if(head == "http:")
+		head = "http:/"
 	var tail = "";
 	for(var i = 1; i <= (parts.length/2); i++){
 		if((head.length + tail.length+parts[i].length + 1) >= maxlength)
 			return head + "..." + tail;
 		else 
 			head += parts[i] + "/";
-		if((head.length + tail.length + parts[parts.length-i] + 1)>=maxlength)
+		if((head.length + tail.length + parts[parts.length-i].length + 1) >= maxlength)
 			return head + "..." + tail;
 		else
 			tail = "/" + parts[parts.length-i] + tail;
@@ -2468,48 +2480,52 @@ function add_to_model_enrich(new_value, col){
 	add_to_content_where_col("enrich", new_value, col);
 }
 
+function get_model_predicate_of_col(col){
+	var model = get_model();
+	for(var i=0; i<model['columns'].length; i++){
+		if(model['columns'][i]["col_num_new"] == col){
+			return model['columns'][i]['predicate'];
+		}
+	}
+	return false;
+}
+
+function get_model_reconciliation(col, row){
+	var model = get_model();
+	for(var i=0; i<model['columns'].length; i++){
+		if(model['columns'][i]["col_num_new"] == col){
+			if(model['columns'][i]['fields'][row-1] && model['columns'][i]['object_method'] == "reconciliation" && model['columns'][i]['fields'][row-1]['reconciliation']){
+				return model['columns'][i]['fields'][row-1]['reconciliation'];
+			}
+			else
+				return false;
+		}
+	}
+	return false;
+}
+
+function get_model_data_type(col){
+	var model = get_model();
+	for(var i=0; i<model['columns'].length; i++){
+		if(model['columns'][i]["col_num_new"] == col){
+			if(model['columns'][i]['object_method'] == "data type" && model['columns'][i]['data_type']){
+				return model['columns'][i]['data_type'];
+			}
+			else
+				return false;
+		}
+	}
+	return false;
+}
+
 
 // ///////////////// MODEL END ///////////////////////////////
 
 
 
-$( document ).ready(function() {
 
-	//$("div.content:not(#rdf_view):not(.no-minimize)").each(function(){
-	$(".minimizable").each(function(){
-		//$(this).css("position","relative");
-		$(this).html($(this).html()+'<i class="fa fa-caret-square-o-down fa-2x content-resizer" style="position: absolute; top: 0.3em; right: 0.2em; color: rgb(136, 136, 136); opacity: 0.4;"></i>');
-	});
 
-	$("i.content-resizer").css("cursor", "pointer");
-	$("i.content-resizer").each(function(){
-		$(this).on("click", function(){
-			$(this).parent().find("div div").slideToggle( "fast", "swing" );
-			if($(this).hasClass("fa-caret-square-o-down")){
-				
-				/*
-				$(this).parent().css("height", "4.3em");
-				$(this).parent().css("overflow", "hidden");
-				$(this).parent().scrollTop("0");*/
-				$(this).removeClass("fa-caret-square-o-down");
-				$(this).addClass("fa-caret-square-o-left");
-			}else{				
-				/*$(this).parent().css("height", "");
-				$(this).parent().css("overflow", "");*/
-				$(this).removeClass("fa-caret-square-o-left");
-				$(this).addClass("fa-caret-square-o-down");
-			}
-		});
-		$(this).on("mouseover", function(){
-			$(this).css("opacity","1");
-		});
-		$(this).on("mouseoout", function(){
-			$(this).css("opacity","0.4");
-		});
-	});
-});
-
-function model_to_table(model){
+function model_to_table(model, numrows){
 
 	var tbl = jQuery('<table/>', {
 		class: "rdf_table"
@@ -2522,9 +2538,10 @@ function model_to_table(model){
 
 	var rdf_array = model_to_array(model);
 
+	numrows = typeof numrows !== "undefined" ? Math.min(rdf_array.length, numrows*model['columns'].length) : rdf_array.length;
 
 	//create table content
-	for(var i = 0; i < rdf_array.length; i++){
+	for(var i = 0; i < numrows; i++){
 
 			var tr = jQuery('<tr/>', {});
 			for(var j = 0; j < 3; j++){
@@ -2658,3 +2675,55 @@ function model_to_array(model){
 
 	return prefix_array.concat(rdf_array);
 }
+
+
+$( document ).ready(function() {
+
+	//$("div.content:not(#rdf_view):not(.no-minimize)").each(function(){
+	$(".minimizable").each(function(){
+		//$(this).css("position","relative");
+		$(this).html($(this).html()+'<i class="fa fa-caret-square-o-down fa-2x content-resizer" style="position: absolute; top: 0.3em; right: 0.2em; color: rgb(136, 136, 136); opacity: 0.4;"></i>');
+	});
+
+	$("i.content-resizer").css("cursor", "pointer");
+	$("i.content-resizer").each(function(){
+		$(this).on("click", function(){
+			$(this).parent().find("div div").slideToggle( "fast", "swing" );
+			if($(this).hasClass("fa-caret-square-o-down")){
+				
+				/*
+				$(this).parent().css("height", "4.3em");
+				$(this).parent().css("overflow", "hidden");
+				$(this).parent().scrollTop("0");*/
+				$(this).removeClass("fa-caret-square-o-down");
+				$(this).addClass("fa-caret-square-o-left");
+			}else{				
+				/*$(this).parent().css("height", "");
+				$(this).parent().css("overflow", "");*/
+				$(this).removeClass("fa-caret-square-o-left");
+				$(this).addClass("fa-caret-square-o-down");
+			}
+		});
+		$(this).on("mouseover", function(){
+			$(this).css("opacity","1");
+		});
+		$(this).on("mouseoout", function(){
+			$(this).css("opacity","0.4");
+		});
+	});
+
+	var help = $(".show-additional-help");
+	help.text("more info...");
+	help.siblings(".additional-help").hide();
+	help.click(function() {
+  		$(this).toggleClass("on");
+  		if($(this).hasClass("on")){
+  			$(this).text("hide info...");  			
+  		}else{
+  			$(this).text("more info...");
+  		}
+  		$(this).siblings(".additional-help").slideToggle( "fast", "swing" );
+
+	});
+
+});
