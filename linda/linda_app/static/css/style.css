@@ -1035,11 +1035,11 @@ form input[type="submit"] {
     background-color: #26C281;
 }
 
-.red, .queries .confirm {
+.red, .queries .confirm, .homepage .confirm {
     background-color: #D64541;
 }
 
-.red:hover, .queries .confirm:hover {
+.red:hover, .queries .confirm:hover, .homepage .confirm:hover {
     background-color: #EF4836;
 }
 
@@ -1108,7 +1108,7 @@ form input[type="submit"] {
     color: #F22613;
 }
 
-.button, .queries .btn {
+.button, .queries .btn, .homepage .btn {
     display: inline-block;
     vertical-align: top;
     padding: 3px 10px;
@@ -1127,7 +1127,7 @@ form input[type="submit"] {
     margin: 0 !important;
 }
 
-.button:hover, .queries .btn:hover {
+.button:hover, .queries .btn:hover, .homepage .btn:hover {
     cursor: pointer;
     color: #fff;
 }
@@ -1941,11 +1941,11 @@ textarea.rename.enabled {
     width: 100%;
 }
 
-.queries .modal-dialog, .builder-advanced .modal-dialog {
+.queries .modal-dialog, .builder-advanced .modal-dialog, .homepage .modal-dialog {
     margin-top: 60px;
 }
 
-.queries .modal-header {
+.queries .modal-header, .homepage .modal-header {
     color: #fff;
     background: #D64541;
 }
@@ -1970,15 +1970,15 @@ textarea.rename.enabled {
     color: #fff;
 }
 
-.queries .confirmation-modal a, .queries .modal-dialog .close {
+.queries .confirmation-modal a, .queries .modal-dialog .close, .homepage .modal-dialog .close {
     display: none;
 }
 
-.queries .cancel, .builder-advanced .cancel {
+.queries .cancel, .builder-advanced .cancel, .homepage .cancel {
     background: #aaa;
 }
 
-.queries .cancel:hover, .builder-advanced .cancel:hover {
+.queries .cancel:hover, .builder-advanced .cancel:hover, .homepage .cancel:hover {
     background: #bbb;
 }
 
