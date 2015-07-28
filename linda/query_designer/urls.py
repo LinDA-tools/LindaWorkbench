@@ -8,7 +8,10 @@ urlpatterns = patterns('',
                        # Basic pages
                        url(r'^$', views.index, name='advanced-builder-index'),
                        url(r'^(?P<pk>\d+)/$', views.load_design),
-
+                       
+					   # Tutorials
+                       url(r'^tutorials/(?P<tutorial>[\w-]+)/$', views.tutorials, name='tutorials'),
+					   
                        # API calls
                        url(r'^api/active_classes/(?P<dt_name>.*)/$', views.active_classes),
                        url(r'^api/active_root_classes/(?P<dt_name>.*)/$', views.active_root_classes),

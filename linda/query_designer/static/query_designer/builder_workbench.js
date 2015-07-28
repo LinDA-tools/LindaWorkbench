@@ -35,7 +35,7 @@
                 var result = undefined;
 
                 $.each(total_endpoints, function (name, e) {
-                    if (total_endpoints[e] === endpoint) {
+                    if (e === endpoint) {
                         result = name;
                     }
                 });

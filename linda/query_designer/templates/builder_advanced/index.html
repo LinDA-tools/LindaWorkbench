@@ -161,7 +161,10 @@
         /*Handle clicks on arrows*/
         $("#builder-canvas").click(function(e) {
             if (!builder_workbench.connection_from) {
-                arrows.in_arrows(e.screenX - $(this).offset().left, e.screenY - $(this).offset().top - 60 + $(document).scrollTop());
+                var x = e.pageX - $(this).offset().left;
+                var y = e.pageY - $(this).offset().top;
+
+                arrows.in_arrows(x, y);
             }
         });
 

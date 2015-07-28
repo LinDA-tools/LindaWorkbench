@@ -1911,25 +1911,34 @@ input, textarea {
     background: #eee;
 }
 
-.queries-table .description textarea {
+textarea.rename {
     resize: none;
     width: calc(100% - 30px);
     height: 100%;
 }
 
-.queries-table .description textarea:focus {
+textarea.rename:focus {
     outline: none;
     border: #ddd;
 }
 
-.queries-table .description textarea.disabled {
+textarea.rename.disabled {
     background: none;
     border: none;
 }
 
-.queries-table .description textarea.enabled {
+textarea.rename.enabled {
     background: #eee;
     border: #ddd;
+}
+
+.datasources-table .dt-title {
+    width: calc(100% - 20px);
+}
+
+.datasources-table textarea.rename {
+    height: 20px;
+    width: 100%;
 }
 
 .queries .modal-dialog, .builder-advanced .modal-dialog {
@@ -2256,8 +2265,43 @@ input, textarea {
     margin: 2px 5px;
 }
 
+.designer-button, designer-button * {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.run-query-info {
+    display: inline-block;
+    margin-top: 5px;
+    position: absolute;
+    color: #6C7A89;
+    font-size: 80%;
+    text-align: center;
+}
+
+.main.sparql .run-query-info {
+    margin-top: 0;
+}
+
+.run-query-info > span {
+    vertical-align: top;
+}
+
+.run-query-info .bs-component {
+    width: 185px;
+    height: 10px;
+}
+
+.run-query-info .bs-component > .progress {
+    height: 10px;
+}
+
 .query-title {
-    color: #999;
+    color: #6C7A89;
 }
 
 .designer-menu .designer-button > span.text {
@@ -2271,13 +2315,17 @@ input, textarea {
     background: #ccc;
 }
 
-.designer-menu #show-source {
+.designer-menu #show-source .source-icon {
     font-family: Consolas;
     font-weight: 600;
 }
 
 .text-green {
     color: #00B16A;
+}
+
+.text-red {
+    color: #D64541;
 }
 
 .text-white {
@@ -2764,6 +2812,12 @@ input, textarea {
 
 .builder-advanced .ui-dialog-titlebar {
     border-radius: 0;
+}
+
+.delete-arrow-link {
+    position: absolute;
+    z-index: 10000;
+    color: #fff;
 }
 
 .class-instance .property-control .sort-frequency {

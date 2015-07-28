@@ -387,7 +387,11 @@ var builder = {
                     this.select_vars.push('?' + name);
                 } else {
                     p.aggr_name = p.name + '_' + p.aggregate;
-                    this.select_vars.push('(' + p.aggregate + '(?' + name + ') AS ?' + p.aggr_name + ')');
+                    var aggregation_params = '';
+                    if (p.aggregate === "group_concat") {
+                        aggregation_params += ' ; separator=";"';
+                    }
+                    this.select_vars.push('(' + p.aggregate + '(?' + name + aggregation_params + ') AS ?' + p.aggr_name + ')');
                 }
 
             }

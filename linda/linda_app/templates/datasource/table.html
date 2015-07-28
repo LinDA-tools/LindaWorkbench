@@ -23,8 +23,7 @@
                 {% else %}
                     <img src="/static/images/rdf.png" alt="Local datasource"/>
                 {% endif %}
-                {{datasource.title}}
-
+                <div class="inline dt-title"><span>{{datasource.title}}</span></div>
             </td>
             {% if datasource.is_public %}
             <td>{% trans "Remote" %}</td>
@@ -59,6 +58,48 @@
                     "infoEmpty": "No datasources available",
                     "infoFiltered": "(filtered from _MAX_ total records)"
                 }
+            });
+
+            /*change description -- textarea o as input*/
+            function change_description(o) {
+                //change cursor to wait
+                $(o).css('cursor', 'wait');
+
+                //get the new description
+                var title = $(o).val();
+
+                $.ajax({ //make ajax request to update the description
+                    url: "/api/datasource/" + $(o).data('id') + "/rename/",
+                    type: "POST",
+                    data: {
+                        csrfmiddlewaretoken: '{{ csrf_token }}',
+                        new_title: title
+                    },
+                    success: function(data, textStatus, jqXHR) {
+                        location.reload();
+                    },
+                    error: function (jqXHR, textStatus, errorThrown)
+                    {
+                        $(o).css('cursor', 'auto');
+                        alert(jqXHR.responseText);
+                        $(o).focus();
+                    }
+                });
+            }
+
+            /*on enter save the textarea description*/
+            $(".datasources-table").on('keypress', 'textarea.rename.enabled', function (e) {
+                if(e.keyCode == 13){ //key enter
+                    change_description(this);
+
+                    e.stopPropagation();
+                    e.preventDefault();
+                }
+            });
+
+            /*on text area lose focus also save the description*/
+            $(".datasources-table").on('focusout', 'textarea.rename.enabled', function (e) {
+                change_description(this);
             });
 
             {% with datasources=datasources %}

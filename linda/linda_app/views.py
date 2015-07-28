@@ -1456,6 +1456,26 @@ def api_datasource_replace(request, dtname):
     return HttpResponse(data, mimetype, status=int(results['status']))
 
 
+# Rename a datasource
+def api_datasource_rename(request, dtname):
+    if request.method == 'POST':
+        datasource = get_object_or_404(DatasourceDescription, name=dtname)
+        new_title = request.POST.get('new_title')
+        if not new_title:
+            return HttpResponseForbidden('New datasource title must not be empty')
+
+        if DatasourceDescription.objects.filter(title=new_title).exclude(name=dtname):
+            return HttpResponseForbidden('A datasource with this name already exists')
+
+        datasource.title = new_title
+        datasource.name = slugify(unidecode(new_title))
+        datasource.save()
+
+        return HttpResponse(datasource.name)
+    else:
+        return HttpResponseForbidden('Method must be POST')
+
+
 # Delete an RDF datasource
 @csrf_exempt
 @login_required

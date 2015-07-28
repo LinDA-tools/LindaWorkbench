@@ -2,6 +2,7 @@ import datetime
 from django.shortcuts import render
 from django.utils.http import urlquote
 import requests
+import sys
 from endpoint_monitor.models import EndpointTest
 from linda_app.models import DatasourceDescription
 
@@ -44,6 +45,7 @@ def monitor_datasources():
                 print(datasource.title + " [UP] " + str(response_time) + "msec SPARQL 1.1: " + str(supports_minus))
             else:
                 print(datasource.title + " [DOWN]")
+            sys.stdout.flush()
 
             EndpointTest.objects.create(datasource=datasource, up=up,
                                         response_time=response_time, supports_minus=supports_minus)
