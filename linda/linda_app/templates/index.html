@@ -6,6 +6,7 @@
 
 {% block css %}
     <link rel="stylesheet" href="/static/css/jquery.contextMenu.css"/>
+    <link rel="stylesheet" href="/static/css/jquery.modal.css" />
     {% if installation_pending %}
         <link rel="stylesheet" href="/static/installer/style.css"/>
     {% endif %}
@@ -154,6 +155,9 @@
 {% block scripts %}
     <script src="/static/js/jquery.contextMenu.js"></script>
     <script src="/static/js/jquery.waitforimages.js"></script>
+    <script src="/static/js/jquery.modal.min.js"></script>
+    <script src="/static/js/jquery.confirm.js"></script>
+
     <script>
         {% with datasources=recent_datasources out="js" %}
             {% include "datasource/pretty-list.html" %}
