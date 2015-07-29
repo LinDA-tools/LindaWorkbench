@@ -1574,7 +1574,7 @@ class QueryListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super(QueryListView, self).get_context_data(**kwargs)
-        context['queries'] = context['queries'].order_by('-updatedOn')
+        context['queries'] = context['queries'].filter(createdBy=self.request.user.pk).order_by('-updatedOn')
         context['page'] = 'Queries'
         return context
 
