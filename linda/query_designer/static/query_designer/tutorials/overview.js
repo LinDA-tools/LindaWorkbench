@@ -109,7 +109,7 @@
 
         //show after a while
         setTimeout(function() {
-            tooltip('.qb-equivalent-query-main .btn-success',
+            tooltip('.designer-button.run-button',
                     'With the <span class="green-text">run</span> button, you can execute the query.<br />Click run to view the results!',
                     'right'
             );

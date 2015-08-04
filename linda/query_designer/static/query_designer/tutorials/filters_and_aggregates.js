@@ -125,7 +125,7 @@
                     clearInterval(interval);
 
                     tooltip('.ui-dialog[aria-describedby="property-filters"] #all-filters',
-                            '<p>Now, let\'s create one more filter for countries that start with <em>ea</em>.</p><emHint: You can remove a filter by clicking on the X button that appears when you move the cursor in the filter\'s tag.</em>',
+                            '<p>Now, let\'s create one more filter for countries that start with <em>ea</em>.</p><em>Hint: You can remove a filter by clicking on the X button that appears when you move the cursor in the filter\'s tag.</em>',
                             'top'
                     );
 
@@ -166,10 +166,10 @@
 
                                                     //scroll to query
                                                     $('html,body').animate({
-                                                        scrollTop: $(".qb-equivalent-query-main").offset().top - 200
+                                                        scrollTop: $(".designer-button.run-button").offset().top - 200
                                                     });
 
-                                                    tooltip('.qb-equivalent-query-main .btn-success',
+                                                    tooltip('.designer-button.run-button',
                                                             'Run the query again!',
                                                             'right'
                                                     );
@@ -289,10 +289,10 @@
 
                                 //scroll to query
                                 $('html,body').animate({
-                                    scrollTop: $(".qb-equivalent-query-main").offset().top - 200
+                                    scrollTop: $(".designer-button.run-button").offset().top - 200
                                 });
 
-                                tooltip('.qb-equivalent-query-main .btn-success',
+                                tooltip('.designer-button.run-button',
                                         'Run the query to find the average.',
                                         'right'
                                 );

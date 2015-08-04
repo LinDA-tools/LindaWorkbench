@@ -50,3 +50,16 @@
             return n_of_found == p_arr.length//all properties are are added
         }
     }
+
+    //wait for instance of type `class_uri` to be added
+    function wait_new_instance(class_uri, callback) {
+        var len = builder_workbench.instances.length;
+        var interval = setInterval(function() {
+            if (builder_workbench.instances.length > len) {
+                if (builder_workbench.instances[builder_workbench.instances.length - 1].uri == class_uri) {
+                    clearInterval(interval);
+                    callback();
+                }
+            }
+        }, 500);
+    }
