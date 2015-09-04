@@ -1,325 +1,1851 @@
-from datetime import datetime
-import json
-import urllib
-from django.http import Http404, HttpResponse
-from django.shortcuts import render
+from operator import attrgetter
+from django.core import serializers
+from django.db import IntegrityError
+from view_cache_utils import cache_page_with_prefix
+from hashlib import md5
+from django.core.paginator import Paginator, EmptyPage
+from django.http import HttpResponse, HttpResponseNotFound, Http404, HttpResponseForbidden
+from django.shortcuts import redirect, render, get_object_or_404
+from unidecode import unidecode
 from django.utils.http import urlquote
-import requests
-from linda_app.models import DatasourceDescription, VocabularyProperty, Query, get_configuration
 
-from linda_app.settings import LINDA_HOME
+from django.core.validators import URLValidator
+from django.core.exceptions import ValidationError
+from django.views.decorators.csrf import csrf_exempt
+from django.views.generic import ListView, UpdateView, DetailView, DeleteView, CreateView
+
+import json
+
+from analytics.models import Analytics
+from query_designer.views import sparql_query_json
+
+from linda_app.forms import *
+from linda_app.models import *
+
+from rdflib import Graph
+from datetime import datetime
+
+from linda_app.installer.views import installation_pending
+from linda_app.settings import LINDA_HOME, RDF_CHUNK_SIZE
+from linda_app.passwords import MS_TRANSLATOR_UID, MS_TRANSLATOR_SECRET
 
 
-def designer_defaults():
+def index(request):
+    params = {}
+    params['installation_pending'] = installation_pending()
+    params['recent_datasources'] = DatasourceDescription.objects.all().order_by('-updatedOn')[:3]
+    params['recent_queries'] = Query.objects.all().order_by('-updatedOn')[:3]
+    if request.user.is_authenticated():
+        params['recent_analytics'] = Analytics.objects.filter(user_id=request.user.pk).order_by('-updatedOn')[:3]
+    else:
+        params['recent_analytics'] = []
+    params['page'] = 'Home'
+
+    return render(request, 'index.html', params)
+
+
+def terms(request):
+    params = {}
+    return render(request, 'terms.html', params)
+
+
+def getstarted(request):
+    params = {}
+    return render(request, 'getstarted.html', params)
+
+
+def sparql(request, q_id=None):
+    params = {}
+    params['mode'] = "sparql"
+    params['datasources'] = list(DatasourceDescription.objects.all())
+    params['datasources'].insert(0,
+                                 DatasourceDescription(title="All private data dources", name="all", is_public=False
+                                                       , uri=LINDA_HOME + "sparql/all/", createdOn=datetime.today(),
+                                                       updatedOn=datetime.today()))
+    params['page'] = 'Sparql'
+    params['RDF2ANY_SERVER'] = get_configuration().rdf2any_server
+
+    # get query parameter
+    if q_id:
+        params['query'] = Query.objects.get(pk=q_id)
+        if not params['query']:
+            return Http404
+
+    return render(request, 'sparql.html', params)
+
+
+def site_search(request):
+    if 'search_q' not in request.GET:
+        return Http404
+
+    q = request.GET.get('search_q')
+
+    # get pages
+    if 'v_page' in request.GET:
+        try:
+            v_page = int(request.GET['v_page'])
+        except ValueError:
+            v_page = 1
+    else:
+        v_page = 1
+
+    if 'c_page' in request.GET:
+        try:
+            c_page = int(request.GET['c_page'])
+        except ValueError:
+            c_page = 1
+    else:
+        c_page = 1
+
+    if 'p_page' in request.GET:
+        try:
+            p_page = int(request.GET['p_page'])
+        except ValueError:
+            p_page = 1
+    else:
+        p_page = 1
+
+    # for vocabularies, classes & properties use elastic search
+    # vocaabularies
+    vocabularies = []
+    for sqs in SearchQuerySet().models(Vocabulary).filter(content=q):
+        if sqs.object:
+            vocabularies.append(sqs.object)
+
+    vocabularies_paginator = Paginator(vocabularies, 10)
+    try:
+        vocabularies_page = vocabularies_paginator.page(v_page)
+    except EmptyPage:
+        vocabularies_page = vocabularies_paginator.page(1)
+
+    # classes
+    classes = []
+    for sqs in SearchQuerySet().models(VocabularyClass).filter(content=q):
+        if sqs.object:
+            classes.append(sqs.object)
+
+    classes_paginator = Paginator(classes, 10)
+    try:
+        classes_page = classes_paginator.page(c_page)
+    except EmptyPage:
+        classes_page = classes_paginator.page(1)
+
+    properties = []
+    for sqs in SearchQuerySet().models(VocabularyProperty).filter(content=q):
+        if sqs.object:
+            properties.append(sqs.object)
+
+    # properties
+    properties_paginator = Paginator(properties, 10)
+    try:
+        properties_page = properties_paginator.page(p_page)
+    except EmptyPage:
+        properties_page = properties_paginator.page(1)
+
+    # also search in datasources, queries and analytics
+    params = {'search_q': q,
+              'datasources': DatasourceDescription.objects.filter(name__icontains=q),
+              'queries': Query.objects.filter(description__icontains=q),
+              'analytics': Analytics.objects.filter(description__icontains=q),
+              'vocabularies_list': vocabularies_page.object_list, 'classes_list': classes_page.object_list,
+              'properties_list': properties_page.object_list,
+              'vocabularies_page': vocabularies_page, 'classes_page': classes_page, 'properties_page': properties_page}
+
+    return render(request, 'search/site-search.html', params)
+
+
+def profile(request, pk):
+    user = User.objects.get(pk=pk)
+    params = {'userModel': user}
+    return render(request, 'users/profile.html', params)
+
+
+class UserListView(ListView):
+    model = User
+    template_name = 'users/community.html'
+    context_object_name = 'users'
+    paginate_by = 20
+
+
+class UserUpdateView(UpdateView):
+    form_class = UserForm
+    model = User
+    template_name = 'users/profile-edit.html'
+    context_object_name = 'user'
+
+    def get_context_data(self, **kwargs):
+        user = self.object
+        context = super(UserUpdateView, self).get_context_data(**kwargs)
+        context['current'] = 'account-settings'
+        context['userProfileForm'] = UserProfileForm(instance=user.profile)
+        context['userModel'] = user
+        return context
+
+    def get(self, *args, **kwargs):
+        if str(self.request.user.id) != str(kwargs.get('pk')):
+            res = HttpResponse("Unauthorized")
+            res.status_code = 401
+            return res
+        else:
+            return super(UserUpdateView, self).get(self, *args, **kwargs)
+
+    def get_success_url(self, **kwargs):
+
+        return "/profile/" + kwargs.get('pk')
+
+    def post(self, *args, **kwargs):
+        if str(self.request.user.id) != str(kwargs.get('pk')):
+            res = HttpResponse("Unauthorized")
+            res.status_code = 401
+            return res
+        else:
+            data = self.request.POST
+            user = self.request.user
+            data['password'] = user.password
+            data['date_joined'] = user.date_joined
+            data['last_login'] = user.last_login
+            data['is_active'] = user.is_active
+            data['is_staff'] = user.is_staff
+            data['is_superuser'] = user.is_superuser
+            userForm = UserForm(data, instance=user)
+            if userForm.is_valid():
+                user = userForm.save(commit=False)
+                userProfileForm = UserProfileForm(self.request.POST, instance=user.profile)
+                if userProfileForm.is_valid():
+                    user.save()
+                    userProfile = userProfileForm.save(commit=False)
+                    userProfile.user = user
+                    userProfile.save()
+                    if 'picture' in self.request.FILES:
+                        picture = self.request.FILES['picture']
+                        avatar = userProfile.avatar
+                        avatar.photo_original = picture
+                        avatar.save()
+                    return redirect(self.get_success_url(**kwargs))
+            return render(self.request, 'users/profile-edit.html', {
+                'current': 'account-settings',
+                'form': userForm,
+                'userProfileForm': userProfileForm,
+                'userModel': user
+            })
+
+
+class VocabularyDetailsView(DetailView):
+    model = Vocabulary
+    template_name = 'vocabulary/details/vocabulary.html'
+    context_object_name = 'vocabulary'
+
+    def get(self, *args, **kwargs):
+        vocabulary = Vocabulary.objects.get(pk=kwargs.get('pk'))
+        if not vocabulary.title_slug() == kwargs.get('slug'):
+            return redirect(vocabulary.get_absolute_url())
+
+        return super(VocabularyDetailsView, self).get(self, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super(VocabularyDetailsView, self).get_context_data(**kwargs)
+
+        # Get defined classes and properties
+        context['classes'] = VocabularyClass.objects.filter(vocabulary=context['vocabulary'])
+        context['properties'] = VocabularyProperty.objects.filter(vocabulary=context['vocabulary'])
+
+        # Load comments
+        context['comments'] = VocabularyComments.objects.filter(vocabularyCommented=context['vocabulary'])
+
+        # Check if user has voted for this vocabulary
+        if self.request.user.is_authenticated():
+            if (
+                    VocabularyRanking.objects.filter(vocabularyRanked=context['vocabulary'],
+                                                     voter=self.request.user).exists()):
+                context['has_voted'] = True
+                context['voteSubmitted'] = \
+                    VocabularyRanking.objects.filter(vocabularyRanked=context['vocabulary'], voter=self.request.user)[
+                        0].vote
+            else:
+                context['has_voted'] = False
+
+        return context
+
+
+class VocabularyClassDetailsView(DetailView):
+    model = VocabularyClass
+    template_name = 'vocabulary/details/class.html'
+    context_object_name = 'class'
+
+    def get_context_data(self, **kwargs):
+        context = super(VocabularyClassDetailsView, self).get_context_data(**kwargs)
+        # get the class object
+        class_object = context['class']
+
+        # handle domain and range pagination
+        domain_page = 1
+        range_page = 1
+
+        if self.request.GET.get('pdomain'):
+            try:
+                domain_page = int(self.request.GET.get('pdomain'))
+            except ValueError:
+                domain_page = 1
+
+        if self.request.GET.get('prange'):
+            try:
+                range_page = int(self.request.GET.get('prange'))
+            except ValueError:
+                range_page = 1
+
+        domain_paginator = Paginator(class_object.domain_of(), 10)
+        try:
+            context['domain_properties'] = domain_paginator.page(domain_page)
+        except EmptyPage:
+            context['domain_properties'] = domain_paginator.page(1)
+
+        range_paginator = Paginator(class_object.range_of(), 10)
+        try:
+            context['range_properties'] = range_paginator.page(range_page)
+        except EmptyPage:
+            context['range_properties'] = range_paginator.page(1)
+
+        return context
+
+
+class VocabularyPropertyDetailsView(DetailView):
+    model = VocabularyProperty
+    template_name = 'vocabulary/details/property.html'
+    context_object_name = 'property'
+
+
+class VocabularyCreateView(CreateView):
+    form_class = VocabularyUpdateForm
+    model = Vocabulary
+    template_name = 'vocabulary/form.html'
+    context_object_name = 'vocabulary'
+
+    def get_context_data(self, **kwargs):
+        context = super(VocabularyCreateView, self).get_context_data(**kwargs)
+
+        # Load categories
+        context['categories'] = CATEGORIES
+        context['create'] = True
+
+        return context
+
+    def post(self, *args, **kwargs):
+        if not self.request.user.is_authenticated:
+            return HttpResponseForbidden
+
+        vocabulary_form = VocabularyUpdateForm(self.request.POST)
+
+        # validate form
+        if vocabulary_form.is_valid():
+            new_vocabulary = vocabulary_form.save(commit=False)
+
+            new_vocabulary.uploader = self.request.user
+            new_vocabulary.dateCreated = datetime.now()
+            new_vocabulary.dateModified = datetime.now()
+
+            new_vocabulary.save()
+
+            return redirect("/vocabulary/" + str(new_vocabulary.pk) + "/")
+        else:
+            return render(self.request, 'vocabulary/form.html', {
+                'vocabulary': None,
+                'form': vocabulary_form,
+                'categories': CATEGORIES,
+                'create': True
+            })
+
+
+class VocabularyUpdateView(UpdateView):
+    form_class = VocabularyUpdateForm
+    model = Vocabulary
+    template_name = 'vocabulary/form.html'
+    context_object_name = 'vocabulary'
+
+    def get_object(self):
+        object = super(VocabularyUpdateView, self).get_object()
+        if object.uploader.id != self.request.user.id:
+            res = HttpResponse("Unauthorized")
+            res.status_code = 401
+            return res
+        return object
+
+    def get_context_data(self, **kwargs):
+        context = super(VocabularyUpdateView, self).get_context_data(**kwargs)
+
+        # Load categories
+        context['categories'] = CATEGORIES
+
+        return context
+
+    def post(self, *args, **kwargs):
+        oldVocabulary = Vocabulary.objects.get(pk=kwargs.get('pk'))
+
+        data = self.request.POST
+        data['dateModified'] = datetime.now()
+
+        vocabularyForm = VocabularyUpdateForm(data, instance=oldVocabulary)
+
+        # Validate form
+        if vocabularyForm.is_valid():
+            vocabularyForm.save()
+            return redirect("/vocabulary/" + kwargs.get('pk'))
+        else:
+            return render(self.request, 'vocabulary/form.html', {
+                'vocabulary': oldVocabulary,
+                'form': vocabularyForm,
+                'categories': CATEGORIES,
+            })
+
+
+class VocabularyDeleteView(DeleteView):
+    model = Vocabulary
+    template_name = 'vocabulary/delete.html'
+    context_object_name = 'vocabulary'
+    success_url = '/vocabularies/'
+
+    def get_object(self):
+        object = super(VocabularyDeleteView, self).get_object()
+        if (object.uploader.id != self.request.user.id):
+            res = HttpResponse("Unauthorized")
+            res.status_code = 401
+            return res
+        return object
+
+
+class VocabularyVisualize(DetailView):
+    model = Vocabulary
+    template_name = 'vocabulary/visualize.html'
+    context_object_name = 'vocabulary'
+
+    def get_context_data(self, **kwargs):
+        context = super(VocabularyVisualize, self).get_context_data(**kwargs)
+
+        # Parse rdf
+        g = Graph()
+        n3data = urllib.request.urlopen(context['vocabulary'].downloadUrl).read()
+        g.parse(data=n3data, format=guess_format(context['vocabulary'].downloadUrl))
+
+        # Load subjects
+        subjects = {}
+        objects = {}
+        predicates = []
+
+        for (subject, predicate, object) in g:
+            subjectName = subject.split("/")[-1].split("#")[-1]
+            predicateName = predicate.split("/")[-1].split("#")[-1]
+            objectName = object.split("/")[-1].split("#")[-1]
+
+            if (predicateName == "type") and (objectName == "Class"):
+                subjects[subject] = subjectName
+
+            if predicateName == "domain":  # property
+                objects[subject] = subjectName
+                subjects[object] = objectName
+                predicates.append((subject, predicate, object))
+
+            if predicateName == "subClassOf":  # Attribute type
+                subjects[subject] = subjectName
+                subjects[object] = objectName
+                predicates.append((subject, predicate, object))
+
+            if predicateName == "range":  # Attribute type
+                objects[subject] = subjectName + ": " + objectName
+
+        context['subjects'] = subjects
+        context['objects'] = objects
+        context['predicates'] = predicates
+
+        return context
+
+
+class VocabularyListView(ListView):
+    model = Vocabulary
+    template_name = 'search/search.html'
+    context_object_name = 'vocabularies'
+    paginate_by = 10
+
+    def get_context_data(self, **kwargs):
+        context = super(VocabularyListView, self).get_context_data(**kwargs)
+        context['page'] = 'Vocabularies'
+        context['type'] = 'vocabularies'
+
+        # Should updates be run?
+        if self.request.GET.get('update'):
+            context['check_for_updates'] = True
+
+        # in category view
+        category = self.request.GET.get('category')
+        if category:
+            context['category'] = category
+
+        return context
+
+    def get_queryset(self):
+        category = self.request.GET.get('category')
+        qs = super(VocabularyListView, self).get_queryset()
+        if category:
+            qs = qs.filter(category=category)
+        return qs.order_by('-lodRanking')
+
+
+class ClassListView(ListView):
+    model = VocabularyClass
+    template_name = 'search/search.html'
+    context_object_name = 'classes'
+    paginate_by = 10
+
+    def get_context_data(self, **kwargs):
+        context = super(ClassListView, self).get_context_data(**kwargs)
+        context['page'] = 'Classes'
+        context['type'] = 'classes'
+        if self.request.GET.get('definedBy'):
+            context['vocabulary_define'] = Vocabulary.objects.get(pk=self.request.GET.get('definedBy'))
+
+        return context
+
+    def get_queryset(self, **kwargs):
+        v_id = self.request.GET.get('definedBy')
+        if v_id:
+            qs = super(ClassListView, self).get_queryset().filter(vocabulary__id=v_id).order_by(
+                '-vocabulary__lodRanking')
+        else:
+            qs = super(ClassListView, self).get_queryset().order_by('-vocabulary__lodRanking')
+        return qs
+
+
+class PropertyListView(ListView):
+    model = VocabularyProperty
+    template_name = 'search/search.html'
+    context_object_name = 'properties'
+    paginate_by = 10
+
+    def get_context_data(self, **kwargs):
+        context = super(PropertyListView, self).get_context_data(**kwargs)
+        context['page'] = 'Properties'
+        context['type'] = 'properties'
+        if self.request.GET.get('definedBy'):
+            context['vocabulary_define'] = Vocabulary.objects.get(pk=self.request.GET.get('definedBy'))
+
+        return context
+
+    def get_queryset(self):
+        v_id = self.request.GET.get('definedBy')
+        if v_id:
+            qs = super(PropertyListView, self).get_queryset().filter(vocabulary__id=v_id).order_by(
+                '-vocabulary__lodRanking')
+        else:
+            qs = super(PropertyListView, self).get_queryset().order_by('-vocabulary__lodRanking')
+        return qs
+
+
+def categories(request):
     params = {
-        'datasources': list(DatasourceDescription.objects.all()),
-        'RDF2ANY_SERVER': get_configuration().rdf2any_server
+        'categories': CATEGORIES,
     }
 
+    return render(request, 'vocabulary/categories.html', params)
+
+
+from haystack.query import SearchQuerySet
+
+
+def vocabulary_search(request):  # view for search in vocabularies - remembers selection (vocabulary - class - property)
+    # get query parameter
+    if 'q' in request.GET:
+        q_in = request.GET['q']
+    else:
+        q_in = ''
+
+    if 'page' in request.GET:
+        try:
+            page = int(request.GET['page'])
+        except ValueError:
+            page = 1
+    else:
+        page = 1
+
+    # translate non english terms
+    if 'translate' in request.GET:
+        translate = True
+        # create a unique translator object to be used
+        from microsofttranslator import Translator
+        translator = Translator(MS_TRANSLATOR_UID, MS_TRANSLATOR_SECRET)
+        q = translator.translate(text=q_in, to_lang='en', from_lang=None)
+        if q.startswith("TranslateApiException:"):
+            q = q_in
+
+    else:
+        translate = False
+        q = q_in
+
+    # get requested type
+    if 'type' in request.GET:
+        tp = request.GET['type']
+    else:
+        tp = "vocabularies"
+
+    # load the query set
+    if tp == "vocabularies":
+        sqs = SearchQuerySet().models(Vocabulary).filter(content__contains=q)
+    elif tp == "classes":
+        sqs = SearchQuerySet().models(VocabularyClass).filter(content__contains=q)
+    elif tp == "properties":
+        sqs = SearchQuerySet().models(VocabularyProperty).filter(content__contains=q)
+    else:
+        return Http404
+
+    # remove non existing objects (may have been deleted but are still indexed)
+    obj_set = []
+    for res in sqs:
+        if res.object:
+            obj_set.append(res)
+
+    # search only inside a vocabulary
+    if request.GET.get('definedBy'):
+        defined_by = int(request.GET.get('definedBy'))
+        obj_set_old = obj_set[:]
+        obj_set = []
+        for res in obj_set_old:
+            try:
+                if res.object.vocabulary.id == defined_by:
+                    obj_set.append(res)
+            except AttributeError:
+                continue  # only return classes or properties
+    else:
+        defined_by = None
+
+    # order the results
+    if tp == "vocabularies":
+        qs = sorted(obj_set, key=attrgetter('object.lodRanking'), reverse=True)  # order objects manually
+    elif tp == "classes":
+        qs = sorted(obj_set, key=attrgetter('object.vocabulary.lodRanking'), reverse=True)
+    elif tp == "properties":
+        qs = sorted(obj_set, key=attrgetter('object.vocabulary.lodRanking'), reverse=True)
+
+    # paginate the results
+    paginator = Paginator(qs, 15)
+    page_object = paginator.page(page)
+
+    # pass parameters and render the search template
+    params = {'q': q, 'type': tp, 'query': True, 'translate': translate,
+              'page_obj': page_object, 'url': "/vocabularies/?q=" + q + '&type=' + tp}
+
+    if defined_by:
+        params['vocabulary_define'] = Vocabulary.objects.get(pk=defined_by)
+
+    return render(request, 'search/search.html', params)
+
+
+def autocomplete(request):
+    sqs = SearchQuerySet().autocomplete(content_auto=request.GET.get('q', ''))[:5]
+    suggestions = [result.title for result in sqs]
+    # Make sure you return a JSON object, not a bare list.
+    # Otherwise, you could be vulnerable to an XSS attack.
+    the_data = json.dumps({
+        'results': suggestions
+    })
+    return HttpResponse(the_data, content_type='application/json')
+
+
+def rateDataset(request, pk, vt):
+    vocid = int(pk)
+    voteSubmitted = int(vt)
+
+    if request.is_ajax():
+        dataJson = []
+        res = {}
+
+        if not request.user.is_authenticated():
+            res['result'] = "You must be logged in to rate."
+            code = 403
+        else:
+            if (voteSubmitted < 1) or (voteSubmitted > 5):
+                res['result'] = "Invalid vote " + voteSubmitted + ", votes must be between 1 and 5."
+                code = 401
+            else:
+                if not Vocabulary.objects.get(id=vocid):
+                    res['result'] = "Vocabulary does not exist."
+                    code = 404
+                else:
+                    if VocabularyRanking.objects.filter(vocabularyRanked=Vocabulary.objects.get(id=vocid),
+                                                        voter=request.user).exists():
+                        res['result'] = "You have already ranked this vocabulary."
+                        code = 403
+                    else:
+                        # Create ranking object
+                        vocabulary = Vocabulary.objects.get(id=vocid)
+                        ranking = VocabularyRanking.objects.create(voter=request.user, vocabularyRanked=vocabulary,
+                                                                   vote=voteSubmitted)
+                        ranking.save()
+                        # Edit vocabulary ranking
+                        vocabulary.prevent_default_make = True
+                        vocabulary.votes = vocabulary.votes + 1
+                        vocabulary.score = vocabulary.score + voteSubmitted
+                        vocabulary.save()
+                        res['result'] = "Your vote was submitted."
+                        code = 200
+
+        dataJson.append(res)
+        data = json.dumps(dataJson)
+    else:
+        data = 'fail'
+        code = 401
+
+    # Create the response
+    mimetype = 'application/json'
+    response = HttpResponse(data, mimetype)
+    response.status_code = code
+    return response
+
+
+def postComment(request, pk):
+    vocid = int(pk)
+    commentTxt = request.POST['comment']
+
+    if request.is_ajax():
+        dataJson = []
+        res = {}
+
+        if (not Vocabulary.objects.get(id=vocid)):
+            res['result'] = "Vocabulary does not exist."
+            code = 404
+        else:
+            if (not request.user.is_authenticated()):
+                res['result'] = "You must be logged in to comment."
+                code = 403
+            else:
+                # Create and store the comment
+                comment = VocabularyComments.objects.create(commentText=commentTxt,
+                                                            vocabularyCommented=Vocabulary.objects.get(id=vocid),
+                                                            user=request.user, timePosted=datetime.now())
+                comment.save()
+                res['result'] = "Your comment was submitted."
+                code = 200
+
+        dataJson.append(res)
+        data = json.dumps(dataJson)
+    else:
+        data = 'fail'
+        code = 401
+
+    # Create the response
+    mimetype = 'application/json'
+    response = HttpResponse(data, mimetype)
+    response.status_code = code
+    return response
+
+
+def downloadRDF(request, pk, type):
+    vocid = int(pk)
+
+    voc = get_object_or_404(Vocabulary, pk=vocid)
+
+    if not type in ("xml", "n3", "nt"):
+        return HttpResponseNotFound("Invalid type.")
+
+    # Convert rdf to the appropriate type
+    g = Graph()
+    n3data = urllib.request.urlopen(voc.downloadUrl).read()
+    g.parse(data=n3data, format=guess_format(voc.downloadUrl))
+
+    # Return response
+    mimetype = "application/octet-stream"
+    response = HttpResponse(g.serialize(format=type))
+    response["Content-Disposition"] = "attachment; filename=%s.%s" % (voc.title_slug(), type)
+    return response
+
+
+# Datasources
+def datasources(request):
+    params = {}
+    params['page'] = 'Datasources'
+    params['datasources'] = DatasourceDescription.objects.all().order_by('-updatedOn')
+
+    return render(request, 'datasource/index.html', params)
+
+
+# Default datasources - suggestions
+def datasources_suggest(request):
+    params = {
+        'page': 'Datasources',
+        'suggested_datasources': DefaultDatasources.objects.all(),
+    }
+
+    return render(request, 'datasource/suggest.html', params)
+
+
+# Add a specific suggestion to the datasources
+def datasource_suggestion_add(request, pk):
+    suggestion = get_object_or_404(DefaultDatasources, pk=pk)
+    if suggestion.is_endpoint():
+        # find the slug
+        sname = slugify(unidecode(suggestion.title))
+        # get user
+        created_by = request.user if request.user.is_authenticated() else None
+
+        dt = DatasourceDescription.objects.create(title=suggestion.title, uri=suggestion.url, is_public=True,
+                                                  name=sname, createdBy=created_by,
+                                                  createdOn=datetime.now(), updatedOn=datetime.now())
+
+        return HttpResponse('Datasource created: ' + str(dt.pk))
+    else:
+        return HttpResponse(content='Operation not supported', content_type='text/plain', status=500)
+
+
+def datasourceCreate(request):
+    params = {'types': {('public', 'Remote'), ('private', 'Local')},
+              'datatypes': {('csv', 'CSV file'), ('rdb', 'Database (relational)'), ('xls', 'Excel file'),
+                            ('rdf', 'RDF file')},
+              'action': "create"}
+    params['typeSelect'] = forms.Select(choices=params['types']).render('type', '', attrs={"id": 'id_type', })
+    params['datatypeSelect'] = forms.Select(choices=params['datatypes']).render('datatype', '',
+                                                                                attrs={"id": 'id_datatype', })
+
+    if request.POST:  # request to create a public datasource or move to appropriate tool for a private one
+
+        if request.POST.get("type") == "private" and (
+                        request.POST.get("datatype") == "csv" or request.POST.get("datatype") == "rdb"):
+            return redirect("/transformation/csv/step/1")
+        elif request.POST.get("type") == "private":
+            return redirect("/datasource/create/" + request.POST.get("datatype"))
+        else:
+            if not request.POST.get("title"):  # title is obligatory
+                params["error"] = "A datasource title must be specified"
+                return render(request, 'datasource/form.html', params)
+
+            if not request.POST.get("endpoint"):  # endpoint is obligatory
+                params["error"] = "A public sparql enpoint must be specified"
+                return render(request, 'datasource/form.html', params)
+
+            # Try to verify that the endpoint uri exists
+            validate = URLValidator()
+            try:
+                validate(request.POST.get("endpoint"))
+            except ValidationError as e:
+                params["error"] = "Invalid sparql enpoint (url does not exist) - " + e
+                return render(request, 'datasource/form.html', params)
+
+            # find the slug
+            sname = slugify(unidecode(request.POST.get("title")))
+
+            # get user
+            created_by = request.user if request.user.is_authenticated() else None
+
+            # check for RSS
+            if request.POST.get("is_rss"):
+                # case rss feed
+                uri = get_configuration().private_sparql_endpoint + "/rdf-graphs/" + sname
+                new_feed = RSSInfo.objects.create(url=request.POST.get("endpoint"))
+                dt = DatasourceDescription.objects.create(title=request.POST.get("title"), is_public=False,
+                                                          name=sname, rss_info=new_feed,
+                                                          uri=uri, createdOn=datetime.now(), updatedOn=datetime.now(),
+                                                          createdBy=created_by)
+                dt.update_rss()
+            else:
+                # default case - sparql endpoint
+                DatasourceDescription.objects.create(title=request.POST.get("title"), is_public=True,
+                                                     name=sname, uri=request.POST.get("endpoint"),
+                                                     createdOn=datetime.now(), updatedOn=datetime.now(),
+                                                     createdBy=created_by)
+
+            # go to view all datasources
+            return redirect("/datasources/")
+    else:  # create form elements and various categories
+        return render(request, 'datasource/form.html', params)
+
+
+def datasourceReplace(request, name):
+    if not DatasourceDescription.objects.filter(name=name):  # datasource does not exist
+        return redirect("/datasources/")
+
+    datasource = DatasourceDescription.objects.filter(name=name)[0]
+
+    # private datasource
+    if (not datasource.is_public) and (not datasource.rss_info):
+        return redirect("/datasource/" + name + "/replace/rdf/")
+
+    params = {'datasource': datasource}
+
+    if request.POST:
+        if not request.POST.get("title"):  # title is obligatory
+            params["error"] = "A datasource title must be specified"
+            return render(request, 'datasource/replace_remote.html', params)
+
+        datasource.title = request.POST.get("title")
+        datasource.name = slugify(unidecode(datasource.title))
+
+        if not request.POST.get("endpoint"):  # endpoint is obligatory
+            params["error"] = "A public sparql enpoint must be specified"
+            return render(request, 'datasource/replace_remote.html', params)
+
+        # Try to verify that the endpoint uri exists
+        validate = URLValidator()
+        try:
+            validate(request.POST.get("endpoint"))
+        except ValidationError as e:
+            params["error"] = "Invalid sparql enpoint (url does not exist) - " + e
+            return render(request, 'datasource/replace_remote.html', params)
+
+        if datasource.is_public:
+            # endpoint
+            datasource.uri = request.POST.get("endpoint")
+            datasource.save()  # save changed object to the database
+        else:
+            # rss feed
+            datasource.rss_info.url = request.POST.get("endpoint")
+            datasource.rss_info.save()  # save changed object to the database
+            datasource.update_rss()  # update the rss contents
+
+        return redirect("/datasources/")
+    else:
+        return render(request, 'datasource/replace_remote.html', params)
+
+
+def clear_chunk(c, newlines):
+    if newlines:
+        last_dot = c.rfind('.\n') + 1
+    else:
+        # detect where the last tripple ends
+        i = 0
+
+        in_dquote = False
+        in_entity = False
+        ignore_next = False
+        last_dot = -1
+
+        for char in c:
+            if not ignore_next:
+                if char == '<' and (not in_dquote):
+                    in_entity = True
+                elif char == '>' and (not in_dquote):
+                    in_entity = False
+                elif char == '"':
+                    in_dquote = not in_dquote
+                elif (char == '.') and (not in_dquote) and (not in_entity):
+                    last_dot = i + 1
+
+            if char == '\\':
+                ignore_next = True
+            else:
+                ignore_next = False
+
+            i += 1
+
+    # seperate c1 & track the remainder
+    if last_dot >= 0:
+        o = c[:last_dot]
+        rem = c[last_dot:]
+
+        return o, rem
+    else:  # segmentation failed
+        return c, ''
+
+
+def datasourceCreateRDF(request):
+    if request.POST:
+        params = {
+            'title': request.POST.get('title'),
+            'format': request.POST.get('format'),
+            'newlines': request.POST.get('newlines'),
+            'rdfdata': request.POST.get("rdfdata"),
+            'rdffile': request.FILES.get("rdffile"),
+        }
+
+        # Get the posted rdf data
+        rem = ''
+        newlines = request.POST.get('newlines', None)
+        title = request.POST.get("title", None)
+        if not title:
+            params['form_error'] = 'Title is required'
+
+            return render(request, 'datasource/create_rdf.html', params)
+
+        a = datetime.now().replace(microsecond=0)
+        if "rdffile" in request.FILES:
+            # get the first chunk
+            inp_file = request.FILES["rdffile"].file
+            current_chunk = inp_file.read(RDF_CHUNK_SIZE).decode('utf-8')
+            if len(current_chunk) == RDF_CHUNK_SIZE:
+                current_chunk, rem = clear_chunk(current_chunk, newlines)
+        else:
+            current_chunk = request.POST.get("rdfdata")
+            inp_file = False
+
+        # Detect prefixes
+        prefixes = []
+        for line in current_chunk.split('\n'):
+            if line.startswith('@prefix'):
+                prefixes.append(line)
+
+        # Call the corresponding web service
+        headers = {'accept': 'application/json'}
+        data = {"content": current_chunk, "title": title}
+        if request.POST.get('format'):
+            data['format'] = request.POST.get('format')
+
+        callAdd = requests.post(LINDA_HOME + "api/datasource/create/", headers=headers,
+                                data=data)
+
+        j_obj = json.loads(callAdd.content.decode('utf-8'))
+        if j_obj['status'] == '200':
+            # get new datasource name
+            dt_name = j_obj['name']
+
+            i = 0
+            while inp_file:  # read all additional chunks
+                chunk = inp_file.read(RDF_CHUNK_SIZE).decode('utf-8')
+                if chunk == "":  # end of file
+                    break
+
+                i += 1
+                print(i)
+                # add the previous remainder & clear again
+                current_chunk, rem = clear_chunk(rem + chunk, newlines)
+                data = {"content": '\n'.join(prefixes) + '\n' + current_chunk}
+                if request.POST.get('format'):
+                    data['format'] = request.POST.get('format')
+
+                # request to update
+                callAppend = requests.post(LINDA_HOME + "api/datasource/" + dt_name + "/replace/?append=true", headers=headers,
+                                    data=data)
+
+            if rem:  # a statement has not been pushed
+                data = {"content": '\n'.join(prefixes) + '\n' + rem}
+                if request.POST.get('format'):
+                    data['format'] = request.POST.get('format')
+                callAppend = requests.post(LINDA_HOME + "api/datasource/" + dt_name + "/replace/?append=true", headers=headers,
+                                    data=data)
+
+            b = datetime.now().replace(microsecond=0)
+            print(title + ':')
+            print(b-a)
+
+            return redirect("/datasources")
+        else:
+            params['form_error'] = j_obj['message']
+            return render(request, 'datasource/create_rdf.html', params)
+    else:
+        params = {
+            'title': '',
+            'rdfdata': ''
+        }
+
+        return render(request, 'datasource/create_rdf.html', params)
+
+
+def datasourceReplaceRDF(request, dtname):
+    if request.POST:
+        params = {
+            'title': request.POST.get('title'),
+            'format': request.POST.get('format'),
+            'newlines': request.POST.get('newlines'),
+            'rdfdata': request.POST.get("rdfdata"),
+            'rdffile': request.FILES.get("rdffile"),
+            'append': request.POST.get('append', False)
+        }
+
+        title = params['title']
+        if not title:
+            params['form_error'] = 'Title is required'
+
+            return render(request, 'datasource/replace_rdf.html', params)
+
+        newlines = params['newlines']
+        append = params['append']
+
+        # Get the posted rdf data
+        if "rdffile" in request.FILES:
+            inp_file = params['rdffile'].file
+            current_chunk = inp_file.read(RDF_CHUNK_SIZE).decode('utf-8')
+            current_chunk, rem = clear_chunk(current_chunk, newlines)
+        else:
+            current_chunk = params['rdfdata']
+
+        # Check if appending or completely replacing
+        if append:
+            append_str = '?append=true'
+        else:
+            append_str = ''
+
+        # Call the corresponding web service
+        headers = {'accept': 'application/json'}
+        data = {"content": current_chunk, }
+        if request.POST.get('format'):
+            data['format'] = request.POST.get('format')
+
+        callReplace = requests.post(LINDA_HOME + "api/datasource/" + dtname + "/replace/" + append_str, headers=headers,
+                                    data=data)
+
+        j_obj = json.loads(callReplace.content.decode('utf-8'))
+        if j_obj['status'] == '200':
+            # update data source information
+            dt_object = DatasourceDescription.objects.filter(name=dtname)[0]
+            dt_object.title = request.POST.get("title")
+            dt_object.save()
+            return redirect("/datasources/")
+        else:
+            params['form_error'] = j_obj['message']
+            return render(request, 'datasource/replace_rdf.html', params)
+    else:
+        params = {}
+        dt_object = DatasourceDescription.objects.filter(name=dtname)[0]
+        params['title'] = dt_object.title
+        params['append'] = True
+
+        return render(request, 'datasource/replace_rdf.html', params)
+
+
+def datasourceDownloadRDF(request, dtname):
+    mimetype = "text/rdf+n3"
+    callDatasource = requests.get(LINDA_HOME + "api/datasource/" + dtname + "/?format=" + urlquote(mimetype))
+    data = json.loads(callDatasource.text)['content']
+
+    return HttpResponse(data, mimetype)
+
+
+def datasourceDelete(request, dtname):
+    # get the datasource with this name
+    datasource = DatasourceDescription.objects.filter(name=dtname)[0]
+
+    if request.POST:
+        if datasource.is_public:  # just delete the datasource description
+            datasource.delete()
+            return redirect("/datasources/")
+        else:  # also remove data from the sesame
+            headers = {'accept': 'application/json'}
+            callDelete = requests.post(LINDA_HOME + "api/datasource/" + dtname + "/delete/", headers=headers)
+            j_obj = json.loads(callDelete.content.decode('utf-8'))
+            if j_obj['status'] == '200':
+                return redirect("/datasources/")
+            else:
+                params = {}
+
+                params['form_error'] = j_obj['message']
+
+                return render(request, 'datasource/delete.html', params)
+    else:
+        params = {}
+        params['title'] = datasource.title
+
+        return render(request, 'datasource/delete.html', params)
+
+
+# Query builder
+def queryBuilder(request):
+    params = {}
+    params['datasources'] = list(DatasourceDescription.objects.all())
     params['datasources'].insert(0,
                                  DatasourceDescription(title="All private data dources", name="all", is_public=False
                                                        , uri=LINDA_HOME + "sparql/all/", createdOn=datetime.today(),
                                                        updatedOn=datetime.today()))
 
-    return params
+    if 'dt_id' in request.GET:
+        params['datasource_default'] = DatasourceDescription.objects.filter(name=request.GET.get('dt_id'))[0]
+
+    params['PRIVATE_SPARQL_ENDPOINT'] = get_configuration().private_sparql_endpoint
+    params['RDF2ANY_SERVER'] = get_configuration().rdf2any_server
+    params['mode'] = "builder"
+    params['page'] = 'QueryBuilder'
+
+    return render(request, 'query-builder/index.html', params)
 
 
-# Home page
-def index(request):
-    params = designer_defaults()
-    endpoint = request.GET.get('endpoint')
-    dt_id = request.GET.get('dt_id')
+# Temporary call to execute a SparQL query
+@csrf_exempt
+def execute_sparql(request):
+    # Make sure a datasource name is specified
+    if not request.POST.get('dataset'):
+        return HttpResponse('Unspecified datasource.', status=400)
 
-    if endpoint:
-        params['datasource_default'] = endpoint
-    elif dt_id:
-        params['datasource_default'] = DatasourceDescription.objects.get(name=request.GET.get('dt_id'))
-        if not params['datasource_default']:
-            return Http404
+    query = request.POST.get('query')
 
-    return render(request, "builder_advanced/index.html", params)
+    # Set a limit on the results if not set by the query itself
+    lim_pos = re.search('LIMIT', query, re.IGNORECASE)
+    if not lim_pos:
+        query += ' LIMIT 100'
 
-
-# Load an existing design
-def load_design(request, pk):
-    params = designer_defaults()
-    params['query'] = Query.objects.get(pk=pk)
-
-    if not params['query']:
-        raise Http404
-
-    return render(request, "builder_advanced/index.html", params)
-
-
-# API calls
-
-
-# get endpoint by data source name
-def get_endpoint_from_dt_name(dt_name):
-    '''
-    if dt_name != "all":  # search in all private data source
-        datasources = DatasourceDescription.objects.filter(name=dt_name)
-
-        if not datasources:  # data source not found by name
-            raise Http404
-
-        return datasources[0].get_endpoint()
+    # Add an offset to facilitate pagination
+    if request.POST.get('offset'):
+        offset = request.POST.get('offset')
+        query += ' OFFSET ' + str(offset)
     else:
-        return get_configuration().private_sparql_endpoint
-    '''
-    return dt_name
+        offset = 0
+
+    # Make the query, add info about the offset and return the results
+    response = sparql_query_json(request.POST.get('dataset'), query)
+    if response.status_code == 200:
+        # avoid erroneous \U characters -- invalid json
+        response_safe = response.content.decode('utf-8')  # .replace(b'\U', '')
+        if response_safe.startswith("MALFORMED QUERY:"):
+            return HttpResponse(response.content, status=500)
+
+        try:
+            data = json.loads(response_safe)
+        except ValueError:
+            return HttpResponse('Invalid JSON response from server: ' + response.content, status=500)
+        data['offset'] = offset
+
+        return HttpResponse(json.dumps(data), content_type="application/json")
+    else:
+        return HttpResponse(response.content, status=response.status_code)
 
 
-# Execute a SparQL query on an endpoint and return json response
-def sparql_query_json(endpoint, query, timeout=None, append_slash=False):
+# redirect to appropriate visualization page
+def query_visualize(request, pk):
+    q = get_object_or_404(Query, pk=pk)
+    return redirect(q.visualization_link())
+
+# Proxy calls - exist as middle-mans between LinDA query builder page and the Query Builder
+@csrf_exempt
+def get_qbuilder_call(request, link):
+    total_link = get_configuration().query_builder_server + "query/" + link
+    if request.GET:
+        total_link += "?"
+    for param in request.GET:
+        total_link += param + "=" + urlquote(request.GET[param]) + "&"
+
+    if link == 'execute_sparql':
+        data = requests.post(total_link, data=request.POST)
+    else:
+        data = requests.get(total_link)
+
+    return HttpResponse(data, data.headers['content-type'])
+
+
+# middle-mans between LinDA query builder page and the RDF2Any server
+@csrf_exempt
+# TODO: Fix cache
+# @cache_page_with_prefix(60*15, lambda request: md5(request.get_full_path()).hexdigest())
+def get_rdf2any_call(request, link):
+    total_link = get_configuration().rdf2any_server + 'rdf2any/' + link
+    if request.GET:
+        total_link += "?"
+    for param in request.GET:
+        total_link += param + "=" + urlquote(request.GET[param]) + "&"
+
+    data = requests.get(total_link)
+    if data.status_code == 200:
+        return HttpResponse(data, data.headers['content-type'])
+    else:
+        return HttpResponse(content=data.text, status=data.status_code)
+
+
+# Api view
+
+# Get a list with all uses - used in autocomplete
+def api_users(request):
+    if request.is_ajax():
+        q = request.GET.get('term', '')
+        usernameList = User.objects.filter(username__icontains=q)
+        last_nameList = User.objects.filter(first_name__icontains=q)
+        first_nameList = User.objects.filter(first_name__icontains=q)
+        userList = usernameList | first_nameList | last_nameList
+        results = []
+        for user in userList[:20]:
+            user_json = {}
+            user_json['id'] = user.id
+            if user.get_full_name():
+                user_json['label'] = user.get_full_name() + ' (' + user.username + ')'
+            else:
+                user_json['label'] = user.username
+            user_json['value'] = user.username
+            results.append(user_json)
+
+        data = json.dumps(results)
+    else:
+        data = 'fail'
+    mimetype = 'application/json'
+    return HttpResponse(data, mimetype)
+
+
+# Return the default description of a sparql query
+def default_description(request):
+    # get query and datasource
+    datasource = request.GET.get('datasource', '')
+    query = request.GET.get('query', '')
+
+    if not query or not datasource:
+        return Http404
+
+    # create a description and save it to a json object
+    results = {'description': create_query_description(datasource, query)}
+    data = json.dumps(results)
+
+    # send the response
+    return HttpResponse(data, 'application/json')
+
+
+# Return a list with all created datasources
+@csrf_exempt
+def api_datasources_list(request):
+    results = []
+    for source in DatasourceDescription.objects.all():
+        source_info = {}
+
+        source_info['name'] = source.name
+        source_info['endpoint'] = source.get_endpoint()
+        source_info['title'] = source.title
+        source_info['public'] = source.is_public
+
+        results.append(source_info)
+
+    data = json.dumps(results)
+    mimetype = 'application/json'
+    return HttpResponse(data, mimetype)
+
+
+# Create a new datasource with some rdf data
+@csrf_exempt
+def api_datasource_create(request):
+    results = {}
+    if request.method == "POST":  # request must be POST
+        # check if datasource already exists
+        if DatasourceDescription.objects.filter(title=request.POST.get("title")).exists():
+            results['status'] = '403'
+            results['message'] = "Datasource already exists."
+        else:
+            # find the slug
+            sname = slugify(unidecode(request.POST.get("title")))
+
+            # get rdf type
+            if request.POST.get("format"):
+                rdf_format = request.POST.get("format")
+            else:
+                rdf_format = 'application/rdf+xml'  # rdf+xml by default
+
+            data = request.POST.get("content").encode('utf-8')
+
+            # make REST api call to add rdf data
+            headers = {'accept': 'application/rdf+xml', 'content-type': rdf_format, 'charset': 'utf-8'}
+            callAdd = requests.post(get_configuration().private_sparql_endpoint + '/rdf-graphs/' + sname, headers=headers,
+                                    data=data)
+
+            if callAdd.text == "":
+                # get user
+                created_by = request.user if request.user.is_authenticated() else None
+
+                # create datasource description
+                DatasourceDescription.objects.create(title=request.POST.get("title"),
+                                                     name=sname,
+                                                     uri=get_configuration().private_sparql_endpoint + "/rdf-graphs/" + sname,
+                                                     createdOn=datetime.now(), updatedOn=datetime.now(),
+                                                     createdBy=created_by)
+
+                results['status'] = '200'
+                results['message'] = 'Datasource created succesfully.'
+                results['name'] = sname
+                results['uri'] = get_configuration().private_sparql_endpoint + "/rdf-graphs/" + sname
+            else:
+                results['status'] = callAdd.status_code
+                results['message'] = 'Error storing rdf data: ' + callAdd.text
+    else:
+        results['status'] = '403'
+        results['message'] = 'POST method must be used to create a datasource.'
+
+    data = json.dumps(results)
+    mimetype = 'application/json'
+    return HttpResponse(data, mimetype, status=int(results['status']))
+
+
+# Retrieve all data from datasource in specified format
+@csrf_exempt
+def api_datasource_get(request, dtname):
+    results = {}
+
+    # check if datasource exists
+    if DatasourceDescription.objects.filter(name=dtname).exists():
+        # get rdf type
+        if request.GET.get("format"):
+            rdf_format = request.GET.get("format")
+        else:
+            rdf_format = 'application/rdf+xml'  # rdf+xml by default
+
+        # make REST api call to get graph
+        headers = {'accept': rdf_format, 'content-type': rdf_format}
+        callReplace = requests.get(get_configuration().private_sparql_endpoint + '/rdf-graphs/' + dtname, headers=headers)
+        results['status'] = '200'
+        results['message'] = "Datasource retrieved successfully"
+        results['content'] = callReplace.text
+    else:
+        results['status'] = '403'
+        results['message'] = "Datasource does not exist."
+
+    data = json.dumps(results)
+    mimetype = 'application/json'
+    return HttpResponse(data, mimetype, status=int(results['status']))
+
+# Replace all data from datasource with new rdf data
+@csrf_exempt
+def api_datasource_replace(request, dtname):
+    results = {}
+    if request.POST:  # request must be POST
+        # check if datasource exists
+        if DatasourceDescription.objects.filter(name=dtname).exists():
+            # get rdf type
+            if request.POST.get("format"):
+                rdf_format = request.POST.get("format")
+            else:
+                rdf_format = 'application/rdf+xml'  # rdf+xml by default
+
+            data = request.POST.get("content").encode('utf-8')
+
+            # make REST api call to update graph
+            headers = {'accept': 'application/rdf+xml', 'content-type': rdf_format}
+
+            if request.GET.get('append'):  # append data to the data source
+                call = requests.post(get_configuration().private_sparql_endpoint + '/rdf-graphs/' + dtname, headers=headers,
+                                       data=data)
+            else:  # completely replace the data source
+                call = requests.put(get_configuration().private_sparql_endpoint + '/rdf-graphs/' + dtname, headers=headers,
+                                       data=data)
+
+            if call.text == "":
+                # update datasource database object
+                source = DatasourceDescription.objects.filter(name=dtname)[0]
+                source.updatedOn = datetime.now()
+                source.save()
+
+                results['status'] = '200'
+                results['message'] = 'Datasource updated succesfully.' + call.text
+            else:
+                results['status'] = call.status_code
+                results['message'] = 'Error replacing rdf data: ' + call.text
+
+        else:
+            results['status'] = '404'
+            results['message'] = "Datasource does not exist."
+    else:
+        results['status'] = '403'
+        results['message'] = 'POST method must be used to update a datasource.'
+
+    data = json.dumps(results)
+    mimetype = 'application/json'
+    return HttpResponse(data, mimetype, status=int(results['status']))
+
+
+# Rename a datasource
+def api_datasource_rename(request, dtname):
+    if request.method == 'POST':
+        datasource = get_object_or_404(DatasourceDescription, name=dtname)
+        new_title = request.POST.get('new_title')
+        if not new_title:
+            return HttpResponseForbidden('New datasource title must not be empty')
+
+        if DatasourceDescription.objects.filter(title=new_title).exclude(name=dtname):
+            return HttpResponseForbidden('A datasource with this name already exists')
+
+        datasource.title = new_title
+        datasource.name = slugify(unidecode(new_title))
+        datasource.save()
+
+        return HttpResponse(datasource.name)
+    else:
+        return HttpResponseForbidden('Method must be POST')
+
+
+# Delete an RDF datasource
+@csrf_exempt
+def api_datasource_delete(request, dtname):
+    results = {}
+    if request.method == 'POST':  # request must be POST
+
+        # check if datasource exists
+        if DatasourceDescription.objects.filter(name=dtname).exists():
+            # make REST api call to delete graph
+            callDelete = requests.delete(get_configuration().private_sparql_endpoint + '/rdf-graphs/' + dtname)
+
+            if callDelete.text == "":
+                results['status'] = '200'
+                results['message'] = 'Datasource deleted succesfully.'
+
+                # delete object from database
+                source = DatasourceDescription.objects.filter(name=dtname)[:1].get()
+                source.delete()
+            else:
+                results['status'] = callDelete.status_code
+                results['message'] = 'Error deleting datasource: ' + callDelete.text
+        else:
+            results['status'] = '404'
+            results['message'] = "Datasource does not exist."
+
+    else:
+        results['status'] = '403'
+
+        results['message'] = 'POST method must be used to delete a datasource.'
+
+    data = json.dumps(results)
+    mimetype = 'application/json'
+    return HttpResponse(data, mimetype, status=int(results['status']))
+
+
+# Get a query for a specific private datasource and execute it
+@csrf_exempt
+def datasource_sparql(request, dtname):  # Acts as a "fake" seperate sparql endpoint for each datasource
+    results = {}
+
+    # Get query - accepts GET or POST requests
+    q = request.GET.get("query")
+    if not q:
+        q = request.POST.get("query")
+
+    query = urllib.parse.unquote_plus(q)
+
+    if dtname != "all":  # search in all private datasource
+        datasources = DatasourceDescription.objects.filter(name=dtname)
+
+        if not datasources:  # datasource not found by name
+            results['status'] = '404'
+            results['message'] = "Datasource does not exist."
+
+            data = json.dumps(results)
+            mimetype = 'application/json'
+            return HttpResponse(data, mimetype)
+
+        datasource = datasources[0]
+
+        if datasource.is_public:  # public data sources
+            results['status'] = '404'
+            results['message'] = "Invalid operation."
+
+            data = json.dumps(results)
+            mimetype = 'application/json'
+            return HttpResponse(data, mimetype)
+        else:  # private data sources
+            # Find where to add the FROM clause
+
+            pos = re.search("WHERE", query, re.IGNORECASE).start()
+            query = query[:pos] + " FROM <" + datasource.uri + "> " + query[pos:]
+            # query = query.replace('?object rdf:type ?class', '')
+
+    # choose results format
+    result_format = 'json'  # default format
+    if request.GET.get('format'):
+        result_format = request.GET.get('format')
+
     # encode the query
     query_enc = urlquote(query, safe='')
 
-    # ClioPatria bugfix
-    if append_slash and endpoint[-1] != '/':
-        endpoint += '/'
-
-    # get query results and turn them into json
-    # with &output=json we support non-standard endpoints like IMDB & World Factbook
+    # get query results
     response = requests.get(
-        endpoint + "?Accept=" + urlquote(
-            "application/sparql-results+json") + "&query=" + query_enc + "&format=json&output=json", timeout=timeout)
+        get_configuration().private_sparql_endpoint + "?Accept=" + urlquote(
+            "application/sparql-results+" + result_format) + "&query=" + query_enc)
 
-    # ClioPatria bugfix
-    if not append_slash:
+    # return the response
+    return HttpResponse(response.text, response.headers['content-type'])
+
+
+class QueryListView(ListView):
+    model = Query
+    template_name = 'queries/index.html'
+    context_object_name = 'queries'
+
+    def get_context_data(self, **kwargs):
+        context = super(QueryListView, self).get_context_data(**kwargs)
+        context['queries'] = context['queries'].order_by('-updatedOn')
+        context['page'] = 'Queries'
+        return context
+
+
+# Save a query
+def query_save(request):
+    # get POST variables
+    endpoint = request.POST.get("endpoint")
+    dt = datasource_from_endpoint(endpoint)
+
+    if dt:
+        endpoint_name = request.POST.get("endpointName", dt.title)
+    else:
+        endpoint_name = request.POST.get("endpointName", endpoint)
+
+    query = request.POST.get("query")
+    description = request.POST.get("description", create_query_description(endpoint_name, query))
+    design_json = request.POST.get("design")
+
+    # save the json design
+    if design_json:
+        design = Design.objects.create(data=design_json)
+    else:
+        design = None
+
+    # get user
+    created_by = request.user if request.user.is_authenticated() else None
+
+    # create the query object
+    query = Query.objects.create(endpoint=endpoint, sparql=query,
+                                 description=description, createdOn=datetime.now(), updatedOn=datetime.now(),
+                                 design=design, createdBy=created_by)
+
+    # return query info
+    return HttpResponse(json.dumps({'id': query.id, 'description': query.description}), 'application/json')
+
+
+# Update an existing query
+def query_update(request, pk):
+    # get query object
+    q_obj = get_object_or_404(Query, pk=pk)
+
+    # get changed fields
+    endpoint = request.POST.get("endpoint", q_obj.endpoint)
+    endpoint_name = request.POST.get("endpointName", datasource_from_endpoint(endpoint).title)
+    query = request.POST.get("query", q_obj.sparql)
+    description = request.POST.get("description", create_query_description(endpoint_name, query))
+
+    # update its properties
+    q_obj.sparql = query
+    q_obj.endpoint = endpoint
+    q_obj.endpoint_name = endpoint_name
+    q_obj.updatedOn = datetime.now()
+    q_obj.description = description
+
+    # update (or create if it did not exist) the query design json
+    design_json = request.POST.get("design")
+    if design_json != 'DEFAULT':  # use default to avoid updating the design
+        if design_json:
+            if q_obj.design:
+                q_obj.design.data = design_json
+                q_obj.design.save()
+            else:
+                q_obj.design = Design.objects.create(data=design_json)
+        else:
+            if q_obj.design:
+                q_obj.design.delete()
+                q_obj.design = None
+
+    # Save changes
+    q_obj.save()
+
+    # return query info
+    return HttpResponse(json.dumps({'id': q_obj.id, 'description': q_obj.description}), 'application/json')
+
+
+# Clone an existing query
+def query_clone(request, pk):
+    q_obj = get_object_or_404(Query, pk=pk)
+
+    # set key to None to save again
+    q_obj.pk = None
+
+    # set new description
+    cnt = 1
+    desc = q_obj.description + ' (Copy 1)'
+    while Query.objects.filter(description=desc):
+        cnt += 1
+        desc = q_obj.description + ' (Copy ' + str(cnt) + ')'
+
+    q_obj.description = desc
+    # for queries from query designer also replicate the design
+    if q_obj.design:
+        q_obj.design.pk = None
+        q_obj.design.save()
+
+    # save the clone
+    q_obj.save()
+
+    return HttpResponse('')
+
+
+# Delete an existing query
+def query_delete(request, pk):
+    # get query object and delete it
+    q_obj = get_object_or_404(Query, pk=pk)
+    q_obj.delete()
+
+    return HttpResponse('')
+
+
+# Proxy call - exists as middle-man between local LinDA server and the Vocabulary Repository
+@csrf_exempt
+def vocabulary_repo_api_call(request, link):
+    total_link = get_configuration().vocabulary_repository + "api/" + link
+    if request.GET:
+        total_link += "?"
+    for param in request.GET:
+        total_link += param + "=" + request.GET[param] + "&"
+
+    data = requests.get(total_link)
+
+    return HttpResponse(data, data.headers['content-type'])
+
+
+# Get current vocabulary versions
+@csrf_exempt
+def get_vocabulary_versions(request):
+    resp_data = []
+    for vocabulary in Vocabulary.objects.all():  # collect all vocabulary IDs and versions
+        resp_data.append({'slug': vocabulary.title_slug(), 'id': vocabulary.pk, 'version': vocabulary.version,
+                          'uri': vocabulary.preferredNamespaceUri, 'prefix': vocabulary.preferredNamespacePrefix})
+
+    data = json.dumps(resp_data)
+    mimetype = 'application/json'
+    return HttpResponse(data, mimetype)
+
+
+# Get vocabulary data
+@csrf_exempt
+def get_vocabulary_data(request, pk):
+    # return the specified vocabulary options
+    vocab = Vocabulary.objects.get(pk=pk)
+
+    if not vocab:  # vocabulary not found
+        return Http404
+
+    serialized_data = serializers.serialize('json', [vocab, ])
+    struct = json.loads(serialized_data)
+    data = json.dumps(struct[0]['fields'])
+    mimetype = 'application/json'
+    return HttpResponse(data, mimetype)
+
+
+# Add a new vocabulary
+def post_vocabulary_data(request):
+    if not request.user.is_superuser:  # forbidden for non-administrative users
+        return HttpResponseForbidden()
+
+    if request.method != 'POST':  # only allow post requests
+        return HttpResponseForbidden()
+
+    data = json.loads(request.POST.get('vocab_data'))
+
+    # Create object
+    vocab = Vocabulary.objects.create(title=data['title'], category=data['category'], description=data['description'],
+                                      originalUrl=data['originalUrl'],
+                                      downloadUrl=data['downloadUrl'],
+                                      preferredNamespaceUri=data['preferredNamespaceUri'],
+                                      preferredNamespacePrefix=data['preferredNamespacePrefix'],
+                                      lodRanking=data['lodRanking'], example=data['example'], uploader=request.user,
+                                      datePublished=data['datePublished'], version=data['version'])
+
+    # Save the new vocabulary (also creates classes and properties)
+    vocab.save()
+
+    return HttpResponse('')  # return OK response
+
+
+# Update a vocabulary's data
+def update_vocabulary_data(request, pk):
+    if not request.user.is_superuser:  # forbidden for non-administrative users
+        return HttpResponseForbidden()
+
+    if request.method != 'POST':  # only allow post requests
+        return HttpResponseForbidden()
+
+    data = json.loads(request.POST.get('vocab_data'))
+    vocab = Vocabulary.objects.get(pk=pk)
+
+    if not vocab:  # vocabulary not found
+        return Http404
+
+    # Updating vocabulary data
+    vocab.title = data['title']
+    vocab.category = data['category']
+    vocab.originalUrl = data['originalUrl']
+    vocab.downloadUrl = data['downloadUrl']
+    vocab.preferredNamespaceUri = data['preferredNamespaceUri']
+    vocab.preferredNamespacePrefix = data['preferredNamespacePrefix']
+    vocab.lodRanking = data['lodRanking']
+    vocab.example = data['example']
+    vocab.version = data['version']
+
+    # Save the updated object (also updates classes and properties)
+    vocab.save()
+
+    return HttpResponse('')  # return OK response
+
+
+# Delete an existing vocabulary
+def delete_vocabulary_data(request, pk):
+    if not request.user.is_superuser:  # forbidden for non-administrative users
+        return HttpResponseForbidden()
+
+    if request.method != 'POST':  # only allow post requests
+        return HttpResponseForbidden()
+
+    vocab = Vocabulary.objects.get(pk=pk)
+
+    if not vocab:  # vocabulary not found
+        return Http404
+
+    # Delete the object (also deletes classes and properties)
+    vocab.delete()
+
+    return HttpResponse('')  # return OK response
+
+
+# Update configuration
+class ConfigurationUpdateView(UpdateView):
+    form_class = ConfigurationForm
+    model = Configuration
+    template_name = 'config.html'
+    context_object_name = 'config'
+
+    def get_success_url(self):
+        return '/settings'
+
+    def get_object(self):
+        return get_configuration()
+
+
+def get_endpoints_from_datahub(offset=0):
+    API_ROOT = 'http://datahub.io/api/'
+    for x in range(0, 10000, 1000):
+        datasets = json.loads(requests.get(API_ROOT + 'search/dataset?limit=1000&offset=' + str(x)).content.decode('utf-8'))['results']
+        # Remove existing
+
+        if offset == 0:
+            DefaultDatasources.objects.filter(defined_at=API_ROOT).delete()
+
+        cnt = x
+        # crawl
+        for dataset in datasets:
+            try:
+                cnt += 1
+                if cnt <= offset:
+                    continue
+                print(str(cnt) + ':\t' + API_ROOT + 'action/dataset_show?id=' + dataset)
+                dt = json.loads(requests.get(API_ROOT + 'action/dataset_show?id=' + dataset).content.decode('utf-8'))
+                if 'result' in dt:
+                    dt = dt['result']
+                    resources = []
+                    for resource in dt['resources']:
+                        if (('sparql' in resource['format']) or ('rdf' in resource['format']) or ('ntriples' in resource['format'])) and (not 'example' in resource['format']):
+                            print(dt['title'] + ': ' + resource['url'] + ' (' + resource['format'] + ')')
+                            resources.append({
+                                'title': dt['title'],
+                                'description': resource['description'],
+                                'url': resource['url'],
+                                'format': resource['format'],
+                            })
+
+                    # if multiple resources where found
+                    # choose which one to add
+                    # prefer SPARQL endpoints
+                    if resources:
+                        to_add = None
+                        for datasource in resources:
+                            if datasource['format'] == 'api/sparql':
+                                to_add = datasource
+                                break
+                        if not to_add:
+                            to_add = resources[0]
+
+                        try:
+                            DefaultDatasources.objects.create(title=to_add['title'],
+                                                              description=to_add['description'],
+                                                              url=to_add['url'], format=to_add['format'],
+                                                              defined_at=API_ROOT)
+                        except IntegrityError:
+                            print('Already added')
+
+            except ValueError as KeyError:
+                print('<!!!>' + API_ROOT + 'action/dataset_show?id=' + dataset)
+
+    for suggestion in DefaultDatasources.objects.filter(format='api/sparql'):
+        print(suggestion.title)
+        query = "SELECT (count(?x) AS ?cnt) WHERE {?x ?y ?z}"
         try:
-            json.loads(response.text)
+            r = sparql_query_json(suggestion.url, query, timeout=10)
+            suggestion.size = int(json.loads(r.content.decode('utf-8'))['results']['bindings'][0]['cnt']['value'])
+            print('\tSize: ' + str(suggestion.size))
+            suggestion.save()
         except:
-            return sparql_query_json(endpoint, query, timeout, append_slash=True)
-
-    if response.status_code == 200:
-        # return the response
-        return HttpResponse(response.text, "application/json")
-    else:
-        return HttpResponse(response.text, status=response.status_code)
-
-
-# Get active classes in a data source
-def active_classes(request, dt_name):
-    # get the endpoint of the query
-    endpoint = get_endpoint_from_dt_name(dt_name)
-
-    # editor classes
-    if request.GET.get('q'):
-        q = request.GET.get('q')
-        if request.GET.get('prefix'):
-            regex = request.GET.get('prefix') + '(.)*' + q + '(.)*'
-        else:
-            regex = '^http://(/)*(.)*' + q + '(.)*'
-
-        query = 'select distinct ?Concept where {[] a ?Concept. FILTER regex(str(?Concept), "' + regex + '" , "i")} LIMIT 20'
-    else:
-        # get page
-        p = request.GET.get('p', '1')
-
-        # check if searching distinct
-        if request.GET.get('distinct'):
-            distinct = "DISTINCT"
-        else:
-            distinct = ""
-
-        # query to get all classes with at least one instance
-        classes_query_paginate_by = 10000
-        query = "SELECT " + distinct + " ?Concept WHERE { ?s a ?Concept } LIMIT " + str(classes_query_paginate_by) + " OFFSET " + str(
-            (int(p) - 1) * classes_query_paginate_by)
-
-    return sparql_query_json(endpoint, query)
-
-
-# Get active classes in a data source
-def active_root_classes(request, dt_name):
-    # get the endpoint of the query
-    endpoint = get_endpoint_from_dt_name(dt_name)
-
-    # query to get all classes with at least one instance
-    query = "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nSELECT DISTINCT ?class ((count(?x)) AS ?cnt) WHERE {?x a ?class. FILTER NOT EXISTS {?class rdfs:subClassOf ?parentClass.} } GROUP BY ?class ORDER BY DESC (?cnt)"
-
-    return sparql_query_json(endpoint, query)
-
-
-# Get active subclasses in a data source
-def active_subclasses(request, dt_name):
-    # get parent class
-    if not request.GET.get('parent_class'):
-        raise Http404
-
-    parent_class = urllib.parse.unquote(request.GET.get('parent_class'))
-
-    # get the endpoint of the query
-    endpoint = get_endpoint_from_dt_name(dt_name)
-
-    # query to get all classes with at least one instance
-    query = "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nSELECT DISTINCT ?class (count(?x) AS ?cnt) WHERE {?x a ?class. ?class rdfs:subClassOf <" + parent_class + ">. } GROUP BY ?class ORDER BY DESC (?cnt)"
-
-    return sparql_query_json(endpoint, query)
-
-
-# Get active object properties in a data source
-def object_properties(request, dt_name):
-    # get the endpoint of the query
-    endpoint = get_endpoint_from_dt_name(dt_name)
-
-    # query to get all classes with at least one instance
-    query = "PREFIX owl: <http://www.w3.org/2002/07/owl#>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nSELECT DISTINCT ?property ?domain ?range WHERE {?property a owl:ObjectProperty. ?property rdfs:domain ?domain. ?property rdfs:range ?range}"
-
-    return sparql_query_json(endpoint, query)
-
-
-# Get all properties of class instances in a data source
-def active_class_properties(request, dt_name):
-    # get class searched
-    if not request.GET.get('class_uri'):
-        raise Http404
-
-    class_uri = urllib.parse.unquote(request.GET.get('class_uri'))
-
-    # get the endpoint of the query
-    endpoint = get_endpoint_from_dt_name(dt_name)
-
-    # get if pagination was set
-    if request.GET.get('page'):
-        p = int(request.GET['page'])
-        offset = (p - 1) * 200
-        page_str = " OFFSET " + str(offset) + " LIMIT 200"
-    else:
-        page_str = ""
-
-    # query to get all properties of a class with at least one instance
-    if request.GET.get('order') == "true":
-        query = "SELECT DISTINCT ?property (count(?x) AS ?cnt) WHERE {?x a <" + class_uri + ">. ?x ?property ?o } GROUP BY ?property ORDER BY DESC(?cnt)" + page_str
-    else:
-        query = "SELECT ?property WHERE {?x a <" + class_uri + ">. ?x ?property ?o }" + page_str
-
-    return sparql_query_json(endpoint, query)
-
-
-# Get all properties in a data source
-def active_properties(request, dt_name):
-    # get the query string
-    q = request.GET.get('q', '')
-
-    # get the endpoint of the query
-    endpoint = get_endpoint_from_dt_name(dt_name)
-
-    if request.GET.get('prefix'):
-        regex = request.GET.get('prefix') + '(.)*' + q + '(.)*'
-    else:
-        regex = '^http://(/)*(.)*' + q + '(.)*'
-
-    query = 'SELECT DISTINCT ?property WHERE {?x ?property ?o FILTER regex(str(?property), "' + regex + '" , "i")} LIMIT 20'
-
-    return sparql_query_json(endpoint, query)
-
-
-def uri_to_label(uri):
-    label = uri.split('/')[-1].split('#')[-1].replace('_', ' ')
-    return urllib.parse.unquote(label)
-
-
-# Suggest entities of a type
-# e.g search for countries in World FactBook typing "fra"
-# will return <http://wifo5-04.informatik.uni-mannheim.de/factbook/resource/France>
-def get_entity_suggestions(request, dt_name):
-    # get query
-    q = request.GET.get('term', '')
-    q = q.replace(' ', '_')
-
-    # get instance & property type
-    class_uri = request.GET.get('class_uri')
-    property_uri = request.GET.get('property_uri')
-
-    # get the endpoint of the query
-    endpoint = get_endpoint_from_dt_name(dt_name)
-
-    regex = '^http://(/)*(.)*' + q + '(.)*'
-
-    if property_uri:
-        if q:
-            query = 'SELECT DISTINCT ?instance WHERE {?x a <' + class_uri + \
-                    '>. ?x <' + property_uri + '> ?instance FILTER regex(str(?instance), "' + regex + '" , "i")} LIMIT 20'
-        else:
-            query = 'SELECT DISTINCT ?instance WHERE {?x a <' + class_uri + '>. ?x <' +\
-                    property_uri + '> ?instance} LIMIT 20'
-    else:
-        if q:
-            query = 'SELECT DISTINCT ?instance WHERE {?instance a <' + class_uri + \
-                    '> FILTER regex(str(?instance), "' + regex + '" , "i")} LIMIT 20'
-        else:
-            query = 'SELECT DISTINCT ?instance WHERE {?instance a <' + class_uri + '>} LIMIT 20'
-
-    # get json result
-    result = sparql_query_json(endpoint, query)
-
-    # make array of results
-    results = []
-    res = json.loads(result.content.decode('utf8'))
-    for b in res['results']['bindings']:
-        results.append({"value": b['instance']['value'], "label": uri_to_label(b['instance']['value'])})
-
-    return HttpResponse(json.dumps(results), "application/json")
-
-
-# Get the return type of a property
-def get_property_type(request, dt_name):
-    # get property uri
-    if not request.GET.get('property_uri'):
-        raise Http404
-
-    property_uri = urllib.parse.unquote(request.GET.get('property_uri'))
-
-    # find type and create json response
-    props = VocabularyProperty.objects.filter(uri=property_uri)
-
-    if not props:  # could not detect the property in the vocabulary repository
-        tp = ""
-    else:  # get the return type (range)
-        tp = props[0].range_uri()
-
-    data = json.dumps({'type': tp})
-
-    # return the response
-    return HttpResponse(data, "application/json")
-
-
-# Get the domain of a property
-def get_properties_with_domain(request, dt_name):
-    # get class uri
-    if not request.GET.get('class_uri'):
-        raise Http404
-
-    class_uri = urllib.parse.unquote(request.GET.get('class_uri'))
-
-    # find properties and create json response
-    # resembles a SparQL response json to ease the client's job
-    r = {"results": {
-        "bindings": []}
-    }
-
-    for p in VocabularyProperty.objects.filter(domain=class_uri):
-        r["results"]["bindings"].append({"property": {"value": p.uri}})
-    data = json.dumps(r)
-
-    # return the response
-    return HttpResponse(data, "application/json")
-
-
-# Get number of class instances
-def class_info(request, dt_name):
-    # get class searched
-    if not request.GET.get('class_uri'):
-        raise Http404
-
-    class_uri = urllib.parse.unquote(request.GET.get('class_uri'))
-
-    # get the endpoint of the query
-    endpoint = get_endpoint_from_dt_name(dt_name)
-
-    # query to get all classes with at least one instance
-    query = "SELECT (count(?x) AS ?cnt) WHERE {?x a <" + class_uri + ">}"
-    return sparql_query_json(endpoint, query)
-
+            pass
