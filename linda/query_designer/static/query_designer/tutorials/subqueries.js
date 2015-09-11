@@ -192,7 +192,21 @@
                                                     'Run the query once again.',
                                                     'right'
                                                 );
-                                            }
+
+                                                //clear results table
+                                                $("#sparql_results_table tbody").html('');
+
+                                                //wait for it to fill again
+                                                var interval = setInterval(function() {
+                                                    if ($("#sparql_results_table tbody tr").length > 0) {
+                                                        clearInterval(interval);
+
+                                                        tooltip('#sparql_results_table',
+                                                            'Congratulations! Click <a href="/">here</a> to return to the home page.',
+                                                            'top'
+                                                        );
+                                                    }
+                                                }, 500);
                                         }, 500);
                                     }
                                 }, 500);
