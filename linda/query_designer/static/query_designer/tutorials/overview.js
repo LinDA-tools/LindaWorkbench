@@ -97,31 +97,18 @@
 
     //#6: Run query
     function run_query() {
-        //scroll to query
-        $('html,body').animate({
-           scrollTop: $(".editor-container").offset().top
-        });
-
-        tooltip('.ace_content',
-                'As you can see above, a <em>SPARQL query</em> has been created.<br />Let\'s just find those films!',
-                'bottom'
+        tooltip('.designer-button.run-button',
+                'With the <span class="green-text">run</span> button, you can execute the query.<br />Click run to view the results!',
+                'right'
         );
 
-        //show after a while
-        setTimeout(function() {
-            tooltip('.designer-button.run-button',
-                    'With the <span class="green-text">run</span> button, you can execute the query.<br />Click run to view the results!',
-                    'right'
-            );
-
-            var interval = setInterval(function() {
-                if ($("#sparql_results_table tbody tr").length > 0) { //results have been returned
-                    clearInterval(interval);
-                    tutorial_step++;
-                    results_appear();
-                }
-            }, 500);
-        }, INTERVAL_LONG);
+        var interval = setInterval(function() {
+            if ($("#sparql_results_table tbody tr").length > 0) { //results have been returned
+                clearInterval(interval);
+                tutorial_step++;
+                results_appear();
+            }
+        }, 500);
     }
 
     //#7: Results appear
