@@ -5,6 +5,13 @@
 {% block title %}Vocabulary categories | LinDA{% endblock %}
 {% block bodyclass %}vocabulary{% endblock %}
 
+{% block css %}
+    {% if tutorial %}
+        <link rel="stylesheet" href="/static/css/tooltipster.css"/>
+        <link rel="stylesheet" href="/static/css/tutorials/tutorials.css"/>
+    {% endif %}
+{% endblock %}
+
 {% block content %}
 <div class="main delete-page">
     <h1 class="page-title inline">{% trans "Vocabulary categories"%}</h1>
@@ -15,4 +22,16 @@
         {% endfor %}
     </div>
 </div>
+{% endblock %}
+
+{% block scripts %}
+    {% if tutorial %}
+        <script>
+            var TUTORIAL_STEP = {{tutorial_step}};
+        </script>
+
+        <script src="/static/js/jquery.tooltipster.min.js"></script>
+        <script src="/static/js/tutorials/tutorials.js"></script>
+        <script src="/static/js/tutorials/vocabulary_repository.js"></script>
+    {% endif %}
 {% endblock %}

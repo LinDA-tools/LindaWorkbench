@@ -4,6 +4,13 @@
 {% load app_filters %}
 {% block title %}{% trans "Vocabularies" %} | LinDA{% endblock %}
 
+{% block css %}
+    {% if tutorial %}
+        <link rel="stylesheet" href="/static/css/tooltipster.css"/>
+        <link rel="stylesheet" href="/static/css/tutorials/tutorials.css"/>
+    {% endif %}
+{% endblock %}
+
 {% block content %}
     <div class="main">
 		<h2 class="page-title">LinDA - {% trans "Vocabulary search" %}{% if request.GET.definedBy %} {% trans "inside"%} {{vocabulary_define.title}}{% endif %}</h2>
@@ -144,5 +151,16 @@
     {% if user.is_superuser and check_for_updates %}
         {% include "vocabulary/run-updates.js" %}
     {% endif %}
+
 </script>
+
+{% if tutorial %}
+    <script>
+        var TUTORIAL_STEP = {{tutorial_step}};
+    </script>
+
+    <script src="/static/js/jquery.tooltipster.min.js"></script>
+    <script src="/static/js/tutorials/tutorials.js"></script>
+    <script src="/static/js/tutorials/vocabulary_repository.js"></script>
+{% endif %}
 {% endblock %}

@@ -2,7 +2,6 @@ from operator import attrgetter
 from django.contrib.auth.decorators import login_required
 from django.core import serializers
 from django.db import IntegrityError
-from microsofttranslator import Translator
 from view_cache_utils import cache_page_with_prefix
 from hashlib import md5
 from django.core.paginator import Paginator, EmptyPage
@@ -476,6 +475,11 @@ class VocabularyListView(ListView):
         if self.request.GET.get('update'):
             context['check_for_updates'] = True
 
+        # Is in tutorial view?
+        if self.request.GET.get('tutorial'):
+            context['tutorial'] = True
+            context['tutorial_step'] = self.request.GET.get('step')
+
         # in category view
         category = self.request.GET.get('category')
         if category:
@@ -501,8 +505,14 @@ class ClassListView(ListView):
         context = super(ClassListView, self).get_context_data(**kwargs)
         context['page'] = 'Classes'
         context['type'] = 'classes'
+
         if self.request.GET.get('definedBy'):
             context['vocabulary_define'] = Vocabulary.objects.get(pk=self.request.GET.get('definedBy'))
+
+        # Is in tutorial view?
+        if self.request.GET.get('tutorial'):
+            context['tutorial'] = True
+            context['tutorial_step'] = self.request.GET.get('step')
 
         return context
 
@@ -529,6 +539,11 @@ class PropertyListView(ListView):
         if self.request.GET.get('definedBy'):
             context['vocabulary_define'] = Vocabulary.objects.get(pk=self.request.GET.get('definedBy'))
 
+        # Is in tutorial view?
+        if self.request.GET.get('tutorial'):
+            context['tutorial'] = True
+            context['tutorial_step'] = self.request.GET.get('step')
+
         return context
 
     def get_queryset(self):
@@ -545,6 +560,11 @@ def categories(request):
     params = {
         'categories': CATEGORIES,
     }
+
+    # Is in tutorial view?
+    if request.GET.get('tutorial'):
+        params['tutorial'] = True
+        params['tutorial_step'] = request.GET.get('step')
 
     return render(request, 'vocabulary/categories.html', params)
 
@@ -571,6 +591,7 @@ def vocabulary_search(request):  # view for search in vocabularies - remembers s
     if 'translate' in request.GET:
         translate = True
         # create a unique translator object to be used
+        from microsofttranslator import Translator
         translator = Translator(MS_TRANSLATOR_UID, MS_TRANSLATOR_SECRET)
         q = translator.translate(text=q_in, to_lang='en', from_lang=None)
         if q.startswith("TranslateApiException:"):
@@ -906,9 +927,9 @@ def datasourceReplace(request, name):
         return render(request, 'datasource/replace_remote.html', params)
 
 
-def clear_chunk(c, newlines):
-    if newlines:
-        last_dot = c.rfind('.\n') + 1
+def clear_chunk(c, newline):
+    if newline:
+        last_dot = c.rfind('\n') + 1
     else:
         # detect where the last tripple ends
         i = 0
@@ -952,14 +973,14 @@ def datasourceCreateRDF(request):
         params = {
             'title': request.POST.get('title'),
             'format': request.POST.get('format'),
-            'newlines': request.POST.get('newlines'),
+            'newline': request.POST.get('newline'),
             'rdfdata': request.POST.get("rdfdata"),
             'rdffile': request.FILES.get("rdffile"),
         }
 
         # Get the posted rdf data
         rem = ''
-        newlines = request.POST.get('newlines', None)
+        newline = request.POST.get('newline', None)
         title = request.POST.get("title", None)
         if not title:
             params['form_error'] = 'Title is required'
@@ -972,10 +993,16 @@ def datasourceCreateRDF(request):
             inp_file = request.FILES["rdffile"].file
             current_chunk = inp_file.read(RDF_CHUNK_SIZE).decode('utf-8')
             if len(current_chunk) == RDF_CHUNK_SIZE:
-                current_chunk, rem = clear_chunk(current_chunk, newlines)
+                current_chunk, rem = clear_chunk(current_chunk, newline)
         else:
             current_chunk = request.POST.get("rdfdata")
             inp_file = False
+
+        # Detect prefixes
+        prefixes = []
+        for line in current_chunk.split('\n'):
+            if line.startswith('@prefix'):
+                prefixes.append(line)
 
         # Call the corresponding web service
         headers = {'accept': 'application/json'}
@@ -1000,8 +1027,8 @@ def datasourceCreateRDF(request):
                 i += 1
                 print(i)
                 # add the previous remainder & clear again
-                current_chunk, rem = clear_chunk(rem + chunk, newlines)
-                data = {"content": current_chunk}
+                current_chunk, rem = clear_chunk(rem + chunk, newline)
+                data = {"content": '\n'.join(prefixes) + '\n' + current_chunk}
                 if request.POST.get('format'):
                     data['format'] = request.POST.get('format')
 
@@ -1010,7 +1037,7 @@ def datasourceCreateRDF(request):
                                            get={'append': 'true'}, accept='application/json')
                 callAppend = api_datasource_replace(mock_request, dt_name)
             if rem:  # a statement has not been pushed
-                data = {"content": current_chunk}
+                data = {"content": '\n'.join(prefixes) + '\n' + rem}
                 if request.POST.get('format'):
                     data['format'] = request.POST.get('format')
                 mock_request = MockRequest(user=request.user, post=request.POST, data=data,
@@ -1039,7 +1066,7 @@ def datasourceReplaceRDF(request, dtname):
         params = {
             'title': request.POST.get('title'),
             'format': request.POST.get('format'),
-            'newlines': request.POST.get('newlines'),
+            'newline': request.POST.get('newline'),
             'rdfdata': request.POST.get("rdfdata"),
             'rdffile': request.FILES.get("rdffile"),
             'append': request.POST.get('append', False)
@@ -1051,14 +1078,14 @@ def datasourceReplaceRDF(request, dtname):
 
             return render(request, 'datasource/replace_rdf.html', params)
 
-        newlines = params['newlines']
+        newline = params['newline']
         append = params['append']
 
         # Get the posted rdf data
         if "rdffile" in request.FILES:
             inp_file = params['rdffile'].file
             current_chunk = inp_file.read(RDF_CHUNK_SIZE).decode('utf-8')
-            current_chunk, rem = clear_chunk(current_chunk, newlines)
+            current_chunk, rem = clear_chunk(current_chunk, newline)
         else:
             current_chunk = params['rdfdata']
 
