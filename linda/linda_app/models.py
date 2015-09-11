@@ -593,7 +593,7 @@ class Query(models.Model):
 class Configuration(models.Model):
     # Vocabulary Repository
     # In local business installations it will be different than the LINDA_SERVER_IP
-    vocabulary_repository = models.URLField(blank=False, null=False, default='http://localhost:8000/')
+    vocabulary_repository = models.URLField(blank=False, null=False, default='http://linda.epu.ntua.gr/')
     # LinDA repository in Sesame (OpenRDF) url, in order to access private data sources
     sesame_url = models.URLField(blank=False, null=False,
                                  default='http://localhost:8080/openrdf-sesame/')
