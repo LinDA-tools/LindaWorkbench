@@ -20,9 +20,9 @@
     <link data-turbolinks-track="true" href="/static/query-builder/stylesheets/application.css?body=1" media="all" rel="stylesheet" />
     <link data-turbolinks-track="true" href="/static/query-builder/stylesheets/gritter.css?body=1" media="all" rel="stylesheet" />
 
-    <link rel="stylesheet" href="/static/css/tooltipster.css"/>
     {% if tutorial %}
-        <link rel="stylesheet" href="/static/query_designer/tutorials/tutorials.css"/>
+        <link rel="stylesheet" href="/static/css/tooltipster.css"/>
+        <link rel="stylesheet" href="/static/css/tutorials/tutorials.css"/>
     {% endif %}
 {% endblock %}
 
@@ -258,7 +258,7 @@
     <script data-turbolinks-track="true" src="/static/query-builder/javascripts/codemirror.js?body=1"></script>
     <script data-turbolinks-track="true" src="/static/query-builder/javascripts/gritter.js?body=1"></script>
     <script data-turbolinks-track="true" src="/static/query-builder/javascripts/application.js?body=1"></script>
-    <script src="/static/js/jquery.tooltipster.min.js"></script>
+
     {% if datasource_default %}
         <script>
             $().ready(function() {
@@ -268,6 +268,7 @@
     {% endif %}
 
     {% if tutorial %}
+        <script src="/static/js/jquery.tooltipster.min.js"></script>
 		<script src="/static/js/tutorials/tutorials.js"></script>
         <script src="/static/query_designer/tutorials/{{tutorial}}.js"></script>
     {% endif %}

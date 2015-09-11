@@ -505,8 +505,14 @@ class ClassListView(ListView):
         context = super(ClassListView, self).get_context_data(**kwargs)
         context['page'] = 'Classes'
         context['type'] = 'classes'
+
         if self.request.GET.get('definedBy'):
             context['vocabulary_define'] = Vocabulary.objects.get(pk=self.request.GET.get('definedBy'))
+
+        # Is in tutorial view?
+        if self.request.GET.get('tutorial'):
+            context['tutorial'] = True
+            context['tutorial_step'] = self.request.GET.get('step')
 
         return context
 
@@ -533,6 +539,11 @@ class PropertyListView(ListView):
         if self.request.GET.get('definedBy'):
             context['vocabulary_define'] = Vocabulary.objects.get(pk=self.request.GET.get('definedBy'))
 
+        # Is in tutorial view?
+        if self.request.GET.get('tutorial'):
+            context['tutorial'] = True
+            context['tutorial_step'] = self.request.GET.get('step')
+
         return context
 
     def get_queryset(self):
@@ -549,6 +560,11 @@ def categories(request):
     params = {
         'categories': CATEGORIES,
     }
+
+    # Is in tutorial view?
+    if request.GET.get('tutorial'):
+        params['tutorial'] = True
+        params['tutorial_step'] = request.GET.get('step')
 
     return render(request, 'vocabulary/categories.html', params)
 
