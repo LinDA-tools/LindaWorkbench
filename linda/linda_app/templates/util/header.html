@@ -17,7 +17,7 @@
                     <ul class="submenu">
                         <li><a href="/datasources/">{% trans "View data Sources" %}</a></li>
                         <li><a href="/datasource/create/rdf/">{% trans "Upload RDF file" %}</a></li>
-                        <li><a href="/transformations/#/csv">{% trans "Upload CSV file " %}</a></li>
+                        <li><a href="/transformation/csv/step/1">{% trans "Upload CSV file " %}</a></li>
                         <li><a href="/datasource/create/">{% trans "New endpoint" %}</a></li>
                     </ul>
                 </li>
@@ -28,7 +28,6 @@
                         <li><a href="/sparql/">{% trans "SPARQL editor" %}</a></li>
                     </ul>
                 </li>
-                <li {%if page == "Visualizations" %}class="selected"{% endif %}><a href="/visualizations/saved-visualizations">{% trans "Visualizations" %}</a></li>
                 <li {%if page == "Analytics" %}class="selected"{% endif %}><a href="/analytics">{% trans "Analytics" %}</a></li>
                 <li {%if page == "Transformations" %}class="selected"{% endif %}><a href="/transformation">{% trans "Transformations" %}</a></li>
                 <li {%if page == "Vocabularies" %}class="selected"{% endif %}><a href="/vocabularies/all/">{% trans "Vocabularies" %}</a>
@@ -38,6 +37,7 @@
                         <li><a href="/properties/all/">{% trans "Properties" %}</a></li>
                     </ul>
                 </li>
+            <li><a href="http://linda-project.eu/wiki/index.php?title=Main_Page" target="_blank">{% trans "Documentation" %}</a></li>
         </ul>
 
 		<div class="username right">
