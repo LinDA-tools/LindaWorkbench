@@ -144,5 +144,12 @@
     {% if user.is_superuser and check_for_updates %}
         {% include "vocabulary/run-updates.js" %}
     {% endif %}
+
 </script>
+
+{% if tutorial %}
+    TUTORIAL_STEP = {{tutorial_step}};
+    <script src="/static/query_designer/tutorials/tutorials.js"></script>
+    <script src="/static/query_designer/tutorials/vocabulary_repository.js"></script>
+{% endif %}
 {% endblock %}

@@ -476,6 +476,11 @@ class VocabularyListView(ListView):
         if self.request.GET.get('update'):
             context['check_for_updates'] = True
 
+        # Is in tutorial view?
+        if self.request.GET.get('tutorial'):
+            context['tutorial'] = True
+            context['tutorial_step'] = self.request.GET.get('step')
+
         # in category view
         category = self.request.GET.get('category')
         if category:
