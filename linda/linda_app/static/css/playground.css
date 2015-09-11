@@ -93,11 +93,17 @@
     background: none;
 }
 
+.welcome-message .button {
+    margin-right: 11px;
+}
+
 .welcome-step {
     width: calc((100% - 25px) / 3 - 20px);
     padding: 10px;
     background: #F3F3F3;
+    border-right: 10px solid #fff;
     height: 580px;
+    display: table-cell;
 }
 
 .welcome-step:nth-of-type(3) > .row {
@@ -143,6 +149,8 @@
     .welcome-step {
         width: 100%;
         height: auto;
+        display: block;
+        border-right: none;
     }
 
     .step-background {

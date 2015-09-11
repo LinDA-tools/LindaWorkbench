@@ -37,14 +37,11 @@
         );
 
         setTimeout(function() {
+            $('.home-search .right.button.orange').attr('href', '/vocabularies/categories/all/?tutorial=true&step=4');
             tooltip('.home-search .right.button.orange',
-                    'By clicking <span class="green-text">Browse categories</span> you can find vocabularies grouped in various categories according to their domain.',
+                    'Click <span class="green-text">Browse categories</span> to find vocabularies grouped in various categories according to their domain.',
                     'left'
             );
-
-            setTimeout(function() {
-                window.location.href = '/vocabularies/categories/all/?tutorial=true&step=4';
-            },   INTERVAL_VERY_LONG);
         }, INTERVAL_LONG);
     }
 
@@ -52,6 +49,13 @@
         $('.category-tag:nth-of-type(15)').attr('href', $('.category-tag:nth-of-type(15)').attr('href') + '&tutorial=true&step=5');
 
         tooltip('.category-tag:nth-of-type(15)',
+                'Click on the <span class="green-text">health</span> category to browse vocabularies about various health-related concepts.',
+                'right'
+        );
+    }
+
+    if (TUTORIAL_STEP == 5) {
+        tooltip('.vocabulary-teaser:nth-of-type(1)',
                 'Click on the <span class="green-text">health</span> category to browse vocabularies about various health-related concepts.',
                 'right'
         );
