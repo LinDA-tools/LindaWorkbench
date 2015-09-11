@@ -251,7 +251,7 @@ def run_installer(request):
             r = install_repositories()
             if r.status_code not in [200, 204]:
                 return r
-            obj = json.loads(r.content)
+            obj = json.loads(r.content.decode("utf-8"))
             for key in obj:
                 r_obj[key] = obj[key]
 
@@ -259,14 +259,14 @@ def run_installer(request):
             r = install_vocabularies()
             if r.status_code != 200:
                 return r
-            obj = json.loads(r.content)
+            obj = json.loads(r.content.decode("utf-8"))
             for key in obj:
                 r_obj[key] = obj[key]
 
             r = install_analytics()
             if r.status_code != 200:
                 return r
-            obj = json.loads(r.content)
+            obj = json.loads(r.content.decode("utf-8"))
             for key in obj:
                 r_obj[key] = obj[key]
 
