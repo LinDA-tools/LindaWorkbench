@@ -171,123 +171,127 @@ class Vocabulary(models.Model):
 
         # Load the rdf
         g = Graph()
-        document = urllib.request.urlopen(self.downloadUrl)
+        try:
+            document = urllib.request.urlopen(self.downloadUrl)
 
-        if document.getcode() == 404:  # not found
-            return
+            if document.getcode() == 404:  # not found
+                return
 
-        rdf_data = document.read()
-        g.parse(data=rdf_data, format=guess_format(self.downloadUrl))
-        g.bind("rdfs", RDFS)
-        g.bind("owl", OWL)
+            rdf_data = document.read()
+            g.parse(data=rdf_data, format=guess_format(self.downloadUrl))
+            g.bind("rdfs", RDFS)
+            g.bind("owl", OWL)
 
-        # Register a temporary SparQL endpoint for this rdf
-        '''
-        plugin.register('sparql', rdflib.query.Processor, 'rdfextras.sparql.processor', 'Processor')
-        plugin.register('sparql', rdflib.query.Result, 'rdfextras.sparql.query', 'SPARQLQueryResult')
-        '''
+            # Register a temporary SparQL endpoint for this rdf
+            '''
+            plugin.register('sparql', rdflib.query.Processor, 'rdfextras.sparql.processor', 'Processor')
+            plugin.register('sparql', rdflib.query.Result, 'rdfextras.sparql.query', 'SPARQLQueryResult')
+            '''
 
-        # Run a query to retrieve all classes
-        # Use COALESCE to overcome RDFLib bug of KeyError exceptions on unbound optional fields
-        q_classes = g.query(
-            """
-                SELECT ?class (COALESCE(?classLabel, "") AS ?cLabel) (COALESCE(?classComment, "") AS ?cComment)
-                WHERE {
-                    {?class rdf:type rdfs:Class} UNION {?class rdf:type owl:Class}.
-                    OPTIONAL {?class rdfs:label ?classLabel}.
-                    OPTIONAL {?class rdfs:comment ?classComment}.
-                }""")
+            # Run a query to retrieve all classes
+            # Use COALESCE to overcome RDFLib bug of KeyError exceptions on unbound optional fields
+            q_classes = g.query(
+                """
+                    SELECT ?class (COALESCE(?classLabel, "") AS ?cLabel) (COALESCE(?classComment, "") AS ?cComment)
+                    WHERE {
+                        {?class rdf:type rdfs:Class} UNION {?class rdf:type owl:Class}.
+                        OPTIONAL {?class rdfs:label ?classLabel}.
+                        OPTIONAL {?class rdfs:comment ?classComment}.
+                    }""")
 
-        # Store the classes in the database
+            # Store the classes in the database
 
-        for row in q_classes.result:
-            if not row[0].startswith(self.preferredNamespaceUri):
-                # don't allow vocabularies define classes outside of their scope
-                continue
+            for row in q_classes.result:
+                if not row[0].startswith(self.preferredNamespaceUri):
+                    # don't allow vocabularies define classes outside of their scope
+                    continue
 
-            # update label for class that exists
-            class_objects = VocabularyClass.objects.filter(uri=row[0])
-            if class_objects:
-                label = row[1].encode("utf-8")
-                class_object = class_objects[0]
-                if (label and (not class_object.label)) or (label and row[1].language == 'en'):
-                    class_object.label = label
-                    class_object.save()
+                # update label for class that exists
+                class_objects = VocabularyClass.objects.filter(uri=row[0])
+                if class_objects:
+                    label = row[1].encode("utf-8")
+                    class_object = class_objects[0]
+                    if (label and (not class_object.label)) or (label and row[1].language == 'en'):
+                        class_object.label = label
+                        class_object.save()
 
-                continue
+                    continue
 
-            if row[1]:
-                label = row[1]
-            else:
-                label = get_label_by_uri(row[0])
-            if row[2]:
-                description = row[2]
-            else:
-                description = ""
-            try:
-                cls = VocabularyClass.objects.create(vocabulary=self, uri=row[0].encode("utf-8"),
-                                                     label=label.encode("utf-8"),
-                                                     description=description.encode("utf-8"))
-            except UnicodeEncodeError:
-                cls = VocabularyClass.objects.create(vocabulary=self, uri=row[0], label=get_label_by_uri(row[0]),
-                                                     description="")
-            cls.save()
+                if row[1]:
+                    label = row[1]
+                else:
+                    label = get_label_by_uri(row[0])
+                if row[2]:
+                    description = row[2]
+                else:
+                    description = ""
+                try:
+                    cls = VocabularyClass.objects.create(vocabulary=self, uri=row[0].encode("utf-8"),
+                                                         label=label.encode("utf-8"),
+                                                         description=description.encode("utf-8"))
+                except UnicodeEncodeError:
+                    cls = VocabularyClass.objects.create(vocabulary=self, uri=row[0], label=get_label_by_uri(row[0]),
+                                                         description="")
+                cls.save()
 
-        # Run a query to retrieve all properties
-        # Use COALESCE to overcome RDFLib bug of KeyError exceptions on unbound optional fields
-        q_properties = g.query(
-            """ SELECT DISTINCT ?property
-                                (COALESCE(?domain, "") AS ?d)
-                                (COALESCE(?range, "") AS ?r)
-                                (COALESCE(?propertyLabel, "") AS ?pLabel)
-                                (COALESCE(?propertyComment, "") AS ?pComment)
-                                (COALESCE(?parent, "") AS ?p)
-                WHERE {
-                    VALUES ?propertyType { rdf:Property owl:ObjectProperty owl:DatatypeProperty owl:AnnotationProperty }
-                    ?property rdf:type ?propertyType.
+            # Run a query to retrieve all properties
+            # Use COALESCE to overcome RDFLib bug of KeyError exceptions on unbound optional fields
+            q_properties = g.query(
+                """ SELECT DISTINCT ?property
+                                    (COALESCE(?domain, "") AS ?d)
+                                    (COALESCE(?range, "") AS ?r)
+                                    (COALESCE(?propertyLabel, "") AS ?pLabel)
+                                    (COALESCE(?propertyComment, "") AS ?pComment)
+                                    (COALESCE(?parent, "") AS ?p)
+                    WHERE {
+                        VALUES ?propertyType { rdf:Property owl:ObjectProperty owl:DatatypeProperty owl:AnnotationProperty }
+                        ?property rdf:type ?propertyType.
 
-                    OPTIONAL {?property rdfs:domain ?domain}.
-                    OPTIONAL {?property rdfs:range ?range}.
-                    OPTIONAL {?property rdfs:subPropertyOf ?parent}.
-                    OPTIONAL {?property rdfs:label ?propertyLabel}.
-                    OPTIONAL {?property rdfs:comment ?propertyComment}.
-                }
-                """)
-        # Store the properties in the database
-        for row in q_properties.result:
-            if not row[0].startswith(self.preferredNamespaceUri):
-                # don't allow vocabularies define properties outside of their scope
-                continue
+                        OPTIONAL {?property rdfs:domain ?domain}.
+                        OPTIONAL {?property rdfs:range ?range}.
+                        OPTIONAL {?property rdfs:subPropertyOf ?parent}.
+                        OPTIONAL {?property rdfs:label ?propertyLabel}.
+                        OPTIONAL {?property rdfs:comment ?propertyComment}.
+                    }
+                    """)
+            # Store the properties in the database
+            for row in q_properties.result:
+                if not row[0].startswith(self.preferredNamespaceUri):
+                    # don't allow vocabularies define properties outside of their scope
+                    continue
 
-            # update label for properties that exist
-            property_objects = VocabularyProperty.objects.filter(uri=row[0])
-            if property_objects:
-                label = row[3].encode("utf-8")
-                property_object = property_objects[0]
-                if (label and (not property_object.label)) or (label and row[3].language == 'en'):
-                    property_object.label = label
-                    property_object.save()
+                # update label for properties that exist
+                property_objects = VocabularyProperty.objects.filter(uri=row[0])
+                if property_objects:
+                    label = row[3].encode("utf-8")
+                    property_object = property_objects[0]
+                    if (label and (not property_object.label)) or (label and row[3].language == 'en'):
+                        property_object.label = label
+                        property_object.save()
 
-                continue
+                    continue
 
-            if row[3]:
-                label = row[3]
-            else:
-                label = get_label_by_uri(row[0])
-            if row[4]:
-                description = row[4]
-            else:
-                description = ""
-            try:
-                prp = VocabularyProperty.objects.create(vocabulary=self, uri=row[0].encode("utf-8"),
-                                                        domain=row[1].encode("utf-8"), range=row[2].encode("utf-8"),
-                                                        label=label.encode("utf-8"),
-                                                        description=description.encode("utf-8"), parent_uri=row[5])
-            except UnicodeEncodeError:
-                prp = VocabularyProperty.objects.create(vocabulary=self, uri=row[0], domain=row[1], range=row[2],
-                                                        label=get_label_by_uri(row[0]), description="",
-                                                        parent_uri=row[5])
-            prp.save()
+                if row[3]:
+                    label = row[3]
+                else:
+                    label = get_label_by_uri(row[0])
+                if row[4]:
+                    description = row[4]
+                else:
+                    description = ""
+                try:
+                    prp = VocabularyProperty.objects.create(vocabulary=self, uri=row[0].encode("utf-8"),
+                                                            domain=row[1].encode("utf-8"), range=row[2].encode("utf-8"),
+                                                            label=label.encode("utf-8"),
+                                                            description=description.encode("utf-8"), parent_uri=row[5])
+                except UnicodeEncodeError:
+                    prp = VocabularyProperty.objects.create(vocabulary=self, uri=row[0], domain=row[1], range=row[2],
+                                                            label=get_label_by_uri(row[0]), description="",
+                                                            parent_uri=row[5])
+                prp.save()
+
+        except HTTPError:
+            pass
 
     def __unicode__(self):
         return self.title
