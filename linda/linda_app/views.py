@@ -254,6 +254,11 @@ class VocabularyDetailsView(DetailView):
         # Load comments
         context['comments'] = VocabularyComments.objects.filter(vocabularyCommented=context['vocabulary'])
 
+        # Is in tutorial view?
+        if self.request.GET.get('tutorial'):
+            context['tutorial'] = True
+            context['tutorial_step'] = self.request.GET.get('step')
+
         # Check if user has voted for this vocabulary
         if self.request.user.is_authenticated():
             if (
