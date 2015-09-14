@@ -1,9 +1,9 @@
     if (TUTORIAL_STEP == 1) {
         //introductory text
         $().ready(function() {
-            tooltip('.page-title',
+            tooltip('.vocabulary-search-form input[type="submit"]',
                     'Welcome to the LinDA Vocabulary Repository!<br />In this tutorial, you will understand <span class="green-text">how</span> to use the vocabulary repository and <span class="green-text">why</span> it\'s important to use term vocabularies for your data.',
-                    'bottom'
+                    'right'
             );
 
             setTimeout(function() {
@@ -55,8 +55,38 @@
     }
 
     if (TUTORIAL_STEP == 5) {
+        var selector = '.vocabulary-teaser:nth-of-type(1) h3 > a'
+        $(selector).attr('href', $(selector).attr('href') + '?tutorial=true&step=6');
+
         tooltip('.vocabulary-teaser:nth-of-type(1)',
-                'Click on the <span class="green-text">health</span> category to browse vocabularies about various health-related concepts.',
+                '<p>Suppose you work in a health organization. Typically, you\'ll have to use information published outside of your company.<br />By re-using existing ontologies, you become able to easily connect your data with information published by other organizations like hospitals, research centers or the state.</p>' +
+                'Select the <span class="green-text">Translational Medicine Ontology</span> to view more information about this ontology & learn how to use it.',
+                'right'
+        );
+    }
+
+    if (TUTORIAL_STEP == 6) {
+        tooltip('p.description',
+                'The vocabulary\'s description helps you understand what kind of needs this vocabulary solves, and what type of data you can expect using terms from this vocabulary.',
+                'top'
+        );
+
+        setTimeout(function() {
+            tooltip('#usage-example',
+                    'A <span class="green-text">usage example</span> can serve as a basis for advanced LinDA users who want to compose RDF data or complicated queries manually.',
+                    'top'
+            );
+
+            setTimeout(function() {
+                window.location.href = '/vocabularies/all/?tutorial=true&step=7';
+            }, INTERVAL_VERY_LONG);
+        }, INTERVAL_VERY_LONG);
+    }
+
+    if (TUTORIAL_STEP == 7) {
+        tooltip('.vocabulary-search-form input[type="submit"]',
+                '<p>That\'s basically it!<br />Use the vocabulary repository to discover appropriate vocabularies for your business domains and you will be able to connect to public data in no time!</p>' +
+                '<p><a href="/">Back to home page</a></p>',
                 'right'
         );
     }
