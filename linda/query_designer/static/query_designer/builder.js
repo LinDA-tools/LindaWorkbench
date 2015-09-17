@@ -68,6 +68,16 @@ var builder = {
         return true;
     },
 
+    is_interlinked_property: function(w, i, p) {
+        for (var j=0; j<arrows.connections.length; j++) {
+            if ((arrows.connections[j].t == '#class_instance_' + i) && (arrows.connections[j].tp == p)) {
+                return true;
+            }
+        }
+
+        return false;
+    },
+
     get_root_uri: function(uri) {
         var spl = uri.split('/');
         var last_part = spl.pop();
@@ -385,7 +395,9 @@ var builder = {
                 }
 
                 if (p.aggregate === undefined) {
-                    this.select_vars.push('?' + name);
+                    if (!this.is_interlinked_property(w, i, j)) {
+                        this.select_vars.push('?' + name);
+                    }
                 } else {
                     p.aggr_name = p.name + '_' + p.aggregate;
                     var aggregation_params = '';
