@@ -2630,6 +2630,12 @@ textarea.rename.enabled {
     white-space: nowrap;
 }
 
+#builder_workspace .class-instance .property-table > .property-row > span:nth-of-type(2) {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 200px;
+}
+
 #builder_workspace .class-instance .property-table .property-show,
 #builder_workspace .class-instance .property-table .property-optional,
 #builder_workspace .class-instance .header-row span:nth-of-type(1),
