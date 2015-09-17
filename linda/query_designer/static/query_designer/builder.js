@@ -265,11 +265,17 @@ var builder = {
         result = "";
         if (foreign_filters.length > 0) {
             result = "\tFILTER ";
+            if (foreign_filters.length > 1) {
+                result += "(";
+            }
             for (var f=0; f<foreign_filters.length; f++) {
                 result += "(?" + foreign_filters[f].from + "=?" + foreign_filters[f].to + ")";
                 if (f < foreign_filters.length - 1) {
                     result += " && ";
                 }
+            }
+            if (foreign_filters.length > 1) {
+                result += ")";
             }
 
             result += "\n"
