@@ -63,6 +63,8 @@ def recommend_dataset(request):
     categories = request.GET.get("category", None)
     if categories:
         categories = categories.split(',')
+    else:  # load default categories
+        categories = get_configuration().default_categories.split(',')
 
     if vocabulary is not None:
         flag = "Vocabulary"
