@@ -21,7 +21,8 @@ class MultiSelectFormField(forms.MultipleChoiceField):
         if not value and self.required:
             raise forms.ValidationError(self.error_messages['required'])
         if value and self.max_choices and len(value) > self.max_choices:
-            raise forms.ValidationError('You must select a maximum of %s choices.' % apnumber(self.max_choices))
+            raise forms.ValidationError('You must select a maximum of %s choices.'
+                    % (apnumber(self.max_choices)))
         return value
 
 
@@ -42,6 +43,11 @@ class MultiSelectField(models.Field):
         # don't call super, as that overrides default widget if it has choices
         defaults = {'required': not self.blank, 'label': capfirst(self.verbose_name),
                     'help_text': self.help_text, 'choices':self.choices}
+        try:
+            defaults['initial'] = self.initial
+        except:
+            pass
+
         if self.has_default():
             defaults['initial'] = self.get_default()
         defaults.update(kwargs)
@@ -60,6 +66,10 @@ class MultiSelectField(models.Field):
             return []
         else:
             return value.split(",")
+
+    def value_to_string(self, obj):
+        value = self._get_val_from_obj(obj)
+        return self.get_prep_value(value)
 
     def contribute_to_class(self, cls, name):
         super(MultiSelectField, self).contribute_to_class(cls, name)
