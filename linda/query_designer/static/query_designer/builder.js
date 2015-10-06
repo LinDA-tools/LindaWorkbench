@@ -68,16 +68,6 @@ var builder = {
         return true;
     },
 
-
-
-
-
-
-
-
-
-
-
     get_root_uri: function(uri) {
         var spl = uri.split('/');
         var last_part = spl.pop();
@@ -250,27 +240,9 @@ var builder = {
 
     //forges foreign key relationships
     create_foreign: function(w, i, p_name, p) {
-
         for (var j=0; j<arrows.connections.length; j++) {
              if ((arrows.connections[j].f == '#class_instance_' + i) && (arrows.connections[j].fp == p)) {
-
                 var tn = arrows.connections[j].t.split('_')[2] //3rd part is the number #class_instance_1
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
                 if (w.instances[tn].selected_properties[arrows.connections[j].tp].uri == 'URI') { //foreign key to other entity
                     if (w.instances[i].selected_properties[p].uri == 'URI') {
@@ -282,16 +254,9 @@ var builder = {
                     this.property_names[tn][arrows.connections[j].tp] = p_name;
                 }
 
-
-
-
-
-
                 this.find_property_names(w, tn);
              }
         }
-
-
     },
 
     //get URI
@@ -419,9 +384,7 @@ var builder = {
                 }
 
                 if (p.aggregate === undefined) {
-
                     this.select_vars.push('?' + name);
-
                 } else {
                     p.aggr_name = p.name + '_' + p.aggregate;
                     var aggregation_params = '';
@@ -594,7 +557,6 @@ var builder = {
             }
         }
         this.where_clause += this.create_subquery(undefined);
-
         this.where_clause += "}";
 
         //construct the select clause -- only keep unique values and order according to options

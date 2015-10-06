@@ -2504,6 +2504,10 @@ textarea.rename.enabled {
     float: right;
     font-size: 0.8em;
     margin-top: 10px;
+    max-width: 200px;
+    max-height: 1.4em;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 #builder_workspace .class-instance .title h3 {
