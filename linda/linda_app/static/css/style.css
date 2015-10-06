@@ -3074,3 +3074,8 @@ textarea.rename.enabled {
 .datasource-suggestions .dataTables_filter input {
     height: 25px;
 }
+
+.config-form .chosen-container {
+    display: block;
+    width: 310px !important;
+}
