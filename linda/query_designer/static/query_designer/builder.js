@@ -68,15 +68,15 @@ var builder = {
         return true;
     },
 
-    is_interlinked_property: function(w, i, p) {
-        for (var j=0; j<arrows.connections.length; j++) {
-            if ((arrows.connections[j].t == '#class_instance_' + i) && (arrows.connections[j].tp == p)) {
-                return true;
-            }
-        }
 
-        return false;
-    },
+
+
+
+
+
+
+
+
 
     get_root_uri: function(uri) {
         var spl = uri.split('/');
@@ -249,39 +249,49 @@ var builder = {
     },
 
     //forges foreign key relationships
-    create_foreign: function() {
-        var foreign_filters = [];
+    create_foreign: function(w, i, p_name, p) {
+
         for (var j=0; j<arrows.connections.length; j++) {
-            var c = arrows.connections[j];
-            var f = Number(c.f.split('_')[2]);
-            var t = Number(c.t.split('_')[2]);
+             if ((arrows.connections[j].f == '#class_instance_' + i) && (arrows.connections[j].fp == p)) {
 
-            foreign_filters.push({
-                from: this.property_names[f][c.fp],
-                to: this.property_names[t][c.tp]
-            });
-        }
+                var tn = arrows.connections[j].t.split('_')[2] //3rd part is the number #class_instance_1
 
-        result = "";
-        if (foreign_filters.length > 0) {
-            result = "\tFILTER ";
-            if (foreign_filters.length > 1) {
-                result += "(";
-            }
-            for (var f=0; f<foreign_filters.length; f++) {
-                result += "(?" + foreign_filters[f].from + "=?" + foreign_filters[f].to + ")";
-                if (f < foreign_filters.length - 1) {
-                    result += " && ";
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                if (w.instances[tn].selected_properties[arrows.connections[j].tp].uri == 'URI') { //foreign key to other entity
+                    if (w.instances[i].selected_properties[p].uri == 'URI') {
+                        this.instance_names[tn] = this.instance_names[i];
+                    } else {
+                        this.instance_names[tn] = this.property_names[i][p];
+                    }
+                } else { //foreign key to other entity's property
+                    this.property_names[tn][arrows.connections[j].tp] = p_name;
                 }
-            }
-            if (foreign_filters.length > 1) {
-                result += ")";
-            }
 
-            result += "\n"
+
+
+
+
+
+                this.find_property_names(w, tn);
+             }
         }
 
-        return result;
+
     },
 
     //get URI
@@ -346,7 +356,9 @@ var builder = {
         }
 
         for (var i=0; i<w.instances.length; i++) {
-            this.find_property_names(w, i);
+            if (this.is_initial(w, i)) {
+                this.find_property_names(w, i);
+            }
         }
     },
 
@@ -367,6 +379,12 @@ var builder = {
                     p.name_from_user = false;
                 }
                 this.property_names[i][j] = p.name;
+            }
+
+            if (p.uri != 'URI') {
+                this.create_foreign(w, i, this.property_names[i][j], j); //handle uri foreign keys
+            } else {
+                this.create_foreign(w, i, this.instance_names[i], j); //handle property foreign keys
             }
         }
     },
@@ -401,9 +419,9 @@ var builder = {
                 }
 
                 if (p.aggregate === undefined) {
-                    if (!this.is_interlinked_property(w, i, j)) {
-                        this.select_vars.push('?' + name);
-                    }
+
+                    this.select_vars.push('?' + name);
+
                 } else {
                     p.aggr_name = p.name + '_' + p.aggregate;
                     var aggregation_params = '';
@@ -576,7 +594,7 @@ var builder = {
             }
         }
         this.where_clause += this.create_subquery(undefined);
-        this.where_clause += this.create_foreign();
+
         this.where_clause += "}";
 
         //construct the select clause -- only keep unique values and order according to options
