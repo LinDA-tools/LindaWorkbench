@@ -12,6 +12,7 @@ from rdflib import Graph, OWL, RDFS
 from rdflib.util import guess_format
 import requests
 from lxml import etree as et
+from linda_app.multiple_choice_field import MultiSelectField
 from query_designer.models import Design
 
 import re
@@ -653,6 +654,8 @@ class Configuration(models.Model):
     rdf2any_server = models.URLField(blank=False, null=False, default='http://localhost:8081/')
     # Visualization backend
     visualization_backend = models.URLField(blank=False, null=False, default='http://localhost:3002/')
+    # default categories
+    default_categories = MultiSelectField(max_length=512, blank=True, null=False, default='', choices=CATEGORIES)
 
 
 # returns the configuration object

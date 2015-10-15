@@ -2504,6 +2504,10 @@ textarea.rename.enabled {
     float: right;
     font-size: 0.8em;
     margin-top: 10px;
+    max-width: 200px;
+    max-height: 1.4em;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 #builder_workspace .class-instance .title h3 {
@@ -3073,4 +3077,9 @@ textarea.rename.enabled {
 
 .datasource-suggestions .dataTables_filter input {
     height: 25px;
+}
+
+.config-form .chosen-container {
+    display: block;
+    width: 310px !important;
 }

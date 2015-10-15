@@ -1,6 +1,7 @@
 from django import forms
 from django.forms.widgets import Select
 from linda_app.models import *
+from linda_app.multiple_choice_field import MultiSelectFormField
 
 
 class UserProfileForm(forms.ModelForm):
@@ -53,3 +54,8 @@ class ConfigurationForm(forms.ModelForm):
     class Meta:
         model = Configuration
         exclude = ()
+
+    def __init__(self, *args, **kwargs):
+        super(ConfigurationForm, self).__init__(*args, **kwargs)
+        self.fields['default_categories'].initial = self.instance.default_categories.split(',')
+

@@ -1,16 +1,27 @@
 {% extends "base.html" %}
-{% block title %}LinDa | Settings{% endblock %}
+{% block title %}LinDA | Settings{% endblock %}
 {% block bodyclass %}settings{% endblock %}
+
+{% block css %}
+    <link data-turbolinks-track="true" href="/static/css/chosen.min.css" media="all" rel="stylesheet" />
+{% endblock %}
 
 {% block content %}
 
 <div class="main">
     <h1 class="page-title">LinDA Configuration</h1>
 
-    <form action="" method="post">{% csrf_token %}
+    <form action="" method="post" class="config-form">{% csrf_token %}
         {{ form.as_p }}
         <input type="submit" class="button green" value="Save changes" />
     </form>
 </div>
 
+{% endblock %}
+
+{% block scripts %}
+    <script src="/static/js/chosen.jquery.min.js"></script>
+    <script>
+        $('form.config-form select').chosen();
+    </script>
 {% endblock %}

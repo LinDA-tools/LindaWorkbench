@@ -63,6 +63,8 @@ def recommend_dataset(request):
     categories = request.GET.get("category", None)
     if categories:
         categories = categories.split(',')
+    else:  # load default categories
+        categories = get_configuration().default_categories.split(',')
 
     if vocabulary is not None:
         flag = "Vocabulary"
@@ -92,9 +94,6 @@ def recommend_dataset(request):
         else:
             vocabs = VocabularyProperty.objects.filter(label__iregex=property)
 
-        if categories:
-            vocabs = vocabs.filter(vocabulary__category__in=categories)
-
         for source in vocabs:
             source_info = {}
             source_info['vocabulary'] = source.vocabulary.title
@@ -108,6 +107,9 @@ def recommend_dataset(request):
             source_info['label'] = source.label
             source_info['read_more'] = source.get_absolute_url()
             source_info['ranking'] = source.vocabulary.lodRanking - (len(source_info["label"]) - len(property))*50
+            if categories:
+                if source.vocabulary.category in categories:
+                    source_info["ranking"] += 50 - categories.index(source.vocabulary.category)*5
 
             results.append(source_info)
 
@@ -125,9 +127,6 @@ def recommend_dataset(request):
         else:
             vocabs = VocabularyClass.objects.filter(label__iregex=class_)
 
-        if categories:
-            vocabs = vocabs.filter(vocabulary__category__in=categories)
-
         for source in vocabs:
             source_info = {}
             source_info["vocabulary"] = source.vocabulary.title
@@ -141,6 +140,9 @@ def recommend_dataset(request):
             source_info["label"] = source.label
             source_info["read_more"] = source.get_absolute_url()
             source_info["ranking"] = int(source.vocabulary.lodRanking) - (len(source_info["label"]) - len(class_))*50
+            if categories:
+                if source.vocabulary.category in categories:
+                    source_info["ranking"] += 50 - categories.index(source.vocabulary.category)*5
 
             results.append(source_info)
 
@@ -153,9 +155,6 @@ def recommend_dataset(request):
         else:
             vocabs = Vocabulary.objects.all()
 
-        if categories:
-            vocabs = vocabs.filter(category__in=categories)
-
         for source in vocabs:
             source_info = {}
             source_info["vocabulary"] = source.title
@@ -164,6 +163,9 @@ def recommend_dataset(request):
             source_info["prefix"] = source.preferredNamespacePrefix
             source_info["description"] = source.description
             source_info["ranking"] = int(source.lodRanking)
+            if categories:
+                if source.category in categories:
+                    source_info["ranking"] += 50 - categories.index(source.category)*5
 
             results.append(source_info)
 
