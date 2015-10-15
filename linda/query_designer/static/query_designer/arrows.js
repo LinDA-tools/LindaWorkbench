@@ -16,7 +16,7 @@ var arrows = {
 
     check_remove_connection_button: function() {
         var clicked_connection = false;
-        for (var i=0; i<this.connections.length; ) {
+        for (var i=0; i<this.connections.length; i++) {
             if (this.connections[i].clicked) {
                 clicked_connection = true;
                 break;

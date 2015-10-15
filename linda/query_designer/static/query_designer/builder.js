@@ -58,16 +58,6 @@ var builder = {
         }
     },
 
-    is_initial: function(w, i) {
-        for (var j=0; j<arrows.connections.length; j++) {
-            if (arrows.connections[j].t == '#class_instance_' + i) {
-                return false;
-            }
-        }
-
-        return true;
-    },
-
     get_root_uri: function(uri) {
         var spl = uri.split('/');
         var last_part = spl.pop();
@@ -239,23 +229,16 @@ var builder = {
     },
 
     //forges foreign key relationships
-    create_foreign: function(w, i, p_name, p) {
+    create_foreigns: function(w) {
         for (var j=0; j<arrows.connections.length; j++) {
-             if ((arrows.connections[j].f == '#class_instance_' + i) && (arrows.connections[j].fp == p)) {
-                var tn = arrows.connections[j].t.split('_')[2] //3rd part is the number #class_instance_1
+            var fn = arrows.connections[j].f.split('_')[2]
+            var tn = arrows.connections[j].t.split('_')[2] //3rd part is the number #class_instance_1
 
-                if (w.instances[tn].selected_properties[arrows.connections[j].tp].uri == 'URI') { //foreign key to other entity
-                    if (w.instances[i].selected_properties[p].uri == 'URI') {
-                        this.instance_names[tn] = this.instance_names[i];
-                    } else {
-                        this.instance_names[tn] = this.property_names[i][p];
-                    }
-                } else { //foreign key to other entity's property
-                    this.property_names[tn][arrows.connections[j].tp] = p_name;
-                }
-
-                this.find_property_names(w, tn);
-             }
+            this.property_names[tn][arrows.connections[j].tp] = this.property_names[fn][arrows.connections[j].fp];
+            w.instances[tn].selected_properties[arrows.connections[j].tp].name = this.property_names[tn][arrows.connections[j].tp];
+            if (w.instances[tn].selected_properties[arrows.connections[j].tp].uri == "URI") {
+                this.instance_names[tn] = this.property_names[tn][arrows.connections[j].tp];
+            }
         }
     },
 
@@ -321,10 +304,10 @@ var builder = {
         }
 
         for (var i=0; i<w.instances.length; i++) {
-            if (this.is_initial(w, i)) {
-                this.find_property_names(w, i);
-            }
+            this.find_property_names(w, i);
         }
+
+        this.create_foreigns(w);
     },
 
     //find the names of the properties & forge foreign keys
@@ -344,12 +327,6 @@ var builder = {
                     p.name_from_user = false;
                 }
                 this.property_names[i][j] = p.name;
-            }
-
-            if (p.uri != 'URI') {
-                this.create_foreign(w, i, this.property_names[i][j], j); //handle uri foreign keys
-            } else {
-                this.create_foreign(w, i, this.instance_names[i], j); //handle property foreign keys
             }
         }
     },
