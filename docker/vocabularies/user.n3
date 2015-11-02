@@ -1,0 +1,75 @@
+@prefix dc: <http://purl.org/dc/elements/1.1/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix dctype: <http://purl.org/dc/dcmitype/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix vann: <http://purl.org/vocab/vann/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix cc: <http://web.resource.org/cc/> .
+
+<http://www.w3.org/1999/02/22-rdf-syntax-ns> a owl:Ontology ;
+	dc:date "2006-06-27" ;
+	dc:title "User Schema"@en ;
+	dc:identifier "http://schemas.talis.com/2005/user/schema-20060627" ;
+	dct:isVersionOf <http://schemas.talis.com/2005/user/schema#> ;
+	dc:creator "Ian Davis <http://purl.org/NET/iand>" ;
+	dc:rights "Copyright © 2005 Talis Information Ltd." ;
+	vann:preferredNamespaceUri "http://schemas.talis.com/2005/user/schema#" ;
+	vann:preferredNamespacePrefix "user" ;
+	dct:hasFormat <http://schemas.talis.com/2005/user/schema-20060627.html> .
+
+<http://schemas.talis.com/2005/user/schema-20060627.html> a dctype:Text ;
+	dc:format _:node17168m5m8x3 .
+
+_:node17168m5m8x3 a dct:IMT ;
+	rdf:value "text/html" ;
+	rdfs:label "HTML"@en .
+
+<http://www.w3.org/1999/02/22-rdf-syntax-ns> dct:hasFormat <http://schemas.talis.com/2005/user/schema-20060627.rdf> .
+
+<http://schemas.talis.com/2005/user/schema-20060627.rdf> a dctype:Text ;
+	dc:format _:node17168m5m8x4 .
+
+_:node17168m5m8x4 a dct:IMT ;
+	rdf:value "application/rdf+xml" ;
+	rdfs:label "RDF"@en .
+
+<http://www.w3.org/1999/02/22-rdf-syntax-ns> dct:issued "2006-06-27" .
+
+<http://schemas.talis.com/2005/user/schema#loginName> a owl:DatatypeProperty ;
+	rdfs:label "loginName"@en ;
+	skos:definition "the string used by the user to identify themselves when logging in."@en ;
+	rdfs:domain <http://schemas.talis.com/2005/user/schema#User> ;
+	rdfs:isDefinedBy <http://schemas.talis.com/2005/user/schema#> ;
+	dct:issued "2006-06-27" .
+
+<http://schemas.talis.com/2005/user/schema#passwordSha1Hash> a owl:DatatypeProperty ;
+	rdfs:label "passwordSha1Hash"@en ;
+	skos:definition "a SHA1 hash of the user's password"@en ;
+	rdfs:domain <http://schemas.talis.com/2005/user/schema#User> ;
+	rdfs:isDefinedBy <http://schemas.talis.com/2005/user/schema#> ;
+	dct:issued "2006-06-27" .
+
+<http://schemas.talis.com/2005/user/schema#lastLoginTime> a owl:DatatypeProperty ;
+	rdfs:label "lastLoginTime"@en ;
+	skos:definition "the time and date the user logged into the directory before the current session started."@en ;
+	rdfs:comment "Must be in W3CDTF format. For example: \"2005-12-01T12:12:26Z\""@en ;
+	rdfs:domain <http://schemas.talis.com/2005/user/schema#User> ;
+	rdfs:isDefinedBy <http://schemas.talis.com/2005/user/schema#> ;
+	dct:issued "2006-06-27" .
+
+<http://schemas.talis.com/2005/user/schema#currentLoginTime> a owl:DatatypeProperty ;
+	rdfs:label "lastLoginTime"@en ;
+	skos:definition "the time and date the user logged into the directory to initiate this session."@en ;
+	rdfs:comment "Must be in W3CDTF format. For example: \"2005-12-01T12:12:26Z\""@en ;
+	rdfs:domain <http://schemas.talis.com/2005/user/schema#User> ;
+	rdfs:isDefinedBy <http://schemas.talis.com/2005/user/schema#> ;
+	dct:issued "2006-06-27" .
+
+<http://schemas.talis.com/2005/user/schema#User> a owl:Class ;
+	rdfs:label "User"@en ;
+	skos:definition "a registered user of the directory"@en ;
+	rdfs:subClassOf <http://xmlns.com/foaf/0.1/Person> ;
+	rdfs:isDefinedBy <http://schemas.talis.com/2005/user/schema#> ;
+	dct:issued "2006-06-27" .

@@ -37,31 +37,22 @@ ENV HOME /root
 # Define working directory.
 WORKDIR /root
 
-# Define default command.
-CMD ["bash"]
-
-# Install tomcat
-RUN apt-get update && \
-    apt-get install -yq --no-install-recommends wget pwgen ca-certificates && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
-
+# INSTALL TOMCAT
 ENV TOMCAT_MAJOR_VERSION 7
 ENV TOMCAT_MINOR_VERSION 7.0.55
-ENV CATALINA_HOME /home/tomcat
+ENV CATALINA_HOME /tomcat
 
-RUN wget -q https://archive.apache.org/dist/tomcat/tomcat-${TOMCAT_MAJOR_VERSION}/v${TOMCAT_MINOR_VERSION}/bin/apache-tomcat-${TOMCAT_MINOR_VERSION}.tar.gz && \
-    wget -qO- https://archive.apache.org/dist/tomcat/tomcat-${TOMCAT_MAJOR_VERSION}/v${TOMCAT_MINOR_VERSION}/bin/apache-tomcat-${TOMCAT_MINOR_VERSION}.tar.gz.md5 | md5sum -c - && \
-    tar zxf apache-tomcat-*.tar.gz && \
-    rm apache-tomcat-*.tar.gz && \
-    mv apache-tomcat* tomcat
+RUN wget -q https://archive.apache.org/dist/tomcat/tomcat-${TOMCAT_MAJOR_VERSION}/v${TOMCAT_MINOR_VERSION}/bin/apache-tomcat-${TOMCAT_MINOR_VERSION}.tar.gz
+RUN    wget -qO- https://archive.apache.org/dist/tomcat/tomcat-${TOMCAT_MAJOR_VERSION}/v${TOMCAT_MINOR_VERSION}/bin/apache-tomcat-${TOMCAT_MINOR_VERSION}.tar.gz.md5 | md5sum -c - 
+RUN    tar zxf apache-tomcat-*.tar.gz
+RUN    rm apache-tomcat-*.tar.gz
+RUN    mv apache-tomcat* tomcat
 
 ADD create_tomcat_admin_user.sh /create_tomcat_admin_user.sh
 ADD tomcat-run.sh /tomcat-run.sh
 RUN chmod +x /*.sh
 
 EXPOSE 8080
-CMD ["/tomcat-run.sh"]
 
 # Install MySQL
 # add our user and group first to make sure their IDs get assigned consistently, regardless of whatever dependencies get added
@@ -75,7 +66,6 @@ RUN chmod +x /usr/local/bin/mysql-run
 
 VOLUME ["/var/lib/mysql"]
 EXPOSE 3306
-CMD ["/usr/local/bin/mysql-run"]
 
 # Install OpenRDF
 ENV SESAME_VERSION 2.7.13
@@ -100,20 +90,47 @@ VOLUME /openrdf-data
 RUN git clone https://github.com/LinDA-tools/LindaWorkbench.git /LinDAWorkbench
 
 # Install Python.
-RUN \
-  apt-get install -y python python-dev python-pip python-virtualenv && \
-  rm -rf /var/lib/apt/lists/*
-RUN apt-get update && apt-get install libmysqlclient15-dev
-RUN easy_install pip
- 
+# https://github.com/docker-library/python/issues/13
+ENV LANG C.UTF-8
+
+# Update package lists and install python3, python3-dev, pip-3.2
+RUN apt-get update && apt-get install --no-install-recommends -y -q \
+    python3 python3-dev python3-pip \
+    ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
+RUN apt-get install -y python3-setuptools
+RUN apt-get update && apt-get install -y libmysqlclient15-dev
+RUN apt-get install -y libxml2-dev libxslt1-dev python-dev
+RUN apt-get install -y libjpeg-dev
+RUN easy_install3 pip
+
 RUN pip install -r /LinDAWorkbench/requirements.txt
+
+# Clone transformation app
+RUN git clone https://github.com/LinDA-tools/transformation.git /LinDAWorkbench/linda/transformation
+
+# TMP  -PLEASE FIX AT END!!!
+RUN sudo rm -rf /usr/lib/python3/dist-packages/urllib3 && sudo rm -rf /usr/lib/python3/dist-packages/urllib3-1.7.1.egg-info && ls -la /usr/lib/python3/dist-packages/
+RUN pip install urllib3==1.8.3 && pip install pyelasticsearch && pip install elasticsearch==1.7.0
+ADD qdmodels.py /LinDAWorkbench/linda/query_designer/models.py 
 
 # Expose workbench ports
 EXPOSE 8000
+ADD passwords.py /LinDAWorkbench/linda/linda_app/passwords.py
+ADD settings.py /LinDAWorkbench/linda/linda_app/settings.py
+ADD vocabularies /LinDAWorkbench/linda/linda_app/static/vocabularies
+ADD models.py /LinDAWorkbench/linda/linda_app/models.py
 
-RUN python /LinDAWorkbench/linda/manage.py makemigrations
-RUN python /LinDAWorkbench/linda/manage.py migrate
-RUN python /LinDAWorkbench/linda/manage.py loaddata
+RUN nohup /elasticsearch/bin/elasticsearch & \
+	service mysql start && \
+	python3 /LinDAWorkbench/linda/manage.py makemigrations && \
+	mysql -u root -e "CREATE DATABASE linda CHARACTER SET utf8 COLLATE utf8_general_ci;" && \
+	python3 /LinDAWorkbench/linda/manage.py migrate && \
+	echo "from django.contrib.auth.models import User; User.objects.create_superuser('admin', 'admin@example.com', 'pass')" | python3 /LinDAWorkbench/linda/manage.py shell && \
+	python3 /LinDAWorkbench/linda/manage.py loaddata /LinDAWorkbench/linda/linda_app/installer/data/vocabularies.json
+	
+CMD nohup /tomcat-run.sh & \
+	nohup /elasticsearch/bin/elasticsearch & \
+	service mysql start && \	
+	python3 /LinDAWorkbench/linda/manage.py runserver 0.0.0.0:8000
 
-# Run server
-RUN python /LinDAWorkbench/linda/manage.py runserver 0.0.0.0:8000

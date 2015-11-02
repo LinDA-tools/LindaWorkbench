@@ -1,0 +1,1272 @@
+@prefix :      <http://sensormeasurement.appspot.com/ont/home/homeActivity#> .
+@prefix dc:    <http://purl.org/dc/elements/1.1/> .
+@prefix homeActivity: <http://sensormeasurement.appspot.com/ont/home/homeActivity#> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix foaf:  <http://xmlns.com/foaf/0.1/> .
+@prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
+@prefix owl:   <http://www.w3.org/2002/07/owl#> .
+@prefix vann:  <http://purl.org/vocab/vann/> .
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix vs:    <http://www.w3.org/2003/06/sw-vocab-status/ns#> .
+@prefix cc:    <http://creativecommons.org/ns#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+
+homeActivity:Working_on_computer
+        a                owl:Class ;
+        rdfs:label       "Working_on_computer" ;
+        rdfs:subClassOf  homeActivity:Object_based_Actvity ;
+        rdfs:subClassOf  [ a                  owl:Restriction ;
+                           owl:allValuesFrom  homeActivity:Computer ;
+                           owl:onProperty     homeActivity:has_use
+                         ] ;
+        rdfs:subClassOf  [ a                owl:Restriction ;
+                           owl:cardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onProperty   homeActivity:has_use
+                         ] .
+
+homeActivity:has_Day_of_week
+        a                   owl:ObjectProperty ;
+        rdfs:domain         homeActivity:Date ;
+        rdfs:subPropertyOf  homeActivity:hasAttribute .
+
+homeActivity:Living_room_Activity
+        a                owl:Class ;
+        rdfs:label       "Living_room_Activity" ;
+        rdfs:subClassOf  homeActivity:Location_based_Activity ;
+        rdfs:subClassOf  [ a                  owl:Restriction ;
+                           owl:allValuesFrom  homeActivity:Livingroom ;
+                           owl:onProperty     homeActivity:has_location
+                         ] ;
+        rdfs:subClassOf  [ a                owl:Restriction ;
+                           owl:cardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onProperty   homeActivity:has_location
+                         ] .
+
+homeActivity:has_Activity_name
+        a                   owl:ObjectProperty ;
+        rdfs:domain         homeActivity:Last_Activity ;
+        rdfs:subPropertyOf  homeActivity:hasAttribute .
+
+homeActivity:Kettle  a   owl:Class ;
+        rdfs:label       "Kettle" ;
+        rdfs:subClassOf  homeActivity:Kitchen_Appliance .
+
+homeActivity:Bedroom_Activity
+        a                owl:Class ;
+        rdfs:label       "Bedroom_Activity" ;
+        rdfs:subClassOf  homeActivity:Location_based_Activity ;
+        rdfs:subClassOf  [ a                  owl:Restriction ;
+                           owl:allValuesFrom  homeActivity:Bedroom ;
+                           owl:onProperty     homeActivity:has_location
+                         ] ;
+        rdfs:subClassOf  [ a                owl:Restriction ;
+                           owl:cardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onProperty   homeActivity:has_location
+                         ] .
+
+homeActivity:Cooking  a  owl:Class ;
+        rdfs:label       "Cooking" ;
+        rdfs:subClassOf  homeActivity:Kitchen_Activity ;
+        rdfs:subClassOf  [ a                  owl:Restriction ;
+                           owl:allValuesFrom  homeActivity:Refrigerator ;
+                           owl:onProperty     homeActivity:has_use
+                         ] ;
+        rdfs:subClassOf  [ a                owl:Restriction ;
+                           owl:cardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onProperty   homeActivity:has_use
+                         ] ;
+        rdfs:subClassOf  [ a                  owl:Restriction ;
+                           owl:allValuesFrom  homeActivity:Electric_Stove ;
+                           owl:onProperty     homeActivity:has_use
+                         ] ;
+        rdfs:subClassOf  [ a                owl:Restriction ;
+                           owl:cardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onProperty   homeActivity:has_use
+                         ] .
+
+homeActivity:Human_Posture
+        a                owl:Class ;
+        rdfs:label       "Human_Posture" ;
+        rdfs:subClassOf  homeActivity:Any ;
+        rdfs:subClassOf  [ a                  owl:Restriction ;
+                           owl:allValuesFrom  homeActivity:string ;
+                           owl:onProperty     homeActivity:has_Posture_name
+                         ] ;
+        rdfs:subClassOf  [ a                owl:Restriction ;
+                           owl:cardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onProperty   homeActivity:has_Posture_name
+                         ] ;
+        rdfs:subClassOf  [ a                  owl:Restriction ;
+                           owl:allValuesFrom  homeActivity:integer ;
+                           owl:onProperty     homeActivity:has_Posture_ID
+                         ] ;
+        rdfs:subClassOf  [ a                owl:Restriction ;
+                           owl:cardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onProperty   homeActivity:has_Posture_ID
+                         ] ;
+        rdfs:subClassOf  [ a                  owl:Restriction ;
+                           owl:allValuesFrom  homeActivity:Human ;
+                           owl:onProperty     homeActivity:has_Actor
+                         ] ;
+        rdfs:subClassOf  [ a                owl:Restriction ;
+                           owl:cardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onProperty   homeActivity:has_Actor
+                         ] .
+
+homeActivity:Milk  a     owl:Class ;
+        rdfs:label       "Milk" ;
+        rdfs:subClassOf  homeActivity:Drink .
+
+homeActivity:Electric_Stove
+        a                owl:Class ;
+        rdfs:label       "Electric_Stove" ;
+        rdfs:subClassOf  homeActivity:Kitchen_Appliance .
+
+homeActivity:Bathroom_Activity
+        a                owl:Class ;
+        rdfs:label       "Bathroom_Activity" ;
+        rdfs:subClassOf  homeActivity:Location_based_Activity ;
+        rdfs:subClassOf  [ a                  owl:Restriction ;
+                           owl:allValuesFrom  homeActivity:Bathroom ;
+                           owl:onProperty     homeActivity:has_location
+                         ] ;
+        rdfs:subClassOf  [ a                owl:Restriction ;
+                           owl:cardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onProperty   homeActivity:has_location
+                         ] .
+
+homeActivity:Date  a     owl:Class ;
+        rdfs:label       "Date" ;
+        rdfs:subClassOf  homeActivity:Any ;
+        rdfs:subClassOf  [ a                  owl:Restriction ;
+                           owl:allValuesFrom  homeActivity:integer ;
+                           owl:onProperty     homeActivity:has_date
+                         ] ;
+        rdfs:subClassOf  [ a                owl:Restriction ;
+                           owl:cardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onProperty   homeActivity:has_Day_of_week
+                         ] ;
+        rdfs:subClassOf  [ a                owl:Restriction ;
+                           owl:cardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onProperty   homeActivity:has_Month
+                         ] ;
+        rdfs:subClassOf  [ a                owl:Restriction ;
+                           owl:cardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onProperty   homeActivity:has_date
+                         ] ;
+        rdfs:subClassOf  [ a                  owl:Restriction ;
+                           owl:allValuesFrom  homeActivity:string ;
+                           owl:onProperty     homeActivity:has_Day_of_week
+                         ] ;
+        rdfs:subClassOf  [ a                  owl:Restriction ;
+                           owl:allValuesFrom  homeActivity:integer ;
+                           owl:onProperty     homeActivity:has_Month
+                         ] ;
+        rdfs:subClassOf  [ a                  owl:Restriction ;
+                           owl:allValuesFrom  homeActivity:integer ;
+                           owl:onProperty     homeActivity:has_Year
+                         ] ;
+        rdfs:subClassOf  [ a                owl:Restriction ;
+                           owl:cardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onProperty   homeActivity:has_Year
+                         ] .
+
+homeActivity:Oven  a     owl:Class ;
+        rdfs:label       "Oven" ;
+        rdfs:subClassOf  homeActivity:Kitchen_Appliance .
+
+homeActivity:Watching_TV
+        a                owl:Class ;
+        rdfs:label       "Watching_TV" ;
+        rdfs:subClassOf  homeActivity:Object_based_Actvity ;
+        rdfs:subClassOf  [ a                  owl:Restriction ;
+                           owl:allValuesFrom  homeActivity:TV ;
+                           owl:onProperty     homeActivity:has_use
+                         ] ;
+        rdfs:subClassOf  [ a                owl:Restriction ;
+                           owl:cardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onProperty   homeActivity:has_use
+                         ] .
+
+homeActivity:has_have_activities
+        a                   owl:ObjectProperty ;
+        rdfs:domain         homeActivity:Last_Activity ;
+        rdfs:subPropertyOf  homeActivity:hasPart .
+
+homeActivity:has_Location_name
+        a                   owl:ObjectProperty ;
+        rdfs:domain         homeActivity:Location ;
+        rdfs:subPropertyOf  homeActivity:hasAttribute .
+
+homeActivity:Human  a    owl:Class ;
+        rdfs:label       "Human" ;
+        rdfs:subClassOf  homeActivity:Object ;
+        rdfs:subClassOf  [ a                  owl:Restriction ;
+                           owl:allValuesFrom  homeActivity:Activity_Log ;
+                           owl:onProperty     homeActivity:has_have_act_log
+                         ] ;
+        rdfs:subClassOf  [ a                owl:Restriction ;
+                           owl:cardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onProperty   homeActivity:has_have_act_log
+                         ] .
+
+homeActivity:Table  a    owl:Class ;
+        rdfs:label       "Table" ;
+        rdfs:subClassOf  homeActivity:Furniture .
+
+homeActivity:Electric_Appliance
+        a                owl:Class ;
+        rdfs:label       "Electric_Appliance" ;
+        rdfs:subClassOf  homeActivity:Object .
+
+homeActivity:Any  a  owl:Class ;
+        rdfs:label  "Any" .
+
+homeActivity:Computer
+        a                owl:Class ;
+        rdfs:label       "Computer" ;
+        rdfs:subClassOf  homeActivity:Entertainment .
+
+homeActivity:Sensor_Type
+        a                owl:Class ;
+        rdfs:label       "Sensor_Type" ;
+        rdfs:subClassOf  homeActivity:Sensor .
+
+homeActivity:Object_based_Actvity
+        a                owl:Class ;
+        rdfs:label       "Object_based_Actvity" ;
+        rdfs:subClassOf  homeActivity:Functional_Activity ;
+        rdfs:subClassOf  [ a                  owl:Restriction ;
+                           owl:allValuesFrom  homeActivity:Object ;
+                           owl:onProperty     homeActivity:has_use
+                         ] ;
+        rdfs:subClassOf  [ a                owl:Restriction ;
+                           owl:cardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onProperty   homeActivity:has_use
+                         ] .
+
+homeActivity:has_hasDrinkType
+        a                   owl:ObjectProperty ;
+        rdfs:domain         homeActivity:Making_a_coffee ;
+        rdfs:subPropertyOf  homeActivity:hasPart .
+
+homeActivity:has_have_date
+        a                   owl:ObjectProperty ;
+        rdfs:domain         [ a            owl:Class ;
+                              owl:unionOf  ( homeActivity:Context homeActivity:Sensor homeActivity:ADL )
+                            ] ;
+        rdfs:subPropertyOf  homeActivity:hasPart .
+
+homeActivity:Last_Object
+        a                owl:Class ;
+        rdfs:label       "Last_Object" ;
+        rdfs:subClassOf  homeActivity:Activity_Log ;
+        rdfs:subClassOf  [ a                  owl:Restriction ;
+                           owl:allValuesFrom  homeActivity:string ;
+                           owl:onProperty     homeActivity:has_Object_name
+                         ] ;
+        rdfs:subClassOf  [ a                owl:Restriction ;
+                           owl:cardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onProperty   homeActivity:has_Object_name
+                         ] ;
+        rdfs:subClassOf  [ a                  owl:Restriction ;
+                           owl:allValuesFrom  homeActivity:integer ;
+                           owl:onProperty     homeActivity:has_Object_ID
+                         ] ;
+        rdfs:subClassOf  [ a                owl:Restriction ;
+                           owl:cardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onProperty   homeActivity:has_Object_ID
+                         ] ;
+        rdfs:subClassOf  [ a                  owl:Restriction ;
+                           owl:allValuesFrom  homeActivity:ObjectInstance ;
+                           owl:onProperty     homeActivity:has_Object_info
+                         ] ;
+        rdfs:subClassOf  [ a                owl:Restriction ;
+                           owl:cardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onProperty   homeActivity:has_Object_info
+                         ] .
+
+homeActivity:Door  a     owl:Class ;
+        rdfs:label       "Door" ;
+        rdfs:subClassOf  homeActivity:Furniture .
+
+homeActivity:has_Sensor_ID
+        a                   owl:ObjectProperty ;
+        rdfs:domain         homeActivity:Sensor ;
+        rdfs:subPropertyOf  homeActivity:hasAttribute .
+
+homeActivity:Coffee  a   owl:Class ;
+        rdfs:label       "Coffee" ;
+        rdfs:subClassOf  homeActivity:Drink .
+
+homeActivity:Sit  a      owl:Class ;
+        rdfs:label       "Sit" ;
+        rdfs:subClassOf  homeActivity:Human_Posture .
+
+homeActivity:Drink  a    owl:Class ;
+        rdfs:label       "Drink" ;
+        rdfs:subClassOf  homeActivity:Food .
+
+homeActivity:has_have_last_activity
+        a                   owl:ObjectProperty ;
+        rdfs:domain         homeActivity:Context ;
+        rdfs:subPropertyOf  homeActivity:hasPart .
+
+homeActivity:Shower  a   owl:Class ;
+        rdfs:label       "Shower" ;
+        rdfs:subClassOf  homeActivity:Furniture .
+
+homeActivity:has_name
+        a                   owl:ObjectProperty ;
+        rdfs:domain         homeActivity:Functional_Activity ;
+        rdfs:subPropertyOf  homeActivity:hasAttribute .
+
+homeActivity:Food  a     owl:Class ;
+        rdfs:label       "Food" ;
+        rdfs:subClassOf  homeActivity:Object .
+
+homeActivity:has_Month
+        a                   owl:ObjectProperty ;
+        rdfs:domain         homeActivity:Date ;
+        rdfs:subPropertyOf  homeActivity:hasAttribute .
+
+homeActivity:Book  a     owl:Class ;
+        rdfs:label       "Book" ;
+        rdfs:subClassOf  homeActivity:Furniture .
+
+homeActivity:has_Object_ID
+        a                   owl:ObjectProperty ;
+        rdfs:domain         [ a            owl:Class ;
+                              owl:unionOf  ( homeActivity:Object homeActivity:Last_Object )
+                            ] ;
+        rdfs:subPropertyOf  homeActivity:hasAttribute .
+
+homeActivity:Bottle  a   owl:Class ;
+        rdfs:label       "Bottle" ;
+        rdfs:subClassOf  homeActivity:Furniture .
+
+homeActivity:has_posture
+        a                   owl:ObjectProperty ;
+        rdfs:domain         [ a            owl:Class ;
+                              owl:unionOf  ( homeActivity:Sleeping homeActivity:Reading_a_book homeActivity:Sitting_on_the_toilet homeActivity:Lying_down___relaxing )
+                            ] ;
+        rdfs:subPropertyOf  homeActivity:hasPart .
+
+homeActivity:has_isAttached
+        a                   owl:ObjectProperty ;
+        rdfs:domain         homeActivity:Object ;
+        rdfs:subPropertyOf  homeActivity:hasPart .
+
+homeActivity:Sink  a     owl:Class ;
+        rdfs:label       "Sink" ;
+        rdfs:subClassOf  homeActivity:Furniture .
+
+homeActivity:has_AttachTo
+        a                   owl:ObjectProperty ;
+        rdfs:domain         homeActivity:Sensor ;
+        rdfs:subPropertyOf  homeActivity:hasPart .
+
+homeActivity:Infrared_Sensor
+        a                owl:Class ;
+        rdfs:label       "Infrared_Sensor" ;
+        rdfs:subClassOf  homeActivity:Sensor_Type .
+
+homeActivity:Chair  a    owl:Class ;
+        rdfs:label       "Chair" ;
+        rdfs:subClassOf  homeActivity:Furniture .
+
+homeActivity:Lying_down___relaxing
+        a                owl:Class ;
+        rdfs:label       "Lying_down___relaxing" ;
+        rdfs:subClassOf  homeActivity:Living_room_Activity ;
+        rdfs:subClassOf  [ a                  owl:Restriction ;
+                           owl:allValuesFrom  homeActivity:Lie-down ;
+                           owl:onProperty     homeActivity:has_posture
+                         ] ;
+        rdfs:subClassOf  [ a                owl:Restriction ;
+                           owl:cardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onProperty   homeActivity:has_posture
+                         ] ;
+        rdfs:subClassOf  [ a                  owl:Restriction ;
+                           owl:allValuesFrom  homeActivity:Sofa ;
+                           owl:onProperty     homeActivity:has_use
+                         ] ;
+        rdfs:subClassOf  [ a                owl:Restriction ;
+                           owl:cardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onProperty   homeActivity:has_use
+                         ] .
+
+homeActivity:Current_Sensor
+        a                owl:Class ;
+        rdfs:label       "Current_Sensor" ;
+        rdfs:subClassOf  homeActivity:Sensor_Type .
+
+homeActivity:has_Current_location
+        a                   owl:ObjectProperty ;
+        rdfs:domain         homeActivity:Object ;
+        rdfs:subPropertyOf  homeActivity:hasPart .
+
+homeActivity:Microwave
+        a                owl:Class ;
+        rdfs:label       "Microwave" ;
+        rdfs:subClassOf  homeActivity:Kitchen_Appliance .
+
+homeActivity:has_Time
+        a                   owl:ObjectProperty ;
+        rdfs:domain         [ a            owl:Class ;
+                              owl:unionOf  ( homeActivity:Sensor homeActivity:Activity_Log homeActivity:ADL )
+                            ] ;
+        rdfs:subPropertyOf  homeActivity:hasAttribute .
+
+homeActivity:has_location
+        a                   owl:ObjectProperty ;
+        rdfs:domain         [ a            owl:Class ;
+                              owl:unionOf  ( homeActivity:Location_based_Activity homeActivity:Kitchen_Activity homeActivity:Bedroom_Activity homeActivity:Bathroom_Activity homeActivity:Living_room_Activity homeActivity:ObjectInstance )
+                            ] ;
+        rdfs:subPropertyOf  homeActivity:hasPart .
+
+homeActivity:Scrubbing_the_floor
+        a                owl:Class ;
+        rdfs:label       "Scrubbing_the_floor" ;
+        rdfs:subClassOf  homeActivity:Object_based_Actvity ;
+        rdfs:subClassOf  [ a                  owl:Restriction ;
+                           owl:allValuesFrom  homeActivity:Mop ;
+                           owl:onProperty     homeActivity:has_use
+                         ] ;
+        rdfs:subClassOf  [ a                owl:Restriction ;
+                           owl:cardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onProperty   homeActivity:has_use
+                         ] .
+
+homeActivity:has_Object_name
+        a                   owl:ObjectProperty ;
+        rdfs:domain         [ a            owl:Class ;
+                              owl:unionOf  ( homeActivity:Object homeActivity:Last_Object )
+                            ] ;
+        rdfs:subPropertyOf  homeActivity:hasAttribute .
+
+homeActivity:has_have_act_log
+        a                   owl:ObjectProperty ;
+        rdfs:domain         homeActivity:Human ;
+        rdfs:subPropertyOf  homeActivity:hasPart .
+
+homeActivity:  a                       <http://purl.org/vocommons/voaf#Vocabulary> , owl:Ontology ;
+        rdfs:seeAlso                   "Location-based concept in activity log ontology for activity recognition in smart home domain. [Wongpatikseree et al. 2013]"^^xsd:string , "A context aware information in smart home for health recommendation service based on care architecture. [Wongpatikseree et al. 2013] "^^xsd:string ;
+        rdfs:seeAlso                   <http://saki.siit.tu.ac.th/acis2013/uploads_final/29__3557af91375c8a9aa3b6f92c3f9165af/A%20Context-aware%20Information%20in%20Smart%20Home%20for%20Health%20Recommendation%20Service%20based%20on%20CARE%20Architecture_Camera_Ready.pdf> , <http://link.springer.com/chapter/10.1007%2F978-3-642-37996-3_24#page-1> ;
+        cc:license                     <http://creativecommons.org/licenses/by/3.0/> ;
+        dc:creator                     "Konlakorn Wongpatikseree"^^xsd:string ;
+        dc:description                 "13 rules are described such as sweeping the floor, scrubbing the floor, making a coffee, cooking, eating or drinking, sleeping, working on a computer, taking a bath, watching tv, reading a book, sitting on the toilet, lying down relaxing, wash dishes. The ontology has been implemented with Ontology editor tool HOZO:OWL Export"@en ;
+        dc:title                       "An ontology to detect activities in a smart home"@en ;
+        dcterms:issued                 "2014-04-02"^^xsd:date ;
+        dcterms:modified               "2014-05-12"^^xsd:date ;
+        vann:preferredNamespacePrefix  "homeActivity" ;
+        vann:preferredNamespaceUri     "http://sensormeasurement.appspot.com/ont/home/homeActivity#" ;
+        owl:versionInfo                0.1 ;
+        vs:term_status                 "Work in progress" .
+
+homeActivity:integer  a  owl:Class ;
+        rdfs:label       "integer" ;
+        rdfs:subClassOf  homeActivity:UndefinedClass .
+
+homeActivity:has_Have_activity
+        a                   owl:ObjectProperty ;
+        rdfs:domain         homeActivity:InferredActivity ;
+        rdfs:subPropertyOf  homeActivity:hasPart .
+
+homeActivity:has_id  a      owl:ObjectProperty ;
+        rdfs:domain         homeActivity:Functional_Activity ;
+        rdfs:subPropertyOf  homeActivity:hasAttribute .
+
+homeActivity:has_have_sensor
+        a                   owl:ObjectProperty ;
+        rdfs:domain         homeActivity:Context ;
+        rdfs:subPropertyOf  homeActivity:hasPart .
+
+homeActivity:Softdrink
+        a                owl:Class ;
+        rdfs:label       "Softdrink" ;
+        rdfs:subClassOf  homeActivity:Drink .
+
+homeActivity:Sensor  a   owl:Class ;
+        rdfs:label       "Sensor" ;
+        rdfs:subClassOf  homeActivity:Any ;
+        rdfs:subClassOf  [ a                owl:Restriction ;
+                           owl:cardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onProperty   homeActivity:has_Time
+                         ] ;
+        rdfs:subClassOf  [ a                  owl:Restriction ;
+                           owl:allValuesFrom  homeActivity:string ;
+                           owl:onProperty     homeActivity:has_Sensor_ID
+                         ] ;
+        rdfs:subClassOf  [ a                  owl:Restriction ;
+                           owl:allValuesFrom  homeActivity:Date ;
+                           owl:onProperty     homeActivity:has_have_date
+                         ] ;
+        rdfs:subClassOf  [ a                  owl:Restriction ;
+                           owl:allValuesFrom  homeActivity:string ;
+                           owl:onProperty     homeActivity:has_Status
+                         ] ;
+        rdfs:subClassOf  [ a                  owl:Restriction ;
+                           owl:allValuesFrom  homeActivity:string ;
+                           owl:onProperty     homeActivity:has_Time
+                         ] ;
+        rdfs:subClassOf  [ a                owl:Restriction ;
+                           owl:cardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onProperty   homeActivity:has_AttachTo
+                         ] ;
+        rdfs:subClassOf  [ a                owl:Restriction ;
+                           owl:cardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onProperty   homeActivity:has_Status
+                         ] ;
+        rdfs:subClassOf  [ a                owl:Restriction ;
+                           owl:cardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onProperty   homeActivity:has_Sensor_ID
+                         ] ;
+        rdfs:subClassOf  [ a                owl:Restriction ;
+                           owl:cardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onProperty   homeActivity:has_have_date
+                         ] ;
+        rdfs:subClassOf  [ a                  owl:Restriction ;
+                           owl:allValuesFrom  homeActivity:Object ;
+                           owl:onProperty     homeActivity:has_AttachTo
+                         ] .
+
+homeActivity:Phone  a    owl:Class ;
+        rdfs:label       "Phone" ;
+        rdfs:subClassOf  homeActivity:Entertainment .
+
+homeActivity:Object  a   owl:Class ;
+        rdfs:label       "Object" ;
+        rdfs:subClassOf  homeActivity:Any ;
+        rdfs:subClassOf  [ a                  owl:Restriction ;
+                           owl:allValuesFrom  homeActivity:string ;
+                           owl:onProperty     homeActivity:has_Object_name
+                         ] ;
+        rdfs:subClassOf  [ a                owl:Restriction ;
+                           owl:cardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onProperty   homeActivity:has_isAttached
+                         ] ;
+        rdfs:subClassOf  [ a                  owl:Restriction ;
+                           owl:allValuesFrom  homeActivity:integer ;
+                           owl:onProperty     homeActivity:has_Object_ID
+                         ] ;
+        rdfs:subClassOf  [ a                  owl:Restriction ;
+                           owl:allValuesFrom  homeActivity:Location ;
+                           owl:onProperty     homeActivity:has_Current_location
+                         ] ;
+        rdfs:subClassOf  [ a                owl:Restriction ;
+                           owl:cardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onProperty   homeActivity:has_Object_ID
+                         ] ;
+        rdfs:subClassOf  [ a                owl:Restriction ;
+                           owl:cardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onProperty   homeActivity:has_Object_name
+                         ] ;
+        rdfs:subClassOf  [ a                owl:Restriction ;
+                           owl:cardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onProperty   homeActivity:has_Current_location
+                         ] ;
+        rdfs:subClassOf  [ a                  owl:Restriction ;
+                           owl:allValuesFrom  homeActivity:Sensor ;
+                           owl:onProperty     homeActivity:has_isAttached
+                         ] .
+
+homeActivity:has_have_time
+        a                   owl:ObjectProperty ;
+        rdfs:domain         homeActivity:Context ;
+        rdfs:subPropertyOf  homeActivity:hasAttribute .
+
+homeActivity:Making_a_coffee
+        a                owl:Class ;
+        rdfs:label       "Making_a_coffee" ;
+        rdfs:subClassOf  homeActivity:Kitchen_Activity ;
+        rdfs:subClassOf  [ a                  owl:Restriction ;
+                           owl:allValuesFrom  homeActivity:Coffee ;
+                           owl:onProperty     homeActivity:has_use
+                         ] ;
+        rdfs:subClassOf  [ a                owl:Restriction ;
+                           owl:cardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onProperty   homeActivity:has_use
+                         ] ;
+        rdfs:subClassOf  [ a                  owl:Restriction ;
+                           owl:allValuesFrom  homeActivity:Coffee ;
+                           owl:onProperty     homeActivity:has_hasDrinkType
+                         ] ;
+        rdfs:subClassOf  [ a                owl:Restriction ;
+                           owl:cardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onProperty   homeActivity:has_hasDrinkType
+                         ] .
+
+homeActivity:TV  a       owl:Class ;
+        rdfs:label       "TV" ;
+        rdfs:subClassOf  homeActivity:Entertainment .
+
+homeActivity:Lie-down
+        a                owl:Class ;
+        rdfs:label       "Lie-down" ;
+        rdfs:subClassOf  homeActivity:Human_Posture .
+
+homeActivity:has_Activity_ID
+        a                   owl:ObjectProperty ;
+        rdfs:domain         homeActivity:Last_Activity ;
+        rdfs:subPropertyOf  homeActivity:hasAttribute .
+
+homeActivity:Cupboard
+        a                owl:Class ;
+        rdfs:label       "Cupboard" ;
+        rdfs:subClassOf  homeActivity:Furniture .
+
+homeActivity:has_location_concept
+        a                   owl:ObjectProperty ;
+        rdfs:domain         homeActivity:Last_Activity ;
+        rdfs:subPropertyOf  homeActivity:hasPart .
+
+homeActivity:Refrigerator
+        a                owl:Class ;
+        rdfs:label       "Refrigerator" ;
+        rdfs:subClassOf  homeActivity:Kitchen_Appliance .
+
+homeActivity:has_use  a     owl:ObjectProperty ;
+        rdfs:domain         [ a            owl:Class ;
+                              owl:unionOf  ( homeActivity:Object_based_Actvity homeActivity:Sweeping_the_floor homeActivity:Scrubbing_the_floor homeActivity:Making_a_coffee homeActivity:Cooking homeActivity:Sleeping homeActivity:Working_on_computer homeActivity:Taking_a_bath homeActivity:Watching_TV homeActivity:Reading_a_book homeActivity:Sitting_on_the_toilet homeActivity:Lying_down___relaxing homeActivity:Wash_dishes )
+                            ] ;
+        rdfs:subPropertyOf  homeActivity:hasPart .
+
+homeActivity:Alcolhol
+        a                owl:Class ;
+        rdfs:label       "Alcolhol" ;
+        rdfs:subClassOf  homeActivity:Drink .
+
+homeActivity:has_have_inf_activity
+        a                   owl:ObjectProperty ;
+        rdfs:domain         homeActivity:Context ;
+        rdfs:subPropertyOf  homeActivity:hasPart .
+
+homeActivity:has_Collect
+        a                   owl:ObjectProperty ;
+        rdfs:domain         homeActivity:ADL ;
+        rdfs:subPropertyOf  homeActivity:hasPart .
+
+homeActivity:Context  a  owl:Class ;
+        rdfs:label       "Context" ;
+        rdfs:subClassOf  homeActivity:Any ;
+        rdfs:subClassOf  [ a                  owl:Restriction ;
+                           owl:allValuesFrom  homeActivity:Last_Activity ;
+                           owl:onProperty     homeActivity:has_have_last_activity
+                         ] ;
+        rdfs:subClassOf  [ a                  owl:Restriction ;
+                           owl:allValuesFrom  homeActivity:ObjectInstance ;
+                           owl:onProperty     homeActivity:has_have_obj
+                         ] ;
+        rdfs:subClassOf  [ a                  owl:Restriction ;
+                           owl:allValuesFrom  homeActivity:Sensor ;
+                           owl:onProperty     homeActivity:has_have_sensor
+                         ] ;
+        rdfs:subClassOf  [ a                owl:Restriction ;
+                           owl:cardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onProperty   homeActivity:has_have_last_activity
+                         ] ;
+        rdfs:subClassOf  [ a                  owl:Restriction ;
+                           owl:allValuesFrom  homeActivity:string ;
+                           owl:onProperty     homeActivity:has_have_time
+                         ] ;
+        rdfs:subClassOf  [ a                owl:Restriction ;
+                           owl:cardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onProperty   homeActivity:has_have_inf_activity
+                         ] ;
+        rdfs:subClassOf  [ a                  owl:Restriction ;
+                           owl:allValuesFrom  homeActivity:integer ;
+                           owl:onProperty     homeActivity:has_Context_ID
+                         ] ;
+        rdfs:subClassOf  [ a                  owl:Restriction ;
+                           owl:allValuesFrom  homeActivity:Last_Object ;
+                           owl:onProperty     homeActivity:has_have_last_object
+                         ] ;
+        rdfs:subClassOf  [ a                owl:Restriction ;
+                           owl:cardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onProperty   homeActivity:has_have_obj
+                         ] ;
+        rdfs:subClassOf  [ a                owl:Restriction ;
+                           owl:cardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onProperty   homeActivity:has_Context_ID
+                         ] ;
+        rdfs:subClassOf  [ a                owl:Restriction ;
+                           owl:cardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onProperty   homeActivity:has_have_time
+                         ] ;
+        rdfs:subClassOf  [ a                owl:Restriction ;
+                           owl:cardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onProperty   homeActivity:has_have_date
+                         ] ;
+        rdfs:subClassOf  [ a                  owl:Restriction ;
+                           owl:allValuesFrom  homeActivity:Human_Posture ;
+                           owl:onProperty     homeActivity:has_have_hum_pos
+                         ] ;
+        rdfs:subClassOf  [ a                  owl:Restriction ;
+                           owl:allValuesFrom  homeActivity:Date ;
+                           owl:onProperty     homeActivity:has_have_date
+                         ] ;
+        rdfs:subClassOf  [ a                owl:Restriction ;
+                           owl:cardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onProperty   homeActivity:has_have_sensor
+                         ] ;
+        rdfs:subClassOf  [ a                owl:Restriction ;
+                           owl:cardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onProperty   homeActivity:has_have_last_object
+                         ] ;
+        rdfs:subClassOf  [ a                owl:Restriction ;
+                           owl:cardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onProperty   homeActivity:has_have_hum_pos
+                         ] ;
+        rdfs:subClassOf  [ a                  owl:Restriction ;
+                           owl:allValuesFrom  homeActivity:InferredActivity ;
+                           owl:onProperty     homeActivity:has_have_inf_activity
+                         ] .
+
+homeActivity:has_Combine_with
+        a                   owl:ObjectProperty ;
+        rdfs:domain         homeActivity:Location_based_Activity ;
+        rdfs:subPropertyOf  homeActivity:hasPart .
+
+homeActivity:has_Year
+        a                   owl:ObjectProperty ;
+        rdfs:domain         homeActivity:Date ;
+        rdfs:subPropertyOf  homeActivity:hasAttribute .
+
+homeActivity:UndefinedClass
+        a           owl:Class ;
+        rdfs:label  "UndefinedClass" .
+
+homeActivity:Bathroom
+        a                owl:Class ;
+        rdfs:label       "Bathroom" ;
+        rdfs:subClassOf  homeActivity:Location .
+
+homeActivity:Water_Meter_Sensor
+        a                owl:Class ;
+        rdfs:label       "Water_Meter_Sensor" ;
+        rdfs:subClassOf  homeActivity:Sensor_Type .
+
+homeActivity:Location_based_Activity
+        a                owl:Class ;
+        rdfs:label       "Location_based_Activity" ;
+        rdfs:subClassOf  homeActivity:Object_based_Actvity ;
+        rdfs:subClassOf  [ a                  owl:Restriction ;
+                           owl:allValuesFrom  homeActivity:Object_based_Actvity ;
+                           owl:onProperty     homeActivity:has_Combine_with
+                         ] ;
+        rdfs:subClassOf  [ a                owl:Restriction ;
+                           owl:cardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onProperty   homeActivity:has_Combine_with
+                         ] ;
+        rdfs:subClassOf  [ a                  owl:Restriction ;
+                           owl:allValuesFrom  homeActivity:Location ;
+                           owl:onProperty     homeActivity:has_location
+                         ] ;
+        rdfs:subClassOf  [ a                owl:Restriction ;
+                           owl:cardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onProperty   homeActivity:has_location
+                         ] .
+
+homeActivity:Livingroom
+        a                owl:Class ;
+        rdfs:label       "Livingroom" ;
+        rdfs:subClassOf  homeActivity:Location .
+
+homeActivity:has_Context_ID
+        a                   owl:ObjectProperty ;
+        rdfs:domain         homeActivity:Context ;
+        rdfs:subPropertyOf  homeActivity:hasAttribute .
+
+homeActivity:hasPart  a  owl:ObjectProperty ;
+        rdfs:label  "hasPart" .
+
+homeActivity:Kitchen_Appliance
+        a                owl:Class ;
+        rdfs:label       "Kitchen_Appliance" ;
+        rdfs:subClassOf  homeActivity:Electric_Appliance .
+
+homeActivity:Kitchen_Activity
+        a                owl:Class ;
+        rdfs:label       "Kitchen_Activity" ;
+        rdfs:subClassOf  homeActivity:Location_based_Activity ;
+        rdfs:subClassOf  [ a                  owl:Restriction ;
+                           owl:allValuesFrom  homeActivity:Kitchen ;
+                           owl:onProperty     homeActivity:has_location
+                         ] ;
+        rdfs:subClassOf  [ a                owl:Restriction ;
+                           owl:cardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onProperty   homeActivity:has_location
+                         ] .
+
+homeActivity:Stand  a    owl:Class ;
+        rdfs:label       "Stand" ;
+        rdfs:subClassOf  homeActivity:Human_Posture .
+
+homeActivity:Sofa  a     owl:Class ;
+        rdfs:label       "Sofa" ;
+        rdfs:subClassOf  homeActivity:Furniture .
+
+homeActivity:Functional_Activity
+        a                owl:Class ;
+        rdfs:label       "Functional_Activity" ;
+        rdfs:subClassOf  homeActivity:Any ;
+        rdfs:subClassOf  [ a                  owl:Restriction ;
+                           owl:allValuesFrom  homeActivity:string ;
+                           owl:onProperty     homeActivity:has_name
+                         ] ;
+        rdfs:subClassOf  [ a                owl:Restriction ;
+                           owl:cardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onProperty   homeActivity:has_name
+                         ] ;
+        rdfs:subClassOf  [ a                  owl:Restriction ;
+                           owl:allValuesFrom  homeActivity:integer ;
+                           owl:onProperty     homeActivity:has_id
+                         ] ;
+        rdfs:subClassOf  [ a                owl:Restriction ;
+                           owl:cardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onProperty   homeActivity:has_id
+                         ] .
+
+homeActivity:has_hasPosture
+        a                   owl:ObjectProperty ;
+        rdfs:domain         homeActivity:Eating_or_drinking ;
+        rdfs:subPropertyOf  homeActivity:hasPart .
+
+homeActivity:ObjectInstance
+        a                owl:Class ;
+        rdfs:label       "ObjectInstance" ;
+        rdfs:subClassOf  homeActivity:Any ;
+        rdfs:subClassOf  [ a                  owl:Restriction ;
+                           owl:allValuesFrom  homeActivity:string ;
+                           owl:onProperty     homeActivity:has_obj_inst_id
+                         ] ;
+        rdfs:subClassOf  [ a                owl:Restriction ;
+                           owl:cardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onProperty   homeActivity:has_obj_inst_id
+                         ] ;
+        rdfs:subClassOf  [ a                  owl:Restriction ;
+                           owl:allValuesFrom  homeActivity:Location ;
+                           owl:onProperty     homeActivity:has_location
+                         ] ;
+        rdfs:subClassOf  [ a                owl:Restriction ;
+                           owl:cardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onProperty   homeActivity:has_location
+                         ] ;
+        rdfs:subClassOf  [ a                  owl:Restriction ;
+                           owl:allValuesFrom  homeActivity:Object ;
+                           owl:onProperty     homeActivity:has_object
+                         ] ;
+        rdfs:subClassOf  [ a                owl:Restriction ;
+                           owl:cardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onProperty   homeActivity:has_object
+                         ] .
+
+homeActivity:has_Object_info
+        a                   owl:ObjectProperty ;
+        rdfs:domain         homeActivity:Last_Object ;
+        rdfs:subPropertyOf  homeActivity:hasPart .
+
+homeActivity:Entertainment
+        a                owl:Class ;
+        rdfs:label       "Entertainment" ;
+        rdfs:subClassOf  homeActivity:Electric_Appliance .
+
+homeActivity:has_Status
+        a                   owl:ObjectProperty ;
+        rdfs:domain         homeActivity:Sensor ;
+        rdfs:subPropertyOf  homeActivity:hasAttribute .
+
+homeActivity:has_Location_ID
+        a                   owl:ObjectProperty ;
+        rdfs:domain         homeActivity:Location ;
+        rdfs:subPropertyOf  homeActivity:hasAttribute .
+
+homeActivity:Tea  a      owl:Class ;
+        rdfs:label       "Tea" ;
+        rdfs:subClassOf  homeActivity:Drink .
+
+homeActivity:Sweeping_the_floor
+        a                owl:Class ;
+        rdfs:label       "Sweeping_the_floor" ;
+        rdfs:subClassOf  homeActivity:Object_based_Actvity ;
+        rdfs:subClassOf  [ a                  owl:Restriction ;
+                           owl:allValuesFrom  homeActivity:Broom ;
+                           owl:onProperty     homeActivity:has_use
+                         ] ;
+        rdfs:subClassOf  [ a                owl:Restriction ;
+                           owl:cardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onProperty   homeActivity:has_use
+                         ] .
+
+homeActivity:Location
+        a                owl:Class ;
+        rdfs:label       "Location" ;
+        rdfs:subClassOf  homeActivity:Any ;
+        rdfs:subClassOf  [ a                  owl:Restriction ;
+                           owl:allValuesFrom  homeActivity:string ;
+                           owl:onProperty     homeActivity:has_Location_name
+                         ] ;
+        rdfs:subClassOf  [ a                owl:Restriction ;
+                           owl:cardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onProperty   homeActivity:has_Location_name
+                         ] ;
+        rdfs:subClassOf  [ a                  owl:Restriction ;
+                           owl:allValuesFrom  homeActivity:string ;
+                           owl:onProperty     homeActivity:has_Location_ID
+                         ] ;
+        rdfs:subClassOf  [ a                owl:Restriction ;
+                           owl:cardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onProperty   homeActivity:has_Location_ID
+                         ] .
+
+homeActivity:has_obj_inst_id
+        a                   owl:ObjectProperty ;
+        rdfs:domain         homeActivity:ObjectInstance ;
+        rdfs:subPropertyOf  homeActivity:hasAttribute .
+
+homeActivity:Eating_or_drinking
+        a                owl:Class ;
+        rdfs:label       "Eating_or_drinking" ;
+        rdfs:subClassOf  homeActivity:Kitchen_Activity ;
+        rdfs:subClassOf  [ a                  owl:Restriction ;
+                           owl:allValuesFrom  homeActivity:Sit ;
+                           owl:onProperty     homeActivity:has_hasPosture
+                         ] ;
+        rdfs:subClassOf  [ a                owl:Restriction ;
+                           owl:cardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onProperty   homeActivity:has_hasPosture
+                         ] ;
+        rdfs:subClassOf  [ a                  owl:Restriction ;
+                           owl:allValuesFrom  homeActivity:Food ;
+                           owl:onProperty     homeActivity:has_hasFood
+                         ] ;
+        rdfs:subClassOf  [ a                owl:Restriction ;
+                           owl:cardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onProperty   homeActivity:has_hasFood
+                         ] .
+
+homeActivity:Wash_dishes
+        a                owl:Class ;
+        rdfs:label       "Wash_dishes" ;
+        rdfs:subClassOf  homeActivity:Kitchen_Activity ;
+        rdfs:subClassOf  [ a                  owl:Restriction ;
+                           owl:allValuesFrom  homeActivity:Sink ;
+                           owl:onProperty     homeActivity:has_use
+                         ] ;
+        rdfs:subClassOf  [ a                owl:Restriction ;
+                           owl:cardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onProperty   homeActivity:has_use
+                         ] .
+
+homeActivity:Gyro_Sensor
+        a                owl:Class ;
+        rdfs:label       "Gyro_Sensor" ;
+        rdfs:subClassOf  homeActivity:Sensor_Type .
+
+homeActivity:Last_Activity
+        a                owl:Class ;
+        rdfs:label       "Last_Activity" ;
+        rdfs:subClassOf  homeActivity:Activity_Log ;
+        rdfs:subClassOf  [ a                  owl:Restriction ;
+                           owl:allValuesFrom  homeActivity:Location ;
+                           owl:onProperty     homeActivity:has_location_concept
+                         ] ;
+        rdfs:subClassOf  [ a                  owl:Restriction ;
+                           owl:allValuesFrom  homeActivity:integer ;
+                           owl:onProperty     homeActivity:has_Activity_ID
+                         ] ;
+        rdfs:subClassOf  [ a                owl:Restriction ;
+                           owl:cardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onProperty   homeActivity:has_Activity_ID
+                         ] ;
+        rdfs:subClassOf  [ a                owl:Restriction ;
+                           owl:cardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onProperty   homeActivity:has_have_activities
+                         ] ;
+        rdfs:subClassOf  [ a                  owl:Restriction ;
+                           owl:allValuesFrom  homeActivity:string ;
+                           owl:onProperty     homeActivity:has_Activity_name
+                         ] ;
+        rdfs:subClassOf  [ a                owl:Restriction ;
+                           owl:cardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onProperty   homeActivity:has_Activity_name
+                         ] ;
+        rdfs:subClassOf  [ a                owl:Restriction ;
+                           owl:cardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onProperty   homeActivity:has_location_concept
+                         ] ;
+        rdfs:subClassOf  [ a                  owl:Restriction ;
+                           owl:allValuesFrom  homeActivity:Functional_Activity ;
+                           owl:onProperty     homeActivity:has_have_activities
+                         ] .
+
+homeActivity:has_date
+        a                   owl:ObjectProperty ;
+        rdfs:domain         homeActivity:Date ;
+        rdfs:subPropertyOf  homeActivity:hasAttribute .
+
+homeActivity:has_hasFood
+        a                   owl:ObjectProperty ;
+        rdfs:domain         homeActivity:Eating_or_drinking ;
+        rdfs:subPropertyOf  homeActivity:hasPart .
+
+homeActivity:has_Posture_name
+        a                   owl:ObjectProperty ;
+        rdfs:domain         homeActivity:Human_Posture ;
+        rdfs:subPropertyOf  homeActivity:hasAttribute .
+
+homeActivity:has_Posture_ID
+        a                   owl:ObjectProperty ;
+        rdfs:domain         homeActivity:Human_Posture ;
+        rdfs:subPropertyOf  homeActivity:hasAttribute .
+
+homeActivity:has_rec_act_name
+        a                   owl:ObjectProperty ;
+        rdfs:domain         homeActivity:InferredActivity ;
+        rdfs:subPropertyOf  homeActivity:hasAttribute .
+
+homeActivity:hasAttribute
+        a           owl:ObjectProperty ;
+        rdfs:label  "hasAttribute" .
+
+homeActivity:Sugar  a    owl:Class ;
+        rdfs:label       "Sugar" ;
+        rdfs:subClassOf  homeActivity:Drink .
+
+homeActivity:Taking_a_bath
+        a                owl:Class ;
+        rdfs:label       "Taking_a_bath" ;
+        rdfs:subClassOf  homeActivity:Bathroom_Activity ;
+        rdfs:subClassOf  [ a                  owl:Restriction ;
+                           owl:allValuesFrom  homeActivity:Shower ;
+                           owl:onProperty     homeActivity:has_use
+                         ] ;
+        rdfs:subClassOf  [ a                owl:Restriction ;
+                           owl:cardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onProperty   homeActivity:has_use
+                         ] .
+
+homeActivity:RelationalConcept
+        a           owl:Class ;
+        rdfs:label  "RelationalConcept" .
+
+homeActivity:Magnetic_Sensor
+        a                owl:Class ;
+        rdfs:label       "Magnetic_Sensor" ;
+        rdfs:subClassOf  homeActivity:Sensor_Type .
+
+homeActivity:Kitchen  a  owl:Class ;
+        rdfs:label       "Kitchen" ;
+        rdfs:subClassOf  homeActivity:Location .
+
+homeActivity:InferredActivity
+        a                owl:Class ;
+        rdfs:label       "InferredActivity" ;
+        rdfs:subClassOf  homeActivity:Any ;
+        rdfs:subClassOf  [ a                  owl:Restriction ;
+                           owl:allValuesFrom  homeActivity:string ;
+                           owl:onProperty     homeActivity:has_rec_act_id
+                         ] ;
+        rdfs:subClassOf  [ a                owl:Restriction ;
+                           owl:cardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onProperty   homeActivity:has_rec_act_id
+                         ] ;
+        rdfs:subClassOf  [ a                  owl:Restriction ;
+                           owl:allValuesFrom  homeActivity:Functional_Activity ;
+                           owl:onProperty     homeActivity:has_Have_activity
+                         ] ;
+        rdfs:subClassOf  [ a                owl:Restriction ;
+                           owl:cardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onProperty   homeActivity:has_Have_activity
+                         ] ;
+        rdfs:subClassOf  [ a                  owl:Restriction ;
+                           owl:allValuesFrom  homeActivity:string ;
+                           owl:onProperty     homeActivity:has_rec_act_name
+                         ] ;
+        rdfs:subClassOf  [ a                owl:Restriction ;
+                           owl:cardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onProperty   homeActivity:has_rec_act_name
+                         ] .
+
+homeActivity:Reading_a_book
+        a                owl:Class ;
+        rdfs:label       "Reading_a_book" ;
+        rdfs:subClassOf  homeActivity:Object_based_Actvity ;
+        rdfs:subClassOf  [ a                  owl:Restriction ;
+                           owl:allValuesFrom  homeActivity:Book ;
+                           owl:onProperty     homeActivity:has_use
+                         ] ;
+        rdfs:subClassOf  [ a                owl:Restriction ;
+                           owl:cardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onProperty   homeActivity:has_use
+                         ] ;
+        rdfs:subClassOf  [ a                  owl:Restriction ;
+                           owl:allValuesFrom  homeActivity:Sit ;
+                           owl:onProperty     homeActivity:has_posture
+                         ] ;
+        rdfs:subClassOf  [ a                owl:Restriction ;
+                           owl:cardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onProperty   homeActivity:has_posture
+                         ] .
+
+homeActivity:has_Actor
+        a                   owl:ObjectProperty ;
+        rdfs:domain         homeActivity:Human_Posture ;
+        rdfs:subPropertyOf  homeActivity:hasPart .
+
+homeActivity:Bed  a      owl:Class ;
+        rdfs:label       "Bed" ;
+        rdfs:subClassOf  homeActivity:Furniture .
+
+homeActivity:Sitting_on_the_toilet
+        a                owl:Class ;
+        rdfs:label       "Sitting_on_the_toilet" ;
+        rdfs:subClassOf  homeActivity:Bathroom_Activity ;
+        rdfs:subClassOf  [ a                  owl:Restriction ;
+                           owl:allValuesFrom  homeActivity:Lavatory ;
+                           owl:onProperty     homeActivity:has_use
+                         ] ;
+        rdfs:subClassOf  [ a                owl:Restriction ;
+                           owl:cardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onProperty   homeActivity:has_use
+                         ] ;
+        rdfs:subClassOf  [ a                  owl:Restriction ;
+                           owl:allValuesFrom  homeActivity:Sit ;
+                           owl:onProperty     homeActivity:has_posture
+                         ] ;
+        rdfs:subClassOf  [ a                owl:Restriction ;
+                           owl:cardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onProperty   homeActivity:has_posture
+                         ] .
+
+homeActivity:Activity_Log
+        a                owl:Class ;
+        rdfs:label       "Activity_Log" ;
+        rdfs:subClassOf  homeActivity:Any ;
+        rdfs:subClassOf  [ a                  owl:Restriction ;
+                           owl:allValuesFrom  homeActivity:string ;
+                           owl:onProperty     homeActivity:has_Time
+                         ] ;
+        rdfs:subClassOf  [ a                owl:Restriction ;
+                           owl:cardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onProperty   homeActivity:has_Time
+                         ] .
+
+homeActivity:has_rec_act_id
+        a                   owl:ObjectProperty ;
+        rdfs:domain         homeActivity:InferredActivity ;
+        rdfs:subPropertyOf  homeActivity:hasAttribute .
+
+homeActivity:Pressure_Sensor
+        a                owl:Class ;
+        rdfs:label       "Pressure_Sensor" ;
+        rdfs:subClassOf  homeActivity:Sensor_Type .
+
+homeActivity:Ultrasonic_Sensor
+        a                owl:Class ;
+        rdfs:label       "Ultrasonic_Sensor" ;
+        rdfs:subClassOf  homeActivity:Sensor_Type .
+
+homeActivity:Furniture
+        a                owl:Class ;
+        rdfs:label       "Furniture" ;
+        rdfs:subClassOf  homeActivity:Object .
+
+homeActivity:Stereo  a   owl:Class ;
+        rdfs:label       "Stereo" ;
+        rdfs:subClassOf  homeActivity:Entertainment .
+
+homeActivity:Bedroom  a  owl:Class ;
+        rdfs:label       "Bedroom" ;
+        rdfs:subClassOf  homeActivity:Location .
+
+homeActivity:has_have_hum_pos
+        a                   owl:ObjectProperty ;
+        rdfs:domain         homeActivity:Context ;
+        rdfs:subPropertyOf  homeActivity:hasPart .
+
+homeActivity:Juice  a    owl:Class ;
+        rdfs:label       "Juice" ;
+        rdfs:subClassOf  homeActivity:Drink .
+
+homeActivity:Sleeping
+        a                owl:Class ;
+        rdfs:label       "Sleeping" ;
+        rdfs:subClassOf  homeActivity:Bedroom_Activity ;
+        rdfs:subClassOf  [ a                  owl:Restriction ;
+                           owl:allValuesFrom  homeActivity:Bed ;
+                           owl:onProperty     homeActivity:has_use
+                         ] ;
+        rdfs:subClassOf  [ a                owl:Restriction ;
+                           owl:cardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onProperty   homeActivity:has_use
+                         ] ;
+        rdfs:subClassOf  [ a                  owl:Restriction ;
+                           owl:allValuesFrom  homeActivity:Lie-down ;
+                           owl:onProperty     homeActivity:has_posture
+                         ] ;
+        rdfs:subClassOf  [ a                owl:Restriction ;
+                           owl:cardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onProperty   homeActivity:has_posture
+                         ] .
+
+homeActivity:string  a   owl:Class ;
+        rdfs:label       "string" ;
+        rdfs:subClassOf  homeActivity:UndefinedClass .
+
+homeActivity:has_have_obj
+        a                   owl:ObjectProperty ;
+        rdfs:domain         homeActivity:Context ;
+        rdfs:subPropertyOf  homeActivity:hasPart .
+
+homeActivity:Lavatory
+        a                owl:Class ;
+        rdfs:label       "Lavatory" ;
+        rdfs:subClassOf  homeActivity:Furniture .
+
+homeActivity:Broom  a    owl:Class ;
+        rdfs:label       "Broom" ;
+        rdfs:subClassOf  homeActivity:Furniture .
+
+homeActivity:ADL  a      owl:Class ;
+        rdfs:label       "ADL" ;
+        rdfs:subClassOf  homeActivity:Any ;
+        rdfs:subClassOf  [ a                  owl:Restriction ;
+                           owl:allValuesFrom  homeActivity:Date ;
+                           owl:onProperty     homeActivity:has_have_date
+                         ] ;
+        rdfs:subClassOf  [ a                owl:Restriction ;
+                           owl:cardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onProperty   homeActivity:has_have_date
+                         ] ;
+        rdfs:subClassOf  [ a                  owl:Restriction ;
+                           owl:allValuesFrom  homeActivity:string ;
+                           owl:onProperty     homeActivity:has_Time
+                         ] ;
+        rdfs:subClassOf  [ a                owl:Restriction ;
+                           owl:cardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onProperty   homeActivity:has_Time
+                         ] ;
+        rdfs:subClassOf  [ a                  owl:Restriction ;
+                           owl:allValuesFrom  homeActivity:Last_Activity ;
+                           owl:onProperty     homeActivity:has_Collect
+                         ] ;
+        rdfs:subClassOf  [ a                owl:Restriction ;
+                           owl:cardinality  "1"^^xsd:nonNegativeInteger ;
+                           owl:onProperty   homeActivity:has_Collect
+                         ] .
+
+homeActivity:has_object
+        a                   owl:ObjectProperty ;
+        rdfs:domain         homeActivity:ObjectInstance ;
+        rdfs:subPropertyOf  homeActivity:hasPart .
+
+homeActivity:has_have_last_object
+        a                   owl:ObjectProperty ;
+        rdfs:domain         homeActivity:Context ;
+        rdfs:subPropertyOf  homeActivity:hasPart .
+
+homeActivity:Mop  a      owl:Class ;
+        rdfs:label       "Mop" ;
+        rdfs:subClassOf  homeActivity:Furniture .

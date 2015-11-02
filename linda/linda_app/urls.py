@@ -8,6 +8,7 @@ from haystack.views import SearchView, search_view_factory
 from linda_app.installer import views as installer_views
 
 import linda_app.views as views
+import query_designer
 
 admin.autodiscover()
 admin.site.site_title = 'LinDA Administration'
@@ -37,6 +38,7 @@ urlpatterns = patterns('',
 
                        # Query Designer
                        url(r'^query-designer/', include('query_designer.urls')),
+                       url(r'^api/query/(?P<q_id>\d+)/execute/$', query_designer.views.execute_query_api),
 
                        # Endpoint Monitor
                        url(r'^endpoint-monitor/', include('endpoint_monitor.urls')),

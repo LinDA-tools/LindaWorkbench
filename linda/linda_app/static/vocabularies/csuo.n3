@@ -1,0 +1,142 @@
+@prefix csuo: <https://github.com/dipapaspyros/FileSync/CloudStorageUnificationOntology#> .
+@prefix owl: <http://www.w3.org/2002/07/owl> .
+@prefix nco: <http://www.semanticdesktop.org/ontologies/2007/03/22/nco#> .
+@prefix nfo: <http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix hydra: <http://www.w3.org/ns/hydra/core#> .
+
+csuo:CloudStorage
+	a rdfs:Class ;
+	rdfs:label "Cloud Storage" ;
+    rdfs:comment "Cloud storage describes the container of all data and operations on a cloud-based storage service for a specific (unique) account." ;
+	rdfs:subClassOf nfo:DataContainer .
+	
+csuo:CoudStorageAPI
+	a hydra:ApiDocumentation ;
+	hydra:title "Generic cloud storage interface" ;
+	hydra:description "Generic API describing common operations of all cloud storage services" ;
+	hydra:operation csuo:Authorize ;
+	hydra:operation csuo:Authenticate ;
+	hydra:operation csuo:SetDirectory ;
+	hydra:operation csuo:ListDirectory ;
+	hydra:operation csuo:GetResource ;
+	hydra:operation csuo:GetResourceMetadata ;
+	hydra:operation csuo:UpdateResource ;
+	hydra:operation csuo:DeleteResource ;
+	hydra:operation csuo:UploadResource .
+	
+csuo:title 
+	a rdf:Property ;
+	rdfs:domain csuo:CloudStorage ;
+    rdfs:range xsd:literal .
+	
+csuo:owner
+	a rdf:Property ;
+	owl:maxCardinality 1 ;
+	rdfs:domain csuo:CloudStorage ;
+	rdfs:range nco:Contact .
+	
+csuo:freeSpace 
+	a rdf:Property ;
+    rdfs:label "free space" ;
+    owl:maxCardinality 1 ;
+    rdfs:comment "Unoccupied storage space on an account the cloud." ;
+    rdfs:domain csuo:CloudStorage ;
+    rdfs:range xsd:integer .
+
+csuo:totalSpace 
+	a rdf:Property ;
+    rdfs:label "total space" ;
+    owl:maxCardinality 1 ;
+	owl:minCardinality 1 ;
+    rdfs:comment "Total storage capacity of the particular account on the cloud." ;
+    rdfs:domain csuo:CloudStorage ;
+    rdfs:range xsd:integer .
+	
+csuo:requires
+	a rdf:Property ;
+	rdfs:label "Indicate that an operation requires another operation to have been already successfully invoked in the workflow" ;
+	rdfs:domain hydra:operation ;
+    rdfs:range hydra:operation .
+	
+csuo:Authorize
+	a hydra:Operation ;
+	rdfs:label "Authorize the application to access the Cloud Storage API methods" .
+	
+csuo:Authenticate
+	a hydra:Operation ;
+	rdfs:label "Authorize the application to access the Cloud Storage API methods" ;
+	csuo:requires csuo:Authorize .
+	
+csuo:SetDirectory
+	a hydra:Operation ;
+	rdfs:label "Set the new directory -- provide a key that identifies uniquely the directory according to the service implementation" ;
+	hydra:expects xsd:string ;
+	hydra:returns xsd:boolean ;
+	csuo:requires csuo:Authenticate .
+	
+csuo:ListDirectory
+	a hydra:Operation ;
+	rdfs:label "List the contents of the current directory" ;
+	hydra:returns nfo:Folder ;
+	csuo:requires csuo:Authenticate ;
+	csuo:requires csuo:SetDirectory .
+
+csuo:GetResource
+	a hydra:Operation ;
+	rdfs:label "Get the contents of a file specified by a unique identifier" ;
+	hydra:expects xsd:string ;
+	hydra:returns nfo:RemoteDataObject ;
+	csuo:requires csuo:Authenticate .
+	
+csuo:GetResourceMetadata
+	a hydra:Operation ;
+	rdfs:label "Get the metadata of a file specified by a unique identifier" ;
+	hydra:expects xsd:string ;
+	hydra:returns xsd:string ;
+	csuo:requires csuo:Authenticate .
+
+csuo:UpdateResource
+	a hydra:Operation ;
+	rdfs:label "Update the contents of a file specified by a unique identifier" ;
+	hydra:expects xsd:string ;
+	hydra:expects nfo:FileDataObject ;
+	hydra:returns nfo:RemoteDataObject ;
+	csuo:requires csuo:Authenticate .
+
+csuo:DeleteResource
+	a hydra:Operation ;
+	rdfs:label "Delete the remote file specified by its unique identifier" ;
+	hydra:expects xsd:string ;
+	hydra:returns xsd:boolean ;
+	csuo:requires csuo:Authenticate .
+	
+csuo:UploadResource
+	a hydra:Operation ;
+	rdfs:label "Upload a local resource to the cloud storage" ;
+	hydra:expects nfo:FileDataObject ;
+	hydra:returns nfo:RemoteDataObject ;
+	csuo:requires csuo:Authenticate .
+	
+csuo:resourceOwner
+	a rdf:Property ;
+	owl:maxCardinality 1 ;
+	rdfs:domain nfo:RemoteDataObject ;
+	rdfs:range nco:Contact .
+	
+csuo:GoogleDriveStorage
+	a csuo:CloudStorage ;
+	rdfs:label "A Google Drive account." ;
+	hydra:apiDocumentation <https://developers.google.com/drive/v2/reference/> .
+	
+csuo:DropboxStorage
+	a csuo:CloudStorage ;
+	rdfs:label "A Dropbox account." ;
+	hydra:apiDocumentation <https://www.dropbox.com/developers/core/docs> .
+	
+csuo:OneDriveStorage 
+	a csuo:CloudStorage ;
+	rdfs:label "An OneDrive account." ;
+	hydra:apiDocumentation <https://msdn.microsoft.com/en-us/library/hh826521.aspx> .

@@ -1,0 +1,148 @@
+@prefix dc: <http://purl.org/dc/elements/1.1/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix dctype: <http://purl.org/dc/dcmitype/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix vann: <http://purl.org/vocab/vann/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix cc: <http://web.resource.org/cc/> .
+
+<http://www.w3.org/1999/02/22-rdf-syntax-ns> a owl:Ontology ;
+	dc:date "2006-06-27" ;
+	dc:title "Directory Schema"@en ;
+	dc:identifier "http://schemas.talis.com/2005/dir/schema-20060627" ;
+	dct:isVersionOf <http://schemas.talis.com/2005/dir/schema#> ;
+	dc:creator "Ian Davis <http://purl.org/NET/iand>" ;
+	dc:rights "Copyright © 2005 Talis Information Ltd." ;
+	vann:preferredNamespaceUri "http://schemas.talis.com/2005/dir/schema#" ;
+	vann:preferredNamespacePrefix "dir" ;
+	dct:hasFormat <http://schemas.talis.com/2005/dir/schema-20060627.html> .
+
+<http://schemas.talis.com/2005/dir/schema-20060627.html> a dctype:Text ;
+	dc:format _:node17168lr2nx3 .
+
+_:node17168lr2nx3 a dct:IMT ;
+	rdf:value "text/html" ;
+	rdfs:label "HTML"@en .
+
+<http://www.w3.org/1999/02/22-rdf-syntax-ns> dct:hasFormat <http://schemas.talis.com/2005/dir/schema-20060627.rdf> .
+
+<http://schemas.talis.com/2005/dir/schema-20060627.rdf> a dctype:Text ;
+	dc:format _:node17168lr2nx4 .
+
+_:node17168lr2nx4 a dct:IMT ;
+	rdf:value "application/rdf+xml" ;
+	rdfs:label "RDF"@en .
+
+<http://www.w3.org/1999/02/22-rdf-syntax-ns> dct:issued "2006-06-27" .
+
+<http://schemas.talis.com/2005/dir/schema#provider> a owl:ObjectProperty ;
+	rdfs:label "provider"@en ;
+	skos:definition "an agent that is responsible for providing this access point."@en ;
+	rdfs:domain <http://schemas.talis.com/2005/dir/schema#AccessPoint> ;
+	rdfs:range <http://xmlns.com/foaf/0.1/Agent> ;
+	rdfs:isDefinedBy <http://schemas.talis.com/2005/dir/schema#> ;
+	dct:issued "2006-06-27" .
+
+<http://schemas.talis.com/2005/dir/schema#contactUser> a owl:ObjectProperty ;
+	rdfs:label "contactUser"@en ;
+	skos:definition "a person who has indicated that they are willing to be contacted for general information about the resource."@en ;
+	rdfs:comment "No claim of affiliation or ownership is implied."@en ;
+	rdfs:range <http://schemas.talis.com/2005/user/schema#User> ;
+	rdfs:isDefinedBy <http://schemas.talis.com/2005/dir/schema#> ;
+	dct:issued "2006-06-27" .
+
+<http://schemas.talis.com/2005/dir/schema#owner> a owl:ObjectProperty ;
+	rdfs:label "owner"@en ;
+	skos:definition "an agent who has legal possession of the collection."@en ;
+	rdfs:domain dctype:Collection ;
+	rdfs:range <http://xmlns.com/foaf/0.1/Agent> ;
+	rdfs:isDefinedBy <http://schemas.talis.com/2005/dir/schema#> ;
+	dct:issued "2006-06-27" .
+
+<http://schemas.talis.com/2005/dir/schema#isAccessedVia> a owl:ObjectProperty ;
+	rdfs:label "isAccessedVia"@en ;
+	skos:definition "an AccessPoint that provides access to the collection."@en ;
+	rdfs:domain dctype:Collection ;
+	rdfs:range <http://schemas.talis.com/2005/dir/schema#AccessPoint> ;
+	rdfs:isDefinedBy <http://schemas.talis.com/2005/dir/schema#> ;
+	dct:issued "2006-06-27" .
+
+<http://schemas.talis.com/2005/dir/schema#dateLastChecked> a owl:DatatypeProperty ;
+	rdfs:label "dateLastChecked"@en ;
+	skos:definition "the date that the service was last checked for operational status."@en ;
+	rdfs:comment "Must be in W3CDTF format. For example: \"2005-12-01T12:12:26Z\""@en ;
+	rdfs:domain dctype:Service ;
+	rdfs:isDefinedBy <http://schemas.talis.com/2005/dir/schema#> ;
+	dct:issued "2006-06-27" .
+
+<http://schemas.talis.com/2005/dir/schema#dateLastOperational> a owl:DatatypeProperty ;
+	rdfs:label "dateLastOperational"@en ;
+	skos:definition "the date that the service was last found to be operational."@en ;
+	rdfs:comment "If the dateLastOperational is different to the dateLastChecked then the service is deemed to be broken. Must be in W3CDTF format. For example: \"2005-12-01T12:12:26Z\""@en ;
+	rdfs:domain dctype:Service ;
+	rdfs:isDefinedBy <http://schemas.talis.com/2005/dir/schema#> ;
+	dct:issued "2006-06-27" .
+
+<http://schemas.talis.com/2005/dir/schema#checkResult> a owl:DatatypeProperty ;
+	rdfs:label "checkResult"@en ;
+	skos:definition "a human-readable description of the result of the last service check."@en ;
+	rdfs:domain dctype:Service ;
+	rdfs:isDefinedBy <http://schemas.talis.com/2005/dir/schema#> ;
+	dct:issued "2006-06-27" .
+
+<http://schemas.talis.com/2005/dir/schema#member> a owl:ObjectProperty ;
+	rdfs:label "member"@en ;
+	skos:definition "a resource that is to be considered part of this group."@en ;
+	rdfs:domain <http://schemas.talis.com/2005/dir/schema#Group> ;
+	rdfs:isDefinedBy <http://schemas.talis.com/2005/dir/schema#> ;
+	dct:issued "2006-06-27" .
+
+<http://schemas.talis.com/2005/dir/schema#user> a owl:ObjectProperty ;
+	rdfs:label "user"@en ;
+	skos:definition "a reference to a user"@en ;
+	rdfs:range <http://schemas.talis.com/2005/user/schema#User> ;
+	rdfs:isDefinedBy <http://schemas.talis.com/2005/dir/schema#> ;
+	dct:issued "2006-06-27" .
+
+<http://schemas.talis.com/2005/dir/schema#about> a owl:ObjectProperty ;
+	rdfs:label "about"@en ;
+	skos:definition "the resource the TagBundle is about"@en ;
+	rdfs:domain <http://schemas.talis.com/2005/dir/schema#TagBundle> ;
+	rdfs:isDefinedBy <http://schemas.talis.com/2005/dir/schema#> ;
+	dct:issued "2006-06-27" .
+
+<http://schemas.talis.com/2005/dir/schema#tag> a owl:DatatypeProperty ;
+	rdfs:label "tag"@en ;
+	skos:definition "a single tag."@en ;
+	rdfs:comment "Free text. For example: \"architecture\""@en ;
+	rdfs:domain <http://schemas.talis.com/2005/dir/schema#TagBundle> ;
+	rdfs:isDefinedBy <http://schemas.talis.com/2005/dir/schema#> ;
+	dct:issued "2006-06-27" .
+
+<http://schemas.talis.com/2005/dir/schema#AccessPoint> a owl:Class ;
+	rdfs:label "Access Point"@en ;
+	skos:definition "A facility that may be used for accessing a collection"@en ;
+	rdfs:isDefinedBy <http://schemas.talis.com/2005/dir/schema#> ;
+	dct:issued "2006-06-27" .
+
+<http://schemas.talis.com/2005/dir/schema#PhysicalAccessPoint> a owl:Class ;
+	rdfs:label "Physical Access Point"@en ;
+	skos:definition "A kind of AccessPoint that is also a SpatialThing and may be physically visited"@en ;
+	rdfs:isDefinedBy <http://schemas.talis.com/2005/dir/schema#> ;
+	rdf:subClassOf <http://schemas.talis.com/2005/dir/schema#AccessPoint> , <http://www.w3.org/2003/01/geo/wgs84_pos#SpatialThing> ;
+	dct:issued "2006-06-27" .
+
+<http://schemas.talis.com/2005/dir/schema#Group> a owl:Class ;
+	rdfs:label "Group"@en ;
+	skos:definition "an arbitrary grouping of other entities"@en ;
+	rdfs:comment "Any other resource may be a member of a group including other groups. The Grouping mechanism is expected to be useful for defining groups of entities such as “National Libraries”, “Central Libraries”, “Public Libraries” etc."@en ;
+	rdfs:isDefinedBy <http://schemas.talis.com/2005/dir/schema#> ;
+	dct:issued "2006-06-27" .
+
+<http://schemas.talis.com/2005/dir/schema#TagBundle> a owl:Class ;
+	rdfs:label "TagBundle"@en ;
+	skos:definition "bundle of tags that a user has assigned to a particular resource"@en ;
+	rdfs:isDefinedBy <http://schemas.talis.com/2005/dir/schema#> ;
+	dct:issued "2006-06-27" .

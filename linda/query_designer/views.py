@@ -1,8 +1,8 @@
 from datetime import datetime
 import json
 import urllib
-from django.http import Http404, HttpResponse
-from django.shortcuts import render
+from django.http import Http404, HttpResponse, JsonResponse
+from django.shortcuts import render, get_object_or_404
 from django.utils.http import urlquote
 import requests
 from linda_app.models import DatasourceDescription, VocabularyProperty, Query, get_configuration
@@ -71,7 +71,7 @@ def get_endpoint_from_dt_name(dt_name):
 
 
 # Execute a SparQL query on an endpoint and return json response
-def sparql_query_json(endpoint, query, timeout=None, append_slash=False):
+def sparql_query_json(endpoint, query, timeout=None, append_slash=False, http_response=True):
     # encode the query
     query_enc = urlquote(query, safe='')
 
@@ -88,16 +88,18 @@ def sparql_query_json(endpoint, query, timeout=None, append_slash=False):
     # ClioPatria bugfix
     if not append_slash:
         try:
-            json.loads(response.text)
+            j_obj = json.loads(response.text)
         except:
             return sparql_query_json(endpoint, query, timeout, append_slash=True)
 
-    if response.status_code == 200:
-        # return the response
-        return HttpResponse(response.text, "application/json")
-    else:
+    if response.status_code != 200:
         return HttpResponse(response.text, status=response.status_code)
 
+    # return the response
+    if http_response:
+        return HttpResponse(response.text, "application/json")
+    else:
+        return j_obj
 
 # Get active classes in a data source
 def active_classes(request, dt_name):
@@ -322,4 +324,48 @@ def class_info(request, dt_name):
     # query to get all classes with at least one instance
     query = "SELECT (count(?x) AS ?cnt) WHERE {?x a <" + class_uri + ">}"
     return sparql_query_json(endpoint, query)
+
+
+API_QUERY_LIMIT = 100
+
+
+def auto_paginate(q, page):
+    """
+    If no limit/offset is specified inside the query, adds limit & offset to query based on current page and sets flag
+    to True.
+    Otherwise, returns query untouched and sets flag to False.
+    """
+    if 'limit ' not in q.lower() and 'offset ' not in q.lower():  # no pagination parameters
+        return '%s LIMIT %d OFFSET %d' % (q, API_QUERY_LIMIT, (page - 1)*API_QUERY_LIMIT), True
+    else:
+        return q, False
+
+
+# API call to execute a specific query, auto-paginate & get results
+def execute_query_api(request, q_id):
+    # get query & current page
+    query = get_object_or_404(Query, pk=q_id)
+    page = int(request.GET.get('page', '1'))
+
+    # auto-paginate
+    sparql, include_links = auto_paginate(query.sparql, page)
+
+    # execute the query
+    result = sparql_query_json(query.endpoint, sparql, http_response=False)
+
+    if type(result) == HttpResponse:  # error case
+        return result
+    else:
+        # include pagination links
+        if include_links:
+            links = {}
+            if page > 1:
+                links['prev'] = '/api/query/%d/execute/?page=%d' % (query.pk, page - 1)
+            if len(result['results']['bindings']) == API_QUERY_LIMIT:
+                links['next'] = '/api/query/%d/execute/?page=%d' % (query.pk, page + 1)
+
+            result['links'] = links
+
+        return HttpResponse(json.dumps(result), content_type='application/json')
+
 
