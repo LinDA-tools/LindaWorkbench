@@ -129,8 +129,5 @@ RUN nohup /elasticsearch/bin/elasticsearch & \
 	echo "from django.contrib.auth.models import User; User.objects.create_superuser('admin', 'admin@example.com', 'pass')" | python3 /LinDAWorkbench/linda/manage.py shell && \
 	python3 /LinDAWorkbench/linda/manage.py loaddata /LinDAWorkbench/linda/linda_app/installer/data/vocabularies.json
 	
-CMD nohup /tomcat-run.sh & \
-	nohup /elasticsearch/bin/elasticsearch & \
-	service mysql start && \	
-	python3 /LinDAWorkbench/linda/manage.py runserver 0.0.0.0:8000
-
+ADD all-commands /all-commands.sh
+CMD /all-commands.sh
