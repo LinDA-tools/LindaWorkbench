@@ -1,0 +1,1983 @@
+@prefix dc: <http://purl.org/dc/elements/1.1/> .
+@prefix : <http://www.identity.org/ontologies/identity.owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl2xml: <http://www.w3.org/2006/12/owl2-xml#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+
+<http://www.identity.org/ontologies/identity.owl> a owl:Ontology ;
+	dc:creator "Maroua Borsali"^^xsd:string ;
+	rdfs:comment "Ontology of digital identity."@en , "Ontologie de l'identité numérique."@fr ;
+	owl:versionInfo "v.2.0 basée sur les spécifications de P3P recommandées par 3WC."@fr .
+
+owl:versionInfo a owl:AnnotationProperty .
+
+dc:creator a owl:AnnotationProperty .
+
+rdfs:isDefinedBy a owl:AnnotationProperty .
+
+dc:type a owl:AnnotationProperty .
+
+rdfs:label a owl:AnnotationProperty .
+
+rdfs:comment a owl:AnnotationProperty .
+
+xsd:ID a rdfs:Datatype .
+
+xsd:anyType a rdfs:Datatype .
+
+xsd:date a rdfs:Datatype .
+
+xsd:duration a rdfs:Datatype .
+
+xsd:gDay a rdfs:Datatype .
+
+xsd:gMonth a rdfs:Datatype .
+
+xsd:gMonthYear a rdfs:Datatype .
+
+xsd:gYear a rdfs:Datatype .
+
+xsd:gYearMonth a rdfs:Datatype .
+
+xsd:time a rdfs:Datatype .
+
+:controls a owl:ObjectProperty ;
+	rdfs:label "controls" ;
+	rdfs:range :Action ;
+	rdfs:domain :Policy .
+
+:createdOn a owl:ObjectProperty ;
+	rdfs:label "createdOn" ;
+	rdfs:range :Date ;
+	rdfs:domain :Policy .
+
+:forbids a owl:ObjectProperty ;
+	rdfs:label "forbids" ;
+	rdfs:range :ForbiddenAction ;
+	rdfs:domain :Policy .
+
+:hasAction a owl:ObjectProperty ;
+	rdfs:range :Action ;
+	rdfs:domain :History .
+
+:hasActor a owl:ObjectProperty ;
+	rdfs:label "hasActor" ;
+	rdfs:domain :Action ;
+	rdfs:range :Agent .
+
+:hasBirthDate a owl:ObjectProperty ;
+	rdfs:label "hasBirthDate"^^xsd:string ;
+	rdfs:comment "User's Birthday"@en , "Demographic and Socieconomic Data"@fr ;
+	rdfs:range :Date ;
+	rdfs:domain :IndividualInformation ;
+	rdfs:subPropertyOf :hasDate .
+
+:hasCertificate a owl:ObjectProperty ;
+	rdfs:label "hasCertificate"^^xsd:string ;
+	rdfs:range :Certificate ;
+	rdfs:domain :IdentityInformation .
+
+:hasContactInfo a owl:ObjectProperty ;
+	rdfs:label "hasContactInfo"^^xsd:string ;
+	rdfs:comment "Cette propriété associe un objet à une adresse, une adresse e-mail et à un numéro de téléphone."@fr ;
+	rdfs:range :ContactInformation ;
+	rdfs:domain :IdentityInformation .
+
+:hasContext a owl:ObjectProperty ;
+	rdfs:label "hasContext" ;
+	rdfs:domain :Action ;
+	rdfs:range :Context .
+
+:hasCreator a owl:ObjectProperty ;
+	rdfs:label "hasCreator" ;
+	rdfs:range :Agent ;
+	rdfs:domain :Policy .
+
+:hasData a owl:ObjectProperty ;
+	rdfs:label "hasData"^^xsd:string ;
+	rdfs:domain :Agent ;
+	rdfs:range :Data .
+
+:hasDate a owl:ObjectProperty ;
+	rdfs:label "hasDate"^^xsd:string ;
+	rdfs:range :Date .
+
+:hasDefaultPolicyMode a owl:ObjectProperty ;
+	rdfs:label "hasDefaultPolicyMode" ;
+	rdfs:range :Mode ;
+	rdfs:domain :Policy .
+
+:hasExpirationDate a owl:ObjectProperty ;
+	rdfs:label "hasExpirationDate"^^xsd:string ;
+	rdfs:domain :Certificate ;
+	rdfs:range :Date ;
+	rdfs:subPropertyOf :hasDate .
+
+:hasHistoricTarget a owl:ObjectProperty ;
+	rdfs:label "hasHistoricTarget" .
+
+:hasHomeInfo a owl:ObjectProperty ;
+	rdfs:label "hasHomeInfo"^^xsd:string ;
+	rdfs:range :ContactInformation ;
+	rdfs:domain :IndividualInformation ;
+	rdfs:subPropertyOf :hasContactInfo .
+
+:hasIdentity a owl:ObjectProperty ;
+	rdfs:label "hasIdentity"^^xsd:string ;
+	rdfs:domain :Agent ;
+	rdfs:range :IdentityInformation .
+
+:hasLocation a owl:ObjectProperty ;
+	rdfs:label "hasLocation" ;
+	rdfs:range :LocationData .
+
+:hasLogin a owl:ObjectProperty ;
+	rdfs:label "hasLogin"^^xsd:string ;
+	rdfs:domain :IndividualInformation ;
+	rdfs:range :Login .
+
+:hasMember a owl:ObjectProperty ;
+	rdfs:label "hasMember"^^xsd:string ;
+	rdfs:domain :Group ;
+	rdfs:range :Person .
+
+:hasName a owl:ObjectProperty ;
+	rdfs:label "hasName"^^xsd:string ;
+	rdfs:domain :IndividualInformation ;
+	rdfs:range :Name .
+
+:hasTarget a owl:ObjectProperty ;
+	rdfs:label "hasTarget" ;
+	rdfs:domain :Action ;
+	rdfs:range :Data .
+
+:hasTelephoneNumber a owl:ObjectProperty ;
+	rdfs:label "hasTelephoneNumber"^^xsd:string ;
+	rdfs:domain :Telecommunication ;
+	rdfs:range :TelephoneNumber .
+
+:hasWorkInfo a owl:ObjectProperty ;
+	rdfs:label "hasWorkInfo"^^xsd:string ;
+	rdfs:range :ContactInformation ;
+	rdfs:domain :IndividualInformation ;
+	rdfs:subPropertyOf :hasContactInfo .
+
+:isIssuerOf a owl:ObjectProperty ;
+	rdfs:label "isIssuerOf"^^xsd:string ;
+	rdfs:range :IndividualInformation ;
+	rdfs:domain :Issuer .
+
+:knows a owl:ObjectProperty ;
+	rdfs:label "knows"^^xsd:string ;
+	rdfs:range :Group ;
+	rdfs:domain :Person .
+
+:permits a owl:ObjectProperty ;
+	rdfs:label "permits" ;
+	rdfs:range :PermittedAction ;
+	rdfs:domain :Policy .
+
+:requires a owl:ObjectProperty ;
+	rdfs:label "requires" ;
+	rdfs:range :Condition ;
+	rdfs:domain :Policy .
+
+:timestamp a owl:ObjectProperty ;
+	rdfs:label "timestamp"^^xsd:string ;
+	rdfs:domain :Data ;
+	rdfs:range :Date ;
+	rdfs:subPropertyOf :hasDate .
+
+:age a owl:DatatypeProperty ;
+	rdfs:label "age"^^xsd:string ;
+	rdfs:domain :IndividualInformation ;
+	rdfs:range xsd:duration .
+
+:algo a owl:DatatypeProperty ;
+	rdfs:label "algo"^^xsd:string ;
+	rdfs:domain :EncryptAlgo ;
+	rdfs:subPropertyOf :data .
+
+:bimetricFile a owl:DatatypeProperty ;
+	rdfs:label "bimetricFile"^^xsd:string ;
+	rdfs:domain :BiometricData ;
+	rdfs:subPropertyOf :data .
+
+:businessName a owl:DatatypeProperty ;
+	rdfs:label "businessName"^^xsd:string ;
+	rdfs:domain :BusinessInformation .
+
+:businessUnit a owl:DatatypeProperty ;
+	rdfs:label "businessUnit"^^xsd:string ;
+	dc:type "Demographic and Socieconomic Data"@en ;
+	rdfs:comment "Department or Division of Organization and eventually where user is employed."@en ;
+	rdfs:domain :IdentityInformation .
+
+:callLog a owl:DatatypeProperty ;
+	rdfs:label "callLog"^^xsd:string ;
+	rdfs:domain :LogData ;
+	rdfs:subPropertyOf :data .
+
+:cellID a owl:DatatypeProperty ;
+	rdfs:label "cellID"^^xsd:string ;
+	rdfs:comment "L'identifiant de l'appareil."@fr ;
+	rdfs:domain :CellPhoneData ;
+	rdfs:subPropertyOf :data .
+
+:city a owl:DatatypeProperty ;
+	rdfs:label "city"^^xsd:string ;
+	dc:type "Demographic and Socioeconomic Data"@en ;
+	rdfs:domain :Postal ;
+	rdfs:subPropertyOf :postalAddress .
+
+:cookie a owl:DatatypeProperty ;
+	rdfs:label "cookie"^^xsd:string ;
+	rdfs:domain :MiscData ;
+	rdfs:subPropertyOf :data .
+
+:country a owl:DatatypeProperty ;
+	rdfs:label "country"^^xsd:string ;
+	dc:type "Demographic and Socioeconomic Data"@en ;
+	rdfs:isDefinedBy "The country field represents the information of the name of the country among the countries listed in ISO3166."@en ;
+	rdfs:subPropertyOf :postalAddress .
+
+:data a owl:DatatypeProperty ;
+	rdfs:label "data"^^xsd:string .
+
+:dateYmd a owl:DatatypeProperty ;
+	rdfs:label "dateYmd"^^xsd:string ;
+	rdfs:comment ""@en ;
+	rdfs:subPropertyOf :timeDate .
+
+:departmentCode a owl:DatatypeProperty ;
+	rdfs:label "departmentCode"^^xsd:string ;
+	dc:type "Demographic and Socioeconomic Data"@en ;
+	rdfs:subPropertyOf :postalAddress .
+
+:departmentName a owl:DatatypeProperty ;
+	rdfs:label "departmentName"^^xsd:string ;
+	dc:type "Demographic and Socioeconomic Data"@en ;
+	rdfs:subPropertyOf :postalAddress .
+
+:document a owl:DatatypeProperty ;
+	rdfs:label "document"^^xsd:string ;
+	rdfs:domain :MiscData ;
+	rdfs:subPropertyOf :data .
+
+:email a owl:DatatypeProperty ;
+	rdfs:label "email"^^xsd:string ;
+	dc:type "Online Contact Information"@en ;
+	rdfs:domain :Online .
+
+:employer a owl:DatatypeProperty ;
+	rdfs:label "employer"^^xsd:string ;
+	dc:type "Demographic and Socieconomic Data"@en ;
+	rdfs:domain :IndividualInformation .
+
+:extendedAddress a owl:DatatypeProperty ;
+	rdfs:label "extendedAddress"^^xsd:string ;
+	dc:type "Demographic and Socioeconomic Data"@en ;
+	rdfs:subPropertyOf :postalAddress .
+
+:familyName a owl:DatatypeProperty ;
+	rdfs:label "familyName"^^xsd:string ;
+	dc:type "Physical Contact Information"@en ;
+	rdfs:subPropertyOf :indivName .
+
+:format a owl:DatatypeProperty ;
+	rdfs:label "Certificate Format"^^xsd:string ;
+	dc:type "Unique Identifiers"@en ;
+	rdfs:domain :Certificate .
+
+:fractionSecond a owl:DatatypeProperty ;
+	rdfs:label "fractionSecond"^^xsd:string ;
+	rdfs:subPropertyOf :timeDate .
+
+:gender a owl:DatatypeProperty ;
+	rdfs:label "gender"^^xsd:string ;
+	dc:type "Demographic and Socieconomic Data"@en ;
+	rdfs:domain :IndividualInformation .
+
+:givenName a owl:DatatypeProperty ;
+	rdfs:label "givenName"^^xsd:string ;
+	dc:type "Physical Contact Information"@en ;
+	rdfs:subPropertyOf :indivName .
+
+:gps a owl:DatatypeProperty ;
+	rdfs:label "gps"^^xsd:string ;
+	rdfs:comment "Global Positioning System"@en , "Système de positionnement mondial."@fr ;
+	rdfs:domain :LocationData ;
+	rdfs:subPropertyOf :data .
+
+:hasActionDate a owl:DatatypeProperty ;
+	rdfs:domain :History ;
+	rdfs:range rdfs:Literal .
+
+:hmsDate a owl:DatatypeProperty ;
+	rdfs:label "hmsDate"^^xsd:string ;
+	rdfs:subPropertyOf :timeDate .
+
+:hmsHour a owl:DatatypeProperty ;
+	rdfs:label "hmsHour"^^xsd:string ;
+	rdfs:subPropertyOf :timeDate .
+
+:hmsMinute a owl:DatatypeProperty ;
+	rdfs:label "hmsMinute"^^xsd:string ;
+	rdfs:subPropertyOf :timeDate .
+
+:hmsSecond a owl:DatatypeProperty ;
+	rdfs:label "hmsSecond"^^xsd:string ;
+	rdfs:subPropertyOf :timeDate .
+
+:id a owl:DatatypeProperty ;
+	rdfs:label "Login ID"@en ;
+	dc:type "Unique Identifiers"@en ;
+	rdfs:domain :Login .
+
+:imei a owl:DatatypeProperty ;
+	rdfs:label "imei"^^xsd:string ;
+	rdfs:comment "International Mobile Equipment Identity."@en , "L'identité internationale d'équipement mobile est un numéro qui permet d'identifier de manière unique chacun des terminaux de téléphonie mobile."@fr ;
+	rdfs:domain :CellPhoneData ;
+	rdfs:subPropertyOf :data .
+
+:indivName a owl:DatatypeProperty ;
+	rdfs:label "indivName"^^xsd:string ;
+	rdfs:domain :IndividualInformation .
+
+:intCode a owl:DatatypeProperty ;
+	rdfs:label "intCode"^^xsd:string ;
+	dc:type "Physical Contact Information"@en ;
+	rdfs:comment "Code international, qui permet par exemple l'accès au service Roaming à l'étranger."@fr ;
+	rdfs:subPropertyOf :telephoneNum .
+
+:ip a owl:DatatypeProperty ;
+	rdfs:label "ip"^^xsd:string ;
+	rdfs:comment "Adresse IP du mobile."@fr ;
+	rdfs:domain :LocationData ;
+	rdfs:subPropertyOf :data .
+
+:jobTitle a owl:DatatypeProperty ;
+	rdfs:label "jobTitle"^^xsd:string ;
+	dc:type "Demographic and Socieconomic Data"@en ;
+	rdfs:domain :IndividualInformation .
+
+:key a owl:DatatypeProperty ;
+	rdfs:label "Certificate Key"@en ;
+	dc:type "Unique Identifiers"@en ;
+	rdfs:comment "Les clés secrètes et publiques associées à un certificat."@fr ;
+	rdfs:domain :Certificate .
+
+:languageCode a owl:DatatypeProperty ;
+	rdfs:label "languageCode"^^xsd:string ;
+	rdfs:comment "Code du langage choisi par l'utilisateur."@fr ;
+	rdfs:domain :CellPhoneData ;
+	rdfs:subPropertyOf :data .
+
+:latitude a owl:DatatypeProperty ;
+	rdfs:label "latitude"^^xsd:string ;
+	rdfs:domain :LocationData ;
+	rdfs:subPropertyOf :data .
+
+:localCode a owl:DatatypeProperty ;
+	rdfs:label "localCode"^^xsd:string ;
+	dc:type "Physical Contact Information"@en ;
+	rdfs:subPropertyOf :telephoneNum .
+
+:logo a owl:DatatypeProperty ;
+	rdfs:label "logo"^^xsd:string ;
+	rdfs:domain :BusinessInformation .
+
+:longitude a owl:DatatypeProperty ;
+	rdfs:label "longitude"^^xsd:string ;
+	rdfs:domain :LocationData ;
+	rdfs:subPropertyOf :data .
+
+:middleName a owl:DatatypeProperty ;
+	rdfs:label "middleName"^^xsd:string ;
+	dc:type "Physical Contact Information"@en ;
+	rdfs:subPropertyOf :indivName .
+
+:nickName a owl:DatatypeProperty ;
+	rdfs:label "nickName"^^xsd:string ;
+	dc:type "Demographic and Socioeconomic Data"@en ;
+	rdfs:subPropertyOf :indivName .
+
+:number a owl:DatatypeProperty ;
+	rdfs:label "number"^^xsd:string ;
+	dc:type "Physical Contact Information"@en ;
+	rdfs:subPropertyOf :postalAddress .
+
+:password a owl:DatatypeProperty ;
+	rdfs:label "Login password"@en ;
+	dc:type "Unique Identifiers"@en ;
+	rdfs:domain :Login .
+
+:phoneExtension a owl:DatatypeProperty ;
+	rdfs:label "phoneExtension"^^xsd:string ;
+	dc:type "Physical Contact Information"@en ;
+	rdfs:subPropertyOf :telephoneNum .
+
+:phoneNumber a owl:DatatypeProperty ;
+	rdfs:label "phoneNumber"^^xsd:string ;
+	dc:type "Physical Contact Information"@en ;
+	rdfs:domain :TelephoneNumber ;
+	rdfs:subPropertyOf :telephoneNum .
+
+:photo a owl:DatatypeProperty ;
+	rdfs:label "photo"^^xsd:string ;
+	rdfs:domain :MiscData ;
+	rdfs:subPropertyOf :data .
+
+:pin a owl:DatatypeProperty ;
+	rdfs:label "pin"^^xsd:string ;
+	rdfs:comment "A secret code to identify the identity holder."@en , "Code secret pour authentifier le porteur de l'identité."@fr ;
+	rdfs:domain :SecretData ;
+	rdfs:subPropertyOf :data .
+
+:postOfficeBox a owl:DatatypeProperty ;
+	rdfs:label "postOfficeBox"^^xsd:string ;
+	dc:type "Physical Contact Information"@en ;
+	rdfs:subPropertyOf :postalAddress .
+
+:postalAddress a owl:DatatypeProperty ;
+	rdfs:label "postalAddress"^^xsd:string ;
+	rdfs:domain :Postal .
+
+:postalCode a owl:DatatypeProperty ;
+	rdfs:label "postalCode"^^xsd:string ;
+	dc:type "Demographic and Socioeconomic Data"@en ;
+	rdfs:subPropertyOf :postalAddress .
+
+:region a owl:DatatypeProperty ;
+	rdfs:label "region"^^xsd:string ;
+	dc:type "Demographic and Socioeconomic Data"@en ;
+	rdfs:subPropertyOf :postalAddress .
+
+:street a owl:DatatypeProperty ;
+	rdfs:label "street"^^xsd:string ;
+	dc:type "Physical Contact Information"@en ;
+	rdfs:subPropertyOf :postalAddress .
+
+:telephoneNum a owl:DatatypeProperty ;
+	rdfs:label "telephoneNum"^^xsd:string ;
+	rdfs:domain :TelephoneNumber .
+
+:timeDate a owl:DatatypeProperty ;
+	rdfs:label "timeDate"^^xsd:string ;
+	rdfs:comment "Time date information is described in the time standard ISO8601."@en ;
+	rdfs:domain :Date .
+
+:timeZone a owl:DatatypeProperty ;
+	rdfs:label "timeZone"^^xsd:string ;
+	rdfs:comment ""^^xsd:string ;
+	rdfs:subPropertyOf :timeDate .
+
+:title a owl:DatatypeProperty ;
+	rdfs:label "title"^^xsd:string ;
+	dc:type "Demographic and Socioeconomic Data"@en ;
+	rdfs:subPropertyOf :indivName .
+
+:uid a owl:DatatypeProperty ;
+	rdfs:label "uid"^^xsd:string ;
+	rdfs:domain :UID .
+
+:uri a owl:DatatypeProperty ;
+	rdfs:label "uri"^^xsd:string ;
+	dc:type "Online Contact Information"@en .
+
+:video a owl:DatatypeProperty ;
+	rdfs:label "video"^^xsd:string ;
+	rdfs:domain :MiscData ;
+	rdfs:subPropertyOf :data .
+
+:wifi a owl:DatatypeProperty ;
+	rdfs:label "wifi"^^xsd:string ;
+	rdfs:comment "Les données de connexion Wifi."@fr ;
+	rdfs:domain :LocationData ;
+	rdfs:subPropertyOf :data .
+
+:ymdDay a owl:DatatypeProperty ;
+	rdfs:label "ymdDay"^^xsd:string ;
+	rdfs:subPropertyOf :timeDate .
+
+:ymdMonth a owl:DatatypeProperty ;
+	rdfs:label "ymdMonth"^^xsd:string ;
+	rdfs:subPropertyOf :timeDate .
+
+:ymdMonthYear a owl:DatatypeProperty ;
+	rdfs:label "ymdMonthYear"^^xsd:string ;
+	rdfs:subPropertyOf :timeDate .
+
+:ymdYear a owl:DatatypeProperty ;
+	rdfs:label "ymdYear"^^xsd:string ;
+	rdfs:subPropertyOf :timeDate .
+
+:ymdYearMonth a owl:DatatypeProperty ;
+	rdfs:label "ymdYearMonth"^^xsd:string ;
+	rdfs:subPropertyOf :timeDate .
+
+:Action a owl:Class ;
+	rdfs:label "Action" ;
+	rdfs:subClassOf owl:Thing .
+
+:Agent a owl:Class ;
+	rdfs:label "Agent" ;
+	rdfs:subClassOf owl:Thing , _:node18kk76ebox1 .
+
+_:node18kk76ebox1 a owl:Restriction ;
+	owl:onProperty :hasData ;
+	owl:someValuesFrom :Data .
+
+:Agent rdfs:subClassOf _:node18kk76ebox2 .
+
+_:node18kk76ebox2 a owl:Restriction ;
+	owl:onProperty :hasIdentity ;
+	owl:someValuesFrom :IdentityInformation .
+
+:AlarmClockProvider a owl:Class ;
+	rdfs:subClassOf :ContentProvider .
+
+:BiometricData a owl:Class ;
+	rdfs:label "BiometricData"^^xsd:string ;
+	rdfs:subClassOf :Data , _:node18kk76ebox3 .
+
+_:node18kk76ebox3 a owl:Restriction ;
+	owl:onProperty :bimetricFile ;
+	owl:someValuesFrom rdf:XMLLiteral .
+
+:BrowserProvider a owl:Class ;
+	rdfs:subClassOf :ContentProvider .
+
+:Business a owl:Class ;
+	rdfs:label "Business"^^xsd:string ;
+	rdfs:subClassOf :Agent , _:node18kk76ebox4 .
+
+_:node18kk76ebox4 a owl:Restriction ;
+	owl:onProperty :hasIdentity ;
+	owl:someValuesFrom :BusinessInformation .
+
+:Business rdfs:comment "A business is a legal entity which is permitted to enter into a contract with another entity."@en , "Un business est une entité morale comme une organisation, une entreprise, une association ou une agence..."@fr .
+
+:BusinessInformation a owl:Class ;
+	rdfs:label "BusinessInformation"^^xsd:string ;
+	rdfs:subClassOf :IdentityInformation , _:node18kk76ebox5 .
+
+_:node18kk76ebox5 a owl:Restriction ;
+	owl:onProperty :businessUnit ;
+	owl:someValuesFrom rdfs:Literal .
+
+:BusinessInformation rdfs:subClassOf _:node18kk76ebox6 .
+
+_:node18kk76ebox6 a owl:Restriction ;
+	owl:onProperty :logo ;
+	owl:someValuesFrom xsd:anyType .
+
+:BusinessInformation rdfs:subClassOf _:node18kk76ebox7 .
+
+_:node18kk76ebox7 a owl:Restriction ;
+	owl:onProperty :hasContactInfo ;
+	owl:someValuesFrom :ContactInformation .
+
+:BusinessInformation rdfs:subClassOf _:node18kk76ebox8 .
+
+_:node18kk76ebox8 a owl:Restriction ;
+	owl:onProperty :businessName ;
+	owl:someValuesFrom rdfs:Literal .
+
+:BusinessInformation rdfs:comment "Identité associée uniquement à une personne morale."@fr .
+
+:CallLogProvider a owl:Class ;
+	rdfs:subClassOf :ContentProvider .
+
+:CellPhoneData a owl:Class ;
+	rdfs:label "CellPhoneData"^^xsd:string ;
+	rdfs:subClassOf :Data , _:node18kk76ebox9 .
+
+_:node18kk76ebox9 a owl:Restriction ;
+	owl:onProperty :languageCode ;
+	owl:someValuesFrom rdfs:Literal .
+
+:CellPhoneData rdfs:subClassOf _:node18kk76ebox10 .
+
+_:node18kk76ebox10 a owl:Restriction ;
+	owl:onProperty :cellID ;
+	owl:someValuesFrom rdfs:Literal .
+
+:CellPhoneData rdfs:subClassOf _:node18kk76ebox11 .
+
+_:node18kk76ebox11 a owl:Restriction ;
+	owl:onProperty :imei ;
+	owl:someValuesFrom rdfs:Literal .
+
+:CellPhoneData rdfs:comment "Les données correspondant à l'appareil mobile."@fr .
+
+:Certificate a owl:Class ;
+	rdfs:label "User or Organization Identity Certificate"^^xsd:string ;
+	rdfs:subClassOf owl:Thing , _:node18kk76ebox12 .
+
+_:node18kk76ebox12 a owl:Restriction ;
+	owl:onProperty :hasExpirationDate ;
+	owl:someValuesFrom :Date .
+
+:Certificate rdfs:subClassOf _:node18kk76ebox13 .
+
+_:node18kk76ebox13 a owl:Restriction ;
+	owl:onProperty :format ;
+	owl:someValuesFrom rdfs:Literal .
+
+:Certificate rdfs:subClassOf _:node18kk76ebox14 .
+
+_:node18kk76ebox14 a owl:Restriction ;
+	owl:onProperty :key ;
+	owl:someValuesFrom rdfs:Literal .
+
+:Certificate rdfs:comment "This structure is used to specify identity certificates."@en , "Il s'agit de l'élèment de l'identité qui permettera l'authentification de l'utilisateur, du fournisseur de service ainsi que l'émetteur de l'identité."@fr .
+
+:ChatAccount a owl:Class ;
+	rdfs:label "ChatAccount"^^xsd:string ;
+	rdfs:subClassOf :OnlineAccount ;
+	rdfs:comment "Compte de discussion en ligne."@fr .
+
+:Condition a owl:Class ;
+	rdfs:label "Condition" ;
+	rdfs:subClassOf owl:Thing .
+
+:ContactInformation a owl:Class ;
+	rdfs:label "ContactInformation"^^xsd:string ;
+	rdfs:subClassOf owl:Thing ;
+	rdfs:comment "Required information to contact an agent."@en , "Les informations nécessaires pour contacter un agent."@fr .
+
+:ContactsContractProvider a owl:Class ;
+	rdfs:subClassOf :ContentProvider .
+
+:ContentProvider a owl:Class ;
+	rdfs:subClassOf :Data .
+
+:Context a owl:Class ;
+	rdfs:label "Context" ;
+	rdfs:subClassOf owl:Thing .
+
+:Data a owl:Class ;
+	rdfs:label "Data"^^xsd:string ;
+	rdfs:subClassOf owl:Thing .
+
+:Date a owl:Class ;
+	rdfs:label "Date"^^xsd:string ;
+	rdfs:subClassOf owl:Thing , _:node18kk76ebox15 .
+
+_:node18kk76ebox15 a owl:Restriction ;
+	owl:onProperty :fractionSecond ;
+	owl:someValuesFrom xsd:time .
+
+:Date rdfs:subClassOf _:node18kk76ebox16 .
+
+_:node18kk76ebox16 a owl:Restriction ;
+	owl:onProperty :timeZone ;
+	owl:someValuesFrom xsd:time .
+
+:Date rdfs:comment "The date structure specifies a date. Date information can be used in different ways, depending on the context."@en .
+
+:DateHms a owl:Class ;
+	rdfs:label "Date: Hour/Minute/Second"^^xsd:string ;
+	rdfs:subClassOf :Date , _:node18kk76ebox17 .
+
+_:node18kk76ebox17 a owl:Restriction ;
+	owl:onProperty :hmsSecond ;
+	owl:someValuesFrom xsd:time .
+
+:DateHms rdfs:subClassOf _:node18kk76ebox18 .
+
+_:node18kk76ebox18 a owl:Restriction ;
+	owl:onProperty :hmsDate ;
+	owl:someValuesFrom xsd:time .
+
+:DateHms rdfs:subClassOf _:node18kk76ebox19 .
+
+_:node18kk76ebox19 a owl:Restriction ;
+	owl:onProperty :hmsMinute ;
+	owl:someValuesFrom xsd:time .
+
+:DateHms rdfs:subClassOf _:node18kk76ebox20 .
+
+_:node18kk76ebox20 a owl:Restriction ;
+	owl:onProperty :hmsHour ;
+	owl:someValuesFrom xsd:time .
+
+_:node18kk76ebox21 a owl:Axiom ;
+	rdfs:label "Minute" ;
+	owl:annotatedSource :DateHms ;
+	owl:annotatedProperty rdfs:subClassOf ;
+	owl:annotatedTarget _:node18kk76ebox22 .
+
+_:node18kk76ebox22 a owl:Restriction ;
+	owl:onProperty :hmsMinute ;
+	owl:someValuesFrom xsd:time .
+
+_:node18kk76ebox23 a owl:Axiom ;
+	rdfs:label "Second" ;
+	owl:annotatedSource :DateHms ;
+	owl:annotatedProperty rdfs:subClassOf ;
+	owl:annotatedTarget _:node18kk76ebox24 .
+
+_:node18kk76ebox24 a owl:Restriction ;
+	owl:onProperty :hmsSecond ;
+	owl:someValuesFrom xsd:time .
+
+_:node18kk76ebox25 a owl:Axiom ;
+	rdfs:label "Hour" ;
+	owl:annotatedSource :DateHms ;
+	owl:annotatedProperty rdfs:subClassOf ;
+	owl:annotatedTarget _:node18kk76ebox26 .
+
+_:node18kk76ebox26 a owl:Restriction ;
+	owl:onProperty :hmsHour ;
+	owl:someValuesFrom xsd:time .
+
+:DateYmd a owl:Class ;
+	rdfs:label "Date: Year/Month/Day"^^xsd:string ;
+	rdfs:subClassOf :Date , _:node18kk76ebox27 .
+
+_:node18kk76ebox27 a owl:Restriction ;
+	owl:onProperty :ymdYear ;
+	owl:someValuesFrom xsd:gYear .
+
+:DateYmd rdfs:subClassOf _:node18kk76ebox28 .
+
+_:node18kk76ebox28 a owl:Restriction ;
+	owl:onProperty :dateYmd ;
+	owl:someValuesFrom xsd:date .
+
+:DateYmd rdfs:subClassOf _:node18kk76ebox29 .
+
+_:node18kk76ebox29 a owl:Restriction ;
+	owl:onProperty :ymdMonth ;
+	owl:someValuesFrom xsd:gMonth .
+
+:DateYmd rdfs:subClassOf _:node18kk76ebox30 .
+
+_:node18kk76ebox30 a owl:Restriction ;
+	owl:onProperty :ymdDay ;
+	owl:someValuesFrom xsd:gDay .
+
+:DateYmd rdfs:subClassOf _:node18kk76ebox31 .
+
+_:node18kk76ebox31 a owl:Restriction ;
+	owl:onProperty :ymdYearMonth ;
+	owl:someValuesFrom xsd:gYearMonth .
+
+:DateYmd rdfs:subClassOf _:node18kk76ebox32 .
+
+_:node18kk76ebox32 a owl:Restriction ;
+	owl:onProperty :ymdMonthYear ;
+	owl:someValuesFrom xsd:gMonthYear .
+
+_:node18kk76ebox33 a owl:Axiom ;
+	rdfs:label "Month" ;
+	owl:annotatedSource :DateYmd ;
+	owl:annotatedProperty rdfs:subClassOf ;
+	owl:annotatedTarget _:node18kk76ebox34 .
+
+_:node18kk76ebox34 a owl:Restriction ;
+	owl:onProperty :ymdMonth ;
+	owl:someValuesFrom xsd:gMonth .
+
+_:node18kk76ebox35 a owl:Axiom ;
+	rdfs:label "Year" ;
+	owl:annotatedSource :DateYmd ;
+	owl:annotatedProperty rdfs:subClassOf ;
+	owl:annotatedTarget _:node18kk76ebox36 .
+
+_:node18kk76ebox36 a owl:Restriction ;
+	owl:onProperty :ymdYear ;
+	owl:someValuesFrom xsd:gYear .
+
+_:node18kk76ebox37 a owl:Axiom ;
+	rdfs:label "Day" ;
+	owl:annotatedSource :DateYmd ;
+	owl:annotatedProperty rdfs:subClassOf ;
+	owl:annotatedTarget _:node18kk76ebox38 .
+
+_:node18kk76ebox38 a owl:Restriction ;
+	owl:onProperty :ymdDay ;
+	owl:someValuesFrom xsd:gDay .
+
+_:node18kk76ebox39 a owl:Axiom ;
+	rdfs:label "Year/Month" ;
+	owl:annotatedSource :DateYmd ;
+	owl:annotatedProperty rdfs:subClassOf ;
+	owl:annotatedTarget _:node18kk76ebox40 .
+
+_:node18kk76ebox40 a owl:Restriction ;
+	owl:onProperty :ymdYearMonth ;
+	owl:someValuesFrom xsd:gYearMonth .
+
+_:node18kk76ebox41 a owl:Axiom ;
+	rdfs:label "Month/Year" ;
+	owl:annotatedSource :DateYmd ;
+	owl:annotatedProperty rdfs:subClassOf ;
+	owl:annotatedTarget _:node18kk76ebox42 .
+
+_:node18kk76ebox42 a owl:Restriction ;
+	owl:onProperty :ymdMonthYear ;
+	owl:someValuesFrom xsd:gMonthYear .
+
+:EcommerceAccount a owl:Class ;
+	rdfs:label "EcommerceAccount"^^xsd:string ;
+	rdfs:subClassOf :OnlineAccount ;
+	rdfs:comment "Compte d'achat en ligne. Il peut contenir des informations critiques comme les données bancaires."@fr .
+
+:EncryptAlgo a owl:Class ;
+	rdfs:label "EncryptAlgo"^^xsd:string , "Algorithme de chiffrement."@fr ;
+	rdfs:subClassOf :Data , _:node18kk76ebox43 .
+
+_:node18kk76ebox43 a owl:Restriction ;
+	owl:onProperty :algo ;
+	owl:someValuesFrom rdfs:Literal .
+
+:FaceRecognition a owl:Class ;
+	rdfs:label "FaceRecognition"^^xsd:string ;
+	rdfs:subClassOf :BiometricData .
+
+:Fax a owl:Class ;
+	rdfs:label "Fax"^^xsd:string ;
+	rdfs:subClassOf :Telecommunication ;
+	dc:type "Physical Contact Information"@en .
+
+:FingerprintRecognition a owl:Class ;
+	rdfs:label "FingerprintRecognition"^^xsd:string ;
+	rdfs:subClassOf :BiometricData .
+
+:ForbiddenAction a owl:Class ;
+	rdfs:label "ForbiddenAction" ;
+	rdfs:subClassOf :Action .
+
+:GamingAccount a owl:Class ;
+	rdfs:label "GamingAccount"^^xsd:string ;
+	rdfs:subClassOf :OnlineAccount ;
+	rdfs:comment "Compte pour des jeux en ligne (gratuit ou payant)."@fr .
+
+:Group a owl:Class ;
+	rdfs:label "Group"^^xsd:string ;
+	rdfs:subClassOf :Individual , _:node18kk76ebox44 .
+
+_:node18kk76ebox44 a owl:Restriction ;
+	owl:onProperty :hasMember ;
+	owl:someValuesFrom :Person .
+
+:Group rdfs:comment "A group of persons that figure in the contact list of an individual."@en , "Un groupe des personnes qui constituent la liste des contacts d'un individu."@fr .
+
+:History a owl:Class ;
+	rdfs:label "History" ;
+	rdfs:subClassOf owl:Thing .
+
+:IdentityInformation a owl:Class ;
+	rdfs:label "IdentityInformation"^^xsd:string ;
+	rdfs:subClassOf owl:Thing , _:node18kk76ebox45 .
+
+_:node18kk76ebox45 a owl:Restriction ;
+	owl:onProperty :hasCertificate ;
+	owl:someValuesFrom :Certificate .
+
+:IdentityInformation rdfs:comment "Identity information of a legal or natural entity."@en , "Les informations relatives à une identité numérique d'une personne physique ou morale."@fr .
+
+:Individual a owl:Class ;
+	rdfs:label "Individual"^^xsd:string ;
+	owl:equivalentClass _:node18kk76ebox46 .
+
+_:node18kk76ebox46 a owl:Restriction ;
+	owl:onProperty :hasIdentity ;
+	owl:someValuesFrom :IndividualInformation .
+
+:Individual rdfs:subClassOf :Agent ;
+	rdfs:comment "Indivuals or natural entities."@en , "L'ensemble des personnes physiques."@fr .
+
+:IndividualInformation a owl:Class ;
+	rdfs:label "IndividualInformation"^^xsd:string ;
+	rdfs:subClassOf :IdentityInformation , _:node18kk76ebox47 .
+
+_:node18kk76ebox47 a owl:Restriction ;
+	owl:onProperty :hasBirthDate ;
+	owl:someValuesFrom :Date .
+
+:IndividualInformation rdfs:subClassOf _:node18kk76ebox48 .
+
+_:node18kk76ebox48 a owl:Restriction ;
+	owl:onProperty :jobTitle ;
+	owl:someValuesFrom rdfs:Literal .
+
+:IndividualInformation rdfs:subClassOf _:node18kk76ebox49 .
+
+_:node18kk76ebox49 a owl:Class ;
+	owl:unionOf _:node18kk76ebox51 .
+
+_:node18kk76ebox51 rdf:first _:node18kk76ebox50 .
+
+_:node18kk76ebox50 a owl:Restriction ;
+	owl:onProperty :businessUnit ;
+	owl:someValuesFrom rdfs:Literal .
+
+_:node18kk76ebox51 rdf:rest _:node18kk76ebox53 .
+
+_:node18kk76ebox53 rdf:first _:node18kk76ebox52 .
+
+_:node18kk76ebox52 a owl:Restriction ;
+	owl:onProperty :employer ;
+	owl:someValuesFrom rdfs:Literal .
+
+_:node18kk76ebox53 rdf:rest rdf:nil .
+
+:IndividualInformation rdfs:subClassOf _:node18kk76ebox54 .
+
+_:node18kk76ebox54 a owl:Restriction ;
+	owl:onProperty :gender ;
+	owl:someValuesFrom rdfs:Literal .
+
+:IndividualInformation rdfs:subClassOf _:node18kk76ebox55 .
+
+_:node18kk76ebox55 a owl:Restriction ;
+	owl:onProperty :hasHomeInfo ;
+	owl:someValuesFrom :ContactInformation .
+
+:IndividualInformation rdfs:subClassOf _:node18kk76ebox56 .
+
+_:node18kk76ebox56 a owl:Restriction ;
+	owl:onProperty :hasLogin ;
+	owl:someValuesFrom :Login .
+
+:IndividualInformation rdfs:subClassOf _:node18kk76ebox57 .
+
+_:node18kk76ebox57 a owl:Restriction ;
+	owl:onProperty :hasName ;
+	owl:someValuesFrom :Name .
+
+:IndividualInformation rdfs:comment "Identité associée uniquement à une personne physique."@fr .
+
+:InvalidCertificate a owl:Class ;
+	rdfs:label "InvalidCertificate" ;
+	rdfs:subClassOf :Certificate .
+
+:IrisRecognition a owl:Class ;
+	rdfs:label "IrisRecognition"^^xsd:string ;
+	rdfs:subClassOf :BiometricData .
+
+:Issuer a owl:Class ;
+	rdfs:label "Issuer"^^xsd:string ;
+	rdfs:subClassOf :Business , _:node18kk76ebox58 .
+
+_:node18kk76ebox58 a owl:Restriction ;
+	owl:onProperty :isIssuerOf ;
+	owl:someValuesFrom :IdentityInformation .
+
+:Issuer rdfs:comment "This legal entity is the issuer of an individual digital identity."@en , "L'émetteur d'une identité numérique (opérateur téléphonique par exemple)."@fr .
+
+:KeystokeDynamicRecognition a owl:Class ;
+	rdfs:label "KeystokeDynamicRecognition"^^xsd:string ;
+	rdfs:subClassOf :BiometricData .
+
+:LiveFoldersProvider a owl:Class ;
+	rdfs:subClassOf :ContentProvider .
+
+:LocationData a owl:Class ;
+	rdfs:label "LocationData"^^xsd:string ;
+	rdfs:subClassOf :Data , _:node18kk76ebox59 .
+
+_:node18kk76ebox59 a owl:Restriction ;
+	owl:onProperty :longitude ;
+	owl:someValuesFrom rdfs:Literal .
+
+:LocationData rdfs:subClassOf _:node18kk76ebox60 .
+
+_:node18kk76ebox60 a owl:Restriction ;
+	owl:onProperty :latitude ;
+	owl:someValuesFrom rdfs:Literal .
+
+:LocationData rdfs:subClassOf _:node18kk76ebox61 .
+
+_:node18kk76ebox61 a owl:Restriction ;
+	owl:onProperty :ip ;
+	owl:someValuesFrom rdfs:Literal .
+
+:LocationData rdfs:subClassOf _:node18kk76ebox62 .
+
+_:node18kk76ebox62 a owl:Restriction ;
+	owl:onProperty :gps ;
+	owl:someValuesFrom rdfs:Literal .
+
+:LocationData rdfs:subClassOf _:node18kk76ebox63 .
+
+_:node18kk76ebox63 a owl:Restriction ;
+	owl:onProperty :wifi ;
+	owl:someValuesFrom rdfs:Literal .
+
+:LocationData rdfs:comment "Les données de locations permettant de localiser le porteur de l'identité."@fr .
+
+:LogData a owl:Class ;
+	rdfs:label "LogData"^^xsd:string , "LogInfo"^^xsd:string , "LogInformation"^^xsd:string ;
+	rdfs:subClassOf :Data , _:node18kk76ebox64 .
+
+_:node18kk76ebox64 a owl:Restriction ;
+	owl:onProperty :callLog ;
+	owl:someValuesFrom rdfs:Literal .
+
+:LogData rdfs:subClassOf _:node18kk76ebox65 .
+
+_:node18kk76ebox65 a owl:Restriction ;
+	owl:onProperty :uri ;
+	owl:someValuesFrom rdfs:Literal .
+
+:LogData rdfs:subClassOf _:node18kk76ebox66 .
+
+_:node18kk76ebox66 a owl:Restriction ;
+	owl:onProperty :timestamp ;
+	owl:someValuesFrom :Date .
+
+:LogData rdfs:subClassOf _:node18kk76ebox67 .
+
+_:node18kk76ebox67 a owl:Restriction ;
+	owl:onProperty :ip ;
+	owl:someValuesFrom rdfs:Literal .
+
+:Login a owl:Class ;
+	rdfs:label "User's Login Information"^^xsd:string ;
+	rdfs:subClassOf owl:Thing , _:node18kk76ebox68 .
+
+_:node18kk76ebox68 a owl:Restriction ;
+	owl:onProperty :id ;
+	owl:someValuesFrom rdfs:Literal .
+
+:Login rdfs:subClassOf _:node18kk76ebox69 .
+
+_:node18kk76ebox69 a owl:Restriction ;
+	owl:onProperty :password ;
+	owl:someValuesFrom rdfs:Literal .
+
+:Login rdfs:comment "IDs ans Passwords for web services which require authentification."@en ;
+	dc:type "Unique Identifiers"@en .
+
+:MediaStoreProvider a owl:Class ;
+	rdfs:subClassOf :ContentProvider .
+
+:MiscData a owl:Class ;
+	rdfs:label "MiscData"^^xsd:string ;
+	rdfs:subClassOf :Data , _:node18kk76ebox70 .
+
+_:node18kk76ebox70 a owl:Restriction ;
+	owl:onProperty :document ;
+	owl:someValuesFrom xsd:anyType .
+
+:MiscData rdfs:subClassOf _:node18kk76ebox71 .
+
+_:node18kk76ebox71 a owl:Restriction ;
+	owl:onProperty :video ;
+	owl:someValuesFrom xsd:anyType .
+
+:MiscData rdfs:subClassOf _:node18kk76ebox72 .
+
+_:node18kk76ebox72 a owl:Restriction ;
+	owl:onProperty :photo ;
+	owl:someValuesFrom xsd:anyType .
+
+:MiscData rdfs:subClassOf _:node18kk76ebox73 .
+
+_:node18kk76ebox73 a owl:Restriction ;
+	owl:onProperty :cookie ;
+	owl:someValuesFrom rdfs:Literal .
+
+:MiscData rdfs:comment "Photos, videos, sms, documents, notes, call logs, cookies..."@fr .
+
+:Mobile a owl:Class ;
+	rdfs:label "Mobile"^^xsd:string ;
+	rdfs:subClassOf :Telecommunication ;
+	dc:type "Physical Contact Information"@en .
+
+:Mode a owl:Class ;
+	rdfs:label "Mode" ;
+	rdfs:subClassOf owl:Thing .
+
+:Name a owl:Class ;
+	rdfs:label "User's Name"^^xsd:string ;
+	rdfs:subClassOf owl:Thing , _:node18kk76ebox74 .
+
+_:node18kk76ebox74 a owl:Restriction ;
+	owl:onProperty :middleName ;
+	owl:someValuesFrom rdfs:Literal .
+
+:Name rdfs:subClassOf _:node18kk76ebox75 .
+
+_:node18kk76ebox75 a owl:Restriction ;
+	owl:onProperty :title ;
+	owl:someValuesFrom rdfs:Literal .
+
+:Name rdfs:subClassOf _:node18kk76ebox76 .
+
+_:node18kk76ebox76 a owl:Restriction ;
+	owl:onProperty :nickName ;
+	owl:someValuesFrom rdfs:Literal .
+
+:Name rdfs:subClassOf _:node18kk76ebox77 .
+
+_:node18kk76ebox77 a owl:Restriction ;
+	owl:onProperty :givenName ;
+	owl:someValuesFrom rdfs:Literal .
+
+:Name rdfs:subClassOf _:node18kk76ebox78 .
+
+_:node18kk76ebox78 a owl:Restriction ;
+	owl:onProperty :familyName ;
+	owl:someValuesFrom rdfs:Literal .
+
+:Name dc:type "Physical Contact Information, Demographic and Socieconomic Data"@en ;
+	rdfs:comment "The person name specifies information about the naming of a person."@en .
+
+:Online a owl:Class ;
+	rdfs:label "Online"^^xsd:string ;
+	rdfs:subClassOf :ContactInformation , _:node18kk76ebox79 .
+
+_:node18kk76ebox79 a owl:Restriction ;
+	owl:onProperty :uri ;
+	owl:someValuesFrom rdfs:Literal .
+
+:Online rdfs:subClassOf _:node18kk76ebox80 .
+
+_:node18kk76ebox80 a owl:Restriction ;
+	owl:onProperty :email ;
+	owl:someValuesFrom rdfs:Literal .
+
+:Online dc:type "Online Contact Information"@en ;
+	rdfs:comment "Online information about an agent."@en , "Les adresses électroniques pour contacter un agent."@fr .
+
+:OnlineAccount a owl:Class ;
+	rdfs:label "OnlineAccount"^^xsd:string ;
+	rdfs:subClassOf :Data ;
+	rdfs:comment "Les comptes en ligne de l'utilisateur."@fr .
+
+:Pager a owl:Class ;
+	rdfs:label "Pager"^^xsd:string ;
+	rdfs:subClassOf :Telecommunication ;
+	dc:type "Physical Contact Information"@en .
+
+:PermittedAction a owl:Class ;
+	rdfs:label "PermittedAction" ;
+	rdfs:subClassOf :Action .
+
+:Person a owl:Class ;
+	rdfs:label "Person"^^xsd:string ;
+	rdfs:subClassOf :Individual , _:node18kk76ebox81 .
+
+_:node18kk76ebox81 a owl:Restriction ;
+	owl:onProperty :knows ;
+	owl:someValuesFrom :Group .
+
+:Person rdfs:comment "A person is an individual who has a social identity and a technical one."@en , "Une personne est un individu qui possède une identité numérique et qui cherche à protéger sa vie privée."@fr .
+
+:Policy a owl:Class ;
+	rdfs:label "Policy" ;
+	rdfs:subClassOf owl:Thing .
+
+:Postal a owl:Class ;
+	rdfs:label "Postal"^^xsd:string ;
+	rdfs:subClassOf :ContactInformation , _:node18kk76ebox82 .
+
+_:node18kk76ebox82 a owl:Restriction ;
+	owl:onProperty :departmentCode ;
+	owl:someValuesFrom xsd:long .
+
+:Postal rdfs:subClassOf _:node18kk76ebox83 .
+
+_:node18kk76ebox83 a owl:Restriction ;
+	owl:onProperty :departmentName ;
+	owl:someValuesFrom rdfs:Literal .
+
+:Postal rdfs:subClassOf _:node18kk76ebox84 .
+
+_:node18kk76ebox84 a owl:Restriction ;
+	owl:onProperty :number ;
+	owl:someValuesFrom rdfs:Literal .
+
+:Postal rdfs:subClassOf _:node18kk76ebox85 .
+
+_:node18kk76ebox85 a owl:Restriction ;
+	owl:onProperty :country ;
+	owl:someValuesFrom rdfs:Literal .
+
+:Postal rdfs:subClassOf _:node18kk76ebox86 .
+
+_:node18kk76ebox86 a owl:Restriction ;
+	owl:onProperty :city ;
+	owl:someValuesFrom rdfs:Literal .
+
+:Postal rdfs:subClassOf _:node18kk76ebox87 .
+
+_:node18kk76ebox87 a owl:Restriction ;
+	owl:onProperty :street ;
+	owl:someValuesFrom rdfs:Literal .
+
+:Postal rdfs:subClassOf _:node18kk76ebox88 .
+
+_:node18kk76ebox88 a owl:Restriction ;
+	owl:onProperty :postalCode ;
+	owl:someValuesFrom xsd:integer .
+
+:Postal rdfs:subClassOf _:node18kk76ebox89 .
+
+_:node18kk76ebox89 a owl:Restriction ;
+	owl:onProperty :region ;
+	owl:someValuesFrom rdfs:Literal .
+
+:Postal dc:type "Physical Contact Information, Demographic and Socioeconomic Data"@en ;
+	rdfs:comment "Postal mailing address."@en .
+
+:SearchRecentSuggestionsProvider a owl:Class ;
+	rdfs:subClassOf :ContentProvider .
+
+:SecretData a owl:Class ;
+	rdfs:label "SecretData"^^xsd:string ;
+	rdfs:subClassOf :Data , _:node18kk76ebox90 .
+
+_:node18kk76ebox90 a owl:Restriction ;
+	owl:onProperty :pin ;
+	owl:someValuesFrom rdfs:Literal .
+
+:ServiceProvider a owl:Class ;
+	rdfs:label "ServiceProvider"^^xsd:string ;
+	rdfs:subClassOf :Business ;
+	rdfs:comment "Provider of mobile phone services."@en , "Le fournisseur de services mobiles (application, jeu, site Web)"@fr .
+
+:SettingsProvider a owl:Class ;
+	rdfs:subClassOf :ContentProvider .
+
+:SyncStateContractProvider a owl:Class ;
+	rdfs:subClassOf :ContentProvider .
+
+:Telecommunication a owl:Class ;
+	rdfs:label "Telecommunication"^^xsd:string ;
+	rdfs:subClassOf :ContactInformation , _:node18kk76ebox91 .
+
+_:node18kk76ebox91 a owl:Restriction ;
+	owl:onProperty :hasTelephoneNumber ;
+	owl:someValuesFrom :TelephoneNumber .
+
+:Telecommunication dc:type "Physical Contact Information"@en ;
+	rdfs:comment "Telecommunication information about an agnet."@en .
+
+:Telephone a owl:Class ;
+	rdfs:label "Telephone"^^xsd:string ;
+	rdfs:subClassOf :Telecommunication ;
+	dc:type "Physical Contact Information"@en .
+
+:TelephoneNumber a owl:Class ;
+	rdfs:label "TelephoneNumber"^^xsd:string ;
+	rdfs:subClassOf owl:Thing , _:node18kk76ebox92 .
+
+_:node18kk76ebox92 a owl:Restriction ;
+	owl:onProperty :intCode ;
+	owl:someValuesFrom xsd:long .
+
+:TelephoneNumber rdfs:subClassOf _:node18kk76ebox93 .
+
+_:node18kk76ebox93 a owl:Restriction ;
+	owl:onProperty :localCode ;
+	owl:someValuesFrom xsd:long .
+
+:TelephoneNumber rdfs:subClassOf _:node18kk76ebox94 .
+
+_:node18kk76ebox94 a owl:Restriction ;
+	owl:onProperty :phoneExtension ;
+	owl:someValuesFrom xsd:long .
+
+:TelephoneNumber rdfs:subClassOf _:node18kk76ebox95 .
+
+_:node18kk76ebox95 a owl:Restriction ;
+	owl:onProperty :phoneNumber ;
+	owl:someValuesFrom xsd:long .
+
+:TelephoneNumber rdfs:comment "The characteristics of a telephone number."@en .
+
+:UID a owl:Class ;
+	rdfs:label "UID"^^xsd:string ;
+	rdfs:subClassOf owl:Thing , _:node18kk76ebox96 .
+
+_:node18kk76ebox96 a owl:Restriction ;
+	owl:onProperty :uid ;
+	owl:someValuesFrom xsd:ID .
+
+:UID rdfs:comment "L'identifiant unique d'une entité qui possède une identité (agent)."^^xsd:string .
+
+:UserDictionaryProvider a owl:Class ;
+	rdfs:subClassOf :ContentProvider .
+
+:ValidCertificate a owl:Class ;
+	rdfs:label "ValidCertificate" ;
+	rdfs:subClassOf :Certificate .
+
+:VoiceRecognition a owl:Class ;
+	rdfs:label "VoiceRecognition"^^xsd:string ;
+	rdfs:subClassOf :BiometricData .
+
+owl:Thing a owl:Class ;
+	rdfs:comment "Identité numérique, agents et données."@fr .
+
+:conservative a owl:Thing , :Mode , owl:NamedIndividual ;
+	rdfs:label "conservative" .
+
+:liberal a owl:Thing , :Mode , owl:NamedIndividual ;
+	rdfs:label "liberal" .
+
+:metaPolicy a owl:Thing , :Policy , owl:NamedIndividual ;
+	rdfs:label "metaPolicy" ;
+	:hasDefaultPolicyMode :conservative .
+
+_:node18kk76ebox97 a owl:AllDisjointClasses ;
+	owl:members _:node18kk76ebox98 .
+
+_:node18kk76ebox98 rdf:first :AlarmClockProvider ;
+	rdf:rest _:node18kk76ebox99 .
+
+_:node18kk76ebox99 rdf:first :BrowserProvider ;
+	rdf:rest _:node18kk76ebox100 .
+
+_:node18kk76ebox100 rdf:first :CallLogProvider ;
+	rdf:rest _:node18kk76ebox101 .
+
+_:node18kk76ebox101 rdf:first :ContactsContractProvider ;
+	rdf:rest _:node18kk76ebox102 .
+
+_:node18kk76ebox102 rdf:first :LiveFoldersProvider ;
+	rdf:rest _:node18kk76ebox103 .
+
+_:node18kk76ebox103 rdf:first :MediaStoreProvider ;
+	rdf:rest _:node18kk76ebox104 .
+
+_:node18kk76ebox104 rdf:first :SearchRecentSuggestionsProvider ;
+	rdf:rest _:node18kk76ebox105 .
+
+_:node18kk76ebox105 rdf:first :SettingsProvider ;
+	rdf:rest _:node18kk76ebox106 .
+
+_:node18kk76ebox106 rdf:first :SyncStateContractProvider ;
+	rdf:rest _:node18kk76ebox107 .
+
+_:node18kk76ebox107 rdf:first :UserDictionaryProvider ;
+	rdf:rest rdf:nil .
+
+_:node18kk76ebox108 a owl:AllDisjointClasses ;
+	owl:members _:node18kk76ebox109 .
+
+_:node18kk76ebox109 rdf:first :FaceRecognition ;
+	rdf:rest _:node18kk76ebox110 .
+
+_:node18kk76ebox110 rdf:first :FingerprintRecognition ;
+	rdf:rest _:node18kk76ebox111 .
+
+_:node18kk76ebox111 rdf:first :IrisRecognition ;
+	rdf:rest _:node18kk76ebox112 .
+
+_:node18kk76ebox112 rdf:first :KeystokeDynamicRecognition ;
+	rdf:rest _:node18kk76ebox113 .
+
+_:node18kk76ebox113 rdf:first :VoiceRecognition ;
+	rdf:rest rdf:nil .
+
+:Agent rdfs:subClassOf _:node18kk76ebox114 .
+
+_:node18kk76ebox114 a owl:Restriction ;
+	owl:onProperty :hasData ;
+	owl:someValuesFrom :Data .
+
+:Agent rdfs:subClassOf _:node18kk76ebox115 .
+
+_:node18kk76ebox115 a owl:Restriction ;
+	owl:onProperty :hasIdentity ;
+	owl:someValuesFrom :IdentityInformation .
+
+:BiometricData rdfs:subClassOf _:node18kk76ebox116 .
+
+_:node18kk76ebox116 a owl:Restriction ;
+	owl:onProperty :bimetricFile ;
+	owl:someValuesFrom rdf:XMLLiteral .
+
+:Business rdfs:subClassOf _:node18kk76ebox117 .
+
+_:node18kk76ebox117 a owl:Restriction ;
+	owl:onProperty :hasIdentity ;
+	owl:someValuesFrom :BusinessInformation .
+
+:BusinessInformation rdfs:subClassOf _:node18kk76ebox118 .
+
+_:node18kk76ebox118 a owl:Restriction ;
+	owl:onProperty :businessUnit ;
+	owl:someValuesFrom rdfs:Literal .
+
+:BusinessInformation rdfs:subClassOf _:node18kk76ebox119 .
+
+_:node18kk76ebox119 a owl:Restriction ;
+	owl:onProperty :logo ;
+	owl:someValuesFrom xsd:anyType .
+
+:BusinessInformation rdfs:subClassOf _:node18kk76ebox120 .
+
+_:node18kk76ebox120 a owl:Restriction ;
+	owl:onProperty :hasContactInfo ;
+	owl:someValuesFrom :ContactInformation .
+
+:BusinessInformation rdfs:subClassOf _:node18kk76ebox121 .
+
+_:node18kk76ebox121 a owl:Restriction ;
+	owl:onProperty :businessName ;
+	owl:someValuesFrom rdfs:Literal .
+
+:CellPhoneData rdfs:subClassOf _:node18kk76ebox122 .
+
+_:node18kk76ebox122 a owl:Restriction ;
+	owl:onProperty :languageCode ;
+	owl:someValuesFrom rdfs:Literal .
+
+:CellPhoneData rdfs:subClassOf _:node18kk76ebox123 .
+
+_:node18kk76ebox123 a owl:Restriction ;
+	owl:onProperty :cellID ;
+	owl:someValuesFrom rdfs:Literal .
+
+:CellPhoneData rdfs:subClassOf _:node18kk76ebox124 .
+
+_:node18kk76ebox124 a owl:Restriction ;
+	owl:onProperty :imei ;
+	owl:someValuesFrom rdfs:Literal .
+
+:Certificate rdfs:subClassOf _:node18kk76ebox125 .
+
+_:node18kk76ebox125 a owl:Restriction ;
+	owl:onProperty :hasExpirationDate ;
+	owl:someValuesFrom :Date .
+
+:Certificate rdfs:subClassOf _:node18kk76ebox126 .
+
+_:node18kk76ebox126 a owl:Restriction ;
+	owl:onProperty :format ;
+	owl:someValuesFrom rdfs:Literal .
+
+:Certificate rdfs:subClassOf _:node18kk76ebox127 .
+
+_:node18kk76ebox127 a owl:Restriction ;
+	owl:onProperty :key ;
+	owl:someValuesFrom rdfs:Literal .
+
+:Date rdfs:subClassOf _:node18kk76ebox128 .
+
+_:node18kk76ebox128 a owl:Restriction ;
+	owl:onProperty :fractionSecond ;
+	owl:someValuesFrom xsd:time .
+
+:Date rdfs:subClassOf _:node18kk76ebox129 .
+
+_:node18kk76ebox129 a owl:Restriction ;
+	owl:onProperty :timeZone ;
+	owl:someValuesFrom xsd:time .
+
+:DateHms rdfs:subClassOf _:node18kk76ebox130 .
+
+_:node18kk76ebox130 a owl:Restriction ;
+	owl:onProperty :hmsSecond ;
+	owl:someValuesFrom xsd:time .
+
+:DateHms rdfs:subClassOf _:node18kk76ebox131 .
+
+_:node18kk76ebox131 a owl:Restriction ;
+	owl:onProperty :hmsDate ;
+	owl:someValuesFrom xsd:time .
+
+:DateHms rdfs:subClassOf _:node18kk76ebox132 .
+
+_:node18kk76ebox132 a owl:Restriction ;
+	owl:onProperty :hmsMinute ;
+	owl:someValuesFrom xsd:time .
+
+:DateHms rdfs:subClassOf _:node18kk76ebox133 .
+
+_:node18kk76ebox133 a owl:Restriction ;
+	owl:onProperty :hmsHour ;
+	owl:someValuesFrom xsd:time .
+
+_:node18kk76ebox134 a owl:Axiom ;
+	rdfs:label "Minute" ;
+	owl:annotatedSource :DateHms ;
+	owl:annotatedProperty rdfs:subClassOf ;
+	owl:annotatedTarget _:node18kk76ebox135 .
+
+_:node18kk76ebox135 a owl:Restriction ;
+	owl:onProperty :hmsMinute ;
+	owl:someValuesFrom xsd:time .
+
+_:node18kk76ebox136 a owl:Axiom ;
+	rdfs:label "Second" ;
+	owl:annotatedSource :DateHms ;
+	owl:annotatedProperty rdfs:subClassOf ;
+	owl:annotatedTarget _:node18kk76ebox137 .
+
+_:node18kk76ebox137 a owl:Restriction ;
+	owl:onProperty :hmsSecond ;
+	owl:someValuesFrom xsd:time .
+
+_:node18kk76ebox138 a owl:Axiom ;
+	rdfs:label "Hour" ;
+	owl:annotatedSource :DateHms ;
+	owl:annotatedProperty rdfs:subClassOf ;
+	owl:annotatedTarget _:node18kk76ebox139 .
+
+_:node18kk76ebox139 a owl:Restriction ;
+	owl:onProperty :hmsHour ;
+	owl:someValuesFrom xsd:time .
+
+:DateYmd rdfs:subClassOf _:node18kk76ebox140 .
+
+_:node18kk76ebox140 a owl:Restriction ;
+	owl:onProperty :ymdYear ;
+	owl:someValuesFrom xsd:gYear .
+
+:DateYmd rdfs:subClassOf _:node18kk76ebox141 .
+
+_:node18kk76ebox141 a owl:Restriction ;
+	owl:onProperty :dateYmd ;
+	owl:someValuesFrom xsd:date .
+
+:DateYmd rdfs:subClassOf _:node18kk76ebox142 .
+
+_:node18kk76ebox142 a owl:Restriction ;
+	owl:onProperty :ymdMonth ;
+	owl:someValuesFrom xsd:gMonth .
+
+:DateYmd rdfs:subClassOf _:node18kk76ebox143 .
+
+_:node18kk76ebox143 a owl:Restriction ;
+	owl:onProperty :ymdDay ;
+	owl:someValuesFrom xsd:gDay .
+
+:DateYmd rdfs:subClassOf _:node18kk76ebox144 .
+
+_:node18kk76ebox144 a owl:Restriction ;
+	owl:onProperty :ymdYearMonth ;
+	owl:someValuesFrom xsd:gYearMonth .
+
+:DateYmd rdfs:subClassOf _:node18kk76ebox145 .
+
+_:node18kk76ebox145 a owl:Restriction ;
+	owl:onProperty :ymdMonthYear ;
+	owl:someValuesFrom xsd:gMonthYear .
+
+_:node18kk76ebox146 a owl:Axiom ;
+	rdfs:label "Month" ;
+	owl:annotatedSource :DateYmd ;
+	owl:annotatedProperty rdfs:subClassOf ;
+	owl:annotatedTarget _:node18kk76ebox147 .
+
+_:node18kk76ebox147 a owl:Restriction ;
+	owl:onProperty :ymdMonth ;
+	owl:someValuesFrom xsd:gMonth .
+
+_:node18kk76ebox148 a owl:Axiom ;
+	rdfs:label "Year" ;
+	owl:annotatedSource :DateYmd ;
+	owl:annotatedProperty rdfs:subClassOf ;
+	owl:annotatedTarget _:node18kk76ebox149 .
+
+_:node18kk76ebox149 a owl:Restriction ;
+	owl:onProperty :ymdYear ;
+	owl:someValuesFrom xsd:gYear .
+
+_:node18kk76ebox150 a owl:Axiom ;
+	rdfs:label "Day" ;
+	owl:annotatedSource :DateYmd ;
+	owl:annotatedProperty rdfs:subClassOf ;
+	owl:annotatedTarget _:node18kk76ebox151 .
+
+_:node18kk76ebox151 a owl:Restriction ;
+	owl:onProperty :ymdDay ;
+	owl:someValuesFrom xsd:gDay .
+
+_:node18kk76ebox152 a owl:Axiom ;
+	rdfs:label "Year/Month" ;
+	owl:annotatedSource :DateYmd ;
+	owl:annotatedProperty rdfs:subClassOf ;
+	owl:annotatedTarget _:node18kk76ebox153 .
+
+_:node18kk76ebox153 a owl:Restriction ;
+	owl:onProperty :ymdYearMonth ;
+	owl:someValuesFrom xsd:gYearMonth .
+
+_:node18kk76ebox154 a owl:Axiom ;
+	rdfs:label "Month/Year" ;
+	owl:annotatedSource :DateYmd ;
+	owl:annotatedProperty rdfs:subClassOf ;
+	owl:annotatedTarget _:node18kk76ebox155 .
+
+_:node18kk76ebox155 a owl:Restriction ;
+	owl:onProperty :ymdMonthYear ;
+	owl:someValuesFrom xsd:gMonthYear .
+
+:EncryptAlgo rdfs:subClassOf _:node18kk76ebox156 .
+
+_:node18kk76ebox156 a owl:Restriction ;
+	owl:onProperty :algo ;
+	owl:someValuesFrom rdfs:Literal .
+
+:Group rdfs:subClassOf _:node18kk76ebox157 .
+
+_:node18kk76ebox157 a owl:Restriction ;
+	owl:onProperty :hasMember ;
+	owl:someValuesFrom :Person .
+
+:IdentityInformation rdfs:subClassOf _:node18kk76ebox158 .
+
+_:node18kk76ebox158 a owl:Restriction ;
+	owl:onProperty :hasCertificate ;
+	owl:someValuesFrom :Certificate .
+
+:Individual owl:equivalentClass _:node18kk76ebox159 .
+
+_:node18kk76ebox159 a owl:Restriction ;
+	owl:onProperty :hasIdentity ;
+	owl:someValuesFrom :IndividualInformation .
+
+:IndividualInformation rdfs:subClassOf _:node18kk76ebox160 .
+
+_:node18kk76ebox160 a owl:Restriction ;
+	owl:onProperty :hasBirthDate ;
+	owl:someValuesFrom :Date .
+
+:IndividualInformation rdfs:subClassOf _:node18kk76ebox161 .
+
+_:node18kk76ebox161 a owl:Restriction ;
+	owl:onProperty :jobTitle ;
+	owl:someValuesFrom rdfs:Literal .
+
+:IndividualInformation rdfs:subClassOf _:node18kk76ebox162 .
+
+_:node18kk76ebox162 a owl:Class ;
+	owl:unionOf _:node18kk76ebox164 .
+
+_:node18kk76ebox164 rdf:first _:node18kk76ebox163 .
+
+_:node18kk76ebox163 a owl:Restriction ;
+	owl:onProperty :businessUnit ;
+	owl:someValuesFrom rdfs:Literal .
+
+_:node18kk76ebox164 rdf:rest _:node18kk76ebox166 .
+
+_:node18kk76ebox166 rdf:first _:node18kk76ebox165 .
+
+_:node18kk76ebox165 a owl:Restriction ;
+	owl:onProperty :employer ;
+	owl:someValuesFrom rdfs:Literal .
+
+_:node18kk76ebox166 rdf:rest rdf:nil .
+
+:IndividualInformation rdfs:subClassOf _:node18kk76ebox167 .
+
+_:node18kk76ebox167 a owl:Restriction ;
+	owl:onProperty :gender ;
+	owl:someValuesFrom rdfs:Literal .
+
+:IndividualInformation rdfs:subClassOf _:node18kk76ebox168 .
+
+_:node18kk76ebox168 a owl:Restriction ;
+	owl:onProperty :hasHomeInfo ;
+	owl:someValuesFrom :ContactInformation .
+
+:IndividualInformation rdfs:subClassOf _:node18kk76ebox169 .
+
+_:node18kk76ebox169 a owl:Restriction ;
+	owl:onProperty :hasLogin ;
+	owl:someValuesFrom :Login .
+
+:IndividualInformation rdfs:subClassOf _:node18kk76ebox170 .
+
+_:node18kk76ebox170 a owl:Restriction ;
+	owl:onProperty :hasName ;
+	owl:someValuesFrom :Name .
+
+:Issuer rdfs:subClassOf _:node18kk76ebox171 .
+
+_:node18kk76ebox171 a owl:Restriction ;
+	owl:onProperty :isIssuerOf ;
+	owl:someValuesFrom :IdentityInformation .
+
+:LocationData rdfs:subClassOf _:node18kk76ebox172 .
+
+_:node18kk76ebox172 a owl:Restriction ;
+	owl:onProperty :longitude ;
+	owl:someValuesFrom rdfs:Literal .
+
+:LocationData rdfs:subClassOf _:node18kk76ebox173 .
+
+_:node18kk76ebox173 a owl:Restriction ;
+	owl:onProperty :latitude ;
+	owl:someValuesFrom rdfs:Literal .
+
+:LocationData rdfs:subClassOf _:node18kk76ebox174 .
+
+_:node18kk76ebox174 a owl:Restriction ;
+	owl:onProperty :ip ;
+	owl:someValuesFrom rdfs:Literal .
+
+:LocationData rdfs:subClassOf _:node18kk76ebox175 .
+
+_:node18kk76ebox175 a owl:Restriction ;
+	owl:onProperty :gps ;
+	owl:someValuesFrom rdfs:Literal .
+
+:LocationData rdfs:subClassOf _:node18kk76ebox176 .
+
+_:node18kk76ebox176 a owl:Restriction ;
+	owl:onProperty :wifi ;
+	owl:someValuesFrom rdfs:Literal .
+
+:LogData rdfs:subClassOf _:node18kk76ebox177 .
+
+_:node18kk76ebox177 a owl:Restriction ;
+	owl:onProperty :callLog ;
+	owl:someValuesFrom rdfs:Literal .
+
+:LogData rdfs:subClassOf _:node18kk76ebox178 .
+
+_:node18kk76ebox178 a owl:Restriction ;
+	owl:onProperty :uri ;
+	owl:someValuesFrom rdfs:Literal .
+
+:LogData rdfs:subClassOf _:node18kk76ebox179 .
+
+_:node18kk76ebox179 a owl:Restriction ;
+	owl:onProperty :timestamp ;
+	owl:someValuesFrom :Date .
+
+:LogData rdfs:subClassOf _:node18kk76ebox180 .
+
+_:node18kk76ebox180 a owl:Restriction ;
+	owl:onProperty :ip ;
+	owl:someValuesFrom rdfs:Literal .
+
+:Login rdfs:subClassOf _:node18kk76ebox181 .
+
+_:node18kk76ebox181 a owl:Restriction ;
+	owl:onProperty :id ;
+	owl:someValuesFrom rdfs:Literal .
+
+:Login rdfs:subClassOf _:node18kk76ebox182 .
+
+_:node18kk76ebox182 a owl:Restriction ;
+	owl:onProperty :password ;
+	owl:someValuesFrom rdfs:Literal .
+
+:MiscData rdfs:subClassOf _:node18kk76ebox183 .
+
+_:node18kk76ebox183 a owl:Restriction ;
+	owl:onProperty :document ;
+	owl:someValuesFrom xsd:anyType .
+
+:MiscData rdfs:subClassOf _:node18kk76ebox184 .
+
+_:node18kk76ebox184 a owl:Restriction ;
+	owl:onProperty :video ;
+	owl:someValuesFrom xsd:anyType .
+
+:MiscData rdfs:subClassOf _:node18kk76ebox185 .
+
+_:node18kk76ebox185 a owl:Restriction ;
+	owl:onProperty :photo ;
+	owl:someValuesFrom xsd:anyType .
+
+:MiscData rdfs:subClassOf _:node18kk76ebox186 .
+
+_:node18kk76ebox186 a owl:Restriction ;
+	owl:onProperty :cookie ;
+	owl:someValuesFrom rdfs:Literal .
+
+:Name rdfs:subClassOf _:node18kk76ebox187 .
+
+_:node18kk76ebox187 a owl:Restriction ;
+	owl:onProperty :middleName ;
+	owl:someValuesFrom rdfs:Literal .
+
+:Name rdfs:subClassOf _:node18kk76ebox188 .
+
+_:node18kk76ebox188 a owl:Restriction ;
+	owl:onProperty :title ;
+	owl:someValuesFrom rdfs:Literal .
+
+:Name rdfs:subClassOf _:node18kk76ebox189 .
+
+_:node18kk76ebox189 a owl:Restriction ;
+	owl:onProperty :nickName ;
+	owl:someValuesFrom rdfs:Literal .
+
+:Name rdfs:subClassOf _:node18kk76ebox190 .
+
+_:node18kk76ebox190 a owl:Restriction ;
+	owl:onProperty :givenName ;
+	owl:someValuesFrom rdfs:Literal .
+
+:Name rdfs:subClassOf _:node18kk76ebox191 .
+
+_:node18kk76ebox191 a owl:Restriction ;
+	owl:onProperty :familyName ;
+	owl:someValuesFrom rdfs:Literal .
+
+:Online rdfs:subClassOf _:node18kk76ebox192 .
+
+_:node18kk76ebox192 a owl:Restriction ;
+	owl:onProperty :uri ;
+	owl:someValuesFrom rdfs:Literal .
+
+:Online rdfs:subClassOf _:node18kk76ebox193 .
+
+_:node18kk76ebox193 a owl:Restriction ;
+	owl:onProperty :email ;
+	owl:someValuesFrom rdfs:Literal .
+
+:Person rdfs:subClassOf _:node18kk76ebox194 .
+
+_:node18kk76ebox194 a owl:Restriction ;
+	owl:onProperty :knows ;
+	owl:someValuesFrom :Group .
+
+:Postal rdfs:subClassOf _:node18kk76ebox195 .
+
+_:node18kk76ebox195 a owl:Restriction ;
+	owl:onProperty :departmentCode ;
+	owl:someValuesFrom xsd:long .
+
+:Postal rdfs:subClassOf _:node18kk76ebox196 .
+
+_:node18kk76ebox196 a owl:Restriction ;
+	owl:onProperty :departmentName ;
+	owl:someValuesFrom rdfs:Literal .
+
+:Postal rdfs:subClassOf _:node18kk76ebox197 .
+
+_:node18kk76ebox197 a owl:Restriction ;
+	owl:onProperty :number ;
+	owl:someValuesFrom rdfs:Literal .
+
+:Postal rdfs:subClassOf _:node18kk76ebox198 .
+
+_:node18kk76ebox198 a owl:Restriction ;
+	owl:onProperty :country ;
+	owl:someValuesFrom rdfs:Literal .
+
+:Postal rdfs:subClassOf _:node18kk76ebox199 .
+
+_:node18kk76ebox199 a owl:Restriction ;
+	owl:onProperty :city ;
+	owl:someValuesFrom rdfs:Literal .
+
+:Postal rdfs:subClassOf _:node18kk76ebox200 .
+
+_:node18kk76ebox200 a owl:Restriction ;
+	owl:onProperty :street ;
+	owl:someValuesFrom rdfs:Literal .
+
+:Postal rdfs:subClassOf _:node18kk76ebox201 .
+
+_:node18kk76ebox201 a owl:Restriction ;
+	owl:onProperty :postalCode ;
+	owl:someValuesFrom xsd:integer .
+
+:Postal rdfs:subClassOf _:node18kk76ebox202 .
+
+_:node18kk76ebox202 a owl:Restriction ;
+	owl:onProperty :region ;
+	owl:someValuesFrom rdfs:Literal .
+
+:SecretData rdfs:subClassOf _:node18kk76ebox203 .
+
+_:node18kk76ebox203 a owl:Restriction ;
+	owl:onProperty :pin ;
+	owl:someValuesFrom rdfs:Literal .
+
+:Telecommunication rdfs:subClassOf _:node18kk76ebox204 .
+
+_:node18kk76ebox204 a owl:Restriction ;
+	owl:onProperty :hasTelephoneNumber ;
+	owl:someValuesFrom :TelephoneNumber .
+
+:TelephoneNumber rdfs:subClassOf _:node18kk76ebox205 .
+
+_:node18kk76ebox205 a owl:Restriction ;
+	owl:onProperty :intCode ;
+	owl:someValuesFrom xsd:long .
+
+:TelephoneNumber rdfs:subClassOf _:node18kk76ebox206 .
+
+_:node18kk76ebox206 a owl:Restriction ;
+	owl:onProperty :localCode ;
+	owl:someValuesFrom xsd:long .
+
+:TelephoneNumber rdfs:subClassOf _:node18kk76ebox207 .
+
+_:node18kk76ebox207 a owl:Restriction ;
+	owl:onProperty :phoneExtension ;
+	owl:someValuesFrom xsd:long .
+
+:TelephoneNumber rdfs:subClassOf _:node18kk76ebox208 .
+
+_:node18kk76ebox208 a owl:Restriction ;
+	owl:onProperty :phoneNumber ;
+	owl:someValuesFrom xsd:long .
+
+:UID rdfs:subClassOf _:node18kk76ebox209 .
+
+_:node18kk76ebox209 a owl:Restriction ;
+	owl:onProperty :uid ;
+	owl:someValuesFrom xsd:ID .
+
+_:node18kk76ebox210 a owl:AllDisjointClasses ;
+	owl:members _:node18kk76ebox211 .
+
+_:node18kk76ebox211 rdf:first :AlarmClockProvider ;
+	rdf:rest _:node18kk76ebox212 .
+
+_:node18kk76ebox212 rdf:first :BrowserProvider ;
+	rdf:rest _:node18kk76ebox213 .
+
+_:node18kk76ebox213 rdf:first :CallLogProvider ;
+	rdf:rest _:node18kk76ebox214 .
+
+_:node18kk76ebox214 rdf:first :ContactsContractProvider ;
+	rdf:rest _:node18kk76ebox215 .
+
+_:node18kk76ebox215 rdf:first :LiveFoldersProvider ;
+	rdf:rest _:node18kk76ebox216 .
+
+_:node18kk76ebox216 rdf:first :MediaStoreProvider ;
+	rdf:rest _:node18kk76ebox217 .
+
+_:node18kk76ebox217 rdf:first :SearchRecentSuggestionsProvider ;
+	rdf:rest _:node18kk76ebox218 .
+
+_:node18kk76ebox218 rdf:first :SettingsProvider ;
+	rdf:rest _:node18kk76ebox219 .
+
+_:node18kk76ebox219 rdf:first :SyncStateContractProvider ;
+	rdf:rest _:node18kk76ebox220 .
+
+_:node18kk76ebox220 rdf:first :UserDictionaryProvider ;
+	rdf:rest rdf:nil .
+
+_:node18kk76ebox221 a owl:AllDisjointClasses ;
+	owl:members _:node18kk76ebox222 .
+
+_:node18kk76ebox222 rdf:first :FaceRecognition ;
+	rdf:rest _:node18kk76ebox223 .
+
+_:node18kk76ebox223 rdf:first :FingerprintRecognition ;
+	rdf:rest _:node18kk76ebox224 .
+
+_:node18kk76ebox224 rdf:first :IrisRecognition ;
+	rdf:rest _:node18kk76ebox225 .
+
+_:node18kk76ebox225 rdf:first :KeystokeDynamicRecognition ;
+	rdf:rest _:node18kk76ebox226 .
+
+_:node18kk76ebox226 rdf:first :VoiceRecognition ;
+	rdf:rest rdf:nil .

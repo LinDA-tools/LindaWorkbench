@@ -14,7 +14,7 @@ import requests
 from lxml import etree as et
 from linda_app.multiple_choice_field import MultiSelectField
 from query_designer.models import Design
-
+from urllib.error import HTTPError
 import re
 from linda_app.lists import *
 
@@ -291,7 +291,7 @@ class Vocabulary(models.Model):
                                                             parent_uri=row[5])
                 prp.save()
 
-        except HTTPError:
+        except:
             pass
 
     def __unicode__(self):

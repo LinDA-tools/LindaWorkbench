@@ -1,0 +1,97 @@
+@prefix : <http://linda-project.eu/ontology/ldao.owl#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xml: <http://www.w3.org/XML/1998/namespace> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<http://linda-project.eu/ontology/ldao.owl> a owl:Ontology .
+
+:algorithm a owl:AnnotationProperty .
+
+:analytic_result_node a owl:Class ;
+    :predictedValue ""^^xsd:string ;
+    rdfs:subClassOf prov:Entity ;
+    prov:wasDerivedFrom :analytic_input_node ;
+    prov:wasGeneratedBy :analytic_process .
+
+:analyzedField a owl:AnnotationProperty .
+
+:hasEvaluationDataset a owl:AnnotationProperty .
+
+:hasTrainDataset a owl:AnnotationProperty .
+
+:performance a owl:AnnotationProperty,
+        owl:Class ;
+    :timeToCreateRDFOutPutInSecs ""^^xsd:long ;
+    :timeToGetDataInSecs ""^^xsd:long ;
+    :timeToRunAnalyticsProcessInSecs ""^^xsd:long ;
+    rdfs:subClassOf :analytic_process .
+
+:predictedValue a owl:AnnotationProperty .
+
+:timeToCreateRDFOutPutInSecs a owl:AnnotationProperty .
+
+:timeToGetDataInSecs a owl:AnnotationProperty .
+
+:timeToRunAnalyticsProcessInSecs a owl:AnnotationProperty .
+
+owl:equivalentClass a owl:AnnotationProperty .
+
+prov:actedOnBehalfOf a owl:AnnotationProperty .
+
+prov:atTime a owl:AnnotationProperty .
+
+prov:wasAssociatedWith a owl:AnnotationProperty .
+
+prov:wasDerivedFrom a owl:AnnotationProperty .
+
+prov:wasGeneratedBy a owl:AnnotationProperty .
+
+foaf:accountName a owl:AnnotationProperty .
+
+foaf:holdsAccount a owl:AnnotationProperty .
+
+:Software a owl:Class ;
+    rdfs:label "Software" ;
+    rdfs:subClassOf prov:Agent ;
+    prov:actedOnBehalfOf :User .
+
+:User a owl:Class ;
+    rdfs:label "User" ;
+    rdfs:subClassOf prov:Agent ;
+    owl:equivalentClass "Person" ;
+    foaf:accountName ""^^xsd:string ;
+    foaf:holdsAccount foaf:OnlineAccount .
+
+:analytic_input_node a owl:Class ;
+    rdfs:subClassOf prov:Entity .
+
+prov:Activity a owl:Class ;
+    rdfs:subClassOf owl:Thing .
+
+foaf:OnlineAccount a owl:AnnotationProperty ;
+    foaf:homepage foaf:homepage .
+
+foaf:homepage a owl:AnnotationProperty .
+
+:analytic_process a owl:Class ;
+    rdfs:label "analytic_process"^^xsd:string ;
+    :algorithm ""^^xsd:string ;
+    :analyzedField ""^^xsd:string ;
+    :hasEvaluationDataset ""^^xsd:anyURI ;
+    :hasTrainDataset ""^^xsd:anyURI ;
+    rdfs:comment ""^^xsd:string ;
+    rdfs:subClassOf prov:Activity ;
+    owl:versionInfo ""^^xsd:string ;
+    prov:atTime ""^^xsd:dateTime ;
+    prov:wasAssociatedWith :Software .
+
+prov:Agent a owl:Class ;
+    rdfs:label "Agent" ;
+    rdfs:subClassOf owl:Thing .
+
+prov:Entity a owl:Class ;
+    rdfs:subClassOf owl:Thing .
