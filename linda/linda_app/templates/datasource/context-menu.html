@@ -38,7 +38,7 @@ $(function(){ //private datasource context menu
         else
         if (key == "Rename") {
             var dt_title = $('#' + id + ' .dt-title span').text();
-            $('#' + id + ' .dt-title').html('<textarea class="enabled" data-id="' + id  +'">' + dt_title + '</textarea>');
+            $('#' + id + ' .dt-title').html('<textarea class="rename enabled" data-id="' + id  +'">' + dt_title + '</textarea>');
             var t = $('#' + id + ' .dt-title').find('textarea');
             $(t).focus();
         }
@@ -61,10 +61,10 @@ if (url)
             "Explore": {name: "Explore", icon: "explore"},
             "sep1": "---------",
             "Edit": {name: "Edit", icon: "edit"},
-            "Rename": {name: "Rename", icon: "pencil"},
             {% if option_rename %}
-                "Delete": {name: "Delete", icon: "delete"},
+                "Rename": {name: "Rename", icon: "pencil"},
             {% endif %}
+            "Delete": {name: "Delete", icon: "delete"},
             "sep2": "---------",
             "Download": {name: "Download", icon: "download"},
         }
