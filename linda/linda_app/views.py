@@ -1635,8 +1635,7 @@ def query_clone(request, pk):
     q_obj.description = desc
     # for queries from query designer also replicate the design
     if q_obj.design:
-        q_obj.design.pk = None
-        q_obj.design.save()
+        q_obj.design = Design.objects.create(data=q_obj.design.data)
 
     # save the clone
     q_obj.save()

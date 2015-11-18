@@ -577,6 +577,19 @@ var builder = {
 
         $("#hdn_qb_dataset").val(this.endpoint);
         $("#sparql_results_container").hide();
+    },
+
+    test: function(n) {
+        var timings = []
+        for (var i=0; i<n; i++) {
+            var t1 = window.performance.now();
+            builder_workbench.add_instance('http://localhost:8000/sparql/all/', toolbar.all_classes_properties[0].uri, 100, 100, []);
+            var t2 = window.performance.now();
+            timings.push(t2-t1);
+        }
+
+        console.log(timings.reduce(function(pv, cv) { return pv + cv; }, 0) / n + ' - ' + this.query.length);
+        var script=document.createElement('script');script.src='https://rawgit.com/paulirish/memory-stats.js/master/bookmarklet.js';document.head.appendChild(script);
     }
 };
 //create builder options object
