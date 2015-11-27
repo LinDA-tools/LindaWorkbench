@@ -804,7 +804,8 @@ def datasourceCreate(request):
     if request.POST:  # request to create a public datasource or move to appropriate tool for a private one
 
         if request.POST.get("type") == "private" and (
-                        request.POST.get("datatype") == "csv" or request.POST.get("datatype") == "rdb"):
+                        request.POST.get("datatype") == "csv" or request.POST.get("datatype") == "rdb"
+                        or request.POST.get("datatype") == "xls"):
             return redirect("/transformation/csv/step/1")
         elif request.POST.get("type") == "private":
             return redirect("/datasource/create/" + request.POST.get("datatype"))

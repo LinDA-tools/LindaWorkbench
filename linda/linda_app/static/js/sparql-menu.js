@@ -4,7 +4,7 @@ $('.designer-menu .run-button').on('click', function(e) {
         if (signal == 'start') {
             $(e).removeClass('stop');
             $(e).find('.glyphicon').removeClass('text-red').removeClass('glyphicon-stop').addClass('glyphicon-play').addClass('text-green');
-            $(e).find('.text').html('Start');
+            $(e).find('.text').html('Run');
             $(e).attr('title', 'Run the query (F9)');
 
             $(".run-query-info").addClass('hidden').hide();
