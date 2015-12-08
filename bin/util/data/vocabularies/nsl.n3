@@ -1,0 +1,176 @@
+@prefix dc: <http://purl.org/dc/elements/1.1/> .
+@prefix provenance: <http://www.bbc.co.uk/ontologies/provenance/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix time: <http://www.w3.org/2006/time#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix vs: <http://www.w3.org/2003/06/sw-vocab-status/ns#> .
+@prefix nsl: <http://purl.org/ontology/storyline/> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+
+<http://purl.org/ontology/storyline> a owl:Ontology , provenance:Ontology ;
+	dc:title "A News Storyline Ontology"@en-gb ;
+	dc:date "2013-05-01"^^xsd:date ;
+	dc:creator <http://uk.linkedin.com/in/paulwilton> , <http://uk.linkedin.com/in/jarredmcginnis> , <http://www.linkedin.com/in/jerenytarling> ;
+	dc:contributor "Matt Chadburn"@en-gb , "Sebastien Cevey"@en-gb , "Michael Smethurst"@en-gb , "Paul Rissen"@en-gb , "Helen Lippell"@en-gb , "Tom Leitch"@en-gb , "Dan Brickley"@en-gb ;
+	dc:rights "This ontology is distributed under the Creative Commons SA-3.0 license"@en-gb ;
+	dcterms:license <http://creativecommons.org/licenses/by-sa/3.0/> ;
+	rdfs:comment "An ontology to represent News Storylines."@en-gb ;
+	rdfs:label "Storyline Ontology"@en-gb ;
+	dc:description "An ontology to represent News Storylines."@en-gb ;
+	owl:versionInfo "0.2"^^xsd:string ;
+	provenance:canonicalLocation "https://repo.dev.bbc.co.uk/services/linked-data/ontologies/domain/news/storyline-0.2.ttl"^^xsd:string ;
+	provenance:changeReason "First commit and provenance meta"@en-gb ;
+	provenance:public "true"^^xsd:boolean ;
+	provenance:slug "storyline"^^xsd:string ;
+	provenance:version "0.2"^^xsd:double ;
+	owl:versionIRI <http://purl.org/ontology/storyline/0.2> .
+
+nsl:StorylineComponent a owl:Class ;
+	rdfs:label "StorylineComponent"@en-gb ;
+	rdfs:comment "An abstract parent class of storyline components."@en-gb ;
+	rdfs:isDefinedBy <http://purl.org/ontology/storyline> ;
+	vs:term_status "testing" .
+
+nsl:Storyline a owl:Class ;
+	rdfs:subClassOf nsl:StorylineComponent ;
+	rdfs:label "Storyline"@en-gb ;
+	rdfs:comment "A news storyline."@en-gb ;
+	rdfs:isDefinedBy <http://purl.org/ontology/storyline> ;
+	vs:term_status "testing" .
+
+nsl:Event a owl:Class ;
+	rdfs:subClassOf nsl:StorylineComponent ;
+	rdfs:label "Event"@en-gb ;
+	rdfs:comment "A newsworthy event. An un-disputable real world event."@en-gb ;
+	rdfs:isDefinedBy <http://purl.org/ontology/storyline> ;
+	vs:term_status "testing" .
+
+nsl:StorylineSlot a owl:Class ;
+	rdfs:label "StorylineSlot"@en-gb ;
+	rdfs:comment "A storyline slot, used as a container for storyline components."@en-gb ;
+	rdfs:isDefinedBy <http://purl.org/ontology/storyline> ;
+	vs:term_status "testing" .
+
+nsl:Topic a owl:Class ;
+	rdfs:label "Topic"@en-gb ;
+	rdfs:comment "The topic of a storyline. An interface to some concept in a knowledge domain."@en-gb ;
+	rdfs:isDefinedBy <http://purl.org/ontology/storyline> ;
+	vs:term_status "testing" .
+
+nsl:Attribution a owl:Class ;
+	rdfs:label "Attribution"@en-gb ;
+	rdfs:comment "Attribution of a storyline used for attributing the interpretation of the storyline to some agent. An interface class, that doesn't restrict the implementation of an attribution."@en-gb ;
+	rdfs:isDefinedBy <http://purl.org/ontology/storyline> ;
+	vs:term_status "testing" .
+
+nsl:hasSlot a owl:ObjectProperty ;
+	rdfs:domain nsl:Storyline ;
+	rdfs:range nsl:StorylineSlot ;
+	rdfs:label "hasSlot"@en-gb ;
+	rdfs:comment "Associates a slot to a storyline. A storyline can have many slots"@en-gb ;
+	rdfs:isDefinedBy <http://purl.org/ontology/storyline> ;
+	vs:term_status "testing" .
+
+nsl:hasDevelopment a owl:ObjectProperty ;
+	rdfs:subPropertyOf nsl:hasSlot ;
+	rdfs:domain nsl:Storyline ;
+	rdfs:range nsl:StorylineSlot ;
+	rdfs:label "hasDevelopment"@en-gb ;
+	rdfs:comment "Associates a slot to a storyline as a development of an existing storyline."@en-gb ;
+	rdfs:isDefinedBy <http://purl.org/ontology/storyline> ;
+	vs:term_status "testing" .
+
+nsl:hasChapter a owl:ObjectProperty ;
+	rdfs:subPropertyOf nsl:hasSlot ;
+	rdfs:domain nsl:Storyline ;
+	rdfs:range nsl:StorylineSlot ;
+	rdfs:label "hasChapter"@en-gb ;
+	rdfs:comment "Associates a slot to a storyline as a chapter of an existing storyline."@en-gb ;
+	rdfs:isDefinedBy <http://purl.org/ontology/storyline> ;
+	vs:term_status "testing" .
+
+nsl:hasUpdate a owl:ObjectProperty ;
+	rdfs:subPropertyOf nsl:hasSlot ;
+	rdfs:domain nsl:Storyline ;
+	rdfs:range nsl:StorylineSlot ;
+	rdfs:label "hasUpdate"@en-gb ;
+	rdfs:comment "Associates a slot to a storyline as an update to an existing storyline."@en-gb ;
+	rdfs:isDefinedBy <http://purl.org/ontology/storyline> ;
+	vs:term_status "testing" .
+
+nsl:contains a owl:ObjectProperty ;
+	rdfs:domain nsl:StorylineSlot ;
+	rdfs:range nsl:StorylineComponent ;
+	rdfs:label "contains"@en-gb ;
+	rdfs:comment "Associates a Slot to a StorylineComponent contained therein. Can be a news event or another storyline"@en-gb ;
+	rdfs:isDefinedBy <http://purl.org/ontology/storyline> ;
+	vs:term_status "testing" .
+
+nsl:comment a owl:AnnotationProperty ;
+	rdfs:subPropertyOf rdfs:comment ;
+	rdfs:domain nsl:Storyline ;
+	rdfs:range rdfs:Literal ;
+	rdfs:label "comment"@en-gb ;
+	rdfs:comment "An editorial comment on a storyline"@en-gb ;
+	rdfs:isDefinedBy <http://purl.org/ontology/storyline> ;
+	vs:term_status "testing" .
+
+nsl:title a owl:AnnotationProperty ;
+	rdfs:subPropertyOf rdfs:label ;
+	rdfs:domain nsl:Storyline ;
+	rdfs:range rdfs:Literal ;
+	rdfs:label "title"@en-gb ;
+	rdfs:comment "A title of a storyline"@en-gb ;
+	rdfs:isDefinedBy <http://purl.org/ontology/storyline> ;
+	vs:term_status "testing" .
+
+nsl:synopsis a owl:DatatypeProperty ;
+	rdfs:domain nsl:Storyline ;
+	rdfs:range rdfs:Literal ;
+	rdfs:label "synopsis"@en-gb ;
+	rdfs:comment "The synopsis of a storyline"@en-gb ;
+	rdfs:isDefinedBy <http://purl.org/ontology/storyline> ;
+	vs:term_status "testing" .
+
+nsl:time a owl:ObjectProperty ;
+	rdfs:domain nsl:Storyline ;
+	rdfs:range time:TemporalEntity ;
+	rdfs:label "time"@en-gb ;
+	rdfs:comment "The time of a slot. A Temporal entity, an instant or an interval. Allows slots to be ordered temporally."@en-gb ;
+	rdfs:isDefinedBy <http://purl.org/ontology/storyline> ;
+	vs:term_status "testing" .
+
+nsl:index a owl:DatatypeProperty ;
+	rdfs:domain nsl:StorylineSlot ;
+	rdfs:range xsd:integer ;
+	rdfs:label "index"@en-gb ;
+	rdfs:comment "A slot index. Allows slots to be ordered numerically"@en-gb ;
+	rdfs:isDefinedBy <http://purl.org/ontology/storyline> ;
+	vs:term_status "testing" .
+
+nsl:follows a owl:ObjectProperty ;
+	rdfs:domain nsl:StorylineSlot ;
+	rdfs:range nsl:StorylineSlot ;
+	rdfs:label "follows"@en-gb ;
+	rdfs:comment "Allows one or more slots to be sequenced. Slot A follows Slot B."@en-gb ;
+	rdfs:isDefinedBy <http://purl.org/ontology/storyline> ;
+	vs:term_status "testing" .
+
+nsl:topic a owl:ObjectProperty ;
+	rdfs:domain nsl:Storyline ;
+	rdfs:range nsl:Topic ;
+	rdfs:label "topic"@en-gb ;
+	rdfs:comment "Associates a slot to a topic"@en-gb ;
+	rdfs:isDefinedBy <http://purl.org/ontology/storyline> ;
+	vs:term_status "testing" .
+
+nsl:attributedTo a owl:ObjectProperty ;
+	rdfs:domain nsl:Storyline ;
+	rdfs:range nsl:Attribution ;
+	rdfs:label "attributedTo"@en-gb ;
+	rdfs:comment "Associates a storyline to its attribution. Provides for interpretation provenance through attribution"@en-gb ;
+	rdfs:isDefinedBy <http://purl.org/ontology/storyline> ;
+	vs:term_status "testing" .

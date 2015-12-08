@@ -1,0 +1,99 @@
+@prefix dc: <http://purl.org/dc/elements/1.1/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix dctype: <http://purl.org/dc/dcmitype/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix vann: <http://purl.org/vocab/vann/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix cc: <http://web.resource.org/cc/> .
+
+<http://www.w3.org/1999/02/22-rdf-syntax-ns> a owl:Ontology ;
+	dc:date "2006-06-26" ;
+	dc:title "Address Schema"@en ;
+	dc:identifier "http://schemas.talis.com/2005/address/schema-20060627" ;
+	dct:isVersionOf <http://schemas.talis.com/2005/address/schema#> ;
+	dc:creator "Ian Davis <http://purl.org/NET/iand>" ;
+	dc:rights "Copyright © 2005 Talis Information Ltd." ;
+	vann:preferredNamespaceUri "http://schemas.talis.com/2005/address/schema#" ;
+	vann:preferredNamespacePrefix "ad" ;
+	dct:hasFormat <http://schemas.talis.com/2005/address/schema-20060627.html> .
+
+<http://schemas.talis.com/2005/address/schema-20060627.html> a dctype:Text ;
+	dc:format _:node1716afbsmx1 .
+
+_:node1716afbsmx1 a dct:IMT ;
+	rdf:value "text/html" ;
+	rdfs:label "HTML"@en .
+
+<http://www.w3.org/1999/02/22-rdf-syntax-ns> dct:hasFormat <http://schemas.talis.com/2005/address/schema-20060627.rdf> .
+
+<http://schemas.talis.com/2005/address/schema-20060627.rdf> a dctype:Text ;
+	dc:format _:node1716afbsmx2 .
+
+_:node1716afbsmx2 a dct:IMT ;
+	rdf:value "application/rdf+xml" ;
+	rdfs:label "RDF"@en .
+
+<http://www.w3.org/1999/02/22-rdf-syntax-ns> dct:issued "2006-06-27" .
+
+<http://schemas.talis.com/2005/address/schema#streetAddress> a owl:DatatypeProperty ;
+	rdfs:label "streetAddress"@en ;
+	skos:definition "the building name and number and street name"@en ;
+	rdfs:comment "For example: \"13 Queen Street\""@en ;
+	rdfs:isDefinedBy <http://schemas.talis.com/2005/address/schema#> ;
+	dct:issued "2006-06-27" .
+
+<http://schemas.talis.com/2005/address/schema#localityName> a owl:DatatypeProperty ;
+	rdfs:label "localityName"@en ;
+	skos:definition "the name of the city, town, village or other geopolitical region for which the streetAddress is unambiguous"@en ;
+	rdfs:comment "For example: \"Santiago 1400\""@en ;
+	rdfs:isDefinedBy <http://schemas.talis.com/2005/address/schema#> ;
+	dct:issued "2006-06-27" .
+
+<http://schemas.talis.com/2005/address/schema#regionName> a owl:DatatypeProperty ;
+	rdfs:label "regionName"@en ;
+	skos:definition "the name of the region within the country, principality or national entity"@en ;
+	rdfs:comment "For example: \"Alabama\""@en ;
+	rdfs:isDefinedBy <http://schemas.talis.com/2005/address/schema#> ;
+	dct:issued "2006-06-27" .
+
+<http://schemas.talis.com/2005/address/schema#countryName> a owl:DatatypeProperty ;
+	rdfs:label "countryName"@en ;
+	skos:definition "the name of the country, principality or national entity"@en ;
+	rdfs:comment "For example: \"Egypt\""@en ;
+	rdfs:isDefinedBy <http://schemas.talis.com/2005/address/schema#> ;
+	dct:issued "2006-06-27" .
+
+<http://schemas.talis.com/2005/address/schema#postalCode> a owl:DatatypeProperty ;
+	rdfs:label "postalCode"@en ;
+	skos:definition "the postcode or zipcode of the address"@en ;
+	rdfs:comment "For example: \"NN14 7DS\""@en ;
+	rdfs:isDefinedBy <http://schemas.talis.com/2005/address/schema#> ;
+	dct:issued "2006-06-27" .
+
+<http://schemas.talis.com/2005/address/schema#tel> a owl:DatatypeProperty ;
+	rdfs:label "tel"@en ;
+	skos:definition "a telephone number which can be used to contact a person at the address"@en ;
+	rdfs:comment "The number must be in standard international format. For example: \"+43 1 53410437\""@en ;
+	rdfs:isDefinedBy <http://schemas.talis.com/2005/address/schema#> ;
+	dct:issued "2006-06-27" .
+
+<http://schemas.talis.com/2005/address/schema#fax> a owl:DatatypeProperty ;
+	rdfs:label "fax"@en ;
+	skos:definition "a fax number which can be used to contact a person at the address"@en ;
+	rdfs:comment "The number must be in standard international format. For example: \"+43 1 53410434\""@en ;
+	rdfs:isDefinedBy <http://schemas.talis.com/2005/address/schema#> ;
+	dct:issued "2006-06-27" .
+
+<http://schemas.talis.com/2005/address/schema-20060627.html> dc:format _:node1716afbsmx3 .
+
+_:node1716afbsmx3 a dct:IMT ;
+	rdf:value "text/html" ;
+	rdfs:label "HTML"@en .
+
+<http://schemas.talis.com/2005/address/schema-20060627.rdf> dc:format _:node1716afbsmx4 .
+
+_:node1716afbsmx4 a dct:IMT ;
+	rdf:value "application/rdf+xml" ;
+	rdfs:label "RDF"@en .
