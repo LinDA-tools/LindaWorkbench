@@ -21,11 +21,12 @@ def visualizations(request):
 def get_api_call(request, link):
     print(link)
 
-    if ('sparql-proxy' in link) or ('dataselection' in link) or ('visualizations' in link):
-	    endpoint = 'http://localhost:3002/'
-    else:
-        endpoint = VISUAL_SERVER
-	
+    #if ('sparql-proxy' in link) or ('dataselection' in link) or ('visualizations' in link):
+    #    endpoint = 'http://localhost:3002/'
+    #else:
+    #    endpoint = VISUAL_SERVER
+    endpoint = 'http://localhost:3002/'
+
     #TO-DO Improve request handler
     link = urllib.parse.quote(link)
     link = re.sub(r"\/", "%2F", link)
@@ -53,7 +54,7 @@ def get_api_call(request, link):
                 d = request.POST
             else:
                 d = request.PUT			
-        
+        print(total_link)
         if request.method == "POST":
             data = requests.post(total_link, data=d, headers=h)
         else:
