@@ -1,0 +1,844 @@
+@prefix dc: <http://purl.org/dc/elements/1.1/> .
+@prefix : <http://d-nb.info/standards/elementset/agrelon.owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+
+<http://d-nb.info/standards/elementset/agrelon.owl#> a owl:Ontology ;
+	rdfs:label "AgRelOn, an Agent Relationship Ontology"^^xsd:string ;
+	owl:versionInfo "V0.9 2011/06/30; URIs are yet instable"^^xsd:string ;
+	dc:publisher "DNB"^^xsd:string ;
+	rdfs:comment """∼∼∼ Introduction ∼∼∼ 
+The ontology of agent relationships, AgRelOn, defines relations of persons to other persons and to organisations, since agents (persons, organisations) and their interconnections are important in the cultural heritage domain. AgRelOn is developed to foster uniform cataloging as well as semantic searchability of and via relations between agents. Therefore, a general set of nearly 70 relationhip types is provided. AgRelOn discerns private acquaintanceship, group affiliation, correspondence, occupational contact,  kinship, spiritual contact, and vital/lethal contact. For these kinds of relations more specific sub-relations are formulated.
+Meta statements are supported to obtain transparency of reliability and provenance as well as validity period of facts.
+The modelled relations are determined on the one hand by exemplary knowledge base searches, on the other hand by available data sources. Hence, the model consciously is incomplete and pertinent to a cultural area and period."""^^xsd:string , """∼∼∼ Modelling Guidelines ∼∼∼ 
+Vocabulary elements (properties and concepts) are conceived gender neutral.
+The identifiers of properties are preferably hasProperty and invers isPropertyOf or hasInverseProperty. 
+Domains and ranges of properties are mostly not fixed.
+Instance relations (object properties) are mostly specified bidirectionally.
+Implicit, deducable instance relations are explicitly formulated.
+Properties partly allow imperfect information (e.g. fragmentary dates, names instead of object URIs).
+Correlations between instance relations, like inversity, transitivity, symmetry, hierarchie, are marked.
+Meta statements are exhibited by modelling person relations as n-ary concepts as well as as properties, corresponding n-ary concepts and properties are correlated."""^^xsd:string ;
+	dcterms:license <http://creativecommons.org/publicdomain/zero/1.0/> .
+
+dc:language a owl:AnnotationProperty .
+
+rdfs:label a owl:AnnotationProperty .
+
+rdfs:comment a owl:AnnotationProperty .
+
+dcterms:license a owl:AnnotationProperty .
+
+:correspondsTo a owl:SymmetricProperty ;
+	rdfs:label "korrespondiert mit"@de , "corresponds to"@en , "corresponde con"@es , "corrisponde a"@it ;
+	rdfs:comment """A normal property's (type rdf:Property) to-direction matches an n-ary concept (type rdfs:Class). 
+2 mutually inverse normal properties match only 1 n-ary concept, because the meta statements must be identical for both 'to-direction' and 'fro-direction' of the relationship. 
+The normal property's fro-direction is related to the n-ary concept via correspondsToInverse."""^^xsd:string .
+
+:correspondsToInverse a owl:SymmetricProperty ;
+	rdfs:label "korrespondiert invers mit"@de , "corresponds to inverse"@en , "corresponde inversamente con"@es , "corrisponde inversamente a"@it ;
+	rdfs:comment """A normal property's (type rdf:Property) fro-direction matches an n-ary concept (type rdfs:Class). 
+2 mutually inverse normal properties match only 1 n-ary concept, because the meta statements must be identical for both 'to-direction' and 'fro-direction' of the relationship. 
+The normal property's to-direction is related to the n-ary concept via correspondsTo."""^^xsd:string .
+
+:hasAcquaintance a owl:SymmetricProperty ;
+	rdfs:label "hat Bekannte(n)"@de , "has acquaintance"@en , "tiene conocido(a)"@es , "ha conoscente"@it ;
+	rdfs:comment "A person (subject) privately knows a person (object)."^^xsd:string ;
+	:correspondsTo :HasAcquaintance ;
+	rdfs:subPropertyOf :relatedAgent ;
+	:hasGndCode "beza" .
+
+:hasAdoptiveChild a owl:ObjectProperty ;
+	rdfs:label "hat Adoptivkind"@de , "has adoptive child"@en , "tiene hijo(a) adoptivo(a)"@es , "ha figlio(a) adottivo(a)"@it ;
+	rdfs:comment "A person (subject) adopted a person (object)."^^xsd:string ;
+	:correspondsTo :HasAdoptiveChildParent ;
+	rdfs:subPropertyOf :hasChild .
+
+:hasAdoptiveParent a owl:ObjectProperty ;
+	rdfs:label "hat Adoptivelter"@de , "has adoptive parent"@en , "tiene padre o madre adoptivo(a)"@es , "ha genitore adottivo"@it ;
+	rdfs:comment "A person (subject) was adopted by a person (object)."^^xsd:string ;
+	:correspondsToInverse :HasAdoptiveChildParent ;
+	owl:inverseOf :hasAdoptiveChild ;
+	rdfs:subPropertyOf :hasParent .
+
+:hasAdoptiveSibling a owl:SymmetricProperty ;
+	rdfs:label "hat Adoptivgeschwister"@de , "has adoptive sibling"@en , "tiene hermano(a) adoptivo(a)"@es , "ha fratello adottato o sorella adottata"@it ;
+	rdfs:comment "A person (subject) has as sibling a person (object), where at least one of the two siblings is adoptive child of a joint parent."^^xsd:string ;
+	:correspondsTo :HasAdoptiveSibling ;
+	rdfs:subPropertyOf :hasSibling .
+
+:hasAncestor a owl:TransitiveProperty ;
+	rdfs:label "hat Vorfahr"@de , "has ancestor"@en , "tiene ancestro"@es , "ha antenato"@it ;
+	rdfs:comment "A person (subject) has an ancestor (object), where the chain of parent-relations might include adoptive, foster, illegitimate, step relations."^^xsd:string ;
+	:correspondsToInverse :HasOffspringAncestor ;
+	owl:inverseOf :hasOffspring ;
+	rdfs:subPropertyOf :hasRelative .
+
+:hasAssociate a owl:ObjectProperty ;
+	rdfs:label "hat Gruppenzugehörigkeit"@de , "has group affiliation"@en , "tiene grupo de afiliación"@es , "ha gruppo di appartenenza"@it ;
+	rdfs:comment "A person (subject) is associated with a group (object), or a group (subject) is associated with a person (object)."^^xsd:string ;
+	:correspondsTo :HasAssociate ;
+	rdfs:subPropertyOf :relatedAgent ;
+	:hasGndCode "affi" .
+
+:hasAuntUncle a owl:ObjectProperty ;
+	rdfs:label "hat Tante oder Onkel"@de , "has aunt or uncle"@en , "tiene tío o tía"@es , "ha zia o zio"@it ;
+	rdfs:comment "A person (subject) has an aunt or uncle (object)."^^xsd:string ;
+	:correspondsToInverse :HasNieceNephewAuntUncle ;
+	rdfs:subPropertyOf :hasRelative .
+
+:hasBiologicalChild a owl:ObjectProperty ;
+	rdfs:label "hat biologisches Kind"@de , "has biological child"@en , "tiene hijo(a) biológico(a)"@es , "ha figlio(a) biologico(a)"@it ;
+	rdfs:comment "A person (subject) begot/conceived a person (object)."^^xsd:string ;
+	:correspondsTo :HasBiologicalChildParent ;
+	rdfs:subPropertyOf :hasChild .
+
+:hasBiologicalParent a owl:ObjectProperty ;
+	rdfs:label "hat biologischen Elter"@de , "has biological parent"@en , "tiene padre o madre biológico(a)"@es , "ha genitore biologico"@it ;
+	rdfs:comment "A person (subject) was begotten/conceived by a person (object)."^^xsd:string ;
+	:correspondsToInverse :HasBiologicalChildParent ;
+	rdfs:subPropertyOf :hasParent .
+
+:hasBiologicalSibling a owl:ObjectProperty ;
+	rdfs:label "hat biologisches Geschwister"@de , "has biological sibling"@en , "tiene hermano(a) biológico(a)"@es , "ha fratello biologico o sorella biologica"@it ;
+	rdfs:comment "A person (subject) has as sibling a person (object), where the two siblings share both biological parents."^^xsd:string ;
+	:correspondsTo :HasBiologicalSibling ;
+	rdfs:subPropertyOf :hasSibling .
+
+:hasChannel a owl:ObjectProperty ;
+	rdfs:label "hat Medium"@de , "has channel"@en , "tiene médium"@es , "ha sensitivo(a)"@it ;
+	rdfs:comment "A person or spiritual entity (subject), e.g. a dead person, spirit, angel etc. has as a channel or medium a person or spiritual entity (object). I.e. the subject transmits messages to the object."^^xsd:string ;
+	:correspondsTo :HasIsChannel ;
+	rdfs:subPropertyOf :hasSpiritualContact .
+
+:hasChief a owl:ObjectProperty ;
+	rdfs:label "hat Chef"@de , "has chief"@en , "tiene jefe"@es , "ha capo"@it ;
+	rdfs:comment "A group (subject) has as a chief a person (object)."^^xsd:string ;
+	:correspondsTo :HasIsChief ;
+	rdfs:subPropertyOf :hasAssociate .
+
+:hasChild a owl:ObjectProperty ;
+	rdfs:label "hat Kind"@de , "has child"@en , "tiene hijo(a)"@es , "ha figlio(a)"@it ;
+	rdfs:comment "A person has as some kind of child a person (object)."^^xsd:string ;
+	:correspondsTo :HasChildParent ;
+	rdfs:subPropertyOf :hasOffspring .
+
+:hasChildInlaw a owl:ObjectProperty ;
+	rdfs:label "hat Schwiegerkind"@de , "has child-in-law"@en , "tiene yerno o nuera"@es , "ha genero o nuora"@it ;
+	rdfs:comment "A person's (subject) child is married with a person (object)."^^xsd:string ;
+	:correspondsTo :HasChildParentInlaw ;
+	rdfs:subPropertyOf :hasInlaw ;
+	owl:inverseOf :hasParentInlaw .
+
+:hasCohabitee a owl:SymmetricProperty ;
+	rdfs:label "hat Lebensgefährte"@de , "has cohabitee"@en , "tiene cohabitante"@es , "ha compagno(a) di vita"@it ;
+	rdfs:comment "A person (subject) lives together with and/or is companion of a person (object), without being married."^^xsd:string ;
+	:correspondsTo :HasCohabitee ;
+	rdfs:subPropertyOf :hasAcquaintance .
+
+:hasColleague a owl:SymmetricProperty ;
+	rdfs:label "hat Kollege"@de , "has colleague"@en , "tiene colega"@es , "ha collega"@it ;
+	rdfs:comment "A person (subject) works together with a person (object) at the same corporation."^^xsd:string ;
+	:correspondsTo :HasColleague ;
+	rdfs:subPropertyOf :hasProfessionalContact .
+
+:hasCooperator a owl:SymmetricProperty ;
+	rdfs:label "hat Kollaborator"@de , "has collaborator"@en , "tiene colaborador(a)"@es , "ha collaboratore o collaboratrice"@it ;
+	rdfs:comment "A person (subject) works together with a person or corporation (object)."^^xsd:string ;
+	:correspondsTo :HasCooperator ;
+	rdfs:subPropertyOf :hasProfessionalContact .
+
+:hasCorrespondent a owl:SymmetricProperty ;
+	rdfs:label "hat Korrespondent"@de , "has correspondent"@en , "tiene correspondente"@es , "ha corrispondente"@it ;
+	rdfs:comment "A person or corporation (subject) exchanges letters with a person or corporation (object)."^^xsd:string ;
+	:correspondsTo :HasCorrespondent ;
+	rdfs:subPropertyOf :relatedAgent .
+
+:hasCousin a owl:SymmetricProperty ;
+	rdfs:label "hat Cousin"@de , "has cousin"@en , "tiene primo o prima"@es , "ha cugino(a)"@it ;
+	rdfs:comment "A person (subject) has a cousin (object)."^^xsd:string ;
+	:correspondsTo :HasCousin ;
+	rdfs:subPropertyOf :hasRelative .
+
+:hasEmployee a owl:ObjectProperty ;
+	rdfs:label "hat Arbeitnehmer"@de , "has employee"@en , "tiene empleado(a)"@es , "ha impiegato(a)"@it ;
+	rdfs:comment "A person or corporation (subject) for whom/which a person (object) works."^^xsd:string ;
+	:correspondsTo :HasEmployeeEmployer ;
+	rdfs:subPropertyOf :hasProfessionalContact .
+
+:hasEmployer a owl:ObjectProperty ;
+	rdfs:label "hat Arbeitgeber"@de , "has employer"@en , "tiene empleador(a)"@es , "ha datore di lavoro"@it ;
+	rdfs:comment "A person (subject) works for a person or corporation (object)."^^xsd:string ;
+	:correspondsToInverse :HasEmployeeEmployer ;
+	owl:inverseOf :hasEmployee ;
+	rdfs:subPropertyOf :hasProfessionalContact .
+
+:hasFianceeFiance a owl:ObjectProperty ;
+	rdfs:label "hat Verlobte(n)"@de , "has fiancee  or fiance"@en , "tiene prometido(a)"@es , "ha fidanzato(a)"@it ;
+	rdfs:comment "A person (subject) is engaged with a person (object)."^^xsd:string ;
+	:correspondsTo :HasFianceeFiance ;
+	rdfs:subPropertyOf :hasInlaw .
+
+:hasFosterChild a owl:ObjectProperty ;
+	rdfs:label "hat Pflegekind"@de , "has foster child"@en , "tiene hijo(a) de crianza"@es , "ha pupillo(a)"@it ;
+	rdfs:comment "A person (subject) fostered a person (object), without being a biological parent."^^xsd:string ;
+	:correspondsTo :HasFosterChildParent ;
+	owl:inverseOf :hasFosterParent ;
+	rdfs:subPropertyOf :hasChild .
+
+:hasFosterParent a owl:ObjectProperty ;
+	rdfs:label "hat Pflegeelter"@de , "has foster parent"@en , "tiene padre o madre de crianza"@es , "ha foster genitore"@it ;
+	rdfs:comment "A person (subject) was fostered by a person (object), without being a biological child."^^xsd:string ;
+	:correspondsToInverse :HasFosterChildParent ;
+	owl:inverseOf :hasFosterChild ;
+	rdfs:subPropertyOf :hasParent .
+
+:hasFosterSibling a owl:SymmetricProperty ;
+	rdfs:label "has Pflegegeschwister"@de , "has foster sibling"@en , "tiene hermano(a) de crianza"@es , "ha fratello o sorella di latte"@it ;
+	rdfs:comment "A person (subject) has as sibling a person (object), where at least one of the two siblings is foster child of a joint parent."^^xsd:string ;
+	:correspondsTo :HasFosterSibling ;
+	rdfs:subPropertyOf :hasSibling .
+
+:hasFounder a owl:ObjectProperty ;
+	rdfs:label "hat Gründer"@de , "has founder"@en , "tiene fundador(a)"@es , "ha fondatore o fondatrice"@it ;
+	rdfs:comment "A group (subject) has as a founder a person (object)."^^xsd:string ;
+	:correspondsTo :HasIsFounder ;
+	rdfs:subPropertyOf :hasAssociate .
+
+:hasFriend a owl:SymmetricProperty ;
+	rdfs:label "hat Freund"@de , "has friend"@en , "tiene amigo(a)"@es , "ha amico(a)"@it ;
+	rdfs:comment "A person (subject) is friends with a person (object)."^^xsd:string ;
+	:correspondsTo :HasFriend ;
+	rdfs:subPropertyOf :hasAcquaintance .
+
+:hasGodChild a owl:ObjectProperty ;
+	rdfs:label "hat Patenkind"@de , "has godchild"@en , "tiene ahijado(a)"@es , "ha figlioccio o figlioccia"@it ;
+	rdfs:comment "A person (subject) obtains as godchild a person (object) at the godchild's christening."^^xsd:string ;
+	:correspondsTo :HasGodChildParent ;
+	owl:inverseOf :hasGodParent ;
+	rdfs:subPropertyOf :hasNieceNephew .
+
+:hasGodParent a owl:ObjectProperty ;
+	rdfs:label "hat Pate"@de , "has godparent"@en , "tiene padrino o madrina"@es , "ha padrino o padrina"@it ;
+	rdfs:comment "A person (subject) obtains as godparent a person (object) at the godchild's christening."^^xsd:string ;
+	:correspondsToInverse :HasGodChildParent ;
+	rdfs:subPropertyOf :hasAuntUncle .
+
+:hasGrandChild a owl:ObjectProperty ;
+	rdfs:label "hat Enkel"@de , "has grandchild"@en , "tiene nieto(a)"@es , "ha nipote (di nonni)"@it ;
+	rdfs:comment "A person's (subject) child has a child (object)."^^xsd:string ;
+	:correspondsTo :HasGrandChildParent ;
+	rdfs:subPropertyOf :hasOffspring .
+
+:hasGrandParent a owl:ObjectProperty ;
+	rdfs:label "hat Großelter"@de , "has grandparent"@en , "tiene abuelo(a)"@en , "ha nonno(a)"@it ;
+	rdfs:comment "A person (subject) has as grandparent a person (object), where the two parent-relations might include adoptive, foster, illegitimate, step relations."^^xsd:string ;
+	:correspondsToInverse :HasGrandChildParent ;
+	rdfs:subPropertyOf :hasAncestor ;
+	owl:inverseOf :hasGrandChild ;
+	owl:propertyChainAxiom _:node17i7fi5j0x1 .
+
+_:node17i7fi5j0x1 rdf:first :hasParent ;
+	rdf:rest _:node17i7fi5j0x2 .
+
+_:node17i7fi5j0x2 rdf:first :hasParent ;
+	rdf:rest rdf:nil .
+
+:hasHalfSibling a owl:ObjectProperty ;
+	rdfs:label "hat Halbgeschwister"@de , "has half sibling"@en , "tiene medio hermano(a)"@es , "ha fratellastro a sorellastra"@it ;
+	rdfs:comment "A person (subject) has as sibling a person (object), where the two siblings share only one biological parent."^^xsd:string ;
+	:correspondsTo :HasHalfSibling ;
+	rdfs:subPropertyOf :hasSibling .
+
+:hasIllegitimateChild a owl:ObjectProperty ;
+	rdfs:label "hat illegitimes Kind"@de , "has illegitimate child"@en , "tiene hijo(a) illegítimo(a)"@es , "ha figlio(a) illegittimo(a)"@it ;
+	rdfs:comment "A person (subject) begot/conceived a person (object), without the two biological parents being married at the child's day of birth."^^xsd:string ;
+	:correspondsTo :HasIllegitimateChildParent ;
+	rdfs:subPropertyOf :hasBiologicalChild .
+
+:hasIllegitimateParent a owl:ObjectProperty ;
+	rdfs:label "hat illegitimen Elter"@de , "has illegitimate parent"@en , "tiene padre o madre ilegítimo(a)"@es , "ha genitore illegittimo"@it ;
+	rdfs:comment "A person (subject) was begotten/conceived by a person (object), without the two biological parents being married at the child's day of birth."^^xsd:string ;
+	:correspondsToInverse :HasIllegitimateChildParent ;
+	rdfs:subPropertyOf :hasBiologicalParent ;
+	owl:inverseOf :hasIllegitimateChild .
+
+:hasInfluenceDonee a owl:ObjectProperty ;
+	rdfs:label "hat Einfluss auf"@de , "has influence on"@en , "tiene influencia sobre"@es , "ha influenza su"@it ;
+	rdfs:comment "A person or corporation (subject) who influences a person or corporation (object)."^^xsd:string ;
+	:correspondsTo :HasInfluenceDoneeDonor ;
+	rdfs:subPropertyOf :hasProfessionalContact .
+
+:hasInfluenceDonor a owl:ObjectProperty ;
+	rdfs:label "ist beeinflusst durch"@de , "is influenced by"@en , "es influenciado(a) por"@es , "è influenzato(a) da"@it ;
+	rdfs:comment "A person or corporation (subject) who is influenced by a person or corporation (object)."^^xsd:string ;
+	:correspondsToInverse :HasInfluenceDoneeDonor ;
+	owl:inverseOf :hasInfluenceDonee ;
+	rdfs:subPropertyOf :hasProfessionalContact .
+
+:hasInlaw a owl:SymmetricProperty ;
+	rdfs:label "hat angeheiratete(n) Verwandte(n)"@de , "has in-law"@en , "tiene pariente político"@es , "ha parente per matrimonio"@it ;
+	rdfs:comment "A person (subject) is related with a person (object) by a marriage between themselves or between relatives."^^xsd:string ;
+	:correspondsTo :HasInlaw ;
+	rdfs:subPropertyOf :hasRelative .
+
+:hasLover a owl:SymmetricProperty ;
+	rdfs:label "hat Geliebte(n)"@de , "has lover"@en , "tiene amante"@es , "ha amante"@it ;
+	rdfs:comment "A person (subject) has a liaison with a person (object), without being married."^^xsd:string ;
+	:correspondsTo :HasLover ;
+	rdfs:subPropertyOf :hasAcquaintance .
+
+:hasMember a owl:ObjectProperty ;
+	rdfs:label "hat Mitglied"@de , "has member"@en , "tiene membrio"@es , "ha membro"@it ;
+	rdfs:comment "A goup (subject) has as a member a person (object)."^^xsd:string ;
+	:correspondsTo :HasIsMember ;
+	rdfs:subPropertyOf :hasAssociate .
+
+:hasMultipleBirthSibling a owl:SymmetricProperty ;
+	rdfs:label "hat Mehrlingsgeschwister"@de , "has multiple birth sibling"@en , "tiene hermano(a) gemelo(a)"@es , "ha fratello o sorella plurigemellare"@it ;
+	rdfs:comment "A person (subject) has as sibling a person (object), where both siblings where carried together in a joint pregnancy. This denotes not only twins, but also triplets etc.. Mostly, multiple birth siblings are biolological siblings, i.e. share both biological parents, but this doesn't have to be the case."^^xsd:string ;
+	:correspondsTo :HasMultipleBirthSibling ;
+	rdfs:subPropertyOf :hasSibling .
+
+:hasMurderee a owl:ObjectProperty ;
+	rdfs:label "hat Mordopfer"@de , "has murder victim"@en , "tiene víctima"@es , "ha vittima domicidio"@it ;
+	rdfs:comment "A person or corporate body (subject) murders a person (object)."^^xsd:string ;
+	:correspondsTo :HasMurdereeMurderer ;
+	rdfs:subPropertyOf :hasVitalLethalContact .
+
+:hasMurderer a owl:ObjectProperty ;
+	rdfs:label "hat Mörder"@de , "has murderer"@en , "tiene asesino(a)"@es , "ha assassino(a)"@it ;
+	rdfs:comment "A person (subject) is murdered by a person or corporate body (object)."^^xsd:string ;
+	:correspondsToInverse :HasMurdereeMurderer ;
+	owl:inverseOf :hasMurderee ;
+	rdfs:subPropertyOf :hasVitalLethalContact .
+
+:hasMuse a owl:ObjectProperty ;
+	rdfs:label "hat Muse"@de , "has muse"@en , "tiene musa"@es , "ha musa"@it ;
+	rdfs:comment "A person or corporation (subject; e.g. an artist or group of artists) who is inspired by a person (object)."^^xsd:string ;
+	:correspondsTo :HasIsMuse ;
+	rdfs:subPropertyOf :hasProfessionalContact ;
+	owl:inverseOf :isMuseOf .
+
+:hasNieceNephew a owl:ObjectProperty ;
+	rdfs:label "hat Nichte oder Neffe"@de , "has niece or nephew"@en , "tiene sobrino(a)"@es , "ha nipote (di zii)"@it ;
+	rdfs:comment "A person (subject) has a niece or nephew (object)."^^xsd:string ;
+	:correspondsTo :HasNieceNephewAuntUncle ;
+	owl:inverseOf :hasAuntUncle ;
+	rdfs:subPropertyOf :hasRelative .
+
+:hasObject a owl:ObjectProperty ;
+	rdfs:label "hat Objekt"@de , "has object"@en , "tiene objeto"@es , "ha oggetto"@it ;
+	rdfs:comment """At an n-ary concept's instance (subject), something (object) takes the object role of the asymmetric relationship meant by the n-ary concept. 
+For inverse relationsships, the subject and object role follow the naming of the n-ary concept when reading quasi just the first part of the n-ary concept name."""^^xsd:string ;
+	rdfs:domain :NAries ;
+	owl:inverseOf :isObject .
+
+:hasOffspring a owl:ObjectProperty ;
+	rdfs:label "hat Nachkomme"@de , "has offspring"@en , "tiene heredero(a)"@es , "ha discendente"@it ;
+	rdfs:comment "A person (subject) has an offspring (object), where the chain of child-relations might include adoptive, foster, illegitimate, step relations."^^xsd:string ;
+	:correspondsTo :HasOffspringAncestor ;
+	rdfs:subPropertyOf :hasRelative .
+
+:hasParent a owl:ObjectProperty ;
+	rdfs:label "hat Elter"@de , "has parent"@en , "tiene padre o madre"@es , "ha genitore"@it ;
+	rdfs:comment "A person has as some kind of parent a person (object)."^^xsd:string ;
+	:correspondsToInverse :HasChildParent ;
+	rdfs:subPropertyOf :hasAncestor ;
+	owl:inverseOf :hasChild .
+
+:hasParentInlaw a owl:ObjectProperty ;
+	rdfs:label "hat Schwiegerelter"@de , "has parent-in-law"@en , "tiene suegro(a)"@es , "ha suocero(a)"@it ;
+	rdfs:comment "A person's (subject) spouse has a parent (object)."^^xsd:string ;
+	:correspondsToInverse :HasChildParentInlaw ;
+	rdfs:subPropertyOf :hasInlaw .
+
+:hasPatron a owl:ObjectProperty ;
+	rdfs:label "hat Mäzen"@de , "has patron"@en , "tiene mecenas"@es , "ha mecenate"@it ;
+	rdfs:comment "A person or corporation (subject; e.g. an artist or group of artists) who is sponsored/favoured by a person or corporation (object)."^^xsd:string ;
+	:correspondsToInverse :IsHasPatron ;
+	rdfs:subPropertyOf :hasProfessionalContact ;
+	owl:inverseOf :isPatronOf .
+
+:hasPhysician a owl:ObjectProperty ;
+	rdfs:label "hat Arzt"@de , "has physician"@en , "tiene médico"@es , "ha medico"@it ;
+	rdfs:comment "A person or corporate body (subject) has as physician a person or corporate body (object)."^^xsd:string ;
+	:correspondsToInverse :IsHasPhysician ;
+	rdfs:subPropertyOf :hasVitalLethalContact .
+
+:hasProfessionalContact a owl:SymmetricProperty ;
+	rdfs:label "hat Berufskontakt"@de , "has professional contact"@en , "tiene relación profesional"@es , "ha contatto professionale"@it ;
+	rdfs:comment "A person or corporation (subject) has some business/profession/occupation related relation with a person or corporation (object)."^^xsd:string ;
+	:correspondsTo :HasProfessionalContact ;
+	rdfs:subPropertyOf :relatedAgent ;
+	:hasGndCode "bezb" .
+
+:hasRelative a owl:SymmetricProperty ;
+	rdfs:label "hat Verwandte(n)"@de , "has relative"@en , "tiene pariente"@es , "ha parente"@it ;
+	rdfs:comment "A person (subject) is kin to a person (object). This denotes not only biological kinship, but also inlaw, adoptive, step, foster relationships."^^xsd:string ;
+	:correspondsTo :HasRelative ;
+	rdfs:subPropertyOf :relatedAgent ;
+	:hasGndCode "bezf" .
+
+:hasSibling a owl:SymmetricProperty ;
+	rdfs:label "hat Geschwister"@de , "has sibling"@en , "tiene hermano(a)"@es , "ha fratello o sorella"@it ;
+	rdfs:comment "A person has as some kind of sibling a person (object)."^^xsd:string ;
+	:correspondsTo :HasSibling ;
+	rdfs:subPropertyOf :hasRelative .
+
+:hasSiblingInlaw a owl:SymmetricProperty ;
+	rdfs:label "hat Schwager oder Schwägerin"@de , "has sibling-in-law"@en , "tiene cuñado(a)"@es , "ha cognato(a)"@it ;
+	rdfs:comment "A person's (subject) spouse has a sibling (object)."^^xsd:string ;
+	:correspondsTo :HasSiblingInlaw ;
+	rdfs:subPropertyOf :hasInlaw .
+
+:hasSpiritualContact a owl:SymmetricProperty ;
+	rdfs:label "hat spirituellen Kontakt"@de , "has spiritual contact"@en , "tiene guía espiritual"@es , "ha contatto spirituale"@it ;
+	rdfs:comment "A person or spiritual entity (subject) has some kind of spiritual relation with a person or spiritual entity (object). The relationship may e.g. be channelling, guru-devotee, or a psychoanalyst-patient."^^xsd:string ;
+	:correspondsTo :HasSpiritualContact ;
+	rdfs:subPropertyOf :relatedAgent .
+
+:hasSpouse a owl:SymmetricProperty ;
+	rdfs:label "hat Ehepartner"@de , "has spouse"@en , "tiene esposo(a)"@es , "ha coniuge"@it ;
+	rdfs:comment "A person (subject) is married with a person (object)."^^xsd:string ;
+	:correspondsTo :HasSpouse ;
+	rdfs:subPropertyOf :hasInlaw .
+
+:hasStepChild a owl:ObjectProperty ;
+	rdfs:label "hat Stiefkind"@de , "has stepchild"@en , "tiene hijo(a) adoptivo(a)"@es , "ha figliastro(a)"@it ;
+	rdfs:comment "A person's (subject) spouse has a child (object)."^^xsd:string ;
+	:correspondsTo :HasStepChildParent ;
+	rdfs:subPropertyOf :hasChild .
+
+:hasStepParent a owl:ObjectProperty ;
+	rdfs:label "hat Stiefelter"@de , "has stepparent"@en , "tiene padre o madre adoptivo(a)"@es , "ha padrigno o madrigna"@it ;
+	rdfs:comment "A person's (subject) biological parent is married with or cohabits with a person (object)."^^xsd:string ;
+	:correspondsToInverse :HasStepChildParent ;
+	rdfs:subPropertyOf :hasParent ;
+	owl:inverseOf :hasStepChild .
+
+:hasStepSibling a owl:SymmetricProperty ;
+	rdfs:label "hat Stiefgeschwister"@de , "has stepsibling"@en , "tiene hermano(a) adoptivo(a)"@es , "ha fratellastro o sorellastra"@it ;
+	rdfs:comment "A person (subject) has as sibling a person (object), where at least one of the two siblings is step child of a joint parent."^^xsd:string ;
+	:correspondsTo :HasStepSibling ;
+	rdfs:subPropertyOf :hasSibling .
+
+:hasStudent a owl:ObjectProperty ;
+	rdfs:label "hat Schüler"@de , "has Student"@en , "tiene estudiante"@es , "ha scolaro(a)"@it ;
+	rdfs:comment "A person (subject) trains a person (object)."^^xsd:string ;
+	:correspondsTo :HasStudentTeacher ;
+	rdfs:subPropertyOf :hasProfessionalContact ;
+	owl:inverseOf :hasTeacher .
+
+:hasSubject a owl:ObjectProperty ;
+	rdfs:label "hat Subjekt"@de , "has subject"@en , "tiene sujeto"@es , "ha soggetto"@it ;
+	rdfs:comment """At an n-ary concept's instance (subject), something (object) takes the subject role of the asymmetric relationship meant by the n-ary concept. 
+For inverse relationsships, the subject and object role follow the naming of the n-ary concept when reading quasi just the first part of the n-ary concept name."""^^xsd:string ;
+	rdfs:domain :NAries .
+
+:hasSubjectObject a owl:ObjectProperty ;
+	rdfs:label "hat Subjekt oder Objekt"@de , "has subject or object"@en , "tiene sujeto u objeto"@es , "ha soggetto o oggetto"@it ;
+	rdfs:comment """At an n-ary concept's instance (subject), something (object) takes the subject or object role of the symmetric relationship meant by the n-ary concept. 
+For inverse relationsships, the subject and object role follow the naming of the n-ary concept when reading quasi just the first part of the n-ary concept name."""^^xsd:string ;
+	owl:inverseOf :isSubjectObject .
+
+:hasTeacher a owl:ObjectProperty ;
+	rdfs:label "hat Lehrer"@de , "has teacher"@en , "tiene maestro(a)"@es , "ha insegnante"@it ;
+	rdfs:comment "A person (subject) who is trained by a person (object)."^^xsd:string ;
+	:correspondsToInverse :HasStudentTeacher ;
+	rdfs:subPropertyOf :hasProfessionalContact .
+
+:hasVitalLethalContact a owl:SymmetricProperty ;
+	rdfs:label "hat vitalen oder letalen Kontakt"@de , "has vital or lethal contact"@en , "tiene contacto vital o letal"@es , "ha contatto vitale o letale"@it ;
+	rdfs:comment "A person or corporate body (subject) has som kind of vital or lethal relation with a person or corporate body (object). The relationship may e.g. include healing, mutilating, life saving, killing."^^xsd:string ;
+	:correspondsTo :HasVitalLethalContact ;
+	rdfs:subPropertyOf :relatedAgent .
+
+:isChannelOf a owl:ObjectProperty ;
+	rdfs:label "ist Medium von"@de , "is channel of"@en , "es médium de"@es , "è sensitivo(a) di"@it ;
+	rdfs:comment "A person or spiritual entity (subject) is a channel or medium of a person or spiritual entity (object), e.g. a dead person, spirit, angel etc. I.e. the subject receives messages from the object."^^xsd:string ;
+	:correspondsToInverse :HasIsChannel ;
+	owl:inverseOf :hasChannel ;
+	rdfs:subPropertyOf :hasSpiritualContact .
+
+:isChiefOf a owl:ObjectProperty ;
+	rdfs:label "ist Chef von"@de , "is chief of"@en , "es jefe de"@es , "è capo di"@it ;
+	rdfs:comment "A person (subject) ist chief of a group (object)."^^xsd:string ;
+	:correspondsToInverse :HasIsChief ;
+	rdfs:subPropertyOf :hasAssociate .
+
+:isFounderOf a owl:ObjectProperty ;
+	rdfs:label "ist Gründer von"@de , "is founder of"@en , "es fundador(a) de"@es , "è fondatore o fondatrice di"@it ;
+	rdfs:comment "A person (subject) ist founder of a group (object)."^^xsd:string ;
+	:correspondsToInverse :HasIsFounder ;
+	rdfs:subPropertyOf :hasAssociate .
+
+:isMemberOf a owl:ObjectProperty ;
+	rdfs:label "ist Mitglied von"@de , "is member of"@en , "es miembro de"@es , "è membro di"@it ;
+	rdfs:comment "A person (subject) ist member of a group (object)."^^xsd:string ;
+	:correspondsToInverse :HasIsMember ;
+	rdfs:subPropertyOf :hasAssociate .
+
+:isMuseOf a owl:ObjectProperty ;
+	rdfs:comment "A person (subject) inspires a person or corporation (object)."^^xsd:string ;
+	rdfs:label "ist Muse von"@de , "is muse of"@en , "es musa de"@es , "è musa di"@it ;
+	:correspondsToInverse :HasIsMuse ;
+	rdfs:subPropertyOf :hasProfessionalContact .
+
+:isObject a owl:ObjectProperty ;
+	rdfs:label "ist Objekt"@de , "is object"@en , "es objeto"@es , "è oggetto"@it ;
+	rdfs:comment """Something (subject) takes the object role at an n-ary concept's instance (object) of the asymmetric relationship meant by the n-ary concept. 
+For inverse relationsships, the subject and object role follow the naming of the n-ary concept when reading quasi just the first part of the n-ary concept name."""^^xsd:string .
+
+:isPatronOf a owl:ObjectProperty ;
+	rdfs:label "ist Mäzen von"@de , "is patron of"@en , "es mecenas de"@es , "è mecenate di"@it ;
+	rdfs:comment "A person or corporation (subject) sponsors/favours a person or corporation (object; e.g. an artist or group of artists)."^^xsd:string ;
+	:correspondsTo :IsHasPatron ;
+	rdfs:subPropertyOf :hasProfessionalContact .
+
+:isPhysicianOf a owl:ObjectProperty ;
+	rdfs:label "ist Arzt von"@de , "is physician of"@en , "es médico de"@es , "è medico di"@it ;
+	rdfs:comment "A person or corporate body (subject) is physician of a person or corporate body (object)."^^xsd:string ;
+	:correspondsTo :IsHasPhysician ;
+	owl:inverseOf :hasPhysician ;
+	rdfs:subPropertyOf :hasVitalLethalContact .
+
+:isSubject a owl:ObjectProperty ;
+	rdfs:label "ist Subjekt"@de , "is subject"@en , "es sujeto"@es , "è soggetto di"@it ;
+	rdfs:comment """Something (subject) takes the subject role at an n-ary concept's instance (object) of the asymmetric relationship meant by the n-ary concept. 
+For inverse relationsships, the subject and object role follow the naming of the n-ary concept when reading quasi just the first part of the n-ary concept name."""^^xsd:string ;
+	owl:inverseOf :hasSubject .
+
+:isSubjectObject a owl:ObjectProperty ;
+	rdfs:label "ist Subjekt oder Objekt"@de , "is subject or object"@en , "es sujeto u objeto"@es , "è soggetto o oggetto"@it ;
+	rdfs:comment """Something (subject) takes the subject or object role at an n-ary concept's instance (object) of the symmetric relationship meant by the n-ary concept. 
+For inverse relationsships, the subject and object role follow the naming of the n-ary concept when reading quasi just the first part of the n-ary concept name."""^^xsd:string .
+
+:relatedAgent a owl:ObjectProperty ;
+	rdfs:label "verknüpfter Agens"@de , "related Agent"@en , "agente relacionado"@es , "agente connesso"@it ;
+	rdfs:comment "A person or corporation (subject) has some kind of relation with a person or corporation (object)."^^xsd:string ;
+	:correspondsTo :RelatedAgent .
+
+:hasBeginDate a owl:DatatypeProperty ;
+	rdfs:comment "A metadata period or phase (subject) has a temporal start (date). The phase might e.g. concern a relationship between agents."^^xsd:string ;
+	rdfs:label "hat Anfangsdatum"@de , "has begin date"@en , "tiene fecha inicial"@es , "ha data dinizio"@it .
+
+:hasEndDate a owl:DatatypeProperty ;
+	rdfs:comment "A metadata period or phase (subject) has a temporal end (date). The phase might e.g. concern a relationship between agents."^^xsd:string ;
+	rdfs:label "hat Enddatum"@de , "has end date"@en , "tiene fecha final"@es , "ha data finale"@it .
+
+:metadataConfidence a owl:DatatypeProperty ;
+	rdfs:comment "A statement or fact (subject) has a value indicating the statement's confidence or trustworthiness."^^xsd:string ;
+	rdfs:label "hat Konfidenzwert"@de , "has confidence value"@en , "valor de confianza"@es , "ha valore di fiducia"@it ;
+	rdfs:range xsd:double .
+
+:metadataPeriod a owl:ObjectProperty ;
+	rdfs:comment "An n−ary instance (subject) is valid/true in a period (object). The period should be manifested in a blank node, with data properties hasBeginDate or/and hasEndDate set."^^xsd:string ;
+	rdfs:label "hat Gültigkeitszeitraum"@de , "has validity period"@en , "tiene periodo de validez"@es , "ha tempo di validità"@it .
+
+:metadataProvenance a owl:DatatypeProperty ;
+	rdfs:comment "A statement or fact (subject) originates from a source."^^xsd:string ;
+	rdfs:label "hat Herkunft"@de , "has provenance"@en , "tiene origen"@es , "ha provenienza"@it ;
+	rdfs:range xsd:string .
+
+:hasGndCode a owl:DatatypeProperty ;
+	rdfs:comment "A relationship type (subject) has a correlating GND code (literal). In the context of the project GND (Gemeinsame Normdatei), codes for agent relations correlating to AgRelOn are successively determined in cooperation with the Library of Congress or rather NDMSO (Network Development and MARC Standards Office) to supplement MARC. The codes will be indicated in AgRelOn when they are available."^^xsd:string ;
+	rdfs:label "hat GND Code"@de , "has GND code"@en , "tiene código de GND"@es , "ha chiave di accesso GND"@it ;
+	rdfs:range xsd:string .
+
+:HasAcquaintance a owl:Class ;
+	rdfs:label "hat Bekannte(n)"@de , "has acquaintance"@en , "tiene conocido(a)"@es , "ha conoscente"@it ;
+	rdfs:comment "This is the n-ary concept for the property hasAcquaintance"^^xsd:string ;
+	rdfs:seeAlso :hasAcquaintance ;
+	rdfs:subClassOf :RelatedAgent .
+
+:HasAdoptiveChildParent a owl:Class ;
+	rdfs:label "hat Adoptivkind / Adoptivelter"@de , "has adoptive child / adoptive parent"@en , "tiene hijo(a) / padre / madre adoptivo(a)"@es , "ha figlio(a) / genitore adottivo(a)"@it ;
+	rdfs:comment "This is the n-ary concept for the properties hasAdoptiveChild and hasAdoptiveParent"^^xsd:string ;
+	rdfs:seeAlso :hasAdoptiveChild , :hasAdoptiveParent ;
+	rdfs:subClassOf :HasChildParent .
+
+:HasAdoptiveSibling a owl:Class ;
+	rdfs:subClassOf :HasSibling ;
+	rdfs:label "hat Adoptivgeschwister"@de , "has adoptive sibling"@en , "tiene hermano(a) adoptivo(a)"@es , "ha fratello adottato o sorella adottata"@it ;
+	rdfs:comment "This is the n-ary concept for the property hasAdoptiveSibling"^^xsd:string ;
+	rdfs:seeAlso :hasAdoptiveSibling .
+
+:HasAssociate a owl:Class ;
+	rdfs:label "hat Gruppenzugehörigkeit"@de , "has group affiliation"@en , "tiene grupo de afiliación"@es , "ha gruppo di appartenenza"@it ;
+	rdfs:comment "This is the n-ary concept for the property hasAssociate"^^xsd:string ;
+	rdfs:seeAlso :hasAssociate ;
+	rdfs:subClassOf :RelatedAgent .
+
+:HasBiologicalChildParent a owl:Class ;
+	rdfs:label "hat biologisches Kind / biologischen Elter"@de , "has biological child / parent"@en , "tiene hijo(a) / padre / madre biológico(a)"@es , "ha figlio(a) / genitore biologico(a)"@it ;
+	rdfs:comment "This is the n-ary concept for the properties hasBiologicalChild and hasBiologicalParent"^^xsd:string ;
+	rdfs:subClassOf :HasChildParent ;
+	rdfs:seeAlso :hasBiologicalChild , :hasBiologicalParent .
+
+:HasBiologicalSibling a owl:Class ;
+	rdfs:label "hat biologisches Geschwister"@de , "has biological sibling"@en , "tiene hermano(a) biológico(a)"@es , "ha fratello biologico o sorella biologica"@it ;
+	rdfs:comment "This is the n-ary concept for the property hasBiologicalSibling"^^xsd:string ;
+	rdfs:subClassOf :HasSibling ;
+	rdfs:seeAlso :hasBiologicalSibling .
+
+:HasChildParent a owl:Class ;
+	rdfs:label "hat Kind /Elter"@de , "has child / parent"@en , "tiene hijo(a) / padre o madre"@es , "ha figlio(a) / genitore"@it ;
+	rdfs:comment "This is the n-ary concept for the properties hasChild and hasParent"^^xsd:string ;
+	rdfs:subClassOf :HasOffspringAncestor ;
+	rdfs:seeAlso :hasChild , :hasParent .
+
+:HasChildParentInlaw a owl:Class ;
+	rdfs:label "hat Schwiegerkind / -elter"@de , "has child/parent-in-law"@en , "tiene yerno o nuera / suegro(a)"@es , "ha genero o nuora / suocero(a)"@it ;
+	rdfs:comment "This is the n-ary concept for the properties hasChildInlaw and hasParentInlaw"^^xsd:string ;
+	rdfs:subClassOf :HasInlaw ;
+	rdfs:seeAlso :hasChildInlaw , :hasParentInlaw .
+
+:HasCohabitee a owl:Class ;
+	rdfs:label "hat Lebensgefährte"@de , "has cohabitee"@en , "tiene cohabitante"@es , "ha compagno(a) di vita"@it ;
+	rdfs:comment "This is the n-ary concept for the property hasCohabitee"^^xsd:string ;
+	rdfs:subClassOf :HasAcquaintance ;
+	rdfs:seeAlso :hasCohabitee .
+
+:HasColleague a owl:Class ;
+	rdfs:label "hat Kollege"@de , "has colleague"@en , "tiene colega"@es , "ha collega"@it ;
+	rdfs:comment "This is the n-ary concept for the property hasColleague"^^xsd:string ;
+	rdfs:subClassOf :HasProfessionalContact ;
+	rdfs:seeAlso :hasColleague .
+
+:HasCooperator a owl:Class ;
+	rdfs:label "hat Kollaborator"@de , "has collaborator"@en , "tiene colaborador(a)"@es , "ha collaboratore o collaboratrice"@it ;
+	rdfs:comment "This is the n-ary concept for the property hasCooperator"^^xsd:string ;
+	rdfs:subClassOf :HasProfessionalContact ;
+	rdfs:seeAlso :hasCooperator .
+
+:HasCorrespondent a owl:Class ;
+	rdfs:label "hat Korrespondent"@de , "has correspondent"@en , "tiene correspondente"@es , "ha corrispondente"@it ;
+	rdfs:comment "This is the n-ary concept for the property hasCorrespondent"^^xsd:string ;
+	rdfs:seeAlso :hasCorrespondent ;
+	rdfs:subClassOf :RelatedAgent .
+
+:HasCousin a owl:Class ;
+	rdfs:label "hat Cousin"@de , "has cousin"@en , "tiene primo o prima"@es , "ha cugino(a)"@it ;
+	rdfs:comment "This is the n-ary concept for the property hasCousin"^^xsd:string ;
+	rdfs:subClassOf :HasRelative ;
+	rdfs:seeAlso :hasCousin .
+
+:HasEmployeeEmployer a owl:Class ;
+	rdfs:label "hat Arbeitnehmer / Arbeitgeber"@de , "has employee / employer"@en , "tiene empleado(a) / empleador(a)"@es , "ha impiegato(a) / datore di lavoro"@it ;
+	rdfs:comment "This is the n-ary concept for the properties hasEmployee and hasEmployer"^^xsd:string ;
+	rdfs:subClassOf :HasProfessionalContact ;
+	rdfs:seeAlso :hasEmployee , :hasEmployer .
+
+:HasFianceeFiance a owl:Class ;
+	rdfs:label "hat Verlobte(n)"@de , "has fiancee  or fiance"@en , "tiene prometido(a)"@es , "ha fidanzato(a)"@it ;
+	rdfs:comment "This is the n-ary concept for the property hasFianceeFiance"^^xsd:string ;
+	rdfs:subClassOf :HasInlaw ;
+	rdfs:seeAlso :hasFianceeFiance .
+
+:HasFosterChildParent a owl:Class ;
+	rdfs:label "hat Pflegekind / -elter"@de , "has foster child / parent"@en , "tiene hijo(a) / padre o madre de crianza"@es , "ha pupillo(a) / genitore"@it ;
+	rdfs:comment "This is the n-ary concept for the properties hasFosterChild and hasFosterParent"^^xsd:string ;
+	rdfs:subClassOf :HasChildParent ;
+	rdfs:seeAlso :hasFosterChild , :hasFosterParent .
+
+:HasFosterSibling a owl:Class ;
+	rdfs:label "has Pflegegeschwister"@de , "has foster sibling"@en , "tiene hermano(a) de crianza"@es , "ha fratello o sorella di latte"@it ;
+	rdfs:comment "This is the n-ary concept for the property hasFosterSibling"^^xsd:string ;
+	rdfs:subClassOf :HasSibling ;
+	rdfs:seeAlso :hasFosterSibling .
+
+:HasFriend a owl:Class ;
+	rdfs:label "hat Freund"@de , "has friend"@en , "tiene amigo(a)"@es , "ha amico(a)"@it ;
+	rdfs:comment "This is the n-ary concept for the property hasFriend"^^xsd:string ;
+	rdfs:subClassOf :HasAcquaintance ;
+	rdfs:seeAlso :hasFriend .
+
+:HasGodChildParent a owl:Class ;
+	rdfs:label "hat Patenkind / Pate"@de , "has godchild / godparent"@en , "tiene ahijado(a) / padrino o madrina"@es , "ha figlioccio o figlioccia / padrino o padrina"@it ;
+	rdfs:comment "This is the n-ary concept for the properties hasGodChild and hasGodParent"^^xsd:string ;
+	rdfs:subClassOf :HasNieceNephewAuntUncle ;
+	rdfs:seeAlso :hasGodChild , :hasGodParent .
+
+:HasGrandChildParent a owl:Class ;
+	rdfs:label "hat Enkel / Großelter"@de , "has grandchild / grandparent"@en , "tiene nieto(a) / abuelo(a)"@es , "ha nipote (di nonni) / nonno(a)"@it ;
+	rdfs:comment "This is the n-ary concept for the properties hasGrandChild and hasGrandParent"^^xsd:string ;
+	rdfs:subClassOf :HasOffspringAncestor ;
+	rdfs:seeAlso :hasGrandChild , :hasGrandParent .
+
+:HasHalfSibling a owl:Class ;
+	rdfs:label "hat Halbgeschwister"@de , "has half sibling"@en , "tiene medio hermano(a)"@es , "ha fratellastro a sorellastra"@it ;
+	rdfs:comment "This is the n-ary concept for the property hasHalfSibling"^^xsd:string ;
+	rdfs:subClassOf :HasSibling ;
+	rdfs:seeAlso :hasHalfSibling .
+
+:HasIllegitimateChildParent a owl:Class ;
+	rdfs:label "hat illegitimes Kind / illegitimen Elter"@de , "has illegitimate child / parent"@en , "tiene hijo(a) / padre o madre illegítimo(a)"@es , "ha figlio(a) / genitore illegittimo(a)"@it ;
+	rdfs:comment "This is the n-ary concept for the properties hasIllegitimateChild / hasIllegitimateParent"^^xsd:string ;
+	rdfs:subClassOf :HasBiologicalChildParent ;
+	rdfs:seeAlso :hasIllegitimateChild , :hasIllegitimateParent .
+
+:HasInfluenceDoneeDonor a owl:Class ;
+	rdfs:label "hat Einfluss auf / ist beeinflusst durch"@de , "has influence on / is influenced by"@en , "tiene influencia sobre / es influenciado(a) por"@es , "ha influenza su / è influenzato(a) da"@it ;
+	rdfs:comment "This is the n-ary concept for the properties hasInfluenceDonee / hasInfluenceDonor"^^xsd:string ;
+	rdfs:subClassOf :HasProfessionalContact ;
+	rdfs:seeAlso :hasInfluenceDonee , :hasInfluenceDonor .
+
+:HasInlaw a owl:Class ;
+	rdfs:label "hat angeheiratete(n) Verwandte(n)"@de , "has in-law"@en , "tiene pariente político"@es , "ha parente per matrimonio"@it ;
+	rdfs:comment "This is the n-ary concept for the property hasInlaw"^^xsd:string ;
+	rdfs:subClassOf :HasRelative ;
+	rdfs:seeAlso :hasInlaw .
+
+:HasIsChannel a owl:Class ;
+	rdfs:label "hat Medium / ist Medium von"@de , "has channel / is channel of"@en , "tiene médium / es médium de"@es , "ha sensitivo(a) / è sensitivo(a) di"@it ;
+	rdfs:comment "This is the n-ary concept for the properties hasChannel / isChannelOf"^^xsd:string ;
+	rdfs:subClassOf :HasSpiritualContact ;
+	rdfs:seeAlso :hasChannel , :isChannelOf .
+
+:HasIsChief a owl:Class ;
+	rdfs:label "hat Chef / ist Chef von"@de , "has chief / is chief of"@en , "tiene jefe / es jefe de"@es , "ha capo / è capo di"@it ;
+	rdfs:comment "This is the n-ary concept for the properties hasChief / isChiefOf"^^xsd:string ;
+	rdfs:subClassOf :HasAssociate ;
+	rdfs:seeAlso :hasChief , :isChiefOf .
+
+:HasIsFounder a owl:Class ;
+	rdfs:label "hat Gründer / ist Gründer von"@de , "has founder / is founder of"@en , "tiene fundador(a) / es fundador(a) de"@es , "ha fondatore o fondatrice / è fondatore o fondatrice di"@it ;
+	rdfs:comment "This is the n-ary concept for the properties hasFounder / isFounderOf"^^xsd:string ;
+	rdfs:subClassOf :HasAssociate ;
+	rdfs:seeAlso :hasFounder , :isFounderOf .
+
+:HasIsMember a owl:Class ;
+	rdfs:label "hat Mitglied / ist Mitglied von"@de , "has member / is member of"@en , "tiene membrio / es miembro de"@es , "ha membro / è membro di"@it ;
+	rdfs:comment "This is the n-ary concept for the properties hasMember / isMemberOf"^^xsd:string ;
+	rdfs:subClassOf :HasAssociate ;
+	rdfs:seeAlso :hasMember , :isMemberOf .
+
+:HasIsMuse a owl:Class ;
+	rdfs:label "hat Muse / ist Muse von"@de , "has muse / is muse of"@en , "tiene musa / es musa de"@es , "ha musa / è musa di"@it ;
+	rdfs:comment "This is the n-ary concept for the properties hasMuse / isMuseOf"^^xsd:string ;
+	rdfs:subClassOf :HasProfessionalContact ;
+	rdfs:seeAlso :hasMuse , :isMuseOf .
+
+:HasLover a owl:Class ;
+	rdfs:label "hat Geliebte(n)"@de , "has lover"@en , "tiene amante"@es , "ha amante"@it ;
+	rdfs:comment "This is the n-ary concept for the property hasLover"^^xsd:string ;
+	rdfs:subClassOf :HasAcquaintance ;
+	rdfs:seeAlso :hasLover .
+
+:HasMultipleBirthSibling a owl:Class ;
+	rdfs:label "hat Mehrlingsgeschwister"@de , "has multiple birth sibling"@en , "tiene hermano(a) gemelo(a)"@es , "ha fratello o sorella plurigemellare"@it ;
+	rdfs:comment "This is the n-ary concept for the property hasMultipleBirthSibling"^^xsd:string ;
+	rdfs:subClassOf :HasSibling ;
+	rdfs:seeAlso :hasMultipleBirthSibling .
+
+:HasMurdereeMurderer a owl:Class ;
+	rdfs:label "hat Mordopfer / Mörder"@de , "has murder victim / murderer"@en , "tiene víctima / asesino(a)"@es , "ha vittima domicidio / assassino(a)"@it ;
+	rdfs:comment "This is the n-ary concept for the properties hasMurderee / hasMurderer"^^xsd:string ;
+	rdfs:subClassOf :HasVitalLethalContact ;
+	rdfs:seeAlso :hasMurderee , :hasMurderer .
+
+:HasNieceNephewAuntUncle a owl:Class ;
+	rdfs:label "hat Tante oder Onkel / Nichte oder Neffe"@de , "has aunt or uncle / niece or nephew"@en , "tiene tío o tía / sobrino(a)"@es , "ha zia o zio / nipote (di zii)"@it ;
+	rdfs:comment "This is the n-ary concept for the properties hasAuntUncle / hasNieceNephew"^^xsd:string ;
+	rdfs:subClassOf :HasRelative ;
+	rdfs:seeAlso :hasAuntUncle , :hasNieceNephew .
+
+:HasOffspringAncestor a owl:Class ;
+	rdfs:label "hat Vorfahr / Nachkomme"@de , "has ancestor / offspring"@en , "tiene ancestro / heredero(a)"@es , "ha antenato / discendente"@it ;
+	rdfs:comment "This is the n-ary concept for the properties hasAncestor / hasOffspring"^^xsd:string ;
+	rdfs:subClassOf :HasRelative ;
+	rdfs:seeAlso :hasAncestor , :hasOffspring .
+
+:HasProfessionalContact a owl:Class ;
+	rdfs:label "hat Berufskontakt"@de , "has professional contact"@en , "tiene relación profesional"@es , "ha contatto professionale"@it ;
+	rdfs:comment "This is the n-ary concept for the property hasProfessionalContact"^^xsd:string ;
+	rdfs:subClassOf :RelatedAgent ;
+	rdfs:seeAlso :hasProfessionalContact .
+
+:HasRelative a owl:Class ;
+	rdfs:label "hat Verwandte(n)"@de , "has relative"@en , "tiene pariente"@es , "ha parente"@it ;
+	rdfs:comment "This is the n-ary concept for the property hasRelative"^^xsd:string ;
+	rdfs:subClassOf :RelatedAgent ;
+	rdfs:seeAlso :hasRelative .
+
+:HasSibling a owl:Class ;
+	rdfs:label "hat Geschwister"@de , "has sibling"@en , "tiene hermano(a)"@es , "ha fratello o sorella"@it ;
+	rdfs:comment "This is the n-ary concept for the property hasSibling"^^xsd:string ;
+	rdfs:subClassOf :HasRelative ;
+	rdfs:seeAlso :hasSibling .
+
+:HasSiblingInlaw a owl:Class ;
+	rdfs:label "hat Schwager oder Schwägerin"@de , "has sibling-in-law"@en , "tiene cuñado(a)"@es , "ha cognato(a)"@it ;
+	rdfs:comment "This is the n-ary concept for the property hasSiblingInlaw"^^xsd:string ;
+	rdfs:subClassOf :HasInlaw ;
+	rdfs:seeAlso :hasSiblingInlaw .
+
+:HasSpiritualContact a owl:Class ;
+	rdfs:label "hat spirituellen Kontakt"@de , "has spiritual contact"@en , "tiene guía espiritual"@es , "ha contatto spirituale"@it ;
+	rdfs:comment "This is the n-ary concept for the property hasSpiritualContact"^^xsd:string ;
+	rdfs:subClassOf :RelatedAgent ;
+	rdfs:seeAlso :hasSpiritualContact .
+
+:HasSpouse a owl:Class ;
+	rdfs:label "hat Ehepartner"@de , "has spouse"@en , "tiene esposo(a)"@es , "ha coniuge"@it ;
+	rdfs:comment "This is the n-ary concept for the property hasSpouse"^^xsd:string ;
+	rdfs:subClassOf :HasInlaw ;
+	rdfs:seeAlso :hasSpouse .
+
+:HasStepChildParent a owl:Class ;
+	rdfs:label "hat Stiefkind / Stiefelter"@de , "has stepchild / stepparent"@en , "tiene hijo(a) / padre o madre adoptivo(a)"@es , "ha figliastro(a) / padrigno o madrigna"@it ;
+	rdfs:comment "This is the n-ary concept for the properties hasStepChild / hasStepParent"^^xsd:string ;
+	rdfs:subClassOf :HasChildParent ;
+	rdfs:seeAlso :hasStepChild , :hasStepParent .
+
+:HasStepSibling a owl:Class ;
+	rdfs:label "hat Stiefgeschwister"@de , "has stepsibling"@en , "tiene hermano(a) adoptivo(a)"@es , "ha fratellastro o sorellastra"@it ;
+	rdfs:comment "This is the n-ary concept for the property hasStepSibling"^^xsd:string ;
+	rdfs:subClassOf :HasSibling ;
+	rdfs:seeAlso :hasStepSibling .
+
+:HasStudentTeacher a owl:Class ;
+	rdfs:label "hat Schüler / Lehrer"@de , "has Student / teacher"@en , "tiene estudiante / maestro(a)"@es , "ha scolaro(a) / insegnante"@it ;
+	rdfs:comment "This is the n-ary concept for the properties hasStudent / hasTeacher"^^xsd:string ;
+	rdfs:subClassOf :HasProfessionalContact ;
+	rdfs:seeAlso :hasStudent , :hasTeacher .
+
+:HasVitalLethalContact a owl:Class ;
+	rdfs:label "hat vitalen oder letalen Kontakt"@de , "has vital or lethal contact"@en , "tiene contacto vital o letal"@es , "ha contatto vitale o letale"@it ;
+	rdfs:comment "This is the n-ary concept for the property hasVitalLethalContact"^^xsd:string ;
+	rdfs:subClassOf :RelatedAgent ;
+	rdfs:seeAlso :hasVitalLethalContact .
+
+:IsHasPatron a owl:Class ;
+	rdfs:label "hat Mäzen / ist Mäzen von"@de , "has patron / is patron of"@en , "tiene mecenas / es mecenas de"@es , "ha mecenateè mecenate di"@it ;
+	rdfs:comment "This is the n-ary concept for the properties hasPatron / isPatronOf"^^xsd:string ;
+	rdfs:subClassOf :HasProfessionalContact ;
+	rdfs:seeAlso :hasPatron , :isPatronOf .
+
+:IsHasPhysician a owl:Class ;
+	rdfs:label "hat Arzt / ist Arzt von"@de , "has physician / is physician of"@en , "tiene médico / es médico de"@es , "ha medico / è medico di"@it ;
+	rdfs:comment "This is the n-ary concept for the properties hasPhysician / isPhysicianOf"^^xsd:string ;
+	rdfs:subClassOf :HasVitalLethalContact ;
+	rdfs:seeAlso :hasPhysician , :isPhysicianOf .
+
+:NAries a owl:Class ;
+	rdfs:label "n-ary Klassen"@de , "n-ary classes"@en ;
+	rdfs:comment "This is the top class for all n-ary classes"^^xsd:string .
+
+:RelatedAgent a owl:Class ;
+	rdfs:label "verknüpfter Agens"@de , "related Agent"@en , "agente relacionado"@es , "agente connesso"@it ;
+	rdfs:comment "This is the n-ary concept for the property relatedAgent"^^xsd:string ;
+	rdfs:subClassOf :NAries ;
+	rdfs:seeAlso :relatedAgent .
+
+:hasGrandParent owl:propertyChainAxiom _:node17i7fi5j0x3 .
+
+_:node17i7fi5j0x3 rdf:first :hasParent ;
+	rdf:rest _:node17i7fi5j0x4 .
+
+_:node17i7fi5j0x4 rdf:first :hasParent ;
+	rdf:rest rdf:nil .

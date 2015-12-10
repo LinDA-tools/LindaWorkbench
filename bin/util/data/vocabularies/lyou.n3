@@ -1,0 +1,470 @@
+@prefix lyou: <http://purl.org/linkingyou/> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+
+<http://purl.org/linkingyou/> a owl:Ontology ;
+	dcterms:title "Linking-you vocabulary"@en ;
+	dcterms:description "Vocabulary for describing common webpages provided by an organisation."@en-gb ;
+	dcterms:issued "2012-12-01"^^xsd:date ;
+	dcterms:publisher "University of Southampton" ;
+	dcterms:creator "Joss Winn" , "Nick Jackson" , "Christopher Gutteridge" ;
+	dcterms:source <http://lncn.eu/toolkit> .
+
+lyou:academia <http://www.w3.org/2000/01/rdf-schema#label> "Academia" ;
+	<http://www.w3.org/2000/01/rdf-schema#comment> "This is used to identify which predicates are related to academia (other than education) so they can be listed separately in the documentation."@en .
+
+lyou:education <http://www.w3.org/2000/01/rdf-schema#label> "Education" ;
+	<http://www.w3.org/2000/01/rdf-schema#comment> "This is used to identify which predicates are related to education so they can be listed separately in the documentation."@en .
+
+lyou:core <http://www.w3.org/2000/01/rdf-schema#label> "Core" ;
+	<http://www.w3.org/2000/01/rdf-schema#comment> "This is used to identify which predicates represent a simple core of Linking You"@en .
+
+lyou:extended <http://www.w3.org/2000/01/rdf-schema#label> "Extended Terms" ;
+	<http://www.w3.org/2000/01/rdf-schema#comment> "This is used to identify which predicates are outside the the core terms. Still useful but listed in a second section."@en ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "UK" ;
+	<http://www.w3.org/2000/01/rdf-schema#comment> "Predicates only useful to UK organisations"@en .
+
+foaf:homepage a owl:ObjectProperty , <http://www.w3.org/1999/02/22-rdf-syntax-ns#Property> ;
+	<http://www.w3.org/2000/01/rdf-schema#isDefinedBy> <http://xmlns.com/foaf/0.1/> ;
+	dcterms:subject lyou:core ;
+	<http://www.w3.org/2000/01/rdf-schema#range> foaf:Document ;
+	<http://www.w3.org/2000/01/rdf-schema#comment> "FOAF already defines a perfectly good way to indicate a homepage."@en ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "homepage"@en .
+
+lyou:events a owl:ObjectProperty , <http://www.w3.org/1999/02/22-rdf-syntax-ns#Property> ;
+	dcterms:subject lyou:core ;
+	<http://www.w3.org/2000/01/rdf-schema#isDefinedBy> <http://purl.org/linkingyou/> ;
+	<http://www.w3.org/2000/01/rdf-schema#domain> foaf:Organization ;
+	<http://www.w3.org/2000/01/rdf-schema#range> foaf:Document ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "events page"@en .
+
+lyou:business a owl:ObjectProperty , <http://www.w3.org/1999/02/22-rdf-syntax-ns#Property> ;
+	dcterms:subject lyou:core ;
+	<http://www.w3.org/2000/01/rdf-schema#isDefinedBy> <http://purl.org/linkingyou/> ;
+	<http://www.w3.org/2000/01/rdf-schema#domain> foaf:Organization ;
+	<http://www.w3.org/2000/01/rdf-schema#range> foaf:Document ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "business page"@en .
+
+lyou:depts a owl:ObjectProperty , <http://www.w3.org/1999/02/22-rdf-syntax-ns#Property> ;
+	dcterms:subject lyou:core ;
+	<http://www.w3.org/2000/01/rdf-schema#isDefinedBy> <http://purl.org/linkingyou/> ;
+	<http://www.w3.org/2000/01/rdf-schema#domain> foaf:Organization ;
+	<http://www.w3.org/2000/01/rdf-schema#range> foaf:Document ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "departments page"@en ;
+	<http://www.w3.org/2000/01/rdf-schema#comment> "Links a group or organisation to a document describing its parts. This is not a linkingyou term but was added as the existing terms were only applicable to academia."@en .
+
+lyou:about a owl:ObjectProperty , <http://www.w3.org/1999/02/22-rdf-syntax-ns#Property> ;
+	dcterms:subject lyou:core ;
+	<http://www.w3.org/2000/01/rdf-schema#isDefinedBy> <http://purl.org/linkingyou/> ;
+	<http://www.w3.org/2000/01/rdf-schema#domain> foaf:Organization ;
+	<http://www.w3.org/2000/01/rdf-schema#range> foaf:Document ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "about page"@en .
+
+lyou:about-leader a owl:ObjectProperty , <http://www.w3.org/1999/02/22-rdf-syntax-ns#Property> ;
+	dcterms:subject lyou:extended ;
+	<http://www.w3.org/2000/01/rdf-schema#isDefinedBy> <http://purl.org/linkingyou/> ;
+	<http://www.w3.org/2000/01/rdf-schema#domain> foaf:Organization ;
+	<http://www.w3.org/2000/01/rdf-schema#range> foaf:Document ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "leader page"@en ;
+	<http://www.w3.org/2000/01/rdf-schema#comment> "Links a group or organisation to a page about the leader of that organisation. This is modified from the linkingyou 'vc' page to make it work for organistations where the leader is not a Vice Chancellor."@en .
+
+lyou:about-executive a owl:ObjectProperty , <http://www.w3.org/1999/02/22-rdf-syntax-ns#Property> ;
+	dcterms:subject lyou:extended ;
+	<http://www.w3.org/2000/01/rdf-schema#isDefinedBy> <http://purl.org/linkingyou/> ;
+	<http://www.w3.org/2000/01/rdf-schema#domain> foaf:Organization ;
+	<http://www.w3.org/2000/01/rdf-schema#range> foaf:Document ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "executive page"@en ;
+	<http://www.w3.org/2000/01/rdf-schema#comment> "Links a group or organisation to a page about the senior staff, be it Microsoft's senior staff or the committee members of a university club. This was not a linkingyou term."@en .
+
+lyou:about-strategy a owl:ObjectProperty , <http://www.w3.org/1999/02/22-rdf-syntax-ns#Property> ;
+	dcterms:subject lyou:extended ;
+	<http://www.w3.org/2000/01/rdf-schema#isDefinedBy> <http://purl.org/linkingyou/> ;
+	<http://www.w3.org/2000/01/rdf-schema#domain> foaf:Organization ;
+	<http://www.w3.org/2000/01/rdf-schema#range> foaf:Document ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "strategy page"@en .
+
+lyou:about-sites a owl:ObjectProperty , <http://www.w3.org/1999/02/22-rdf-syntax-ns#Property> ;
+	dcterms:subject lyou:extended ;
+	<http://www.w3.org/2000/01/rdf-schema#isDefinedBy> <http://purl.org/linkingyou/> ;
+	<http://www.w3.org/2000/01/rdf-schema#domain> foaf:Organization ;
+	<http://www.w3.org/2000/01/rdf-schema#range> foaf:Document ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "sites page"@en ;
+	<http://www.w3.org/2000/01/rdf-schema#comment> "Links a group or organisation to a page about the sites or campuses of that organisation. Was about/campuses in linkingyou, but altered here to be less academic-only."@en .
+
+lyou:search a owl:ObjectProperty , <http://www.w3.org/1999/02/22-rdf-syntax-ns#Property> ;
+	dcterms:subject lyou:core ;
+	<http://www.w3.org/2000/01/rdf-schema#isDefinedBy> <http://purl.org/linkingyou/> ;
+	<http://www.w3.org/2000/01/rdf-schema#domain> foaf:Organization ;
+	<http://www.w3.org/2000/01/rdf-schema#range> foaf:Document ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "search page"@en ;
+	<http://www.w3.org/2000/01/rdf-schema#comment> "Perhaps this should link to a string with a variable in to indicate how to construct a search?"@en .
+
+lyou:press a owl:ObjectProperty , <http://www.w3.org/1999/02/22-rdf-syntax-ns#Property> ;
+	dcterms:subject lyou:core ;
+	<http://www.w3.org/2000/01/rdf-schema#isDefinedBy> <http://purl.org/linkingyou/> ;
+	<http://www.w3.org/2000/01/rdf-schema#domain> foaf:Organization ;
+	<http://www.w3.org/2000/01/rdf-schema#range> foaf:Document ;
+	<http://www.w3.org/2000/01/rdf-schema#comment> "A page with information specifically aimed at journalists."@en ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "press page"@en .
+
+lyou:press-facts a owl:ObjectProperty , <http://www.w3.org/1999/02/22-rdf-syntax-ns#Property> ;
+	dcterms:subject lyou:extended ;
+	<http://www.w3.org/2000/01/rdf-schema#isDefinedBy> <http://purl.org/linkingyou/> ;
+	<http://www.w3.org/2000/01/rdf-schema#domain> foaf:Organization ;
+	<http://www.w3.org/2000/01/rdf-schema#comment> "A page aimed at the press with a list of useful facts about the organisation."@en ;
+	<http://www.w3.org/2000/01/rdf-schema#range> foaf:Document ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "press facts page"@en .
+
+lyou:news a owl:ObjectProperty , <http://www.w3.org/1999/02/22-rdf-syntax-ns#Property> ;
+	dcterms:subject lyou:core ;
+	<http://www.w3.org/2000/01/rdf-schema#isDefinedBy> <http://purl.org/linkingyou/> ;
+	<http://www.w3.org/2000/01/rdf-schema#domain> foaf:Organization ;
+	<http://www.w3.org/2000/01/rdf-schema#range> foaf:Document ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "news page"@en .
+
+lyou:jobs a owl:ObjectProperty , <http://www.w3.org/1999/02/22-rdf-syntax-ns#Property> ;
+	dcterms:subject lyou:core ;
+	<http://www.w3.org/2000/01/rdf-schema#isDefinedBy> <http://purl.org/linkingyou/> ;
+	<http://www.w3.org/2000/01/rdf-schema#domain> foaf:Organization ;
+	<http://www.w3.org/2000/01/rdf-schema#range> foaf:Document ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "jobs page"@en .
+
+lyou:legal a owl:ObjectProperty , <http://www.w3.org/1999/02/22-rdf-syntax-ns#Property> ;
+	dcterms:subject lyou:core ;
+	<http://www.w3.org/2000/01/rdf-schema#isDefinedBy> <http://purl.org/linkingyou/> ;
+	<http://www.w3.org/2000/01/rdf-schema#domain> foaf:Organization ;
+	<http://www.w3.org/2000/01/rdf-schema#range> foaf:Document ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "legal page"@en .
+
+lyou:legal-policies a owl:ObjectProperty , <http://www.w3.org/1999/02/22-rdf-syntax-ns#Property> ;
+	dcterms:subject lyou:extended ;
+	<http://www.w3.org/2000/01/rdf-schema#isDefinedBy> <http://purl.org/linkingyou/> ;
+	<http://www.w3.org/2000/01/rdf-schema#domain> foaf:Organization ;
+	<http://www.w3.org/2000/01/rdf-schema#range> foaf:Document ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "policies page"@en .
+
+lyou:legal-data-protection a owl:ObjectProperty , <http://www.w3.org/1999/02/22-rdf-syntax-ns#Property> ;
+	dcterms:subject lyou:extended ;
+	<http://www.w3.org/2000/01/rdf-schema#isDefinedBy> <http://purl.org/linkingyou/> ;
+	<http://www.w3.org/2000/01/rdf-schema#domain> foaf:Organization ;
+	<http://www.w3.org/2000/01/rdf-schema#range> foaf:Document ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "data-protection statement page"@en .
+
+lyou:legal-environment a owl:ObjectProperty , <http://www.w3.org/1999/02/22-rdf-syntax-ns#Property> ;
+	dcterms:subject lyou:extended ;
+	<http://www.w3.org/2000/01/rdf-schema#isDefinedBy> <http://purl.org/linkingyou/> ;
+	<http://www.w3.org/2000/01/rdf-schema#domain> foaf:Organization ;
+	<http://www.w3.org/2000/01/rdf-schema#range> foaf:Document ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "environmental policy page"@en .
+
+lyou:legal-equality a owl:ObjectProperty , <http://www.w3.org/1999/02/22-rdf-syntax-ns#Property> ;
+	dcterms:subject lyou:extended ;
+	<http://www.w3.org/2000/01/rdf-schema#isDefinedBy> <http://purl.org/linkingyou/> ;
+	<http://www.w3.org/2000/01/rdf-schema#domain> foaf:Organization ;
+	<http://www.w3.org/2000/01/rdf-schema#range> foaf:Document ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "equality policy page"@en .
+
+lyou:legal-foi a owl:ObjectProperty , <http://www.w3.org/1999/02/22-rdf-syntax-ns#Property> ;
+	dcterms:subject lyou:extended ;
+	<http://www.w3.org/2000/01/rdf-schema#isDefinedBy> <http://purl.org/linkingyou/> ;
+	<http://www.w3.org/2000/01/rdf-schema#domain> foaf:Organization ;
+	<http://www.w3.org/2000/01/rdf-schema#range> foaf:Document ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "freedom-of-information policy page"@en .
+
+lyou:legal-ict a owl:ObjectProperty , <http://www.w3.org/1999/02/22-rdf-syntax-ns#Property> ;
+	dcterms:subject lyou:extended ;
+	<http://www.w3.org/2000/01/rdf-schema#isDefinedBy> <http://purl.org/linkingyou/> ;
+	<http://www.w3.org/2000/01/rdf-schema#domain> foaf:Organization ;
+	<http://www.w3.org/2000/01/rdf-schema#range> foaf:Document ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "ICT policy page"@en .
+
+lyou:legal-website a owl:ObjectProperty , <http://www.w3.org/1999/02/22-rdf-syntax-ns#Property> ;
+	dcterms:subject lyou:extended ;
+	<http://www.w3.org/2000/01/rdf-schema#isDefinedBy> <http://purl.org/linkingyou/> ;
+	<http://www.w3.org/2000/01/rdf-schema#domain> foaf:Organization ;
+	<http://www.w3.org/2000/01/rdf-schema#range> foaf:Document ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "website legal information page"@en .
+
+lyou:legal-regulations a owl:ObjectProperty , <http://www.w3.org/1999/02/22-rdf-syntax-ns#Property> ;
+	dcterms:subject lyou:extended ;
+	<http://www.w3.org/2000/01/rdf-schema#isDefinedBy> <http://purl.org/linkingyou/> ;
+	<http://www.w3.org/2000/01/rdf-schema#domain> foaf:Organization ;
+	<http://www.w3.org/2000/01/rdf-schema#range> foaf:Document ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "regulations page"@en .
+
+lyou:contact a owl:ObjectProperty , <http://www.w3.org/1999/02/22-rdf-syntax-ns#Property> ;
+	dcterms:subject lyou:core ;
+	<http://www.w3.org/2000/01/rdf-schema#isDefinedBy> <http://purl.org/linkingyou/> ;
+	<http://www.w3.org/2000/01/rdf-schema#domain> foaf:Organization ;
+	<http://www.w3.org/2000/01/rdf-schema#range> foaf:Document ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "contact page"@en .
+
+lyou:contact-staff a owl:ObjectProperty , <http://www.w3.org/1999/02/22-rdf-syntax-ns#Property> ;
+	dcterms:subject lyou:extended ;
+	<http://www.w3.org/2000/01/rdf-schema#isDefinedBy> <http://purl.org/linkingyou/> ;
+	<http://www.w3.org/2000/01/rdf-schema#domain> foaf:Organization ;
+	<http://www.w3.org/2000/01/rdf-schema#range> foaf:Document ;
+	<http://www.w3.org/2000/01/rdf-schema#comment> "A page giving contact details for staff in the organisation. Generally this is a searchable phonebook."@en ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "staff contact page"@en .
+
+lyou:ict-support a owl:ObjectProperty , <http://www.w3.org/1999/02/22-rdf-syntax-ns#Property> ;
+	dcterms:subject lyou:extended ;
+	<http://www.w3.org/2000/01/rdf-schema#isDefinedBy> <http://purl.org/linkingyou/> ;
+	<http://www.w3.org/2000/01/rdf-schema#domain> foaf:Organization ;
+	<http://www.w3.org/2000/01/rdf-schema#range> foaf:Document ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "ICT support page"@en .
+
+lyou:open-data a owl:ObjectProperty , <http://www.w3.org/1999/02/22-rdf-syntax-ns#Property> ;
+	dcterms:subject lyou:extended ;
+	<http://www.w3.org/2000/01/rdf-schema#isDefinedBy> <http://purl.org/linkingyou/> ;
+	<http://www.w3.org/2000/01/rdf-schema#domain> foaf:Organization ;
+	<http://www.w3.org/2000/01/rdf-schema#range> foaf:Document ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "open data page"@en ;
+	<http://www.w3.org/2000/01/rdf-schema#comment> "Links a group or organisation to a page (or the homepage of a website) describing open data services from the organisation, eg. http://data.lincoln.ac.uk/"@en .
+
+lyou:web-accessibility a owl:ObjectProperty , <http://www.w3.org/1999/02/22-rdf-syntax-ns#Property> ;
+	dcterms:subject lyou:extended ;
+	<http://www.w3.org/2000/01/rdf-schema#isDefinedBy> <http://purl.org/linkingyou/> ;
+	<http://www.w3.org/2000/01/rdf-schema#range> foaf:Document ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "web accessibility"@en ;
+	<http://www.w3.org/2000/01/rdf-schema#comment> "Links a group or organisation to a document which describes the accessibility policy of the organisation regarding websites and online resources. May also be used to link the homepage of a website to an accessibility document."@en .
+
+lyou:space-accessibility a owl:ObjectProperty , <http://www.w3.org/1999/02/22-rdf-syntax-ns#Property> ;
+	dcterms:subject lyou:extended ;
+	<http://www.w3.org/2000/01/rdf-schema#isDefinedBy> <http://purl.org/linkingyou/> ;
+	<http://www.w3.org/2000/01/rdf-schema#range> foaf:Document ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "spatial acessibility"@en ;
+	<http://www.w3.org/2000/01/rdf-schema#comment> "Links a group or organisation to a document describing the aspects of the location and environment of this organisation. Generally this will be for the benefit of a visitor with a physical or mental disability. May also be used to link a spatial thing (such as a building, airport, campus, bus) to a description of its accessibility."@en .
+
+lyou:uk-ico-publication-scheme a owl:ObjectProperty , <http://www.w3.org/1999/02/22-rdf-syntax-ns#Property> ;
+	dcterms:subject lyou:uk ;
+	<http://www.w3.org/2000/01/rdf-schema#isDefinedBy> <http://purl.org/linkingyou/> ;
+	<http://www.w3.org/2000/01/rdf-schema#domain> foaf:Organization ;
+	<http://www.w3.org/2000/01/rdf-schema#range> foaf:Document ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "ICO publication scheme"@en ;
+	<http://www.w3.org/2000/01/rdf-schema#comment> "[Generally only for UK public sector] A link to the publication scheme for this organisation as described by the UK Information Commissioner's Office. See http://www.ico.org.uk/for_organisations/freedom_of_information/guide/publication_scheme for more information."@en .
+
+lyou:courses a owl:ObjectProperty , <http://www.w3.org/1999/02/22-rdf-syntax-ns#Property> ;
+	<http://www.w3.org/2000/01/rdf-schema#isDefinedBy> <http://purl.org/linkingyou/> ;
+	<http://www.w3.org/2000/01/rdf-schema#domain> foaf:Organization ;
+	<http://www.w3.org/2000/01/rdf-schema#range> foaf:Document ;
+	dcterms:subject lyou:education ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "courses page"@en .
+
+lyou:undergraduate a owl:ObjectProperty , <http://www.w3.org/1999/02/22-rdf-syntax-ns#Property> ;
+	<http://www.w3.org/2000/01/rdf-schema#isDefinedBy> <http://purl.org/linkingyou/> ;
+	<http://www.w3.org/2000/01/rdf-schema#domain> foaf:Organization ;
+	<http://www.w3.org/2000/01/rdf-schema#range> foaf:Document ;
+	dcterms:subject lyou:education ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "undergraduate admissions page"@en .
+
+lyou:undergraduate-courses a owl:ObjectProperty , <http://www.w3.org/1999/02/22-rdf-syntax-ns#Property> ;
+	<http://www.w3.org/2000/01/rdf-schema#isDefinedBy> <http://purl.org/linkingyou/> ;
+	<http://www.w3.org/2000/01/rdf-schema#domain> foaf:Organization ;
+	<http://www.w3.org/2000/01/rdf-schema#range> foaf:Document ;
+	dcterms:subject lyou:education ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "undergraduate courses page"@en .
+
+lyou:undergraduate-courses-entry-requirements a owl:ObjectProperty , <http://www.w3.org/1999/02/22-rdf-syntax-ns#Property> ;
+	<http://www.w3.org/2000/01/rdf-schema#isDefinedBy> <http://purl.org/linkingyou/> ;
+	<http://www.w3.org/2000/01/rdf-schema#domain> foaf:Organization ;
+	<http://www.w3.org/2000/01/rdf-schema#range> foaf:Document ;
+	dcterms:subject lyou:education ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "undergraduate courses entry requirements page"@en .
+
+lyou:undergraduate-prospectus a owl:ObjectProperty , <http://www.w3.org/1999/02/22-rdf-syntax-ns#Property> ;
+	<http://www.w3.org/2000/01/rdf-schema#isDefinedBy> <http://purl.org/linkingyou/> ;
+	<http://www.w3.org/2000/01/rdf-schema#domain> foaf:Organization ;
+	<http://www.w3.org/2000/01/rdf-schema#range> foaf:Document ;
+	dcterms:subject lyou:education ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "undergraduate prospectus page"@en ;
+	<http://www.w3.org/2000/01/rdf-schema#comment> "Link a university, or other degree awarding organisation, to its undergraduate prospectus. This may be an HTML or PDF document."@en .
+
+lyou:postgraduate a owl:ObjectProperty , <http://www.w3.org/1999/02/22-rdf-syntax-ns#Property> ;
+	<http://www.w3.org/2000/01/rdf-schema#isDefinedBy> <http://purl.org/linkingyou/> ;
+	<http://www.w3.org/2000/01/rdf-schema#domain> foaf:Organization ;
+	<http://www.w3.org/2000/01/rdf-schema#range> foaf:Document ;
+	dcterms:subject lyou:education ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "general postgraduate admissions page"@en ;
+	<http://www.w3.org/2000/01/rdf-schema#comment> "covering research and taught postgraduates"@en .
+
+lyou:postgraduate-taught a owl:ObjectProperty , <http://www.w3.org/1999/02/22-rdf-syntax-ns#Property> ;
+	<http://www.w3.org/2000/01/rdf-schema#isDefinedBy> <http://purl.org/linkingyou/> ;
+	<http://www.w3.org/2000/01/rdf-schema#domain> foaf:Organization ;
+	<http://www.w3.org/2000/01/rdf-schema#range> foaf:Document ;
+	dcterms:subject lyou:education ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "taught postgraduate admissions page"@en .
+
+lyou:postgraduate-taught-courses a owl:ObjectProperty , <http://www.w3.org/1999/02/22-rdf-syntax-ns#Property> ;
+	<http://www.w3.org/2000/01/rdf-schema#isDefinedBy> <http://purl.org/linkingyou/> ;
+	<http://www.w3.org/2000/01/rdf-schema#domain> foaf:Organization ;
+	<http://www.w3.org/2000/01/rdf-schema#range> foaf:Document ;
+	dcterms:subject lyou:education ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "taught postgraduate courses page"@en .
+
+lyou:postgraduate-taught-courses-entry-requirements a owl:ObjectProperty , <http://www.w3.org/1999/02/22-rdf-syntax-ns#Property> ;
+	<http://www.w3.org/2000/01/rdf-schema#isDefinedBy> <http://purl.org/linkingyou/> ;
+	<http://www.w3.org/2000/01/rdf-schema#domain> foaf:Organization ;
+	<http://www.w3.org/2000/01/rdf-schema#range> foaf:Document ;
+	dcterms:subject lyou:education ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "taught postgraduate entry requirements page"@en .
+
+lyou:postgraduate-taught-prospectus a owl:ObjectProperty , <http://www.w3.org/1999/02/22-rdf-syntax-ns#Property> ;
+	<http://www.w3.org/2000/01/rdf-schema#isDefinedBy> <http://purl.org/linkingyou/> ;
+	<http://www.w3.org/2000/01/rdf-schema#domain> foaf:Organization ;
+	<http://www.w3.org/2000/01/rdf-schema#range> foaf:Document ;
+	dcterms:subject lyou:education ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "taught postgraduate prospectus page"@en ;
+	<http://www.w3.org/2000/01/rdf-schema#comment> "Link a university, or other degree awarding organisation, to its taught postgraduate prospectus. This may be an HTML or PDF document."@en .
+
+lyou:postgraduate-research a owl:ObjectProperty , <http://www.w3.org/1999/02/22-rdf-syntax-ns#Property> ;
+	<http://www.w3.org/2000/01/rdf-schema#isDefinedBy> <http://purl.org/linkingyou/> ;
+	<http://www.w3.org/2000/01/rdf-schema#domain> foaf:Organization ;
+	<http://www.w3.org/2000/01/rdf-schema#range> foaf:Document ;
+	dcterms:subject lyou:education ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "research postgraduate admissions page"@en .
+
+lyou:postgraduate-research-courses a owl:ObjectProperty , <http://www.w3.org/1999/02/22-rdf-syntax-ns#Property> ;
+	<http://www.w3.org/2000/01/rdf-schema#isDefinedBy> <http://purl.org/linkingyou/> ;
+	<http://www.w3.org/2000/01/rdf-schema#domain> foaf:Organization ;
+	<http://www.w3.org/2000/01/rdf-schema#range> foaf:Document ;
+	dcterms:subject lyou:education ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "research postgraduate courses (or programmes) page"@en .
+
+lyou:postgraduate-research-courses-entry-requirements a owl:ObjectProperty , <http://www.w3.org/1999/02/22-rdf-syntax-ns#Property> ;
+	<http://www.w3.org/2000/01/rdf-schema#isDefinedBy> <http://purl.org/linkingyou/> ;
+	<http://www.w3.org/2000/01/rdf-schema#domain> foaf:Organization ;
+	<http://www.w3.org/2000/01/rdf-schema#range> foaf:Document ;
+	dcterms:subject lyou:education ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "research postgraduate entry requirements page"@en .
+
+lyou:postgraduate-research-prospectus a owl:ObjectProperty , <http://www.w3.org/1999/02/22-rdf-syntax-ns#Property> ;
+	<http://www.w3.org/2000/01/rdf-schema#isDefinedBy> <http://purl.org/linkingyou/> ;
+	<http://www.w3.org/2000/01/rdf-schema#domain> foaf:Organization ;
+	<http://www.w3.org/2000/01/rdf-schema#range> foaf:Document ;
+	dcterms:subject lyou:education ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "research postgraduate prospectus page"@en ;
+	<http://www.w3.org/2000/01/rdf-schema#comment> "Link a university, or other degree awarding organisation, to its research postgraduate prospectus. This may be an HTML or PDF document."@en .
+
+lyou:foundation a owl:ObjectProperty , <http://www.w3.org/1999/02/22-rdf-syntax-ns#Property> ;
+	<http://www.w3.org/2000/01/rdf-schema#isDefinedBy> <http://purl.org/linkingyou/> ;
+	<http://www.w3.org/2000/01/rdf-schema#domain> foaf:Organization ;
+	<http://www.w3.org/2000/01/rdf-schema#range> foaf:Document ;
+	dcterms:subject lyou:education ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "foundation admissions page"@en .
+
+lyou:foundation-courses a owl:ObjectProperty , <http://www.w3.org/1999/02/22-rdf-syntax-ns#Property> ;
+	<http://www.w3.org/2000/01/rdf-schema#isDefinedBy> <http://purl.org/linkingyou/> ;
+	<http://www.w3.org/2000/01/rdf-schema#domain> foaf:Organization ;
+	<http://www.w3.org/2000/01/rdf-schema#range> foaf:Document ;
+	dcterms:subject lyou:education ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "foundation courses page"@en .
+
+lyou:foundation-courses-entry-requirements a owl:ObjectProperty , <http://www.w3.org/1999/02/22-rdf-syntax-ns#Property> ;
+	<http://www.w3.org/2000/01/rdf-schema#isDefinedBy> <http://purl.org/linkingyou/> ;
+	<http://www.w3.org/2000/01/rdf-schema#domain> foaf:Organization ;
+	<http://www.w3.org/2000/01/rdf-schema#range> foaf:Document ;
+	dcterms:subject lyou:education ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "foundation courses entry requirements page"@en .
+
+lyou:foundation-prospectus a owl:ObjectProperty , <http://www.w3.org/1999/02/22-rdf-syntax-ns#Property> ;
+	<http://www.w3.org/2000/01/rdf-schema#isDefinedBy> <http://purl.org/linkingyou/> ;
+	<http://www.w3.org/2000/01/rdf-schema#domain> foaf:Organization ;
+	<http://www.w3.org/2000/01/rdf-schema#range> foaf:Document ;
+	dcterms:subject lyou:education ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "foundation prospectus page"@en ;
+	<http://www.w3.org/2000/01/rdf-schema#comment> "Link a university, or other degree awarding organisation, to its foundation prospectus. This may be an HTML or PDF document."@en .
+
+lyou:opendays a owl:ObjectProperty , <http://www.w3.org/1999/02/22-rdf-syntax-ns#Property> ;
+	<http://www.w3.org/2000/01/rdf-schema#isDefinedBy> <http://purl.org/linkingyou/> ;
+	<http://www.w3.org/2000/01/rdf-schema#domain> foaf:Organization ;
+	<http://www.w3.org/2000/01/rdf-schema#range> foaf:Document ;
+	dcterms:subject lyou:education ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "open days page"@en .
+
+lyou:research a owl:ObjectProperty , <http://www.w3.org/1999/02/22-rdf-syntax-ns#Property> ;
+	<http://www.w3.org/2000/01/rdf-schema#isDefinedBy> <http://purl.org/linkingyou/> ;
+	<http://www.w3.org/2000/01/rdf-schema#domain> foaf:Organization ;
+	<http://www.w3.org/2000/01/rdf-schema#range> foaf:Document ;
+	dcterms:subject lyou:academia ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "research page"@en .
+
+lyou:legal-ethics a owl:ObjectProperty , <http://www.w3.org/1999/02/22-rdf-syntax-ns#Property> ;
+	dcterms:subject lyou:academia ;
+	<http://www.w3.org/2000/01/rdf-schema#isDefinedBy> <http://purl.org/linkingyou/> ;
+	<http://www.w3.org/2000/01/rdf-schema#domain> foaf:Organization ;
+	<http://www.w3.org/2000/01/rdf-schema#range> foaf:Document ;
+	<http://www.w3.org/2000/01/rdf-schema#comment> "Many research organisations have a public ethics policy."@en ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "ethics policy"@en .
+
+lyou:conferences a owl:ObjectProperty , <http://www.w3.org/1999/02/22-rdf-syntax-ns#Property> ;
+	<http://www.w3.org/2000/01/rdf-schema#isDefinedBy> <http://purl.org/linkingyou/> ;
+	<http://www.w3.org/2000/01/rdf-schema#domain> foaf:Organization ;
+	<http://www.w3.org/2000/01/rdf-schema#range> foaf:Document ;
+	dcterms:subject lyou:academia ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "conferences page"@en .
+
+lyou:public-lectures a owl:ObjectProperty , <http://www.w3.org/1999/02/22-rdf-syntax-ns#Property> ;
+	<http://www.w3.org/2000/01/rdf-schema#isDefinedBy> <http://purl.org/linkingyou/> ;
+	<http://www.w3.org/2000/01/rdf-schema#domain> foaf:Organization ;
+	<http://www.w3.org/2000/01/rdf-schema#range> foaf:Document ;
+	dcterms:subject lyou:academia ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "public lectures page"@en .
+
+lyou:events-graduation a owl:ObjectProperty , <http://www.w3.org/1999/02/22-rdf-syntax-ns#Property> ;
+	<http://www.w3.org/2000/01/rdf-schema#isDefinedBy> <http://purl.org/linkingyou/> ;
+	<http://www.w3.org/2000/01/rdf-schema#domain> foaf:Organization ;
+	<http://www.w3.org/2000/01/rdf-schema#range> foaf:Document ;
+	dcterms:subject lyou:education ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "graduation event page"@en .
+
+lyou:business-incubation a owl:ObjectProperty , <http://www.w3.org/1999/02/22-rdf-syntax-ns#Property> ;
+	<http://www.w3.org/2000/01/rdf-schema#isDefinedBy> <http://purl.org/linkingyou/> ;
+	<http://www.w3.org/2000/01/rdf-schema#domain> foaf:Organization ;
+	<http://www.w3.org/2000/01/rdf-schema#range> foaf:Document ;
+	dcterms:subject lyou:academia ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "business incubation page"@en .
+
+lyou:business-ktp a owl:ObjectProperty , <http://www.w3.org/1999/02/22-rdf-syntax-ns#Property> ;
+	<http://www.w3.org/2000/01/rdf-schema#isDefinedBy> <http://purl.org/linkingyou/> ;
+	<http://www.w3.org/2000/01/rdf-schema#domain> foaf:Organization ;
+	<http://www.w3.org/2000/01/rdf-schema#range> foaf:Document ;
+	dcterms:subject lyou:academia ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "business knowlege transfer partnerships page"@en .
+
+lyou:academic-depts a owl:ObjectProperty , <http://www.w3.org/1999/02/22-rdf-syntax-ns#Property> ;
+	<http://www.w3.org/2000/01/rdf-schema#isDefinedBy> <http://purl.org/linkingyou/> ;
+	<http://www.w3.org/2000/01/rdf-schema#domain> foaf:Organization ;
+	<http://www.w3.org/2000/01/rdf-schema#range> foaf:Document ;
+	dcterms:subject lyou:academia ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "academic departments page"@en .
+
+lyou:support-depts a owl:ObjectProperty , <http://www.w3.org/1999/02/22-rdf-syntax-ns#Property> ;
+	<http://www.w3.org/2000/01/rdf-schema#isDefinedBy> <http://purl.org/linkingyou/> ;
+	<http://www.w3.org/2000/01/rdf-schema#domain> foaf:Organization ;
+	<http://www.w3.org/2000/01/rdf-schema#range> foaf:Document ;
+	dcterms:subject lyou:academia ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "support departments page"@en .
+
+lyou:about-parents a owl:ObjectProperty , <http://www.w3.org/1999/02/22-rdf-syntax-ns#Property> ;
+	<http://www.w3.org/2000/01/rdf-schema#isDefinedBy> <http://purl.org/linkingyou/> ;
+	<http://www.w3.org/2000/01/rdf-schema#domain> foaf:Organization ;
+	<http://www.w3.org/2000/01/rdf-schema#range> foaf:Document ;
+	dcterms:subject lyou:education ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "information for parents page"@en .
+
+lyou:international-students a owl:ObjectProperty , <http://www.w3.org/1999/02/22-rdf-syntax-ns#Property> ;
+	<http://www.w3.org/2000/01/rdf-schema#isDefinedBy> <http://purl.org/linkingyou/> ;
+	<http://www.w3.org/2000/01/rdf-schema#domain> foaf:Organization ;
+	<http://www.w3.org/2000/01/rdf-schema#range> foaf:Document ;
+	dcterms:subject lyou:education ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "information for international students page"@en .
+
+lyou:conference-facilities a owl:ObjectProperty , <http://www.w3.org/1999/02/22-rdf-syntax-ns#Property> ;
+	<http://www.w3.org/2000/01/rdf-schema#isDefinedBy> <http://purl.org/linkingyou/> ;
+	<http://www.w3.org/2000/01/rdf-schema#domain> foaf:Organization ;
+	<http://www.w3.org/2000/01/rdf-schema#range> foaf:Document ;
+	dcterms:subject lyou:academia ;
+	<http://www.w3.org/2000/01/rdf-schema#label> "conference facilities page"@en .

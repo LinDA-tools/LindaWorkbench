@@ -5,7 +5,7 @@ rdflib-sqlite
 #pyparsing<=1.5.7
 django==1.7
 Pillow
-django-allauth
+django-allauth==0.20.0
 django-view-cache-utils
 django-imagekit
 django-haystack

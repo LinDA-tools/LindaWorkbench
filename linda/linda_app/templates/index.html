@@ -7,17 +7,10 @@
 {% block css %}
     <link rel="stylesheet" href="/static/css/jquery.contextMenu.css"/>
     <link rel="stylesheet" href="/static/css/jquery.modal.css" />
-    {% if installation_pending %}
-        <link rel="stylesheet" href="/static/installer/style.css"/>
-    {% endif %}
 {% endblock %}
 
 {% block content %}
 	<div class="main">
-
-        {% if installation_pending %}
-            {% include "installer/installer.html" %}
-        {% endif %}
 
         <div class="welcome">
             <!--img class="welcome-video" src="/static/images/video-placeholder.jpg" /-->
@@ -98,12 +91,4 @@
             {% include "queries/pretty-list.html" %}
         {% endwith %}
     </script>
-
-
-    {% if installation_pending %}
-        <script>
-            var csrf_token = '{{csrf_token}}';
-        </script>
-        <script src="/static/installer/scripts.js"></script>
-    {% endif %}
 {% endblock %}

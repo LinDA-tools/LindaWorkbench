@@ -1,0 +1,591 @@
+[2015-12-07 18:43:34,746][WARN ][bootstrap                ] jvm uses the client vm, make sure to run `java` with the server vm for best performance by adding `-server` to the command line
+[2015-12-07 18:43:35,773][INFO ][node                     ] [Vixen] version[1.5.0], pid[9436], build[5448160/2015-03-23T14:30:58Z]
+[2015-12-07 18:43:35,773][INFO ][node                     ] [Vixen] initializing ...
+[2015-12-07 18:43:36,107][INFO ][plugins                  ] [Vixen] loaded [], sites []
+OpenJDK Client VM warning: You have loaded library /elasticsearch/lib/sigar/libsigar-x86-linux.so which might have disabled stack guard. The VM will try to fix the stack guard now.
+It's highly recommended that you fix the library with 'execstack -c <libfile>', or link it with '-z noexecstack'.
+[2015-12-07 18:44:04,823][INFO ][node                     ] [Vixen] initialized
+[2015-12-07 18:44:04,862][INFO ][node                     ] [Vixen] starting ...
+[2015-12-07 18:44:05,678][INFO ][transport                ] [Vixen] bound_address {inet[/0:0:0:0:0:0:0:0:9300]}, publish_address {inet[/147.102.6.78:9300]}
+[2015-12-07 18:44:06,284][INFO ][discovery                ] [Vixen] elasticsearch/NRUOJ9K4RUy0-phGonK_rQ
+[2015-12-07 18:44:36,285][WARN ][discovery                ] [Vixen] waited for 30s and no initial state was set by the discovery
+[2015-12-07 18:44:36,356][INFO ][http                     ] [Vixen] bound_address {inet[/0:0:0:0:0:0:0:0:9200]}, publish_address {inet[/147.102.6.78:9200]}
+[2015-12-07 18:44:36,357][INFO ][node                     ] [Vixen] started
+[2015-12-07 18:44:40,415][WARN ][discovery.zen            ] [Vixen] failed to connect to master [[Steel Spider][L8qfHdnEQ5m_M34_bghP4w][peto-stol][inet[/158.197.31.98:9300]]], retrying...
+org.elasticsearch.transport.ConnectTransportException: [Steel Spider][inet[/158.197.31.98:9300]] connect_timeout[30s]
+	at org.elasticsearch.transport.netty.NettyTransport.connectToChannels(NettyTransport.java:797)
+	at org.elasticsearch.transport.netty.NettyTransport.connectToNode(NettyTransport.java:731)
+	at org.elasticsearch.transport.netty.NettyTransport.connectToNode(NettyTransport.java:704)
+	at org.elasticsearch.transport.TransportService.connectToNode(TransportService.java:216)
+	at org.elasticsearch.discovery.zen.ZenDiscovery.joinElectedMaster(ZenDiscovery.java:464)
+	at org.elasticsearch.discovery.zen.ZenDiscovery.innerJoinCluster(ZenDiscovery.java:416)
+	at org.elasticsearch.discovery.zen.ZenDiscovery.access$6100(ZenDiscovery.java:85)
+	at org.elasticsearch.discovery.zen.ZenDiscovery$JoinThreadControl$1.run(ZenDiscovery.java:1373)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1145)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:615)
+	at java.lang.Thread.run(Thread.java:745)
+Caused by: org.elasticsearch.common.netty.channel.ConnectTimeoutException: connection timed out: /158.197.31.98:9300
+	at org.elasticsearch.common.netty.channel.socket.nio.NioClientBoss.processConnectTimeout(NioClientBoss.java:139)
+	at org.elasticsearch.common.netty.channel.socket.nio.NioClientBoss.process(NioClientBoss.java:83)
+	at org.elasticsearch.common.netty.channel.socket.nio.AbstractNioSelector.run(AbstractNioSelector.java:337)
+	at org.elasticsearch.common.netty.channel.socket.nio.NioClientBoss.run(NioClientBoss.java:42)
+	at org.elasticsearch.common.netty.util.ThreadRenamingRunnable.run(ThreadRenamingRunnable.java:108)
+	at org.elasticsearch.common.netty.util.internal.DeadLockProofWorker$1.run(DeadLockProofWorker.java:42)
+	... 3 more
+[2015-12-07 18:44:43,953][INFO ][cluster.service          ] [Vixen] new_master [Vixen][NRUOJ9K4RUy0-phGonK_rQ][linda-VirtualBox][inet[/147.102.6.78:9300]], reason: zen-disco-join (elected_as_master)
+[2015-12-07 18:44:44,115][INFO ][cluster.service          ] [Vixen] added {[Caiman][tvmU2UrcRPqdx2Eecgwq1Q][linda-VirtualBox][inet[/147.102.6.78:9301]],}, reason: zen-disco-receive(join from node[[Caiman][tvmU2UrcRPqdx2Eecgwq1Q][linda-VirtualBox][inet[/147.102.6.78:9301]]])
+[2015-12-07 18:44:45,254][INFO ][gateway                  ] [Vixen] recovered [0] indices into cluster_state
+[2015-12-08 07:25:31,347][DEBUG][action.admin.cluster.node.stats] [Vixen] failed to execute on node [tvmU2UrcRPqdx2Eecgwq1Q]
+org.elasticsearch.transport.ReceiveTimeoutTransportException: [Caiman][inet[/147.102.6.78:9301]][cluster:monitor/nodes/stats[n]] request_id [17441] timed out after [15001ms]
+	at org.elasticsearch.transport.TransportService$TimeoutHandler.run(TransportService.java:531)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1145)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:615)
+	at java.lang.Thread.run(Thread.java:745)
+[2015-12-08 07:25:58,705][DEBUG][action.admin.cluster.node.stats] [Vixen] failed to execute on node [tvmU2UrcRPqdx2Eecgwq1Q]
+org.elasticsearch.transport.ReceiveTimeoutTransportException: [Caiman][inet[/147.102.6.78:9301]][cluster:monitor/nodes/stats[n]] request_id [17443] timed out after [15000ms]
+	at org.elasticsearch.transport.TransportService$TimeoutHandler.run(TransportService.java:531)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1145)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:615)
+	at java.lang.Thread.run(Thread.java:745)
+[2015-12-08 07:26:28,706][DEBUG][action.admin.cluster.node.stats] [Vixen] failed to execute on node [tvmU2UrcRPqdx2Eecgwq1Q]
+org.elasticsearch.transport.ReceiveTimeoutTransportException: [Caiman][inet[/147.102.6.78:9301]][cluster:monitor/nodes/stats[n]] request_id [17445] timed out after [15001ms]
+	at org.elasticsearch.transport.TransportService$TimeoutHandler.run(TransportService.java:531)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1145)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:615)
+	at java.lang.Thread.run(Thread.java:745)
+[2015-12-08 07:26:38,331][INFO ][cluster.service          ] [Vixen] removed {[Caiman][tvmU2UrcRPqdx2Eecgwq1Q][linda-VirtualBox][inet[/147.102.6.78:9301]],}, reason: zen-disco-node_failed([Caiman][tvmU2UrcRPqdx2Eecgwq1Q][linda-VirtualBox][inet[/147.102.6.78:9301]]), reason failed to ping, tried [3] times, each with maximum [30s] timeout
+[2015-12-08 10:34:41,196][WARN ][discovery.zen.ping.multicast] [Vixen] failed to connect to requesting node [Ebon Seeker][NU36rQiERRWqp3lF_U1PEA][dipap-PC][inet[/147.102.6.60:9300]]
+org.elasticsearch.transport.ConnectTransportException: [Ebon Seeker][inet[/147.102.6.60:9300]] connect_timeout[30s]
+	at org.elasticsearch.transport.netty.NettyTransport.connectToChannels(NettyTransport.java:797)
+	at org.elasticsearch.transport.netty.NettyTransport.connectToNode(NettyTransport.java:731)
+	at org.elasticsearch.transport.netty.NettyTransport.connectToNode(NettyTransport.java:704)
+	at org.elasticsearch.transport.TransportService.connectToNode(TransportService.java:216)
+	at org.elasticsearch.discovery.zen.ping.multicast.MulticastZenPing$Receiver$1.run(MulticastZenPing.java:542)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1145)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:615)
+	at java.lang.Thread.run(Thread.java:745)
+Caused by: org.elasticsearch.common.netty.channel.ConnectTimeoutException: connection timed out: /147.102.6.60:9300
+	at org.elasticsearch.common.netty.channel.socket.nio.NioClientBoss.processConnectTimeout(NioClientBoss.java:139)
+	at org.elasticsearch.common.netty.channel.socket.nio.NioClientBoss.process(NioClientBoss.java:83)
+	at org.elasticsearch.common.netty.channel.socket.nio.AbstractNioSelector.run(AbstractNioSelector.java:337)
+	at org.elasticsearch.common.netty.channel.socket.nio.NioClientBoss.run(NioClientBoss.java:42)
+	at org.elasticsearch.common.netty.util.ThreadRenamingRunnable.run(ThreadRenamingRunnable.java:108)
+	at org.elasticsearch.common.netty.util.internal.DeadLockProofWorker$1.run(DeadLockProofWorker.java:42)
+	... 3 more
+[2015-12-08 10:35:11,381][WARN ][discovery.zen.ping.multicast] [Vixen] failed to connect to requesting node [Ebon Seeker][NU36rQiERRWqp3lF_U1PEA][dipap-PC][inet[/147.102.6.60:9300]]
+org.elasticsearch.transport.ConnectTransportException: [Ebon Seeker][inet[/147.102.6.60:9300]] connect_timeout[30s]
+	at org.elasticsearch.transport.netty.NettyTransport.connectToChannels(NettyTransport.java:797)
+	at org.elasticsearch.transport.netty.NettyTransport.connectToNode(NettyTransport.java:731)
+	at org.elasticsearch.transport.netty.NettyTransport.connectToNode(NettyTransport.java:704)
+	at org.elasticsearch.transport.TransportService.connectToNode(TransportService.java:216)
+	at org.elasticsearch.discovery.zen.ping.multicast.MulticastZenPing$Receiver$1.run(MulticastZenPing.java:542)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1145)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:615)
+	at java.lang.Thread.run(Thread.java:745)
+Caused by: org.elasticsearch.common.netty.channel.ConnectTimeoutException: connection timed out: /147.102.6.60:9300
+	at org.elasticsearch.common.netty.channel.socket.nio.NioClientBoss.processConnectTimeout(NioClientBoss.java:139)
+	at org.elasticsearch.common.netty.channel.socket.nio.NioClientBoss.process(NioClientBoss.java:83)
+	at org.elasticsearch.common.netty.channel.socket.nio.AbstractNioSelector.run(AbstractNioSelector.java:337)
+	at org.elasticsearch.common.netty.channel.socket.nio.NioClientBoss.run(NioClientBoss.java:42)
+	at org.elasticsearch.common.netty.util.ThreadRenamingRunnable.run(ThreadRenamingRunnable.java:108)
+	at org.elasticsearch.common.netty.util.internal.DeadLockProofWorker$1.run(DeadLockProofWorker.java:42)
+	... 3 more
+[2015-12-08 10:35:41,542][WARN ][discovery.zen.ping.multicast] [Vixen] failed to connect to requesting node [Ebon Seeker][NU36rQiERRWqp3lF_U1PEA][dipap-PC][inet[/147.102.6.60:9300]]
+org.elasticsearch.transport.ConnectTransportException: [Ebon Seeker][inet[/147.102.6.60:9300]] connect_timeout[30s]
+	at org.elasticsearch.transport.netty.NettyTransport.connectToChannels(NettyTransport.java:797)
+	at org.elasticsearch.transport.netty.NettyTransport.connectToNode(NettyTransport.java:731)
+	at org.elasticsearch.transport.netty.NettyTransport.connectToNode(NettyTransport.java:704)
+	at org.elasticsearch.transport.TransportService.connectToNode(TransportService.java:216)
+	at org.elasticsearch.discovery.zen.ping.multicast.MulticastZenPing$Receiver$1.run(MulticastZenPing.java:542)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1145)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:615)
+	at java.lang.Thread.run(Thread.java:745)
+Caused by: org.elasticsearch.common.netty.channel.ConnectTimeoutException: connection timed out: /147.102.6.60:9300
+	at org.elasticsearch.common.netty.channel.socket.nio.NioClientBoss.processConnectTimeout(NioClientBoss.java:139)
+	at org.elasticsearch.common.netty.channel.socket.nio.NioClientBoss.process(NioClientBoss.java:83)
+	at org.elasticsearch.common.netty.channel.socket.nio.AbstractNioSelector.run(AbstractNioSelector.java:337)
+	at org.elasticsearch.common.netty.channel.socket.nio.NioClientBoss.run(NioClientBoss.java:42)
+	at org.elasticsearch.common.netty.util.ThreadRenamingRunnable.run(ThreadRenamingRunnable.java:108)
+	at org.elasticsearch.common.netty.util.internal.DeadLockProofWorker$1.run(DeadLockProofWorker.java:42)
+	... 3 more
+[2015-12-08 11:30:11,304][WARN ][cluster.service          ] [Vixen] failed to reconnect to node [Vixen][NRUOJ9K4RUy0-phGonK_rQ][linda-VirtualBox][inet[/147.102.6.78:9300]]
+org.elasticsearch.transport.ConnectTransportException: [Vixen][inet[/147.102.6.78:9300]] connect_timeout[30s]
+	at org.elasticsearch.transport.netty.NettyTransport.connectToChannels(NettyTransport.java:797)
+	at org.elasticsearch.transport.netty.NettyTransport.connectToNode(NettyTransport.java:731)
+	at org.elasticsearch.transport.netty.NettyTransport.connectToNode(NettyTransport.java:704)
+	at org.elasticsearch.transport.TransportService.connectToNode(TransportService.java:216)
+	at org.elasticsearch.cluster.service.InternalClusterService$ReconnectToNodes.run(InternalClusterService.java:562)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1145)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:615)
+	at java.lang.Thread.run(Thread.java:745)
+Caused by: org.elasticsearch.common.netty.channel.ConnectTimeoutException: connection timed out: /147.102.6.78:9300
+	at org.elasticsearch.common.netty.channel.socket.nio.NioClientBoss.processConnectTimeout(NioClientBoss.java:139)
+	at org.elasticsearch.common.netty.channel.socket.nio.NioClientBoss.process(NioClientBoss.java:83)
+	at org.elasticsearch.common.netty.channel.socket.nio.AbstractNioSelector.run(AbstractNioSelector.java:337)
+	at org.elasticsearch.common.netty.channel.socket.nio.NioClientBoss.run(NioClientBoss.java:42)
+	at org.elasticsearch.common.netty.util.ThreadRenamingRunnable.run(ThreadRenamingRunnable.java:108)
+	at org.elasticsearch.common.netty.util.internal.DeadLockProofWorker$1.run(DeadLockProofWorker.java:42)
+	... 3 more
+[2015-12-08 11:34:12,921][WARN ][cluster.service          ] [Vixen] failed to reconnect to node [Vixen][NRUOJ9K4RUy0-phGonK_rQ][linda-VirtualBox][inet[/147.102.6.78:9300]]
+org.elasticsearch.transport.ConnectTransportException: [Vixen][inet[/147.102.6.78:9300]] connect_timeout[30s]
+	at org.elasticsearch.transport.netty.NettyTransport.connectToChannels(NettyTransport.java:797)
+	at org.elasticsearch.transport.netty.NettyTransport.connectToNode(NettyTransport.java:731)
+	at org.elasticsearch.transport.netty.NettyTransport.connectToNode(NettyTransport.java:704)
+	at org.elasticsearch.transport.TransportService.connectToNode(TransportService.java:216)
+	at org.elasticsearch.cluster.service.InternalClusterService$ReconnectToNodes.run(InternalClusterService.java:562)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1145)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:615)
+	at java.lang.Thread.run(Thread.java:745)
+Caused by: org.elasticsearch.common.netty.channel.ConnectTimeoutException: connection timed out: /147.102.6.78:9300
+	at org.elasticsearch.common.netty.channel.socket.nio.NioClientBoss.processConnectTimeout(NioClientBoss.java:139)
+	at org.elasticsearch.common.netty.channel.socket.nio.NioClientBoss.process(NioClientBoss.java:83)
+	at org.elasticsearch.common.netty.channel.socket.nio.AbstractNioSelector.run(AbstractNioSelector.java:337)
+	at org.elasticsearch.common.netty.channel.socket.nio.NioClientBoss.run(NioClientBoss.java:42)
+	at org.elasticsearch.common.netty.util.ThreadRenamingRunnable.run(ThreadRenamingRunnable.java:108)
+	at org.elasticsearch.common.netty.util.internal.DeadLockProofWorker$1.run(DeadLockProofWorker.java:42)
+	... 3 more
+[2015-12-08 11:38:14,415][WARN ][cluster.service          ] [Vixen] failed to reconnect to node [Vixen][NRUOJ9K4RUy0-phGonK_rQ][linda-VirtualBox][inet[/147.102.6.78:9300]]
+org.elasticsearch.transport.ConnectTransportException: [Vixen][inet[/147.102.6.78:9300]] connect_timeout[30s]
+	at org.elasticsearch.transport.netty.NettyTransport.connectToChannels(NettyTransport.java:797)
+	at org.elasticsearch.transport.netty.NettyTransport.connectToNode(NettyTransport.java:731)
+	at org.elasticsearch.transport.netty.NettyTransport.connectToNode(NettyTransport.java:704)
+	at org.elasticsearch.transport.TransportService.connectToNode(TransportService.java:216)
+	at org.elasticsearch.cluster.service.InternalClusterService$ReconnectToNodes.run(InternalClusterService.java:562)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1145)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:615)
+	at java.lang.Thread.run(Thread.java:745)
+Caused by: org.elasticsearch.common.netty.channel.ConnectTimeoutException: connection timed out: /147.102.6.78:9300
+	at org.elasticsearch.common.netty.channel.socket.nio.NioClientBoss.processConnectTimeout(NioClientBoss.java:139)
+	at org.elasticsearch.common.netty.channel.socket.nio.NioClientBoss.process(NioClientBoss.java:83)
+	at org.elasticsearch.common.netty.channel.socket.nio.AbstractNioSelector.run(AbstractNioSelector.java:337)
+	at org.elasticsearch.common.netty.channel.socket.nio.NioClientBoss.run(NioClientBoss.java:42)
+	at org.elasticsearch.common.netty.util.ThreadRenamingRunnable.run(ThreadRenamingRunnable.java:108)
+	at org.elasticsearch.common.netty.util.internal.DeadLockProofWorker$1.run(DeadLockProofWorker.java:42)
+	... 3 more
+[2015-12-08 11:42:15,376][WARN ][cluster.service          ] [Vixen] failed to reconnect to node [Vixen][NRUOJ9K4RUy0-phGonK_rQ][linda-VirtualBox][inet[/147.102.6.78:9300]]
+org.elasticsearch.transport.ConnectTransportException: [Vixen][inet[/147.102.6.78:9300]] connect_timeout[30s]
+	at org.elasticsearch.transport.netty.NettyTransport.connectToChannels(NettyTransport.java:797)
+	at org.elasticsearch.transport.netty.NettyTransport.connectToNode(NettyTransport.java:731)
+	at org.elasticsearch.transport.netty.NettyTransport.connectToNode(NettyTransport.java:704)
+	at org.elasticsearch.transport.TransportService.connectToNode(TransportService.java:216)
+	at org.elasticsearch.cluster.service.InternalClusterService$ReconnectToNodes.run(InternalClusterService.java:562)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1145)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:615)
+	at java.lang.Thread.run(Thread.java:745)
+Caused by: org.elasticsearch.common.netty.channel.ConnectTimeoutException: connection timed out: /147.102.6.78:9300
+	at org.elasticsearch.common.netty.channel.socket.nio.NioClientBoss.processConnectTimeout(NioClientBoss.java:139)
+	at org.elasticsearch.common.netty.channel.socket.nio.NioClientBoss.process(NioClientBoss.java:83)
+	at org.elasticsearch.common.netty.channel.socket.nio.AbstractNioSelector.run(AbstractNioSelector.java:337)
+	at org.elasticsearch.common.netty.channel.socket.nio.NioClientBoss.run(NioClientBoss.java:42)
+	at org.elasticsearch.common.netty.util.ThreadRenamingRunnable.run(ThreadRenamingRunnable.java:108)
+	at org.elasticsearch.common.netty.util.internal.DeadLockProofWorker$1.run(DeadLockProofWorker.java:42)
+	... 3 more
+[2015-12-08 11:46:16,064][WARN ][cluster.service          ] [Vixen] failed to reconnect to node [Vixen][NRUOJ9K4RUy0-phGonK_rQ][linda-VirtualBox][inet[/147.102.6.78:9300]]
+org.elasticsearch.transport.ConnectTransportException: [Vixen][inet[/147.102.6.78:9300]] connect_timeout[30s]
+	at org.elasticsearch.transport.netty.NettyTransport.connectToChannels(NettyTransport.java:797)
+	at org.elasticsearch.transport.netty.NettyTransport.connectToNode(NettyTransport.java:731)
+	at org.elasticsearch.transport.netty.NettyTransport.connectToNode(NettyTransport.java:704)
+	at org.elasticsearch.transport.TransportService.connectToNode(TransportService.java:216)
+	at org.elasticsearch.cluster.service.InternalClusterService$ReconnectToNodes.run(InternalClusterService.java:562)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1145)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:615)
+	at java.lang.Thread.run(Thread.java:745)
+Caused by: org.elasticsearch.common.netty.channel.ConnectTimeoutException: connection timed out: /147.102.6.78:9300
+	at org.elasticsearch.common.netty.channel.socket.nio.NioClientBoss.processConnectTimeout(NioClientBoss.java:139)
+	at org.elasticsearch.common.netty.channel.socket.nio.NioClientBoss.process(NioClientBoss.java:83)
+	at org.elasticsearch.common.netty.channel.socket.nio.AbstractNioSelector.run(AbstractNioSelector.java:337)
+	at org.elasticsearch.common.netty.channel.socket.nio.NioClientBoss.run(NioClientBoss.java:42)
+	at org.elasticsearch.common.netty.util.ThreadRenamingRunnable.run(ThreadRenamingRunnable.java:108)
+	at org.elasticsearch.common.netty.util.internal.DeadLockProofWorker$1.run(DeadLockProofWorker.java:42)
+	... 3 more
+[2015-12-08 11:50:16,652][WARN ][cluster.service          ] [Vixen] failed to reconnect to node [Vixen][NRUOJ9K4RUy0-phGonK_rQ][linda-VirtualBox][inet[/147.102.6.78:9300]]
+org.elasticsearch.transport.ConnectTransportException: [Vixen][inet[/147.102.6.78:9300]] connect_timeout[30s]
+	at org.elasticsearch.transport.netty.NettyTransport.connectToChannels(NettyTransport.java:797)
+	at org.elasticsearch.transport.netty.NettyTransport.connectToNode(NettyTransport.java:731)
+	at org.elasticsearch.transport.netty.NettyTransport.connectToNode(NettyTransport.java:704)
+	at org.elasticsearch.transport.TransportService.connectToNode(TransportService.java:216)
+	at org.elasticsearch.cluster.service.InternalClusterService$ReconnectToNodes.run(InternalClusterService.java:562)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1145)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:615)
+	at java.lang.Thread.run(Thread.java:745)
+Caused by: org.elasticsearch.common.netty.channel.ConnectTimeoutException: connection timed out: /147.102.6.78:9300
+	at org.elasticsearch.common.netty.channel.socket.nio.NioClientBoss.processConnectTimeout(NioClientBoss.java:139)
+	at org.elasticsearch.common.netty.channel.socket.nio.NioClientBoss.process(NioClientBoss.java:83)
+	at org.elasticsearch.common.netty.channel.socket.nio.AbstractNioSelector.run(AbstractNioSelector.java:337)
+	at org.elasticsearch.common.netty.channel.socket.nio.NioClientBoss.run(NioClientBoss.java:42)
+	at org.elasticsearch.common.netty.util.ThreadRenamingRunnable.run(ThreadRenamingRunnable.java:108)
+	at org.elasticsearch.common.netty.util.internal.DeadLockProofWorker$1.run(DeadLockProofWorker.java:42)
+	... 3 more
+[2015-12-08 11:54:18,027][WARN ][cluster.service          ] [Vixen] failed to reconnect to node [Vixen][NRUOJ9K4RUy0-phGonK_rQ][linda-VirtualBox][inet[/147.102.6.78:9300]]
+org.elasticsearch.transport.ConnectTransportException: [Vixen][inet[/147.102.6.78:9300]] connect_timeout[30s]
+	at org.elasticsearch.transport.netty.NettyTransport.connectToChannels(NettyTransport.java:797)
+	at org.elasticsearch.transport.netty.NettyTransport.connectToNode(NettyTransport.java:731)
+	at org.elasticsearch.transport.netty.NettyTransport.connectToNode(NettyTransport.java:704)
+	at org.elasticsearch.transport.TransportService.connectToNode(TransportService.java:216)
+	at org.elasticsearch.cluster.service.InternalClusterService$ReconnectToNodes.run(InternalClusterService.java:562)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1145)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:615)
+	at java.lang.Thread.run(Thread.java:745)
+Caused by: org.elasticsearch.common.netty.channel.ConnectTimeoutException: connection timed out: /147.102.6.78:9300
+	at org.elasticsearch.common.netty.channel.socket.nio.NioClientBoss.processConnectTimeout(NioClientBoss.java:139)
+	at org.elasticsearch.common.netty.channel.socket.nio.NioClientBoss.process(NioClientBoss.java:83)
+	at org.elasticsearch.common.netty.channel.socket.nio.AbstractNioSelector.run(AbstractNioSelector.java:337)
+	at org.elasticsearch.common.netty.channel.socket.nio.NioClientBoss.run(NioClientBoss.java:42)
+	at org.elasticsearch.common.netty.util.ThreadRenamingRunnable.run(ThreadRenamingRunnable.java:108)
+	at org.elasticsearch.common.netty.util.internal.DeadLockProofWorker$1.run(DeadLockProofWorker.java:42)
+	... 3 more
+[2015-12-08 11:58:18,613][WARN ][cluster.service          ] [Vixen] failed to reconnect to node [Vixen][NRUOJ9K4RUy0-phGonK_rQ][linda-VirtualBox][inet[/147.102.6.78:9300]]
+org.elasticsearch.transport.ConnectTransportException: [Vixen][inet[/147.102.6.78:9300]] connect_timeout[30s]
+	at org.elasticsearch.transport.netty.NettyTransport.connectToChannels(NettyTransport.java:797)
+	at org.elasticsearch.transport.netty.NettyTransport.connectToNode(NettyTransport.java:731)
+	at org.elasticsearch.transport.netty.NettyTransport.connectToNode(NettyTransport.java:704)
+	at org.elasticsearch.transport.TransportService.connectToNode(TransportService.java:216)
+	at org.elasticsearch.cluster.service.InternalClusterService$ReconnectToNodes.run(InternalClusterService.java:562)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1145)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:615)
+	at java.lang.Thread.run(Thread.java:745)
+Caused by: org.elasticsearch.common.netty.channel.ConnectTimeoutException: connection timed out: /147.102.6.78:9300
+	at org.elasticsearch.common.netty.channel.socket.nio.NioClientBoss.processConnectTimeout(NioClientBoss.java:139)
+	at org.elasticsearch.common.netty.channel.socket.nio.NioClientBoss.process(NioClientBoss.java:83)
+	at org.elasticsearch.common.netty.channel.socket.nio.AbstractNioSelector.run(AbstractNioSelector.java:337)
+	at org.elasticsearch.common.netty.channel.socket.nio.NioClientBoss.run(NioClientBoss.java:42)
+	at org.elasticsearch.common.netty.util.ThreadRenamingRunnable.run(ThreadRenamingRunnable.java:108)
+	at org.elasticsearch.common.netty.util.internal.DeadLockProofWorker$1.run(DeadLockProofWorker.java:42)
+	... 3 more
+[2015-12-08 12:06:17,808][WARN ][cluster.service          ] [Vixen] failed to reconnect to node [Vixen][NRUOJ9K4RUy0-phGonK_rQ][linda-VirtualBox][inet[/147.102.6.78:9300]]
+org.elasticsearch.transport.ConnectTransportException: [Vixen][inet[/147.102.6.78:9300]] connect_timeout[30s]
+	at org.elasticsearch.transport.netty.NettyTransport.connectToChannels(NettyTransport.java:797)
+	at org.elasticsearch.transport.netty.NettyTransport.connectToNode(NettyTransport.java:731)
+	at org.elasticsearch.transport.netty.NettyTransport.connectToNode(NettyTransport.java:704)
+	at org.elasticsearch.transport.TransportService.connectToNode(TransportService.java:216)
+	at org.elasticsearch.cluster.service.InternalClusterService$ReconnectToNodes.run(InternalClusterService.java:562)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1145)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:615)
+	at java.lang.Thread.run(Thread.java:745)
+Caused by: org.elasticsearch.common.netty.channel.ConnectTimeoutException: connection timed out: /147.102.6.78:9300
+	at org.elasticsearch.common.netty.channel.socket.nio.NioClientBoss.processConnectTimeout(NioClientBoss.java:139)
+	at org.elasticsearch.common.netty.channel.socket.nio.NioClientBoss.process(NioClientBoss.java:83)
+	at org.elasticsearch.common.netty.channel.socket.nio.AbstractNioSelector.run(AbstractNioSelector.java:337)
+	at org.elasticsearch.common.netty.channel.socket.nio.NioClientBoss.run(NioClientBoss.java:42)
+	at org.elasticsearch.common.netty.util.ThreadRenamingRunnable.run(ThreadRenamingRunnable.java:108)
+	at org.elasticsearch.common.netty.util.internal.DeadLockProofWorker$1.run(DeadLockProofWorker.java:42)
+	... 3 more
+[2015-12-08 12:10:18,711][WARN ][cluster.service          ] [Vixen] failed to reconnect to node [Vixen][NRUOJ9K4RUy0-phGonK_rQ][linda-VirtualBox][inet[/147.102.6.78:9300]]
+org.elasticsearch.transport.ConnectTransportException: [Vixen][inet[/147.102.6.78:9300]] connect_timeout[30s]
+	at org.elasticsearch.transport.netty.NettyTransport.connectToChannels(NettyTransport.java:797)
+	at org.elasticsearch.transport.netty.NettyTransport.connectToNode(NettyTransport.java:731)
+	at org.elasticsearch.transport.netty.NettyTransport.connectToNode(NettyTransport.java:704)
+	at org.elasticsearch.transport.TransportService.connectToNode(TransportService.java:216)
+	at org.elasticsearch.cluster.service.InternalClusterService$ReconnectToNodes.run(InternalClusterService.java:562)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1145)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:615)
+	at java.lang.Thread.run(Thread.java:745)
+Caused by: org.elasticsearch.common.netty.channel.ConnectTimeoutException: connection timed out: /147.102.6.78:9300
+	at org.elasticsearch.common.netty.channel.socket.nio.NioClientBoss.processConnectTimeout(NioClientBoss.java:139)
+	at org.elasticsearch.common.netty.channel.socket.nio.NioClientBoss.process(NioClientBoss.java:83)
+	at org.elasticsearch.common.netty.channel.socket.nio.AbstractNioSelector.run(AbstractNioSelector.java:337)
+	at org.elasticsearch.common.netty.channel.socket.nio.NioClientBoss.run(NioClientBoss.java:42)
+	at org.elasticsearch.common.netty.util.ThreadRenamingRunnable.run(ThreadRenamingRunnable.java:108)
+	at org.elasticsearch.common.netty.util.internal.DeadLockProofWorker$1.run(DeadLockProofWorker.java:42)
+	... 3 more
+[2015-12-08 12:14:21,338][WARN ][cluster.service          ] [Vixen] failed to reconnect to node [Vixen][NRUOJ9K4RUy0-phGonK_rQ][linda-VirtualBox][inet[/147.102.6.78:9300]]
+org.elasticsearch.transport.ConnectTransportException: [Vixen][inet[/147.102.6.78:9300]] connect_timeout[30s]
+	at org.elasticsearch.transport.netty.NettyTransport.connectToChannels(NettyTransport.java:797)
+	at org.elasticsearch.transport.netty.NettyTransport.connectToNode(NettyTransport.java:731)
+	at org.elasticsearch.transport.netty.NettyTransport.connectToNode(NettyTransport.java:704)
+	at org.elasticsearch.transport.TransportService.connectToNode(TransportService.java:216)
+	at org.elasticsearch.cluster.service.InternalClusterService$ReconnectToNodes.run(InternalClusterService.java:562)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1145)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:615)
+	at java.lang.Thread.run(Thread.java:745)
+Caused by: org.elasticsearch.common.netty.channel.ConnectTimeoutException: connection timed out: /147.102.6.78:9300
+	at org.elasticsearch.common.netty.channel.socket.nio.NioClientBoss.processConnectTimeout(NioClientBoss.java:139)
+	at org.elasticsearch.common.netty.channel.socket.nio.NioClientBoss.process(NioClientBoss.java:83)
+	at org.elasticsearch.common.netty.channel.socket.nio.AbstractNioSelector.run(AbstractNioSelector.java:337)
+	at org.elasticsearch.common.netty.channel.socket.nio.NioClientBoss.run(NioClientBoss.java:42)
+	at org.elasticsearch.common.netty.util.ThreadRenamingRunnable.run(ThreadRenamingRunnable.java:108)
+	at org.elasticsearch.common.netty.util.internal.DeadLockProofWorker$1.run(DeadLockProofWorker.java:42)
+	... 3 more
+[2015-12-08 12:18:25,048][WARN ][cluster.service          ] [Vixen] failed to reconnect to node [Vixen][NRUOJ9K4RUy0-phGonK_rQ][linda-VirtualBox][inet[/147.102.6.78:9300]]
+org.elasticsearch.transport.ConnectTransportException: [Vixen][inet[/147.102.6.78:9300]] connect_timeout[30s]
+	at org.elasticsearch.transport.netty.NettyTransport.connectToChannels(NettyTransport.java:797)
+	at org.elasticsearch.transport.netty.NettyTransport.connectToNode(NettyTransport.java:731)
+	at org.elasticsearch.transport.netty.NettyTransport.connectToNode(NettyTransport.java:704)
+	at org.elasticsearch.transport.TransportService.connectToNode(TransportService.java:216)
+	at org.elasticsearch.cluster.service.InternalClusterService$ReconnectToNodes.run(InternalClusterService.java:562)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1145)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:615)
+	at java.lang.Thread.run(Thread.java:745)
+Caused by: org.elasticsearch.common.netty.channel.ConnectTimeoutException: connection timed out: /147.102.6.78:9300
+	at org.elasticsearch.common.netty.channel.socket.nio.NioClientBoss.processConnectTimeout(NioClientBoss.java:139)
+	at org.elasticsearch.common.netty.channel.socket.nio.NioClientBoss.process(NioClientBoss.java:83)
+	at org.elasticsearch.common.netty.channel.socket.nio.AbstractNioSelector.run(AbstractNioSelector.java:337)
+	at org.elasticsearch.common.netty.channel.socket.nio.NioClientBoss.run(NioClientBoss.java:42)
+	at org.elasticsearch.common.netty.util.ThreadRenamingRunnable.run(ThreadRenamingRunnable.java:108)
+	at org.elasticsearch.common.netty.util.internal.DeadLockProofWorker$1.run(DeadLockProofWorker.java:42)
+	... 3 more
+[2015-12-08 12:22:27,627][WARN ][cluster.service          ] [Vixen] failed to reconnect to node [Vixen][NRUOJ9K4RUy0-phGonK_rQ][linda-VirtualBox][inet[/147.102.6.78:9300]]
+org.elasticsearch.transport.ConnectTransportException: [Vixen][inet[/147.102.6.78:9300]] connect_timeout[30s]
+	at org.elasticsearch.transport.netty.NettyTransport.connectToChannels(NettyTransport.java:797)
+	at org.elasticsearch.transport.netty.NettyTransport.connectToNode(NettyTransport.java:731)
+	at org.elasticsearch.transport.netty.NettyTransport.connectToNode(NettyTransport.java:704)
+	at org.elasticsearch.transport.TransportService.connectToNode(TransportService.java:216)
+	at org.elasticsearch.cluster.service.InternalClusterService$ReconnectToNodes.run(InternalClusterService.java:562)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1145)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:615)
+	at java.lang.Thread.run(Thread.java:745)
+Caused by: org.elasticsearch.common.netty.channel.ConnectTimeoutException: connection timed out: /147.102.6.78:9300
+	at org.elasticsearch.common.netty.channel.socket.nio.NioClientBoss.processConnectTimeout(NioClientBoss.java:139)
+	at org.elasticsearch.common.netty.channel.socket.nio.NioClientBoss.process(NioClientBoss.java:83)
+	at org.elasticsearch.common.netty.channel.socket.nio.AbstractNioSelector.run(AbstractNioSelector.java:337)
+	at org.elasticsearch.common.netty.channel.socket.nio.NioClientBoss.run(NioClientBoss.java:42)
+	at org.elasticsearch.common.netty.util.ThreadRenamingRunnable.run(ThreadRenamingRunnable.java:108)
+	at org.elasticsearch.common.netty.util.internal.DeadLockProofWorker$1.run(DeadLockProofWorker.java:42)
+	... 3 more
+[2015-12-08 12:26:29,430][WARN ][cluster.service          ] [Vixen] failed to reconnect to node [Vixen][NRUOJ9K4RUy0-phGonK_rQ][linda-VirtualBox][inet[/147.102.6.78:9300]]
+org.elasticsearch.transport.ConnectTransportException: [Vixen][inet[/147.102.6.78:9300]] connect_timeout[30s]
+	at org.elasticsearch.transport.netty.NettyTransport.connectToChannels(NettyTransport.java:797)
+	at org.elasticsearch.transport.netty.NettyTransport.connectToNode(NettyTransport.java:731)
+	at org.elasticsearch.transport.netty.NettyTransport.connectToNode(NettyTransport.java:704)
+	at org.elasticsearch.transport.TransportService.connectToNode(TransportService.java:216)
+	at org.elasticsearch.cluster.service.InternalClusterService$ReconnectToNodes.run(InternalClusterService.java:562)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1145)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:615)
+	at java.lang.Thread.run(Thread.java:745)
+Caused by: org.elasticsearch.common.netty.channel.ConnectTimeoutException: connection timed out: /147.102.6.78:9300
+	at org.elasticsearch.common.netty.channel.socket.nio.NioClientBoss.processConnectTimeout(NioClientBoss.java:139)
+	at org.elasticsearch.common.netty.channel.socket.nio.NioClientBoss.process(NioClientBoss.java:83)
+	at org.elasticsearch.common.netty.channel.socket.nio.AbstractNioSelector.run(AbstractNioSelector.java:337)
+	at org.elasticsearch.common.netty.channel.socket.nio.NioClientBoss.run(NioClientBoss.java:42)
+	at org.elasticsearch.common.netty.util.ThreadRenamingRunnable.run(ThreadRenamingRunnable.java:108)
+	at org.elasticsearch.common.netty.util.internal.DeadLockProofWorker$1.run(DeadLockProofWorker.java:42)
+	... 3 more
+[2015-12-08 12:30:34,693][WARN ][cluster.service          ] [Vixen] failed to reconnect to node [Vixen][NRUOJ9K4RUy0-phGonK_rQ][linda-VirtualBox][inet[/147.102.6.78:9300]]
+org.elasticsearch.transport.ConnectTransportException: [Vixen][inet[/147.102.6.78:9300]] connect_timeout[30s]
+	at org.elasticsearch.transport.netty.NettyTransport.connectToChannels(NettyTransport.java:797)
+	at org.elasticsearch.transport.netty.NettyTransport.connectToNode(NettyTransport.java:731)
+	at org.elasticsearch.transport.netty.NettyTransport.connectToNode(NettyTransport.java:704)
+	at org.elasticsearch.transport.TransportService.connectToNode(TransportService.java:216)
+	at org.elasticsearch.cluster.service.InternalClusterService$ReconnectToNodes.run(InternalClusterService.java:562)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1145)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:615)
+	at java.lang.Thread.run(Thread.java:745)
+Caused by: org.elasticsearch.common.netty.channel.ConnectTimeoutException: connection timed out: /147.102.6.78:9300
+	at org.elasticsearch.common.netty.channel.socket.nio.NioClientBoss.processConnectTimeout(NioClientBoss.java:139)
+	at org.elasticsearch.common.netty.channel.socket.nio.NioClientBoss.process(NioClientBoss.java:83)
+	at org.elasticsearch.common.netty.channel.socket.nio.AbstractNioSelector.run(AbstractNioSelector.java:337)
+	at org.elasticsearch.common.netty.channel.socket.nio.NioClientBoss.run(NioClientBoss.java:42)
+	at org.elasticsearch.common.netty.util.ThreadRenamingRunnable.run(ThreadRenamingRunnable.java:108)
+	at org.elasticsearch.common.netty.util.internal.DeadLockProofWorker$1.run(DeadLockProofWorker.java:42)
+	... 3 more
+[2015-12-08 12:35:16,888][WARN ][cluster.service          ] [Vixen] failed to reconnect to node [Vixen][NRUOJ9K4RUy0-phGonK_rQ][linda-VirtualBox][inet[/147.102.6.78:9300]]
+org.elasticsearch.transport.ConnectTransportException: [Vixen][inet[/147.102.6.78:9300]] connect_timeout[30s]
+	at org.elasticsearch.transport.netty.NettyTransport.connectToChannels(NettyTransport.java:797)
+	at org.elasticsearch.transport.netty.NettyTransport.connectToNode(NettyTransport.java:731)
+	at org.elasticsearch.transport.netty.NettyTransport.connectToNode(NettyTransport.java:704)
+	at org.elasticsearch.transport.TransportService.connectToNode(TransportService.java:216)
+	at org.elasticsearch.cluster.service.InternalClusterService$ReconnectToNodes.run(InternalClusterService.java:562)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1145)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:615)
+	at java.lang.Thread.run(Thread.java:745)
+[2015-12-08 12:45:37,100][WARN ][cluster.service          ] [Vixen] failed to reconnect to node [Vixen][NRUOJ9K4RUy0-phGonK_rQ][linda-VirtualBox][inet[/147.102.6.78:9300]]
+org.elasticsearch.transport.ConnectTransportException: [Vixen][inet[/147.102.6.78:9300]] connect_timeout[30s]
+	at org.elasticsearch.transport.netty.NettyTransport.connectToChannels(NettyTransport.java:797)
+	at org.elasticsearch.transport.netty.NettyTransport.connectToNode(NettyTransport.java:731)
+	at org.elasticsearch.transport.netty.NettyTransport.connectToNode(NettyTransport.java:704)
+	at org.elasticsearch.transport.TransportService.connectToNode(TransportService.java:216)
+	at org.elasticsearch.cluster.service.InternalClusterService$ReconnectToNodes.run(InternalClusterService.java:562)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1145)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:615)
+	at java.lang.Thread.run(Thread.java:745)
+[2015-12-08 12:57:13,370][WARN ][cluster.service          ] [Vixen] failed to reconnect to node [Vixen][NRUOJ9K4RUy0-phGonK_rQ][linda-VirtualBox][inet[/147.102.6.78:9300]]
+org.elasticsearch.transport.ConnectTransportException: [Vixen][inet[/147.102.6.78:9300]] connect_timeout[30s]
+	at org.elasticsearch.transport.netty.NettyTransport.connectToChannels(NettyTransport.java:797)
+	at org.elasticsearch.transport.netty.NettyTransport.connectToNode(NettyTransport.java:731)
+	at org.elasticsearch.transport.netty.NettyTransport.connectToNode(NettyTransport.java:704)
+	at org.elasticsearch.transport.TransportService.connectToNode(TransportService.java:216)
+	at org.elasticsearch.cluster.service.InternalClusterService$ReconnectToNodes.run(InternalClusterService.java:562)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1145)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:615)
+	at java.lang.Thread.run(Thread.java:745)
+[2015-12-08 13:05:29,542][WARN ][cluster.service          ] [Vixen] failed to reconnect to node [Vixen][NRUOJ9K4RUy0-phGonK_rQ][linda-VirtualBox][inet[/147.102.6.78:9300]]
+org.elasticsearch.transport.ConnectTransportException: [Vixen][inet[/147.102.6.78:9300]] connect_timeout[30s]
+	at org.elasticsearch.transport.netty.NettyTransport.connectToChannels(NettyTransport.java:797)
+	at org.elasticsearch.transport.netty.NettyTransport.connectToNode(NettyTransport.java:731)
+	at org.elasticsearch.transport.netty.NettyTransport.connectToNode(NettyTransport.java:704)
+	at org.elasticsearch.transport.TransportService.connectToNode(TransportService.java:216)
+	at org.elasticsearch.cluster.service.InternalClusterService$ReconnectToNodes.run(InternalClusterService.java:562)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1145)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:615)
+	at java.lang.Thread.run(Thread.java:745)
+[2015-12-08 13:14:49,328][WARN ][cluster.service          ] [Vixen] failed to reconnect to node [Vixen][NRUOJ9K4RUy0-phGonK_rQ][linda-VirtualBox][inet[/147.102.6.78:9300]]
+org.elasticsearch.transport.ConnectTransportException: [Vixen][inet[/147.102.6.78:9300]] connect_timeout[30s]
+	at org.elasticsearch.transport.netty.NettyTransport.connectToChannels(NettyTransport.java:797)
+	at org.elasticsearch.transport.netty.NettyTransport.connectToNode(NettyTransport.java:731)
+	at org.elasticsearch.transport.netty.NettyTransport.connectToNode(NettyTransport.java:704)
+	at org.elasticsearch.transport.TransportService.connectToNode(TransportService.java:216)
+	at org.elasticsearch.cluster.service.InternalClusterService$ReconnectToNodes.run(InternalClusterService.java:562)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1145)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:615)
+	at java.lang.Thread.run(Thread.java:745)
+[2015-12-08 13:24:46,911][WARN ][cluster.service          ] [Vixen] failed to reconnect to node [Vixen][NRUOJ9K4RUy0-phGonK_rQ][linda-VirtualBox][inet[/147.102.6.78:9300]]
+org.elasticsearch.transport.ConnectTransportException: [Vixen][inet[/147.102.6.78:9300]] connect_timeout[30s]
+	at org.elasticsearch.transport.netty.NettyTransport.connectToChannels(NettyTransport.java:797)
+	at org.elasticsearch.transport.netty.NettyTransport.connectToNode(NettyTransport.java:731)
+	at org.elasticsearch.transport.netty.NettyTransport.connectToNode(NettyTransport.java:704)
+	at org.elasticsearch.transport.TransportService.connectToNode(TransportService.java:216)
+	at org.elasticsearch.cluster.service.InternalClusterService$ReconnectToNodes.run(InternalClusterService.java:562)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1145)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:615)
+	at java.lang.Thread.run(Thread.java:745)
+[2015-12-08 13:33:58,008][WARN ][cluster.service          ] [Vixen] failed to reconnect to node [Vixen][NRUOJ9K4RUy0-phGonK_rQ][linda-VirtualBox][inet[/147.102.6.78:9300]]
+org.elasticsearch.transport.ConnectTransportException: [Vixen][inet[/147.102.6.78:9300]] connect_timeout[30s]
+	at org.elasticsearch.transport.netty.NettyTransport.connectToChannels(NettyTransport.java:797)
+	at org.elasticsearch.transport.netty.NettyTransport.connectToNode(NettyTransport.java:731)
+	at org.elasticsearch.transport.netty.NettyTransport.connectToNode(NettyTransport.java:704)
+	at org.elasticsearch.transport.TransportService.connectToNode(TransportService.java:216)
+	at org.elasticsearch.cluster.service.InternalClusterService$ReconnectToNodes.run(InternalClusterService.java:562)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1145)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:615)
+	at java.lang.Thread.run(Thread.java:745)
+[2015-12-08 13:41:59,095][WARN ][cluster.service          ] [Vixen] failed to reconnect to node [Vixen][NRUOJ9K4RUy0-phGonK_rQ][linda-VirtualBox][inet[/147.102.6.78:9300]]
+org.elasticsearch.transport.ConnectTransportException: [Vixen][inet[/147.102.6.78:9300]] connect_timeout[30s]
+	at org.elasticsearch.transport.netty.NettyTransport.connectToChannels(NettyTransport.java:797)
+	at org.elasticsearch.transport.netty.NettyTransport.connectToNode(NettyTransport.java:731)
+	at org.elasticsearch.transport.netty.NettyTransport.connectToNode(NettyTransport.java:704)
+	at org.elasticsearch.transport.TransportService.connectToNode(TransportService.java:216)
+	at org.elasticsearch.cluster.service.InternalClusterService$ReconnectToNodes.run(InternalClusterService.java:562)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1145)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:615)
+	at java.lang.Thread.run(Thread.java:745)
+[2015-12-08 13:48:43,111][WARN ][cluster.service          ] [Vixen] failed to reconnect to node [Vixen][NRUOJ9K4RUy0-phGonK_rQ][linda-VirtualBox][inet[/147.102.6.78:9300]]
+org.elasticsearch.transport.ConnectTransportException: [Vixen][inet[/147.102.6.78:9300]] connect_timeout[30s]
+	at org.elasticsearch.transport.netty.NettyTransport.connectToChannels(NettyTransport.java:797)
+	at org.elasticsearch.transport.netty.NettyTransport.connectToNode(NettyTransport.java:731)
+	at org.elasticsearch.transport.netty.NettyTransport.connectToNode(NettyTransport.java:704)
+	at org.elasticsearch.transport.TransportService.connectToNode(TransportService.java:216)
+	at org.elasticsearch.cluster.service.InternalClusterService$ReconnectToNodes.run(InternalClusterService.java:562)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1145)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:615)
+	at java.lang.Thread.run(Thread.java:745)
+[2015-12-08 13:56:08,852][WARN ][cluster.service          ] [Vixen] failed to reconnect to node [Vixen][NRUOJ9K4RUy0-phGonK_rQ][linda-VirtualBox][inet[/147.102.6.78:9300]]
+org.elasticsearch.transport.ConnectTransportException: [Vixen][inet[/147.102.6.78:9300]] connect_timeout[30s]
+	at org.elasticsearch.transport.netty.NettyTransport.connectToChannels(NettyTransport.java:797)
+	at org.elasticsearch.transport.netty.NettyTransport.connectToNode(NettyTransport.java:731)
+	at org.elasticsearch.transport.netty.NettyTransport.connectToNode(NettyTransport.java:704)
+	at org.elasticsearch.transport.TransportService.connectToNode(TransportService.java:216)
+	at org.elasticsearch.cluster.service.InternalClusterService$ReconnectToNodes.run(InternalClusterService.java:562)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1145)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:615)
+	at java.lang.Thread.run(Thread.java:745)
+Caused by: org.elasticsearch.common.netty.channel.ConnectTimeoutException: connection timed out: /147.102.6.78:9300
+	at org.elasticsearch.common.netty.channel.socket.nio.NioClientBoss.processConnectTimeout(NioClientBoss.java:139)
+	at org.elasticsearch.common.netty.channel.socket.nio.NioClientBoss.process(NioClientBoss.java:83)
+	at org.elasticsearch.common.netty.channel.socket.nio.AbstractNioSelector.run(AbstractNioSelector.java:337)
+	at org.elasticsearch.common.netty.channel.socket.nio.NioClientBoss.run(NioClientBoss.java:42)
+	at org.elasticsearch.common.netty.util.ThreadRenamingRunnable.run(ThreadRenamingRunnable.java:108)
+	at org.elasticsearch.common.netty.util.internal.DeadLockProofWorker$1.run(DeadLockProofWorker.java:42)
+	... 3 more
+[2015-12-08 14:05:42,557][WARN ][cluster.service          ] [Vixen] failed to reconnect to node [Vixen][NRUOJ9K4RUy0-phGonK_rQ][linda-VirtualBox][inet[/147.102.6.78:9300]]
+org.elasticsearch.transport.ConnectTransportException: [Vixen][inet[/147.102.6.78:9300]] connect_timeout[30s]
+	at org.elasticsearch.transport.netty.NettyTransport.connectToChannels(NettyTransport.java:797)
+	at org.elasticsearch.transport.netty.NettyTransport.connectToNode(NettyTransport.java:731)
+	at org.elasticsearch.transport.netty.NettyTransport.connectToNode(NettyTransport.java:704)
+	at org.elasticsearch.transport.TransportService.connectToNode(TransportService.java:216)
+	at org.elasticsearch.cluster.service.InternalClusterService$ReconnectToNodes.run(InternalClusterService.java:562)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1145)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:615)
+	at java.lang.Thread.run(Thread.java:745)
+Caused by: org.elasticsearch.common.netty.channel.ConnectTimeoutException: connection timed out: /147.102.6.78:9300
+	at org.elasticsearch.common.netty.channel.socket.nio.NioClientBoss.processConnectTimeout(NioClientBoss.java:139)
+	at org.elasticsearch.common.netty.channel.socket.nio.NioClientBoss.process(NioClientBoss.java:83)
+	at org.elasticsearch.common.netty.channel.socket.nio.AbstractNioSelector.run(AbstractNioSelector.java:337)
+	at org.elasticsearch.common.netty.channel.socket.nio.NioClientBoss.run(NioClientBoss.java:42)
+	at org.elasticsearch.common.netty.util.ThreadRenamingRunnable.run(ThreadRenamingRunnable.java:108)
+	at org.elasticsearch.common.netty.util.internal.DeadLockProofWorker$1.run(DeadLockProofWorker.java:42)
+	... 3 more
+[2015-12-08 14:12:36,978][WARN ][cluster.service          ] [Vixen] failed to reconnect to node [Vixen][NRUOJ9K4RUy0-phGonK_rQ][linda-VirtualBox][inet[/147.102.6.78:9300]]
+org.elasticsearch.transport.ConnectTransportException: [Vixen][inet[/147.102.6.78:9300]] connect_timeout[30s]
+	at org.elasticsearch.transport.netty.NettyTransport.connectToChannels(NettyTransport.java:797)
+	at org.elasticsearch.transport.netty.NettyTransport.connectToNode(NettyTransport.java:731)
+	at org.elasticsearch.transport.netty.NettyTransport.connectToNode(NettyTransport.java:704)
+	at org.elasticsearch.transport.TransportService.connectToNode(TransportService.java:216)
+	at org.elasticsearch.cluster.service.InternalClusterService$ReconnectToNodes.run(InternalClusterService.java:562)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1145)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:615)
+	at java.lang.Thread.run(Thread.java:745)
+Caused by: org.elasticsearch.common.netty.channel.ConnectTimeoutException: connection timed out: /147.102.6.78:9300
+	at org.elasticsearch.common.netty.channel.socket.nio.NioClientBoss.processConnectTimeout(NioClientBoss.java:139)
+	at org.elasticsearch.common.netty.channel.socket.nio.NioClientBoss.process(NioClientBoss.java:83)
+	at org.elasticsearch.common.netty.channel.socket.nio.AbstractNioSelector.run(AbstractNioSelector.java:337)
+	at org.elasticsearch.common.netty.channel.socket.nio.NioClientBoss.run(NioClientBoss.java:42)
+	at org.elasticsearch.common.netty.util.ThreadRenamingRunnable.run(ThreadRenamingRunnable.java:108)
+	at org.elasticsearch.common.netty.util.internal.DeadLockProofWorker$1.run(DeadLockProofWorker.java:42)
+	... 3 more
+[2015-12-08 14:18:40,292][WARN ][cluster.service          ] [Vixen] failed to reconnect to node [Vixen][NRUOJ9K4RUy0-phGonK_rQ][linda-VirtualBox][inet[/147.102.6.78:9300]]
+org.elasticsearch.transport.ConnectTransportException: [Vixen][inet[/147.102.6.78:9300]] connect_timeout[30s]
+	at org.elasticsearch.transport.netty.NettyTransport.connectToChannels(NettyTransport.java:797)
+	at org.elasticsearch.transport.netty.NettyTransport.connectToNode(NettyTransport.java:731)
+	at org.elasticsearch.transport.netty.NettyTransport.connectToNode(NettyTransport.java:704)
+	at org.elasticsearch.transport.TransportService.connectToNode(TransportService.java:216)
+	at org.elasticsearch.cluster.service.InternalClusterService$ReconnectToNodes.run(InternalClusterService.java:562)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1145)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:615)
+	at java.lang.Thread.run(Thread.java:745)
+Caused by: org.elasticsearch.common.netty.channel.ConnectTimeoutException: connection timed out: /147.102.6.78:9300
+	at org.elasticsearch.common.netty.channel.socket.nio.NioClientBoss.processConnectTimeout(NioClientBoss.java:139)
+	at org.elasticsearch.common.netty.channel.socket.nio.NioClientBoss.process(NioClientBoss.java:83)
+	at org.elasticsearch.common.netty.channel.socket.nio.AbstractNioSelector.run(AbstractNioSelector.java:337)
+	at org.elasticsearch.common.netty.channel.socket.nio.NioClientBoss.run(NioClientBoss.java:42)
+	at org.elasticsearch.common.netty.util.ThreadRenamingRunnable.run(ThreadRenamingRunnable.java:108)
+	at org.elasticsearch.common.netty.util.internal.DeadLockProofWorker$1.run(DeadLockProofWorker.java:42)
+	... 3 more
+[2015-12-08 14:23:37,478][WARN ][monitor.jvm              ] [Vixen] [gc][young][26843][6] duration [2.7m], collections [1]/[3.3s], total [2.7m]/[2.7m], memory [67.3mb]->[67.3mb]/[1017.6mb], all_pools {[young] [51.2mb]->[51.2mb]/[51.2mb]}{[survivor] [67.7kb]->[67.7kb]/[6.3mb]}{[old] [16mb]->[16mb]/[960mb]}
+[2015-12-08 14:28:43,964][WARN ][cluster.service          ] [Vixen] failed to reconnect to node [Vixen][NRUOJ9K4RUy0-phGonK_rQ][linda-VirtualBox][inet[/147.102.6.78:9300]]
+org.elasticsearch.transport.ConnectTransportException: [Vixen][inet[/147.102.6.78:9300]] connect_timeout[30s]
+	at org.elasticsearch.transport.netty.NettyTransport.connectToChannels(NettyTransport.java:797)
+	at org.elasticsearch.transport.netty.NettyTransport.connectToNode(NettyTransport.java:731)
+	at org.elasticsearch.transport.netty.NettyTransport.connectToNode(NettyTransport.java:704)
+	at org.elasticsearch.transport.TransportService.connectToNode(TransportService.java:216)
+	at org.elasticsearch.cluster.service.InternalClusterService$ReconnectToNodes.run(InternalClusterService.java:562)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1145)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:615)
+	at java.lang.Thread.run(Thread.java:745)
+[2015-12-08 14:34:36,506][WARN ][cluster.service          ] [Vixen] failed to reconnect to node [Vixen][NRUOJ9K4RUy0-phGonK_rQ][linda-VirtualBox][inet[/147.102.6.78:9300]]
+org.elasticsearch.transport.ConnectTransportException: [Vixen][inet[/147.102.6.78:9300]] connect_timeout[30s]
+	at org.elasticsearch.transport.netty.NettyTransport.connectToChannels(NettyTransport.java:797)
+	at org.elasticsearch.transport.netty.NettyTransport.connectToNode(NettyTransport.java:731)
+	at org.elasticsearch.transport.netty.NettyTransport.connectToNode(NettyTransport.java:704)
+	at org.elasticsearch.transport.TransportService.connectToNode(TransportService.java:216)
+	at org.elasticsearch.cluster.service.InternalClusterService$ReconnectToNodes.run(InternalClusterService.java:562)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1145)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:615)
+	at java.lang.Thread.run(Thread.java:745)
+[2015-12-08 14:40:52,403][WARN ][cluster.service          ] [Vixen] failed to reconnect to node [Vixen][NRUOJ9K4RUy0-phGonK_rQ][linda-VirtualBox][inet[/147.102.6.78:9300]]
+org.elasticsearch.transport.ConnectTransportException: [Vixen][inet[/147.102.6.78:9300]] connect_timeout[30s]
+	at org.elasticsearch.transport.netty.NettyTransport.connectToChannels(NettyTransport.java:797)
+	at org.elasticsearch.transport.netty.NettyTransport.connectToNode(NettyTransport.java:731)
+	at org.elasticsearch.transport.netty.NettyTransport.connectToNode(NettyTransport.java:704)
+	at org.elasticsearch.transport.TransportService.connectToNode(TransportService.java:216)
+	at org.elasticsearch.cluster.service.InternalClusterService$ReconnectToNodes.run(InternalClusterService.java:562)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1145)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:615)
+	at java.lang.Thread.run(Thread.java:745)
+[2015-12-08 14:48:27,496][WARN ][cluster.service          ] [Vixen] failed to reconnect to node [Vixen][NRUOJ9K4RUy0-phGonK_rQ][linda-VirtualBox][inet[/147.102.6.78:9300]]
+org.elasticsearch.transport.ConnectTransportException: [Vixen][inet[/147.102.6.78:9300]] connect_timeout[30s]
+	at org.elasticsearch.transport.netty.NettyTransport.connectToChannels(NettyTransport.java:797)
+	at org.elasticsearch.transport.netty.NettyTransport.connectToNode(NettyTransport.java:731)
+	at org.elasticsearch.transport.netty.NettyTransport.connectToNode(NettyTransport.java:704)
+	at org.elasticsearch.transport.TransportService.connectToNode(TransportService.java:216)
+	at org.elasticsearch.cluster.service.InternalClusterService$ReconnectToNodes.run(InternalClusterService.java:562)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1145)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:615)
+	at java.lang.Thread.run(Thread.java:745)
+Caused by: org.elasticsearch.common.netty.channel.ConnectTimeoutException: connection timed out: /147.102.6.78:9300
+	at org.elasticsearch.common.netty.channel.socket.nio.NioClientBoss.processConnectTimeout(NioClientBoss.java:139)
+	at org.elasticsearch.common.netty.channel.socket.nio.NioClientBoss.process(NioClientBoss.java:83)
+	at org.elasticsearch.common.netty.channel.socket.nio.AbstractNioSelector.run(AbstractNioSelector.java:337)
+	at org.elasticsearch.common.netty.channel.socket.nio.NioClientBoss.run(NioClientBoss.java:42)
+	at org.elasticsearch.common.netty.util.ThreadRenamingRunnable.run(ThreadRenamingRunnable.java:108)
+	at org.elasticsearch.common.netty.util.internal.DeadLockProofWorker$1.run(DeadLockProofWorker.java:42)
+	... 3 more
