@@ -1,0 +1,28 @@
+{
+  "name": "linda-vis-be",
+  "description": "",
+  "version": "0.0.1",
+  "main": "./visualization_backend.js",
+  "author": {
+    "name": "Klaudia Thellmann",
+    "email": "klaudia.thellmann@gmx.de"
+  },
+  "keywords": [],
+  "licenses": {
+    "type": "none"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/LinDA-tools/Visualization.git"
+  },
+  "bugs": {
+    "url": "http://github.com/LinDA-tools/Visualization/issues"
+  },
+  "dependencies": {
+    "express": "3.5.0",
+    "q": "1.0.1",
+    "graph-store-client": "0.0.1",
+    "lodash": "^2.4.1",
+    "munkres-js": "^1.1.2"
+  }
+}
