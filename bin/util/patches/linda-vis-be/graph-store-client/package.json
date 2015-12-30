@@ -1,0 +1,31 @@
+{
+  "name": "graph-store-client",
+  "version": "0.0.1",
+  "description": "NodeJS SPARQL Client Supporting SPARQL 1.1 Graph Store HTTP Protocol & SPARQL 1.1 Protocol using Q promises",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/inanidea/graph-store-client.git"
+  },
+  "keywords": [
+    "GraphStore",
+    "SPARQL",
+    "Q"
+  ],
+  "author": "Inan Idea",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/inanidea/graph-store-client/issues"
+  },
+  "dependencies": {
+    "utile": "~0.2.0",
+    "q": "^1",
+    "rest": "~1.1.1",
+    "jsonld": "*",
+    "debug": "^1.0.3",
+	"request": "*"
+  }
+}
