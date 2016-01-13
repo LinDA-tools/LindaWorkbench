@@ -199,3 +199,22 @@ def recommend_dataset(request):
 
     return data
 
+@csrf_exempt
+@json_response
+def list_properties(request):
+    class_ = request.GET.get("class", None)
+    properties = VocabularyProperty.objects.filter(domain=class_)
+	
+    if page != "all":
+        paginator = Paginator(results, 20)
+
+        try:
+            records = paginator.page(page)
+        except PageNotAnInteger:
+            records = paginator.page(1)
+        except EmptyPage:
+            records = paginator.page(paginator.num_pages)
+    else:
+        records = results
+    
+    return records

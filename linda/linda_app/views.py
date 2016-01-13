@@ -903,9 +903,27 @@ def datasourceReplace(request, name):
 
 
 def clear_chunk(c, newline):
+    last_dot = None
+    end_search = 5000
     if newline:
-        last_dot = c.rfind('\n') + 1
-    else:
+        n_of_tries = 0
+        s = c[-end_search:]
+        while s:
+            last_dot = s.rfind('\n') + 1
+            if s[:last_dot].rstrip()[-1] == '.':
+                break
+
+            s = s[:last_dot - 1]
+            last_dot = None
+            n_of_tries += 1
+            if n_of_tries > 20:
+                break
+
+    # add offset from original string
+    if last_dot:
+        last_dot += len(c) - end_search
+
+    if not last_dot:
         # detect where the last tripple ends
         i = 0
 
@@ -966,7 +984,11 @@ def datasourceCreateRDF(request):
             # get the first chunk
             inp_file = request.FILES["rdffile"].file
             current_chunk = inp_file.read(RDF_CHUNK_SIZE).decode('utf-8')
-            if len(current_chunk) == RDF_CHUNK_SIZE:
+
+            # a small `tolerance` is required, as python will not read **exactly** RDF_CHUNK_SIZE bytes
+            # if that causes e.g a unicode character to break
+            read_tolerance = 20
+            if len(current_chunk) >= RDF_CHUNK_SIZE - read_tolerance:
                 current_chunk, rem = clear_chunk(current_chunk, newline)
         else:
             current_chunk = request.POST.get("rdfdata")
@@ -1007,8 +1029,8 @@ def datasourceCreateRDF(request):
                     data['format'] = request.POST.get('format')
 
                 # request to update
-                callAppend = requests.post(LINDA_HOME + "api/datasource/" + dt_name + "/replace/?append=true", headers=headers,
-                                    data=data)
+                callAppend = requests.post(LINDA_HOME + "api/datasource/" + dt_name + "/replace/?append=true",
+                                           headers=headers, data=data)
 
             if rem:  # a statement has not been pushed
                 data = {"content": '\n'.join(prefixes) + '\n' + rem}
