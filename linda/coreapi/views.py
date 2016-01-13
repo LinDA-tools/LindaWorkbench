@@ -203,8 +203,14 @@ def recommend_dataset(request):
 @json_response
 def list_properties(request):
     class_ = request.GET.get("class", None)
-    properties = VocabularyProperty.objects.filter(domain=class_)
-	
+    page = request.GET.get('page')
+
+    try:
+        cls = VocabularyClass.objects.get(uri=class_)
+        results = VocabularyProperty.objects.filter(domain=class_, vocabulary=cls.vocabulary)
+    except VocabularyClass.DoesNotExist:
+        results = VocabularyProperty.objects.filter(domain=class_)
+
     if page != "all":
         paginator = Paginator(results, 20)
 
@@ -216,5 +222,9 @@ def list_properties(request):
             records = paginator.page(paginator.num_pages)
     else:
         records = results
-    
-    return records
+
+    data = []
+    for record in records:
+        data.append({'uri': record.uri, 'label': record.label, 'description': record.description, 'range': record.range})
+
+    return data
