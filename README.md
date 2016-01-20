@@ -20,7 +20,7 @@ Move in the bin/ directory of the LinDA source and run:
 bash -e ./install.sh
 ```
 ##Deployment
-From the bin directory, run:
+Again, from the LinDA bin/ directory, run:
 ```
 ./deploy.sh
 ```
