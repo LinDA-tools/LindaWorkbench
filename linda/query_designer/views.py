@@ -85,19 +85,24 @@ def sparql_query_json(endpoint, query, timeout=None, append_slash=False, http_re
         endpoint + "?Accept=" + urlquote(
             "application/sparql-results+json") + "&query=" + query_enc + "&format=json&output=json", timeout=timeout)
 
+    if response.encoding != 'utf-8':
+        text = bytes(response.text, response.encoding).decode('utf-8-sig')
+    else:
+        text = response.text
+
     # ClioPatria bugfix
     if not append_slash:
         try:
-            j_obj = json.loads(response.text)
+            j_obj = json.loads(text)
         except:
             return sparql_query_json(endpoint, query, timeout, append_slash=True)
 
     if response.status_code != 200:
-        return HttpResponse(response.text, status=response.status_code)
+        return HttpResponse(text, status=response.status_code)
 
     # return the response
     if http_response:
-        return HttpResponse(response.text, "application/json")
+        return HttpResponse(text, "application/json")
     else:
         return j_obj
 
