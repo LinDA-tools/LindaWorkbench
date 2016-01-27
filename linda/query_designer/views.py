@@ -85,6 +85,10 @@ def sparql_query_json(endpoint, query, timeout=None, append_slash=False, http_re
         endpoint + "?Accept=" + urlquote(
             "application/sparql-results+json") + "&query=" + query_enc + "&format=json&output=json", timeout=timeout)
 
+    # get encoding - if missing, asume utf
+    encoding = response.encoding
+    if not encoding:
+        encoding = 'utf-8'
     if response.encoding != 'utf-8':
         text = bytes(response.text, response.encoding).decode('utf-8-sig')
     else:
