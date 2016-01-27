@@ -90,7 +90,7 @@ def sparql_query_json(endpoint, query, timeout=None, append_slash=False, http_re
     if not encoding:
         encoding = 'utf-8'
     if response.encoding != 'utf-8':
-        text = bytes(response.text, response.encoding).decode('utf-8-sig')
+        text = bytes(response.text, encoding).decode('utf-8-sig')
     else:
         text = response.text
 
