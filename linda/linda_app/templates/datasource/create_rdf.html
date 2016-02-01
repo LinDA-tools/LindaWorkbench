@@ -43,9 +43,9 @@
             <textarea id="rdfdata" name="rdfdata">{{rdfdata}}</textarea>
         </div>
 
-        <div class="newline" {%if format == "text/rdf+n3" or format == "text/plain" or format == "application/x-turtle" %}{% else %}style="display: none;"{% endif %}}>
+        <div class="newline" style="display: none;">
             <label for="newline">{% trans "Tripples end with newlines<br />(will upload faster)" %}</label>
-            <input type="checkbox" id="newline" name="newline" value="{% if newlines %}true{% else %}false{% endif %}" />
+            <input type="checkbox" id="newline" name="newline" value="true" />
         </div>
 
         <div class="submit-box">
@@ -61,7 +61,43 @@
 
         $('#id_file').change(function(){
             $('#file-uploader').html($(this).val().split('\\').pop());
-        })
+
+            // choose the correct rdf type by default
+            var splits = $('#id_file')[0].files[0].name.split('.');
+
+            var ext = splits[splits.length - 1];
+            if ((ext == "rdf") || (ext == "xml")) {
+                $('#format').val('application/rdf+xml');
+            }
+            else if (ext == "nt") {
+                $('#format').val('text/plain');
+            }
+            else if (ext == "n3") {
+                $('#format').val('text/rdf+n3');
+            }
+            else if (ext == "ttl") {
+                $('#format').val('application/x-turtle');
+            }
+
+            //suggest default file name
+            if ($('#id_title').val() === "") {
+                var dt_name = "";
+                for (var i=0; i<splits.length - 1; i++) {
+                    if (i > 0) {
+                        dt_name += '.';
+                    }
+
+                    dt_name += splits[i];
+                }
+                $('#id_title').val(dt_name);
+            }
+
+            //alert for too large files
+            var sz = $('#id_file')[0].files[0].size || $('#id_file')[0].files[0].fileSize;
+            if ((sz > 10000000) && ((ext != "nt") && (ext != "n3"))) {
+                alert('This RDF format is only supported for files up to 10MB. Please convert the file to the n3 or ntriples format and try again.');
+            }
+        });
 
         $('#file-uploader').click(function(){
             $('#id_file').click();

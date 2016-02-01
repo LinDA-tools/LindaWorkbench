@@ -7,20 +7,17 @@
 {% block css %}
     <link rel="stylesheet" href="/static/css/jquery.contextMenu.css"/>
     <link rel="stylesheet" href="/static/css/jquery.modal.css" />
-    {% if installation_pending %}
-        <link rel="stylesheet" href="/static/installer/style.css"/>
-    {% endif %}
+
     <link rel="stylesheet" href="/static/css/gettingstarted.css" />
+
 {% endblock %}
 
 {% block content %}
 	<div class="main">
 
-        {% if installation_pending %}
-            {% include "installer/installer.html" %}
-        {% endif %}
-
         <div class="welcome">
+
+            <iframe width="350" height="250" src="//www.youtube.com/embed/mml6i_gDJUE" frameborder="0" allowfullscreen></iframe>
             <div class="welcome-message clearfix">
                 <h1>Welcome to the LinDA Playground</h1>
                 <p>Play with the LinDA tools that enchace semantic web technologies <span class="orange-text">|</span> Learn how to use data from all around the world.
@@ -169,12 +166,4 @@
             {% include "queries/pretty-list.html" %}
         {% endwith %}
     </script>
-
-
-    {% if installation_pending %}
-        <script>
-            var csrf_token = '{{csrf_token}}';
-        </script>
-        <script src="/static/installer/scripts.js"></script>
-    {% endif %}
 {% endblock %}

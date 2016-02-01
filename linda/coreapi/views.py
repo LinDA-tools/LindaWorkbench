@@ -199,3 +199,32 @@ def recommend_dataset(request):
 
     return data
 
+@csrf_exempt
+@json_response
+def list_properties(request):
+    class_ = request.GET.get("class", None)
+    page = request.GET.get('page')
+
+    try:
+        cls = VocabularyClass.objects.get(uri=class_)
+        results = VocabularyProperty.objects.filter(domain=class_, vocabulary=cls.vocabulary)
+    except VocabularyClass.DoesNotExist:
+        results = VocabularyProperty.objects.filter(domain=class_)
+
+    if page != "all":
+        paginator = Paginator(results, 20)
+
+        try:
+            records = paginator.page(page)
+        except PageNotAnInteger:
+            records = paginator.page(1)
+        except EmptyPage:
+            records = paginator.page(paginator.num_pages)
+    else:
+        records = results
+
+    data = []
+    for record in records:
+        data.append({'uri': record.uri, 'label': record.label, 'description': record.description, 'range': record.range})
+
+    return data

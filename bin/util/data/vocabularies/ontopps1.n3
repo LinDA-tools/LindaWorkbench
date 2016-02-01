@@ -1,0 +1,138 @@
+@prefix : <http://linda.eu/ontopps/> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix owl2xml: <http://www.w3.org/2006/12/owl2-xml#> .
+@prefix prov: <http://www.w3.org/TR/prov-o/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xml: <http://www.w3.org/XML/1998/namespace> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+: a owl:Ontology .
+
+:Documentary a owl:Class ;
+    rdfs:subClassOf :AudiovisualProduct .
+
+:Interviewee a owl:Class ;
+    rdfs:subClassOf :Person .
+
+:Interviewer a owl:Class ;
+    rdfs:subClassOf :Person .
+
+:Movie a owl:Class ;
+    rdfs:subClassOf :AudiovisualProduct .
+
+:MovieCharacter a owl:Class ;
+    rdfs:subClassOf :Person .
+
+:Reportage a owl:Class ;
+    rdfs:subClassOf :AudiovisualProduct .
+
+:addressedTo a owl:ObjectProperty .
+
+:adresse a owl:AnnotationProperty .
+
+:appearsIn a owl:ObjectProperty ;
+    rdfs:subPropertyOf owl:topObjectProperty .
+
+:dataLink a owl:ObjectProperty .
+
+:description a owl:DatatypeProperty ;
+    rdfs:range xsd:string .
+
+:endTime a owl:DatatypeProperty .
+
+:happensIn a owl:ObjectProperty .
+
+:hasExtractedData a owl:ObjectProperty .
+
+:hasPart a owl:ObjectProperty .
+
+:hasRole a owl:ObjectProperty .
+
+:inLanguage a owl:ObjectProperty .
+
+:info a owl:DatatypeProperty .
+
+:isNextOf a owl:ObjectProperty .
+
+:journalist a owl:Class ;
+    rdfs:subClassOf :Person .
+
+:name a owl:DatatypeProperty ;
+    rdfs:range xsd:string .
+
+:performedBy a owl:ObjectProperty ;
+    rdfs:range :Person .
+
+:speaker a owl:AnnotationProperty .
+
+:startTime a owl:DatatypeProperty ;
+    rdfs:range xsd:time .
+
+:startsWith a owl:ObjectProperty .
+
+:text a owl:DatatypeProperty ;
+    rdfs:range xsd:string .
+
+:title a owl:AnnotationProperty,
+        owl:DatatypeProperty .
+
+dcterms:Text a owl:AnnotationProperty .
+
+dcterms:description a owl:AnnotationProperty .
+
+owl:Thing a owl:Class .
+
+prov:atLocation a owl:AnnotationProperty .
+
+prov:endedAtTime a owl:AnnotationProperty .
+
+prov:generatedAtTime a owl:AnnotationProperty .
+
+prov:identifier a owl:AnnotationProperty .
+
+prov:isPartOf a owl:AnnotationProperty .
+
+prov:new a owl:Class ;
+    rdfs:subClassOf :AudiovisualProduct .
+
+prov:startedAtTime a owl:AnnotationProperty .
+
+foaf:Dialogue a owl:Class ;
+    :adresse :Person ;
+    :speaker :Person ;
+    dcterms:Text "" ;
+    prov:endedAtTime "" ;
+    prov:identifier "" ;
+    prov:isPartOf :Scene ;
+    prov:startedAtTime "" .
+
+foaf:name a owl:AnnotationProperty .
+
+foaf:surname a owl:AnnotationProperty .
+
+:Scene a owl:Class ;
+    dcterms:description "" ;
+    prov:atLocation "" ;
+    prov:endedAtTime "" ;
+    prov:identifier "" ;
+    prov:isPartOf :AudiovisualProduct ;
+    prov:startedAtTime "" .
+
+xsd:time a rdfs:Datatype .
+
+:AudiovisualProduct a owl:Class ;
+    :title "" ;
+    dcterms:description "" ;
+    prov:generatedAtTime "" ;
+    prov:identifier "" .
+
+:Person a owl:Class ;
+    prov:identifier "" ;
+    foaf:name "" ;
+    foaf:surname "" .
+
+[] :title "" .
+

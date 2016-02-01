@@ -2721,6 +2721,10 @@ textarea.rename.enabled {
     background-size: 16px;
 }
 
+.ui-front {
+    z-index: 10000;
+}
+
 .ui-widget div {
     padding-top: 10px;
 }
