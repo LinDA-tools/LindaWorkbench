@@ -44,6 +44,10 @@ def index(request):
 def load_design(request, pk):
     params = designer_defaults()
     params['query'] = Query.objects.get(pk=pk)
+    try:
+        params['datasource_default'] = DatasourceDescription.objects.filter(uri=params['query'].endpoint)[0]
+    except IndexError:
+        params['datasource_default'] = params['query'].endpoint
 
     if not params['query']:
         raise Http404

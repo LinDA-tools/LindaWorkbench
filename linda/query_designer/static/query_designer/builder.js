@@ -236,10 +236,42 @@ var builder = {
 
             this.property_names[tn][arrows.connections[j].tp] = this.property_names[fn][arrows.connections[j].fp];
             w.instances[tn].selected_properties[arrows.connections[j].tp].name = this.property_names[tn][arrows.connections[j].tp];
+
             if (w.instances[tn].selected_properties[arrows.connections[j].tp].uri == "URI") {
-                this.instance_names[tn] = this.property_names[tn][arrows.connections[j].tp];
+                // if already renamed by another FK, we have a conflict we'll have to revisit
+                if (typeof(this.instance_names[tn].from) !== "undefined") {
+                    this.conflicts.push({
+                        instance: tn,
+                        conflicting: {
+                            instance: fn,
+                            property: arrows.connections[j].fp
+                        }
+                    });
+                } else {
+                    this.instance_names[tn].val = this.property_names[tn][arrows.connections[j].tp];
+                    this.instance_names[tn].from = {instance: tn, property: arrows.connections[j].tp};
+                }
             }
         }
+    },
+
+    // resolve naming conflicts
+    resolve_conflicts: function(w) {
+        for (var k=0; k<this.conflicts.length; k++) {
+            var c = this.conflicts[k];
+
+            var prevPropertyName = this.property_names[c.conflicting.instance][c.conflicting.property];
+            var replaceWith = this.instance_names[c.instance].val;
+            for (var i=0; i<w.instances.length; i++) {
+                for (var j=0; j<this.property_names[i].length; j++) {
+                    if (this.property_names[i][j] == prevPropertyName) {
+                        this.property_names[i][j] = replaceWith;
+                    }
+                }
+            }
+        }
+
+        this.conflicts = [];
     },
 
     //get URI
@@ -263,9 +295,9 @@ var builder = {
             var p = this.get_uri_property(i);
             if (p !== undefined) {
                 if (p.name !== undefined  && p.name != "" && p.name_from_user) {
-                    i_names[i] = p.name;
+                    i_names[i] = {val: p.name};
                 } else {
-                    i_names[i] = "";
+                    i_names[i] = {val: ""};
                 }
             }
         }
@@ -274,7 +306,7 @@ var builder = {
         for (var i=0; i<w.instances.length; i++) {
             var p_uri = this.get_uri_property(i);
             if (w.instances[i] == undefined) continue;
-            if ((p_uri.name_from_user) || (i_names[i] != "")) continue;
+            if ((p_uri.name_from_user) || (i_names[i].val != "")) continue;
 
             var label = this.get_constraint_name(w.instances[i].uri, true); //get the constraint name
 
@@ -283,19 +315,19 @@ var builder = {
                 if (w.instances[j] == undefined) continue;
 
                 if ((this.get_constraint_name(w.instances[j].uri, true) == label) && (w.instances[j].subquery === w.instances[i].subquery)) {
-                    if (i_names[i] == "") {
-                        i_names[i] = label + '1';
+                    if (i_names[i].val == "") {
+                        i_names[i].val = label + '1';
                     }
 
                     cnt++;
-                    i_names[j] = label + cnt;
+                    i_names[j].val = label + cnt;
                 }
             }
 
-            if (i_names[i] == "") {
-                i_names[i] = label;
+            if (i_names[i].val == "") {
+                i_names[i].val = label;
             }
-            p_uri.name = i_names[i];
+            p_uri.name = i_names[i].val;
         }
 
         //find property names
@@ -307,13 +339,18 @@ var builder = {
             this.find_property_names(w, i);
         }
 
+        // setup foreign key names
+        this.conflicts = [];
         this.create_foreigns(w);
+
+        // resolve any naming issue conflicts
+        this.resolve_conflicts(w);
     },
 
     //find the names of the properties & forge foreign keys
     find_property_names: function(w, i) {
         var inst = w.instances[i];
-        var i_name = this.instance_names[i];
+        var i_name = this.instance_names[i].val;
 
         for (var j=0; j<inst.selected_properties.length; j++) {
             var p = inst.selected_properties[j];
@@ -338,7 +375,7 @@ var builder = {
         var wh_c = '';
 
         var inst = w.instances[i];
-        var i_name = this.instance_names[i];
+        var i_name = this.instance_names[i].val;
 
         //check if resource comes from a remote endpoint
         var endpoint = w.instances[i].dt_name;

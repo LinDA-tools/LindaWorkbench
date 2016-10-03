@@ -230,6 +230,10 @@ var arrows = {
     },
 
     delete_selected: function() {
+        // remove delete button
+        $('.delete-arrow-link').remove();
+
+        // delete selected arrows
         for (var i=0; i<this.connections.length; ) {
             if (this.connections[i].clicked) {
                 this.connections.splice(i, 1);
